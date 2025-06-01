@@ -1,2 +1,2 @@
 # Blood-Donation-Support-System
-Source code for UI
+Source code for User Interface.
