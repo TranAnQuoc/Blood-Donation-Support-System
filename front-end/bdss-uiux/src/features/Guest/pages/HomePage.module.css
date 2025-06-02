@@ -1,0 +1,54 @@
+/* src/features/Guest/pages/HomePage.module.css */
+
+.heroSection {
+    background-color: #f8f8f8;
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.heroContent {
+    max-width: 600px;
+}
+
+.heroTitle {
+    font-size: 3em;
+    color: #d9534f; /* Màu đỏ */
+    margin-bottom: 20px;
+}
+
+.heroSubtitle {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.donateButton {
+    background-color: #d9534f;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.infoSection {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.infoItem {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 30px;
+}
+
+.communitySection {
+    padding: 40px 20px;
+    text-align: center;
+}
