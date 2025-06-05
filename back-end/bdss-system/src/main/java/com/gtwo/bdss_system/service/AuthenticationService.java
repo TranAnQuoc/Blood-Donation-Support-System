@@ -1,9 +1,11 @@
 package com.gtwo.bdss_system.service;
 
+import com.gtwo.bdss_system.dto.AccountResponse;
 import com.gtwo.bdss_system.dto.LoginRequest;
 import com.gtwo.bdss_system.entity.Account;
 import com.gtwo.bdss_system.exception.exceptions.AuthenticationException;
 import com.gtwo.bdss_system.repository.AuthenticationRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,13 +26,19 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
+    TokenService tokenService;
+
     public Account register(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         Account savedAccount = authenticationRepository.save(account);
         return savedAccount;
     }
 
-    public Account login(LoginRequest loginRequest){
+    public AccountResponse login(LoginRequest loginRequest){
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginRequest.getEmail(),
@@ -40,7 +48,12 @@ public class AuthenticationService implements UserDetailsService {
             System.out.println("Error");
             throw new AuthenticationException("Invalid username or password");
         }
-        return authenticationRepository.findAccountByEmail(loginRequest.getEmail());
+
+        Account account = authenticationRepository.findAccountByEmail(loginRequest.getEmail());
+        AccountResponse accountResponse = modelMapper.map(account, AccountResponse.class);
+        String token = tokenService.generateToken(account);
+        accountResponse.setToken(token);
+        return accountResponse;
     }
 
     @Override

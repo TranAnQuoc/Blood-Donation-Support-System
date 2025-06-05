@@ -2,6 +2,8 @@ package com.gtwo.bdss_system.entity;
 
 import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.Role;
+import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusDonation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,12 +27,14 @@ public class Account implements UserDetails {
     @Column(name = "Password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Role")
     private Role role;
 
     @Column(name = "Full_Name")
     private String fullName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Gender")
     private Gender gender;
 
@@ -50,8 +54,13 @@ public class Account implements UserDetails {
     @Column(name = "Create_at")
     private Date createAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Status")
-    private boolean status;
+    private Status status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Status_Donation")
+    private StatusDonation statusDonation;
 
 
     @Override
