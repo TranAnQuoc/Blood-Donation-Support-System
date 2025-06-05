@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.controller;
 
+import com.gtwo.bdss_system.dto.AccountResponse;
 import com.gtwo.bdss_system.dto.LoginRequest;
 import com.gtwo.bdss_system.entity.Account;
 import com.gtwo.bdss_system.repository.AuthenticationRepository;
@@ -25,7 +26,7 @@ public class AuthenticationApi {
 
     @PostMapping("/api/login")
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
-        Account ac = authenticationService.login(loginRequest);
-        return ResponseEntity.ok(ac);
+        AccountResponse account = authenticationService.login(loginRequest);
+        return ResponseEntity.ok(account);
     }
 }
