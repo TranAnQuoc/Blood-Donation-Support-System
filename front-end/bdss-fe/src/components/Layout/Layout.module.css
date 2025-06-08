@@ -1,0 +1,11 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures the footer stays at the bottom */
+}
+
+.mainContent {
+    flex-grow: 1; /* Allows main content to take up available space */
+    padding: 20px 0; /* Add some padding for content */
+    /* You might want to adjust padding or max-width based on your overall content design */
+}
