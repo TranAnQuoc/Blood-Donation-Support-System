@@ -1,0 +1,95 @@
+/* src/components/Header/index.module.css */
+
+.header {
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.mainNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 120px;
+}
+
+.mainNav{
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.mainNav nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.mainNav nav ul li {
+    margin-left: 30px;
+}
+
+.mainNav nav ul li a {
+    text-decoration: none;
+    color: #C02044;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px 0;
+    position: relative;
+}
+
+.mainNav nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #d9534f;
+    transition: width 0.3s ease-in-out;
+}
+
+.mainNav nav ul li a:hover::after {
+    width: 100%;
+}
+
+.mainNav nav ul li a:hover {
+    color: #d9534f;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+
+  max-width: 1200px;
+  margin: auto;
+  margin-left: 10px;
+  padding: 0 20px;
+}
+
+.logoArea {
+  display: flex;
+  align-items: self-start;
+  gap: 10px;
+}
+
+.logoImage {
+  height: 60px;
+  width: auto;
+}
+
+.logoText {
+  margin-top: 10px;
+  line-height: 1.2;
+  font-weight: bold;
+  color: #C02044;
+  text-transform: uppercase;
+}
+
+.logoText p {
+  margin: 0;
+  font-size: 1.1em;
+
+}

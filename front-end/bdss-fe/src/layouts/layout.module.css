@@ -1,0 +1,13 @@
+.layout {
+    min-height: 100vh;
+    background: white; /* Thêm xanh và trắng */
+    display: flex;
+    flex-direction: column;
+}
+
+.mainContent {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
