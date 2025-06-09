@@ -1,0 +1,20 @@
+/* src/components/Common/Logo.module.css */
+.logo {
+  display: flex;
+  align-items: center;
+  /* Add other styling for your logo container */
+}
+
+.logoImage {
+  width: 50px; /* Adjust as needed */
+  height: 60px; /* Adjust as needed */
+  margin-right: 8px; /* Space between image and text */
+  /* Add other styling for your image */
+}
+
+.logoText {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: rgb(211, 92, 92);
+  /* Add other styling for your text */
+}
