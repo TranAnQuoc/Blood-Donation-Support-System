@@ -1,0 +1,9 @@
+.homePage {
+    text-align: center;
+    padding: 50px;
+}
+
+.homePage h2 {
+    color: #333;
+    margin-bottom: 20px;
+}

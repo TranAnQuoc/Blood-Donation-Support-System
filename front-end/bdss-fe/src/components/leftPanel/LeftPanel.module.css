@@ -1,0 +1,19 @@
+/* src/components/LeftPanel/LeftPanel.module.css */
+.leftPanel {
+  width: 250px; /* Chiều rộng cố định của panel trái */
+  background-color: rgb(226, 241, 252); /* Màu nền panel trái */
+  padding: 20px 0;
+  color: rgb(0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 10px 10px 0; /* Bo góc bên phải */
+}
+
+.navButtonsContainer {
+  margin-top: 20px;
+  flex-grow: 1; /* Cho phép các nút chiếm hết không gian còn lại */
+  overflow-y: auto; /* Thêm scroll nếu có quá nhiều nút */
+  overflow-y: scroll; /* Vẫn cho phép cuộn nội dung theo chiều dọc nếu cần */
+  scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+  -ms-overflow-style: none;  /* Ẩn thanh cuộn trên Internet Explorer và Edge */
+}

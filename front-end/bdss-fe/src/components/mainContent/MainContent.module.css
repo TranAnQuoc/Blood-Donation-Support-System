@@ -1,0 +1,17 @@
+/* src/components/MainContent/MainContent.module.css */
+.mainContent {
+  flex-grow: 1; /* Cho phép MainContent chiếm hết không gian còn lại */
+  display: flex;
+  flex-direction: column;
+  background-color: white; /* Màu nền của khu vực nội dung */
+  border-radius: 10px; /* Bo góc bên trái */
+  margin: 10px; /* Khoảng cách với viền màn hình */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Đảm bảo nội dung không tràn ra ngoài bo góc */
+}
+
+.contentArea {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto; /* Cho phép cuộn nội dung nếu dài */
+}

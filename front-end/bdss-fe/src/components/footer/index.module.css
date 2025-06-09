@@ -1,0 +1,86 @@
+.footer {
+    border-top: 2px solid #D9534F;
+    background-color: white; /* Dark blue similar to the image */
+    color: #000000; /* Light gray for text */
+    padding: 40px 120px;
+    font-family: Arial, sans-serif;
+}
+
+.footerContent {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+.contactInfo, .supportInfo {
+    flex: 1; /* Distribute space evenly */
+    min-width: 300px; /* Minimum width before wrapping */
+    margin-right: 30px; /* Space between sections */
+}
+
+.contactInfo h3, .supportInfo h3 {
+    color: #000000;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #D9534F; /* Blue underline */
+    padding-bottom: 10px;
+}
+
+.addressSection {
+    margin-bottom: 25px;
+}
+
+.addressSection h4 {
+    color: #000000;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.contactItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.contactItem i {
+    margin-right: 10px;
+    color: #000000; /* Lighter gray for icons */
+    font-size: 16px;
+    margin-top: 2px; /* Adjust icon vertical alignment */
+}
+
+.contactItem p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #000000;
+    flex: 1; /* Allow text to take remaining space */
+}
+
+.contactItem .phone {
+    font-weight: bold;
+    color: #f1c40f; /* Yellow for phone numbers */
+    margin-left: 15px;
+    white-space: nowrap; /* Prevent phone number from wrapping */
+}
+
+.supportInfo ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.supportInfo ul li {
+    margin-bottom: 10px;
+}
+
+.supportInfo ul li a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.supportInfo ul li a:hover {
+    color: #3498db; /* Blue on hover */
+}
