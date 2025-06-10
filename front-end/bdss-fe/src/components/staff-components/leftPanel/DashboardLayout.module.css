@@ -1,0 +1,7 @@
+/* src/components/Layout/DashboardLayout.module.css */
+.dashboardLayout {
+  display: flex;
+  height: 100vh; /* Chiếm toàn bộ chiều cao màn hình */
+  background-color: rgb(226, 241, 252); /* Màu nền tổng thể */
+  font-family: Arial, sans-serif;
+}
