@@ -5,6 +5,8 @@ import api from '../../configs/axios';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/features/userSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // faEye cho "show", faEyeSlash cho "hide"
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -51,6 +53,8 @@ function LoginForm() {
   return (
     <div className={styles.loginContainer}>
       <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <h2>Login</h2>
+
         <div className={styles.inputGroup}>
           <input
             type="text"
@@ -77,7 +81,11 @@ function LoginForm() {
             className={styles.togglePasswordButton}
             onClick={handleTogglePasswordVisibility}
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? (
+              <FontAwesomeIcon icon={faEyeSlash} /> 
+            ) : (
+              <FontAwesomeIcon icon={faEye} /> 
+            )}
           </button>
         </div>
         <div className={styles.forgotPassword}>
