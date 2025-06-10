@@ -2,14 +2,13 @@ package com.gtwo.bdss_system.controller;
 
 import com.gtwo.bdss_system.dto.AccountResponse;
 import com.gtwo.bdss_system.dto.LoginRequest;
+import com.gtwo.bdss_system.dto.RegisterRequest;
 import com.gtwo.bdss_system.entity.Account;
 import com.gtwo.bdss_system.repository.AuthenticationRepository;
 import com.gtwo.bdss_system.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationApi {
@@ -19,7 +18,8 @@ public class AuthenticationApi {
     private AuthenticationService authenticationService;
 
     @PostMapping("/api/register")
-    public ResponseEntity register(@RequestBody Account account) {
+    public ResponseEntity register(@RequestBody RegisterRequest account) {
+        System.out.println("Blood type ID: " + account.getBloodTypeId());
         Account newAccount = authenticationService.register(account);
         return ResponseEntity.ok(newAccount);
     }

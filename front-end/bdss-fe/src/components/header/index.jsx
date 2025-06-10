@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './index.module.css'; // Đảm bảo import đúng tên file CSS Module
 import logo from '../../assets/logo.png'; 
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     return (
@@ -17,13 +18,13 @@ const Header = () => {
             <div className={styles.mainNav}>
                 <nav>
                     <ul>
-                        <li><a href="#">HOME</a></li>
-                        <li><a href="#">SERVICE</a></li>
-                        <li><a href="#">EMERGENCY</a></li>
-                        <li><a href="#">COMMUNITY</a></li>
-                        <li><a href="#">ABOUT US</a></li>
-                        <li><a href="#">BLOG</a></li>
-                        <li><a href="#">LOGIN</a></li>
+                        <li><Link to="/">HOME</Link></li>
+                        <li><Link to="/">SERVICE</Link></li>
+                        <li><Link to="/">EMERGENCY</Link></li>
+                        <li><Link to="/">COMMUNITY</Link></li>
+                        <li><Link to="/">ABOUT US</Link></li>
+                        <li><Link to="/">BLOG</Link></li>
+                        <li><Link to="/login">LOGIN</Link></li>
                     </ul>
                 </nav>
             </div>
