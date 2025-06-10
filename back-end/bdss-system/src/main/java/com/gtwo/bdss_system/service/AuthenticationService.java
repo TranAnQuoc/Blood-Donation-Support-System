@@ -2,7 +2,13 @@ package com.gtwo.bdss_system.service;
 
 import com.gtwo.bdss_system.dto.AccountResponse;
 import com.gtwo.bdss_system.dto.LoginRequest;
+import com.gtwo.bdss_system.dto.RegisterRequest;
 import com.gtwo.bdss_system.entity.Account;
+import com.gtwo.bdss_system.entity.BloodType;
+import com.gtwo.bdss_system.enums.Gender;
+import com.gtwo.bdss_system.enums.Role;
+import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusDonation;
 import com.gtwo.bdss_system.exception.exceptions.AuthenticationException;
 import com.gtwo.bdss_system.repository.AuthenticationRepository;
 import org.modelmapper.ModelMapper;
@@ -32,10 +38,27 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     TokenService tokenService;
 
-    public Account register(Account account) {
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-        Account savedAccount = authenticationRepository.save(account);
-        return savedAccount;
+    @Autowired
+    BloodTypeService bloodTypeService;
+
+    public Account register(RegisterRequest dto) {
+        Account account = new Account();
+        account.setEmail(dto.getEmail());
+        account.setPassword(passwordEncoder.encode(dto.getPassword()));
+        account.setFullName(dto.getFullName());
+        account.setGender(Gender.valueOf(dto.getGender().toUpperCase()));
+        account.setDateOfBirth(dto.getDateOfBirth());
+        account.setPhone(dto.getPhone());
+        account.setAddress(dto.getAddress());
+        account.setRole(Role.MEMBER);
+        account.setStatus(Status.ACTIVE);
+        account.setStatusDonation(StatusDonation.AVAILABLE);
+        if (dto.getBloodTypeId() != null) {
+            BloodType bloodType = bloodTypeService.findById(dto.getBloodTypeId());
+            account.setBloodType(bloodType);
+        }
+
+        return authenticationRepository.save(account);
     }
 
     public AccountResponse login(LoginRequest loginRequest){

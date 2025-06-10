@@ -9,8 +9,9 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -52,7 +53,12 @@ public class Account implements UserDetails {
     private String address;
 
     @Column(name = "Create_at")
-    private Date createAt;
+    private LocalDateTime createAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createAt = LocalDateTime.now();
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Status")

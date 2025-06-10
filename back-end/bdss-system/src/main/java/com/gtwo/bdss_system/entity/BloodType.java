@@ -15,7 +15,7 @@ import lombok.ToString;
 public class BloodType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "Type")
     private String type;
