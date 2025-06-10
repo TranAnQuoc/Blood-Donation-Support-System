@@ -18,22 +18,12 @@
 .registerForm h2 {
   text-align: center;
   margin-bottom: 25px;
-  color: #333;
+  color: #C02044;
 }
 
 .inputGroup {
   position: relative;
   margin-bottom: 20px;
-}
-
-.inputIcon {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #886abf; /* Màu tím tương tự hình ảnh */
-  width: 20px;
-  height: 20px;
 }
 
 .inputField {
@@ -50,8 +40,8 @@
 
 .inputField:focus {
   outline: none;
-  border-color: #886abf;
-  box-shadow: 0 0 5px rgba(136, 106, 191, 0.5);
+  border-color: #ff7878;
+  box-shadow: 0 0 5px #ffe5ea;
 }
 
 /* Thêm mũi tên xuống cho select box nếu cần */
@@ -82,20 +72,20 @@
 }
 
 .registerButton {
-  background-color: #886abf; /* Màu tím tương tự hình ảnh */
+  background-color: #C02044; /* Màu tím tương tự hình ảnh */
   color: white;
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
-  width: 100%;
+  width: 93%;
   transition: background-color 0.3s ease;
   margin-top: 10px; /* Khoảng cách với trường cuối cùng */
 }
 
 .registerButton:hover {
-  background-color: #6a4aa7;
+  background-color: #DA5E5A;
 }
 
 .loginPrompt {
@@ -105,7 +95,7 @@
 }
 
 .loginPrompt a {
-  color: #886abf;
+  color: #C02044;
   text-decoration: none;
   font-weight: bold;
 }

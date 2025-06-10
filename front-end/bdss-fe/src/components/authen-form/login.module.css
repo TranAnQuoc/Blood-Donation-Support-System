@@ -3,7 +3,8 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  width: 100%; /* Để container chiếm hết chiều ngang */
+  width: 100%;
+  /* Để container chiếm hết chiều ngang */
 }
 
 .loginForm {
@@ -15,24 +16,22 @@
   max-width: 400px;
 }
 
+.loginForm h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #C02044;
+}
+
 .inputGroup {
   position: relative;
   margin-bottom: 20px;
 }
 
-.inputIcon {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #886abf; /* Màu tím tương tự hình ảnh */
-  width: 20px;
-  height: 20px;
-}
-
 .inputField {
-  width: calc(100% - 40px); /* Trừ đi khoảng trống cho icon và padding */
-  padding: 12px 15px 12px 40px; /* Thêm padding bên trái cho icon */
+  width: calc(100% - 40px);
+  /* Trừ đi khoảng trống cho icon và padding */
+  padding: 12px 15px 12px 40px;
+  /* Thêm padding bên trái cho icon */
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
@@ -41,19 +40,21 @@
 
 .inputField:focus {
   outline: none;
-  border-color: #886abf;
-  box-shadow: 0 0 5px rgba(136, 106, 191, 0.5);
+  border-color: #ff7878;
+  box-shadow: 0 0 5px #ffe5ea;
 }
 
 .togglePasswordButton {
   position: absolute;
-  right: 15px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
+  color: #C02044;
+  font-size: 1.2em;
 }
 
 .eyeIcon {
@@ -68,7 +69,7 @@
 }
 
 .forgotPassword a {
-  color: #886abf;
+  color: #C02044;
   text-decoration: none;
   font-size: 14px;
 }
@@ -78,7 +79,8 @@
 }
 
 .loginButton {
-  background-color: #886abf; /* Màu tím tương tự hình ảnh */
+  background-color: #C02044;
+  /* Màu tím tương tự hình ảnh */
   color: white;
   padding: 12px 20px;
   border: none;
@@ -90,7 +92,7 @@
 }
 
 .loginButton:hover {
-  background-color: #6a4aa7;
+  background-color: #DA5E5A;
 }
 
 .signupPrompt {
@@ -100,7 +102,7 @@
 }
 
 .signupPrompt a {
-  color: #886abf;
+  color: #C02044;
   text-decoration: none;
   font-weight: bold;
 }
