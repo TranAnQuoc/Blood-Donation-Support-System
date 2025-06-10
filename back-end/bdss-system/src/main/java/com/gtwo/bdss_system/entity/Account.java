@@ -6,6 +6,7 @@ import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusDonation;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,6 +34,7 @@ public class Account implements UserDetails {
     private Role role;
 
     @Column(name = "Full_Name")
+    @Nationalized
     private String fullName;
 
     @Enumerated(EnumType.STRING)
@@ -50,6 +52,7 @@ public class Account implements UserDetails {
     private String phone;
 
     @Column(name = "Address")
+    @Nationalized
     private String address;
 
     @Column(name = "Create_at")

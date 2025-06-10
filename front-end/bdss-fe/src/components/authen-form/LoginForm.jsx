@@ -6,21 +6,46 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/features/userSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // faEye cho "show", faEyeSlash cho "hide"
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // faEye for "show", faEyeSlash for "hide"
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    if (!email) {
+      return 'Email is required.';
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Invalid email format.';
+    }
+    return ''; // No error
+  };
+
+  const validatePassword = (password) => {
+    if (!password) {
+      return 'Password is required.';
+    }
+    return ''; // No error
+  };
+
   const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+    const newEmail = event.target.value;
+    setEmail(newEmail);
+    setEmailError(validateEmail(newEmail));
   };
 
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+    setPasswordError(validatePassword(newPassword));
   };
 
   const handleTogglePasswordVisibility = () => {
@@ -29,24 +54,46 @@ function LoginForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const emailValidationMessage = validateEmail(email);
+    const passwordValidationMessage = validatePassword(password);
+
+    setEmailError(emailValidationMessage);
+    setPasswordError(passwordValidationMessage);
+
+    if (emailValidationMessage || passwordValidationMessage) {
+      toast.error('Please correct the errors in the form.');
+      return;
+    }
+
     try {
       const response = await api.post('login', {
         email: email,
         password: password,
       });
 
-      const userData = response.data.data;
+      const userData = response.data;
+      if (!userData?.token) {
+        toast.error('Invalid login response from server');
+        return;
+      }
       localStorage.setItem('token', userData.token);
+      localStorage.setItem('user', JSON.stringify(userData));
       dispatch(login(userData));
+      toast.success('Login successful!');
 
       if (userData.role === 'ADMIN') {
-        navigate('/dashboard');
+        navigate('/admin');
+      } else if (userData.role === 'STAFF') {
+        navigate('/staff');
+      } else if (userData.role === 'MEMBER') {
+        navigate('/member');
       } else {
-        navigate('/');
+        navigate('/'); // Fallback for other roles or no specific role
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data || 'Login failed!');
+      toast.error(error.response?.data?.message || 'Login failed! Please check your credentials.');
     }
   };
 
@@ -59,18 +106,19 @@ function LoginForm() {
           <input
             type="text"
             id="email"
-            className={styles.inputField}
+            className={`${styles.inputField} ${emailError ? styles.inputError : ''}`}
             placeholder="Email address"
             value={email}
             onChange={handleEmailChange}
             required
           />
+          {emailError && <p className={styles.errorMessage}>{emailError}</p>}
         </div>
         <div className={styles.inputGroup}>
           <input
             type={showPassword ? 'text' : 'password'}
             id="password"
-            className={styles.inputField}
+            className={`${styles.inputField} ${passwordError ? styles.inputError : ''}`}
             placeholder="Password"
             value={password}
             onChange={handlePasswordChange}
@@ -82,11 +130,12 @@ function LoginForm() {
             onClick={handleTogglePasswordVisibility}
           >
             {showPassword ? (
-              <FontAwesomeIcon icon={faEyeSlash} /> 
+              <FontAwesomeIcon icon={faEyeSlash} />
             ) : (
-              <FontAwesomeIcon icon={faEye} /> 
+              <FontAwesomeIcon icon={faEye} />
             )}
           </button>
+          {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
         </div>
         <div className={styles.forgotPassword}>
           <a href="#">Forgot Password?</a>

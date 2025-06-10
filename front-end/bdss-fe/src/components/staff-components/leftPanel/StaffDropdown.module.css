@@ -1,0 +1,60 @@
+/* src/components/LeftPanel/StaffDropdown.module.css */
+.StaffDropdown {
+  position: relative;
+  margin: 0 20px 20px;
+  background-color: rgb(178, 219, 248); /* Màu nền của dropdown */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* (Tùy chọn) Thêm đổ bóng nhẹ để tăng hiệu ứng 3D */
+}
+
+.dropdownToggle {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  justify-content: space-between;
+}
+
+.userIcon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: black;
+}
+
+.arrowIcon {
+  margin-left: 10px;
+  font-size: 12px;
+  color: black;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%; /* Đặt menu ngay dưới toggle */
+  left: 0;
+  right: 0;
+  background-color: rgb(178, 219, 248); /* Màu nền menu */
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+  margin-top: 5px;
+  border-radius: 8px; 
+  border: 1px solid rgb(120, 160, 200); 
+  
+  z-index: 10; /* Đảm bảo menu hiển thị trên các phần khác */
+}
+
+.dropdownMenuItem {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: black;
+}
+
+.dropdownMenuItem:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.StaffName{
+    color: black;
+}

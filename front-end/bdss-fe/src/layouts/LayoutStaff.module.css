@@ -1,0 +1,6 @@
+.dashboardLayout {
+  display: flex;
+  height: 100vh; 
+  background-color: rgb(226, 241, 252); 
+  font-family: Arial, sans-serif;
+}

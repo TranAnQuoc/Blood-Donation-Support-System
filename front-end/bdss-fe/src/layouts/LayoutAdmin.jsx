@@ -1,7 +1,7 @@
 // src/components/Layout/DashboardLayout.jsx
 import React, { useState } from 'react';
-import LeftPanel from '../components/leftPanel/LeftPanel';
-import MainContent from '../components/mainContent/MainContent';
+import LeftPanel from '../components/admin-components/leftPanel/LeftPanel';
+import MainContent from '../components/admin-components/mainContent/MainContent';
 import styles from './LayoutAdmin.module.css';
 
 const LayoutAdmin = () => {
