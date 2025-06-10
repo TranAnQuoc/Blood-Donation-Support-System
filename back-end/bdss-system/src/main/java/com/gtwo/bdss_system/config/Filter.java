@@ -1,8 +1,8 @@
 package com.gtwo.bdss_system.config;
 
-import com.gtwo.bdss_system.entity.Account;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.exception.exceptions.AuthenticationException;
-import com.gtwo.bdss_system.service.TokenService;
+import com.gtwo.bdss_system.service.auth.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
