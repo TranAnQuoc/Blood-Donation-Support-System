@@ -1,30 +1,46 @@
-import React from 'react';
-import styles from './index.module.css'; // Đảm bảo import đúng tên file CSS Module
-import logo from '../../assets/logo.png'; 
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import styles from "./index.module.css";
+import logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+const [menuOpen, setMenuOpen] = useState(false);
+
+const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+};
+const closeMenu = () => {
+        setMenuOpen(false);
+    };
+
     return (
         <header className={styles.header}>
-            <div className={styles.mainContent}>
-                <div className={styles.logoArea}>
-                    <img src={logo} alt="Save a Life - Donate Blood" className={styles.logoImage} />
-                    <div className={styles.logoText}>
-                        <p>SAVE A LIFE</p>
-                        <p>DONATE BLOOD</p>
-                    </div>
+            <div className={styles.logoArea}>
+                <img src={logo} alt="Save a Life - Donate Blood" className={styles.logoImage} />
+                <div className={styles.logoText}>
+                    <p>SAVE A LIFE</p>
+                    <p>DONATE BLOOD</p>
                 </div>
             </div>
-            <div className={styles.mainNav}>
+
+            {/* Hamburger icon (sẽ được căn chỉnh riêng) */}
+            <div className={styles.hamburger} onClick={toggleMenu}>
+                <span className={styles.bar}></span>
+                <span className={styles.bar}></span>
+                <span className={styles.bar}></span>
+            </div>
+
+            {/* mainNav */}
+            <div className={`${styles.mainNav} ${menuOpen ? styles.open : ""}`}>
                 <nav>
                     <ul>
-                        <li><Link to="/">HOME</Link></li>
-                        <li><Link to="/">SERVICE</Link></li>
-                        <li><Link to="/">EMERGENCY</Link></li>
-                        <li><Link to="/">COMMUNITY</Link></li>
-                        <li><Link to="/">ABOUT US</Link></li>
-                        <li><Link to="/">BLOG</Link></li>
-                        <li><Link to="/login">LOGIN</Link></li>
+                        <li><Link to="/" onClick={closeMenu}>HOME</Link></li>
+                        <li><Link to="/service" onClick={closeMenu}>SERVICE</Link></li>
+                        <li><Link to="/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
+                        <li><Link to="/community" onClick={closeMenu}>COMMUNITY</Link></li>
+                        <li><Link to="/about-us" onClick={closeMenu}>ABOUT US</Link></li>
+                        <li><Link to="/blog" onClick={closeMenu}>BLOG</Link></li>
+                        <li><Link to="/login" onClick={closeMenu}>LOGIN</Link></li>
                     </ul>
                 </nav>
             </div>
