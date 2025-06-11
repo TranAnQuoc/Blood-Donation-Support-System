@@ -4,7 +4,6 @@ import com.gtwo.bdss_system.dto.auth.AccountResponse;
 import com.gtwo.bdss_system.dto.auth.LoginRequest;
 import com.gtwo.bdss_system.dto.auth.RegisterRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
-import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.service.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationApi {
-    @Autowired
-    AuthenticationRepository authenticationRepository;
     @Autowired
     private AuthenticationService authenticationService;
 
