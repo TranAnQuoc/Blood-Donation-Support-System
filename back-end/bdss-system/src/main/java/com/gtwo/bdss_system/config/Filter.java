@@ -2,7 +2,7 @@ package com.gtwo.bdss_system.config;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.exception.exceptions.AuthenticationException;
-import com.gtwo.bdss_system.service.auth.TokenService;
+import com.gtwo.bdss_system.service.auth.impl.TokenServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -30,7 +30,7 @@ public class Filter extends OncePerRequestFilter {
     private HandlerExceptionResolver resolver;
 
     @Autowired
-    TokenService tokenService;
+    TokenServiceImpl tokenService;
 
     private final List<String> PUBLIC_API = List.of(
             "POST:/api/register",

@@ -1,4 +1,4 @@
 package com.gtwo.bdss_system.service.donation;
 
-public class DonationRequestService {
+public interface DonationRequestService {
 }

@@ -1,6 +1,6 @@
 package com.gtwo.bdss_system.config;
 
-import com.gtwo.bdss_system.service.auth.AuthenticationService;
+import com.gtwo.bdss_system.service.auth.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ public class SecurityConfig {
     Filter filter;
 
     @Autowired
-    AuthenticationService authenticationService;
+    AuthenticationServiceImpl authenticationServiceImpl;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-                .userDetailsService(authenticationService)
+                .userDetailsService(authenticationServiceImpl)
                 .sessionManagement(session ->
                                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();
