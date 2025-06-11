@@ -2,77 +2,75 @@
 
 .header {
   width: 100%;
-  padding: 20px 0;
+  padding: 10px 40px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
+  background-color: #fff;
+  position: relative;
+  z-index: 10;
 }
 
 .mainNav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 120px;
-}
-
-.mainNav{
-    align-items: center;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
 }
 
 .mainNav nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 .mainNav nav ul li {
-    margin-left: 30px;
+  margin-left: 30px;
 }
 
 .mainNav nav ul li a {
-    text-decoration: none;
-    color: #C02044;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 5px 0;
-    position: relative;
+  text-decoration: none;
+  color: #c02044;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 5px 0;
+  position: relative;
+  transition: color 0.3s;
+  white-space: nowrap;
 }
 
 .mainNav nav ul li a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #d9534f;
-    transition: width 0.3s ease-in-out;
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #d9534f;
+  transition: width 0.3s ease-in-out;
 }
 
 .mainNav nav ul li a:hover::after {
-    width: 100%;
+  width: 100%;
 }
 
 .mainNav nav ul li a:hover {
-    color: #d9534f;
+  color: #d9534f;
 }
 
 .mainContent {
   display: flex;
-  justify-content: space-between;
-
-  max-width: 1200px;
-  margin: auto;
-  margin-left: 10px;
-  padding: 0 20px;
+  align-items: center;
+  gap: 15px;
 }
 
 .logoArea {
   display: flex;
-  align-items: self-start;
+  align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .logoImage {
@@ -81,15 +79,147 @@
 }
 
 .logoText {
-  margin-top: 10px;
   line-height: 1.2;
   font-weight: bold;
-  color: #C02044;
+  color: #c02044;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .logoText p {
   margin: 0;
   font-size: 1.1em;
+}
 
+/* Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.bar {
+  height: 3px;
+  width: 100%;
+  background-color: #c02044;
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------- */
+/* Responsive Styles (Media Queries) */
+/* --------------------------------------------------- */
+
+/* Cho màn hình từ 1024px trở xuống */
+@media (max-width: 1024px) {
+    .header {
+        padding: 10px 20px;
+    }
+    .mainNav nav ul li {
+        margin-left: 20px;
+    }
+    .mainNav nav ul li a {
+        font-size: 15px;
+    }
+}
+
+
+/* Cho màn hình từ 768px trở xuống (kích hoạt Hamburger menu) */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+    }
+
+    .logoArea {
+        flex-grow: 1;
+        justify-content: flex-start;
+    }
+
+    .logoImage {
+        height: 50px;
+    }
+
+    .logoText p {
+        font-size: 1em;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .mainNav {
+        /* Ẩn menu điều hướng chính và chuẩn bị cho hiệu ứng trượt */
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        flex-direction: column;
+        padding: 0;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        opacity: 0;
+    }
+
+    .mainNav.open {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .mainNav nav ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .mainNav nav ul li {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .mainNav nav ul li a {
+        display: block;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 16px;
+    }
+
+    .mainNav nav ul li:last-child a {
+        border-bottom: none;
+    }
+}
+
+/* Cho màn hình từ 480px trở xuống (ví dụ: điện thoại nhỏ) */
+@media (max-width: 480px) {
+    .logoImage {
+        height: 40px;
+    }
+
+    .logoText p {
+        font-size: 0.9em;
+    }
+}
+
+/* Các hiệu ứng chuyển đổi cho Hamburger icon khi menu mở */
+.hamburger.open .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
 }
