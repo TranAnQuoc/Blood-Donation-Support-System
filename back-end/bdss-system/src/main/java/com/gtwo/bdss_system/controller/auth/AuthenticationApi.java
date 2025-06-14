@@ -10,18 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/auth")
 public class AuthenticationApi {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequest account) {
         System.out.println("Blood type ID: " + account.getBloodTypeId());
         Account newAccount = authenticationService.register(account);
         return ResponseEntity.ok(newAccount);
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
         AccountResponse account = authenticationService.login(loginRequest);
         return ResponseEntity.ok(account);

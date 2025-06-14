@@ -2,8 +2,10 @@ package com.gtwo.bdss_system.entity.donation;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Gender;
+import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 import java.sql.Date;
 
@@ -52,5 +54,10 @@ public class DonationHistory {
     private String address;
 
     @Column(name = "Note")
+    @Nationalized
     private String note;
+
+    @Column(name = "Status")
+    @Enumerated(EnumType.STRING)
+    private StatusProcess status;
 }

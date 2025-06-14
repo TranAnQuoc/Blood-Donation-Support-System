@@ -6,11 +6,11 @@ import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusDonation;
 import lombok.Data;
-
 import java.util.Date;
 
 @Data
 public class AccountResponse {
+    private Long id;
     private String email;
     private Role role;
     private String fullName;

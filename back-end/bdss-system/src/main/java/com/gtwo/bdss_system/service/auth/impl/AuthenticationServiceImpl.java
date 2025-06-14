@@ -5,7 +5,6 @@ import com.gtwo.bdss_system.dto.auth.LoginRequest;
 import com.gtwo.bdss_system.dto.auth.RegisterRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
-import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusDonation;
@@ -14,13 +13,11 @@ import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.service.auth.AuthenticationService;
 import com.gtwo.bdss_system.service.auth.TokenService;
 import com.gtwo.bdss_system.service.commons.BloodTypeService;
-import com.gtwo.bdss_system.service.commons.impl.BloodTypeServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setEmail(dto.getEmail());
         account.setPassword(passwordEncoder.encode(dto.getPassword()));
         account.setFullName(dto.getFullName());
-        account.setGender(Gender.valueOf(dto.getGender().toUpperCase()));
+        account.setGender(dto.getGender());
         account.setDateOfBirth(dto.getDateOfBirth());
         account.setPhone(dto.getPhone());
         account.setAddress(dto.getAddress());
@@ -61,7 +58,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             BloodType bloodType = bloodTypeService.findById(dto.getBloodTypeId());
             account.setBloodType(bloodType);
         }
-
         return authenticationRepository.save(account);
     }
 
@@ -75,7 +71,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             System.out.println("Error");
             throw new AuthenticationException("Invalid username or password");
         }
-
         Account account = authenticationRepository.findAccountByEmail(loginRequest.getEmail());
         AccountResponse accountResponse = modelMapper.map(account, AccountResponse.class);
         String token = tokenService.generateToken(account);
