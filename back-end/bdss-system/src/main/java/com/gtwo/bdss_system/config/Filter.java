@@ -33,22 +33,18 @@ public class Filter extends OncePerRequestFilter {
     TokenServiceImpl tokenService;
 
     private final List<String> PUBLIC_API = List.of(
-            "POST:/api/register",
-            "POST:/api/login"
+            "POST:/api/auth/register",
+            "POST:/api/auth/login"
     );
 
     public boolean isPublicAPI(String uri, String method) {
         AntPathMatcher matcher = new AntPathMatcher();
-
         if(method.equals("GET")) return true;
-
         return PUBLIC_API.stream().anyMatch(pattern -> {
             String[] parts = pattern.split(":", 2);
             if (parts.length != 2) return false;
-
             String allowedMethod = parts[0];
             String allowedUri = parts[1];
-
             return method.equalsIgnoreCase(allowedMethod) && matcher.match(allowedUri, uri);
         });
     }
@@ -57,23 +53,18 @@ public class Filter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String uri = request.getRequestURI();
         String method = request.getMethod();
-
         if(isPublicAPI(uri,method)){
             filterChain.doFilter(request,response);
         }else {
             String token = getToken(request);
-
             if(token == null){
                 resolver.resolveException(request, response, null, new AuthenticationException("Empty token!"));
                 return;
             }
-
             Account account;
             try {
-                // từ token tìm ra thằng đó là ai
                 account = tokenService.extractAccount(token);
             } catch (ExpiredJwtException expiredJwtException) {
-                // token het han
                 resolver.resolveException(request, response, null, new AuthenticationException("Expired Token!"));
                 return;
             } catch (MalformedJwtException malformedJwtException) {
@@ -85,7 +76,6 @@ public class Filter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(account, token, account.getAuthorities());
             authenToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenToken);
-
             filterChain.doFilter(request,response);
         }
     }

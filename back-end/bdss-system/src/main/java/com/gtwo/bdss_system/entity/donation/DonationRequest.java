@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -16,22 +17,22 @@ public class DonationRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Donor_ID")
     private Account donor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Schedule_ID")
     private DonationSchedule schedule;
 
     @Column(name = "Request_Time")
     private LocalDateTime requestTime;
 
-    @Column(name = "Status")
+    @Column(name = "Status_Request")
     @Enumerated(EnumType.STRING)
-    private StatusRequest status;
+    private StatusRequest statusRequest;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Approver_ID")
     private Account approver;
 
@@ -39,5 +40,6 @@ public class DonationRequest {
     private LocalDateTime approvedTime;
 
     @Column(name = "Pre_Check_Note")
+    @Nationalized
     private String note;
 }

@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.entity.commons;
 
+import com.gtwo.bdss_system.enums.FacilityStatus;
 import com.gtwo.bdss_system.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,6 +29,10 @@ public class MedicalFacility {
     @Column(name = "Region")
     @Nationalized
     private String region;
+
+    @Column(name = "Status_Facility")
+    @Enumerated(EnumType.STRING)
+    private FacilityStatus facilityStatus;
 
     @Column(name = "Status")
     @Enumerated(EnumType.STRING)

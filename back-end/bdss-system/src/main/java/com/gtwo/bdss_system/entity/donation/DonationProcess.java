@@ -2,9 +2,11 @@ package com.gtwo.bdss_system.entity.donation;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.DonationType;
+import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +19,7 @@ public class DonationProcess {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RequestId")
     private DonationRequest request;
 
@@ -31,23 +33,31 @@ public class DonationProcess {
     private Boolean healthCheck;
 
     @Column(name = "Hemoglobin_Level")
-    private float hemoglobin;
+    private Double hemoglobin;
 
     @Column(name = "Blood_Pressure")
     private String bloodPressure;
 
+    @Column(name = "Quantity")
+    private int quantity;
+
     @Column(name = "Staff_Notes")
+    @Nationalized
     private String notes;
 
     @Column(name = "Donation_Type")
     @Enumerated(EnumType.STRING)
     private DonationType type;
 
-    @Column(name = "Status")
+    @Column(name = "Process")
     @Enumerated(EnumType.STRING)
-    private StatusProcess status;
+    private StatusProcess process;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Performer_ID")
     private Account performer;
+
+    @Column(name = "Status_Activate")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

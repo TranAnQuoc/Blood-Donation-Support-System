@@ -103,6 +103,7 @@
 			<version>0.12.5</version>
 			<scope>runtime</scope>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -116,8 +117,14 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.3</version>
 		</dependency>
-	</dependencies>
 
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.2.3</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -140,5 +147,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

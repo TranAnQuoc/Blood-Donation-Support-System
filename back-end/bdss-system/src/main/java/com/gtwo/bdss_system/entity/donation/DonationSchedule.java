@@ -1,10 +1,10 @@
 package com.gtwo.bdss_system.entity.donation;
 
 import com.gtwo.bdss_system.entity.commons.MedicalFacility;
+import com.gtwo.bdss_system.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
-
 import java.sql.Date;
 import java.sql.Time;
 
@@ -21,7 +21,7 @@ public class DonationSchedule {
     @Nationalized
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MedicalFacilityID")
     private MedicalFacility facility;
 
@@ -37,10 +37,11 @@ public class DonationSchedule {
     @Column(name = "Max_Slot")
     private int maxSlot;
 
-    @Column(name = "Current_Slot")
-    private int currentSlot;
-
     @Column(name = "Address")
     @Nationalized
     private String address;
+
+    @Column(name = "Status_Schedule")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }
