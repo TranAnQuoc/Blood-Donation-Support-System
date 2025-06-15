@@ -37,6 +37,10 @@ public class DonationSchedule {
     @Transient
     private int currentSlot;
 
+    public void setCurrentSlot(int currentSlot) {
+        this.currentSlot = currentSlot;
+    }
+
     @Column(name = "Max_Slot")
     private int maxSlot;
 

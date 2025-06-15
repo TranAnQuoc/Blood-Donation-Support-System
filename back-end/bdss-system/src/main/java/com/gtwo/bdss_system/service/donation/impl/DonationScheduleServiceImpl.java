@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.dto.donation.DonationScheduleDTO;
 import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.entity.donation.DonationSchedule;
 import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
 import com.gtwo.bdss_system.repository.donation.DonationScheduleRepository;
 import com.gtwo.bdss_system.service.commons.MedicalFacilityService;
 import com.gtwo.bdss_system.service.donation.DonationScheduleService;
@@ -11,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -24,15 +26,43 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
     @Autowired
     private MedicalFacilityService medicalFacilityService;
 
+    @Autowired
+    private DonationRequestRepository donationRequestRepository;
+
     @Override
     public List<DonationSchedule> getAll() {
-        return repository.findAllByStatus(Status.ACTIVE);
+        List<DonationSchedule> schedules = repository.findAllByStatus(Status.ACTIVE);
+        for (DonationSchedule schedule : schedules) {
+            schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(schedule.getId()));
+        }
+        return schedules;
+    }
+
+    @Override
+    public List<DonationSchedule> getAllForStaff() {
+        List<DonationSchedule> schedules = repository.findAll();
+        for (DonationSchedule schedule : schedules) {
+            schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(schedule.getId()));
+        }
+        return schedules;
     }
 
     @Override
     public DonationSchedule getById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + id));
+        DonationSchedule schedule = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hiến máu với ID: " + id));
+        schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(id));
+        return schedule;
+    }
+
+    @Override
+    public List<DonationSchedule> getByDateRange(Date fromDate, Date toDate) {
+        List<DonationSchedule> schedules = repository.findByDateRangeAndActive(fromDate, toDate);
+        for (DonationSchedule schedule : schedules) {
+            int approved = donationRequestRepository.countScheduleIdInRequest(schedule.getId());
+            schedule.setCurrentSlot(approved);
+        }
+        return schedules;
     }
 
     @Override

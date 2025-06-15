@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationSchedule;
+import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
 import com.gtwo.bdss_system.repository.donation.DonationScheduleRepository;
@@ -49,7 +50,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         DonationRequest request = repository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
         if (request.getStatusRequest() == StatusRequest.APPROVED) {
-            throw new IllegalStateException("Request already processed");
+            throw new IllegalStateException("Request already approved");
         }
         request.setStatusRequest(decision);
         request.setApprovedTime(LocalDateTime.now());
@@ -58,6 +59,12 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         DonationRequest savedRequest = repository.save(request);
         if (decision == StatusRequest.APPROVED) {
             donationProcessService.autoCreateByRequest(savedRequest);
+        }
+        DonationSchedule schedule = request.getSchedule();
+        int approved = repository.countScheduleIdInRequest(schedule.getId());
+        if (approved >= schedule.getMaxSlot()) {
+            schedule.setStatus(Status.INACTIVE);
+            scheduleRepository.save(schedule);
         }
         return savedRequest;
     }
