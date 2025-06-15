@@ -16,7 +16,6 @@ public class MedicalFacibilityServiceImpl implements MedicalFacilityService {
 
     @Override
     public MedicalFacility create(MedicalFacility medicalFacility) {
-        medicalFacility.setStatus(Status.ACTIVE);
         return repository.save(medicalFacility);
     }
 

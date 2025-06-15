@@ -9,17 +9,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 public class MyExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleInvalidArgument(MethodArgumentNotValidException ex) {
-        System.out.println("User input is invalid");
-        String responseMessage = "";
-        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            responseMessage += fieldError.getField() + ": " + fieldError.getDefaultMessage() + "\n";
+    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+        StringBuilder sb = new StringBuilder();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            sb.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("\n");
         }
-        return new ResponseEntity(responseMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity handleAuthenticationException(AuthenticationException ex) {
-        return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return new ResponseEntity<>("Lỗi hệ thống: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
