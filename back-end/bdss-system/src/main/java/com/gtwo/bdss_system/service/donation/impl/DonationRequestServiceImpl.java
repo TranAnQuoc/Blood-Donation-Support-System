@@ -48,7 +48,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
     public DonationRequest approvedRequest(Long requestId, StatusRequest decision, String note, Account approver) {
         DonationRequest request = repository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
-        if (request.getStatusRequest() != StatusRequest.PENDING) {
+        if (request.getStatusRequest() == StatusRequest.APPROVED) {
             throw new IllegalStateException("Request already processed");
         }
         request.setStatusRequest(decision);
