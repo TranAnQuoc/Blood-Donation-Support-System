@@ -1,12 +1,14 @@
 package com.gtwo.bdss_system.dto.donation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.sql.Date;
 
 @Data
-public class CreateDonationHistoryRequest {
-    private Long staffId;
+public class DonationHistoryResponseDTO {
+    private Long id;
+    private String staffName;
     private String donorName;
     private String donorPhone;
     private String donorGender;
@@ -18,4 +20,13 @@ public class CreateDonationHistoryRequest {
     private String facilityName;
     private String address;
     private String note;
+    private String status;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public Date getDonationDate() {
+        return donationDate;
+    }
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public Date getDonorDateOfBirth() {
+        return donorDateOfBirth;
+    }
 }
