@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MedicalFacilityRepository extends JpaRepository<MedicalFacility, Long> {
     List<MedicalFacility> findByStatus(Status status);
+    boolean existsByNameAndAddressAndPhone(String name, String address, String phone);
 }

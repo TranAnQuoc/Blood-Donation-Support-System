@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface DonationScheduleRepository extends JpaRepository<DonationSchedule, Long> {
     List<DonationSchedule> findAllByStatus(Status status);
+    boolean existsByNameAndAddress(String name, String address);
 }

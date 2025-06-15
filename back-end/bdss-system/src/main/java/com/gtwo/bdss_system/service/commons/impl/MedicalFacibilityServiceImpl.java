@@ -16,6 +16,14 @@ public class MedicalFacibilityServiceImpl implements MedicalFacilityService {
 
     @Override
     public MedicalFacility create(MedicalFacility medicalFacility) {
+        boolean exists = repository.existsByNameAndAddressAndPhone(
+                medicalFacility.getName(),
+                medicalFacility.getAddress(),
+                medicalFacility.getPhone()
+        );
+        if (exists) {
+            throw new IllegalArgumentException("Cơ sở y tế đã tồn tại với cùng tên, địa chỉ và số điện thoại");
+        }
         return repository.save(medicalFacility);
     }
 
@@ -33,6 +41,16 @@ public class MedicalFacibilityServiceImpl implements MedicalFacilityService {
     @Override
     public MedicalFacility update(Long id, MedicalFacility updatedFacility) {
         MedicalFacility existing = getById(id);
+        boolean isDuplicate = repository.existsByNameAndAddressAndPhone(
+                updatedFacility.getName(),
+                updatedFacility.getAddress(),
+                updatedFacility.getPhone()
+        ) && !(updatedFacility.getName().equals(existing.getName())
+                && updatedFacility.getAddress().equals(existing.getAddress())
+                && updatedFacility.getPhone().equals(existing.getPhone()));
+        if (isDuplicate) {
+            throw new IllegalArgumentException("Cơ sở y tế đã tồn tại với thông tin này");
+        }
         existing.setName(updatedFacility.getName());
         existing.setAddress(updatedFacility.getAddress());
         existing.setPhone(updatedFacility.getPhone());
