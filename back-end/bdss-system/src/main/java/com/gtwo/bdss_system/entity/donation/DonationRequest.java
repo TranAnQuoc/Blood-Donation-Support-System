@@ -17,8 +17,8 @@ public class DonationRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Donor_ID")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Donor_ID", unique = true)
     private Account donor;
 
     @ManyToOne(fetch = FetchType.EAGER)

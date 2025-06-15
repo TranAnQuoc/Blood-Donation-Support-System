@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationSchedule;
+import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
@@ -30,9 +31,15 @@ public class DonationRequestServiceImpl implements DonationRequestService {
 
     @Override
     public DonationRequest createRequest(Long scheduleId, Account currentUser) {
+        if (!currentUser.getRole().equals(Role.MEMBER)) {
+            throw new IllegalArgumentException("Chỉ người dùng với vai trò MEMBER mới được đăng ký hiến máu.");
+        }
+        boolean exists = repository.existsByDonorId(currentUser.getId());
+        if (exists) {
+            throw new IllegalArgumentException("Tài khoản này đã đăng ký hiến máu trước đó.");
+        }
         DonationSchedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
-
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hiến máu."));
         DonationRequest request = new DonationRequest();
         request.setDonor(currentUser);
         request.setSchedule(schedule);
@@ -41,7 +48,6 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         request.setApprover(null);
         request.setApprovedTime(null);
         request.setNote(null);
-
         return repository.save(request);
     }
 
@@ -68,6 +74,19 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         }
         return savedRequest;
     }
+
+    @Override
+    public DonationRequest cancelOwnRequest(Long requestId, Account currentUser, String note) {
+        DonationRequest request = repository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn đăng ký."));
+        if (request.getStatusRequest() != StatusRequest.PENDING) {
+            throw new IllegalArgumentException("Chỉ có thể hủy đơn khi đang ở trạng thái PENDING.");
+        }
+        request.setStatusRequest(StatusRequest.CANCELLED);
+        request.setNote(note);
+        return repository.save(request);
+    }
+
 
     @Override
     public List<DonationRequest> getAll() {

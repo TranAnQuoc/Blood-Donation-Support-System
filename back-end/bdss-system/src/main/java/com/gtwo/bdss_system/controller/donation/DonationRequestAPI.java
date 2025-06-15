@@ -28,41 +28,51 @@ public class DonationRequestAPI {
     private DonationRequestService donationRequestService;
 
     @PreAuthorize("hasAnyRole('MEMBER', 'STAFF')")
-        @PostMapping("/register/{scheduleId}")
-        public ResponseEntity<DonationRequest> registerRequest(
+    @PostMapping("/register/{scheduleId}")
+    public ResponseEntity<DonationRequest> registerRequest(
             @PathVariable Long scheduleId,
             @AuthenticationPrincipal Account currentUser) {
-            DonationRequest newRequest = service.createRequest(scheduleId, currentUser);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
-        }
+        DonationRequest newRequest = service.createRequest(scheduleId, currentUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
+    }
 
-        @PreAuthorize("hasRole('STAFF')")
-        @PutMapping("/{id}/approved")
-        public ResponseEntity<DonationRequest> approvedRequest(
-                @PathVariable Long id,
-                @RequestParam boolean accept,
-                @RequestParam(required = false) String note,
-                @AuthenticationPrincipal Account staff) {
-            StatusRequest decision = accept ? StatusRequest.APPROVED : StatusRequest.REJECTED;
-            DonationRequest updated = service.approvedRequest(id, decision, note, staff);
-            return ResponseEntity.ok(updated);
-        }
+    @PreAuthorize("hasRole('STAFF')")
+    @PutMapping("/{id}/approved")
+    public ResponseEntity<DonationRequest> approvedRequest(
+            @PathVariable Long id,
+            @RequestParam boolean accept,
+            @RequestParam(required = false) String note,
+            @AuthenticationPrincipal Account staff) {
+        StatusRequest decision = accept ? StatusRequest.APPROVED : StatusRequest.REJECTED;
+        DonationRequest updated = service.approvedRequest(id, decision, note, staff);
+        return ResponseEntity.ok(updated);
+    }
 
-        @GetMapping
-        @PreAuthorize("permitAll()")
-        public ResponseEntity<List<DonationRequestDTO>> getAll() {
-            List<DonationRequest> requests = service.getAll();
-            List<DonationRequestDTO> dtoList = requests.stream()
-                    .map(request -> donationRequestService.requestTable(request))
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(dtoList);
-        }
+    @PreAuthorize("hasRole('MEMBER')")
+    @PutMapping("/{id}/cancel-own")
+    public ResponseEntity<DonationRequest> cancelOwnRequest(
+            @PathVariable Long id,
+            @RequestParam(required = false) String note,
+            @AuthenticationPrincipal Account currentUser) {
+        DonationRequest cancelled = service.cancelOwnRequest(id, currentUser, note);
+        return ResponseEntity.ok(cancelled);
+    }
 
-        @GetMapping("/{id}")
-        @PreAuthorize("permitAll()")
-        public ResponseEntity<DonationRequestDTO> getById(@PathVariable Long id) {
-            DonationRequest entity = service.getById(id);
-            DonationRequestDTO dto = service.requestTable(entity);
-            return ResponseEntity.ok(dto);
-        }
+    @GetMapping
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<DonationRequestDTO>> getAll() {
+        List<DonationRequest> requests = service.getAll();
+        List<DonationRequestDTO> dtoList = requests.stream()
+                .map(request -> donationRequestService.requestTable(request))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<DonationRequestDTO> getById(@PathVariable Long id) {
+        DonationRequest entity = service.getById(id);
+        DonationRequestDTO dto = service.requestTable(entity);
+        return ResponseEntity.ok(dto);
+    }
 }
