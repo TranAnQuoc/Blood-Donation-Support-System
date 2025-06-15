@@ -10,6 +10,9 @@ import com.gtwo.bdss_system.service.donation.DonationScheduleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -36,6 +39,12 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
     public DonationSchedule create(DonationScheduleDTO dto) {
         MedicalFacility facility = medicalFacilityService.getById(dto.getFacilityId());
         DonationSchedule schedule = new DonationSchedule();
+        LocalTime start = dto.getStartTime().toLocalTime();
+        LocalTime end = dto.getEndTime().toLocalTime();
+        long duration = ChronoUnit.MINUTES.between(start, end);
+        if (duration < 60) {
+            throw new IllegalArgumentException("Thời gian kết thúc phải sau thời gian bắt đầu ít nhất 1 tiếng");
+        }
         schedule.setName(dto.getName());
         schedule.setFacility(facility);
         schedule.setDate(dto.getDate());
@@ -51,6 +60,12 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
     @Override
     public DonationSchedule update(Long id, DonationScheduleDTO updated) {
         DonationSchedule existing = getById(id);
+        LocalTime start = updated.getStartTime().toLocalTime();
+        LocalTime end = updated.getEndTime().toLocalTime();
+        long duration = ChronoUnit.MINUTES.between(start, end);
+        if (duration < 60) {
+            throw new IllegalArgumentException("Thời gian kết thúc phải sau thời gian bắt đầu ít nhất 1 tiếng");
+        }
         existing.setName(updated.getName());
         existing.setDate(updated.getDate());
         existing.setStartTime(updated.getStartTime());

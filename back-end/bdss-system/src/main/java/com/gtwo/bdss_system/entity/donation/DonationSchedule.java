@@ -34,6 +34,9 @@ public class DonationSchedule {
     @Column(name = "End_Time")
     private Time endTime;
 
+    @Transient
+    private int currentSlot;
+
     @Column(name = "Max_Slot")
     private int maxSlot;
 
