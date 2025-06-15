@@ -6,10 +6,12 @@ import com.gtwo.bdss_system.service.donation.DonationScheduleService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,10 +28,24 @@ public class DonationScheduleAPI {
         return service.getAll();
     }
 
+    @GetMapping("staff-view")
+    @PreAuthorize("permitAll()")
+    public List<DonationSchedule> getAllForStaff() {
+        return service.getAllForStaff();
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<DonationSchedule> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
+    }
+
+    @GetMapping("/by-date")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<DonationSchedule>> getByDateRange(
+            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
+        return ResponseEntity.ok(service.getByDateRange(from, to));
     }
 
     @PreAuthorize("hasRole('STAFF')")

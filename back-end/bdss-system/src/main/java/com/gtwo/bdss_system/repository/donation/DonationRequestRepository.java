@@ -8,5 +8,4 @@ import org.springframework.data.repository.query.Param;
 public interface DonationRequestRepository extends JpaRepository<DonationRequest, Long> {
     @Query("SELECT COUNT(r) FROM DonationRequest r WHERE r.schedule.id = :scheduleId AND r.statusRequest = 'APPROVED'")
     int countScheduleIdInRequest(@Param("scheduleId") Long scheduleId);
-
 }
