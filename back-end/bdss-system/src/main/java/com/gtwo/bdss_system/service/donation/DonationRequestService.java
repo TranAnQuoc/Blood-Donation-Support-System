@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface DonationRequestService {
     DonationRequest approvedRequest(Long requestId, StatusRequest decision, String note, Account approver);
+    DonationRequest cancelOwnRequest(Long requestId, Account currentUser, String note);
     DonationRequest createRequest(Long scheduleId, Account currentUser);
     List<DonationRequest> getAll();
     DonationRequest getById(Long id);
