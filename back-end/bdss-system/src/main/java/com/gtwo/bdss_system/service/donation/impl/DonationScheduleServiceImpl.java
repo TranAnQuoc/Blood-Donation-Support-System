@@ -53,6 +53,9 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
         schedule.setMaxSlot(dto.getMaxSlot());
         schedule.setAddress(dto.getAddress());
         schedule.setStatus(Status.ACTIVE);
+        if (repository.existsByNameAndAddress(dto.getName(), dto.getAddress())) {
+            throw new IllegalArgumentException("Lịch hiến máu với tên và địa chỉ này đã tồn tại");
+        }
         return repository.save(schedule);
     }
 
@@ -74,6 +77,11 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
         existing.setMaxSlot(updated.getMaxSlot());
         MedicalFacility facility = medicalFacilityService.getById(updated.getFacilityId());
         existing.setFacility(facility);
+        boolean isDuplicate = repository.existsByNameAndAddress(updated.getName(), updated.getAddress());
+        if (isDuplicate &&
+                (!existing.getName().equals(updated.getName()) || !existing.getAddress().equals(updated.getAddress()))) {
+            throw new IllegalArgumentException("Tên và địa chỉ đã được sử dụng cho lịch khác");
+        }
         return repository.save(existing);
     }
 
