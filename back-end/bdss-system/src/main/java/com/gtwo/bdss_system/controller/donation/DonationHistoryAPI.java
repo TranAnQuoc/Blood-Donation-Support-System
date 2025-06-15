@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.controller.donation;
 
+import com.gtwo.bdss_system.dto.donation.DonationHistoryResponseDTO;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.service.donation.DonationHistoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,13 +20,13 @@ public class DonationHistoryAPI {
 
     @GetMapping("/all")
     @PreAuthorize("permitAll()")
-    public List<DonationHistory> getAll() {
+    public List<DonationHistoryResponseDTO> getAll() {
         return donationHistoryService.getAllHistories();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public DonationHistory getById(@PathVariable Long id) {
+    public DonationHistoryResponseDTO getById(@PathVariable Long id) {
         return donationHistoryService.getHistoryById(id);
     }
 }

@@ -9,6 +9,7 @@ import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationSchedule;
+import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
@@ -21,6 +22,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -53,8 +57,52 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     @Override
     public DonationProcess update(Long processId, DonationProcessDTO dto) {
         DonationProcess existing = getById(processId);
-        existing.setStartTime(dto.getStartTime());
-        existing.setEndTime(dto.getEndTime());
+        if (dto.getPerformerId() == null) {
+            throw new IllegalArgumentException("Người thực hiện không được để trống.");
+        }
+        Account performer = accountRepository.findById(dto.getPerformerId())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người thực hiện với ID: " + dto.getPerformerId()));
+        if (!performer.getRole().equals(Role.STAFF)) {
+            throw new IllegalArgumentException("Chỉ nhân viên (STAFF) mới được phép thực hiện quy trình.");
+        }
+        if (dto.getDate() == null || dto.getStartTime() == null || dto.getEndTime() == null) {
+            throw new IllegalArgumentException("Ngày và thời gian bắt đầu, kết thúc không được để trống.");
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime start;
+        LocalDateTime end;
+        try {
+            start = LocalDateTime.parse(dto.getDate() + " " + dto.getStartTime(), formatter);
+            end = LocalDateTime.parse(dto.getDate() + " " + dto.getEndTime(), formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Định dạng ngày/giờ không hợp lệ. VD: date='2025-06-15', time='08:00'");
+        }
+        if (!end.isAfter(start)) {
+            throw new IllegalArgumentException("Thời gian kết thúc phải sau thời gian bắt đầu.");
+        }
+        if (dto.getBloodPressure() == null || !dto.getBloodPressure().matches("\\d{2,3}/\\d{2,3}")) {
+            throw new IllegalArgumentException("Huyết áp không hợp lệ. Ví dụ hợp lệ: 120/80");
+        }
+        if (dto.getQuantity() <= 249 || dto.getQuantity() > 500) {
+            throw new IllegalArgumentException("Lượng máu hiến phải nằm trong khoảng 250 - 500 ml.");
+        }
+        if (dto.getType() == null) {
+            throw new IllegalArgumentException("Loại hiến máu không được để trống.");
+        }
+        if (dto.getBloodTypeId() != null) {
+            if (dto.getBloodTypeId() == 1L || !bloodTypeRepository.existsById(dto.getBloodTypeId())) {
+                throw new IllegalArgumentException("Nhóm máu không hợp lệ.");
+            }
+            BloodType newBloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhóm máu với ID: " + dto.getBloodTypeId()));
+            Account donor = existing.getRequest().getDonor();
+            if (donor.getBloodType() == null || "Unknown".equalsIgnoreCase(donor.getBloodType().getType())) {
+                donor.setBloodType(newBloodType);
+                accountRepository.save(donor);
+            }
+        }
+        existing.setStartTime(start);
+        existing.setEndTime(end);
         existing.setHealthCheck(dto.isHealthCheck());
         existing.setHemoglobin(dto.getHemoglobin());
         existing.setBloodPressure(dto.getBloodPressure());
@@ -62,17 +110,6 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         existing.setNotes(dto.getNotes());
         existing.setType(dto.getType());
         existing.setProcess(dto.getProcess());
-        if (dto.getBloodTypeId() != null) {
-            BloodType newBloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
-                    .orElseThrow(() -> new RuntimeException("Blood type not found with ID: " + dto.getBloodTypeId()));
-            Account donor = existing.getRequest().getDonor();
-            if (donor.getBloodType() == null || "Unknown".equalsIgnoreCase(donor.getBloodType().getType())) {
-                donor.setBloodType(newBloodType);
-                accountRepository.save(donor);
-            }
-        }
-        Account performer = accountRepository.findById(dto.getPerformerId())
-                .orElseThrow(() -> new RuntimeException("Performer not found with ID: " + dto.getPerformerId()));
         existing.setPerformer(performer);
         DonationProcess saved = processRepository.save(existing);
         if (dto.getProcess() == StatusProcess.COMPLETED || dto.getProcess() == StatusProcess.FAILED) {

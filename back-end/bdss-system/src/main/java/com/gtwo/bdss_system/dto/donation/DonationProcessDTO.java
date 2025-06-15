@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Data
 public class DonationProcessDTO {
     private Long performerId;
-    private LocalDateTime startTime;
+    private String date;
+    private String startTime;
     private Long bloodTypeId;
     private boolean healthCheck;
     private Double hemoglobin;
@@ -18,5 +19,5 @@ public class DonationProcessDTO {
     private DonationType type;
     private String notes;
     private StatusProcess process;
-    private LocalDateTime endTime;
+    private String endTime;
 }

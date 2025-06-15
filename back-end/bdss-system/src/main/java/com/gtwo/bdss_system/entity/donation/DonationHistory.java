@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.entity.donation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.StatusProcess;
@@ -19,6 +20,7 @@ public class DonationHistory {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "Staff_ID")
     private Account staff;
 
