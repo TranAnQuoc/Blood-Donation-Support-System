@@ -93,3 +93,21 @@
 .data-table tr:hover {
     background-color: #e0e0e0;
 }
+
+.dateErrorMessage {
+    color: #ff0000; /* Màu đỏ */
+    background-color: #ffe0e0; /* Nền nhạt */
+    border: 1px solid #ffaaaa; /* Viền đỏ nhạt */
+    padding: 8px 12px;
+    margin-top: 10px;
+    margin-bottom: 20px; /* Khoảng cách dưới form */
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.95em;
+    animation: fadeIn 0.3s ease-out; /* Hiệu ứng mờ dần */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

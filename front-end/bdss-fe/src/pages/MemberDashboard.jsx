@@ -9,6 +9,10 @@ const MemberDashboard = () => {
             <h1>Chào mừng, Thành viên!</h1>
             <p>Tại đây bạn có thể đăng ký hiến máu, yêu cầu nhận máu và theo dõi lịch sử của mình.</p>
 
+            <div className={styles.scheduleSection}>
+                <ScheduleSearchAndList />
+            </div>
+
             <div className={styles.featureGrid}>
                 <div className={styles.featureCard}>
                     <h3>Đăng ký Hiến máu</h3>
@@ -20,13 +24,11 @@ const MemberDashboard = () => {
                     <h3>Yêu cầu Nhận máu</h3>
                     <p>Gửi yêu cầu nhận máu cho bản thân hoặc người thân.</p>
                     <Link to="/member/receive-blood" className={styles.actionButton}>Yêu cầu nhận máu</Link>
-                </div> 
+                </div>
             </div>
 
             
-            <div className={styles.scheduleSection}>
-                <ScheduleSearchAndList />
-            </div>
+            
 
         </div>
     );
