@@ -31,11 +31,4 @@ public class DonationHistoryAPI {
     public DonationHistoryResponseDTO getById(@PathVariable Long id) {
         return donationHistoryService.getHistoryById(id);
     }
-
-    @GetMapping("/my-history")
-    @PreAuthorize("hasRole('MEMBER')")
-    public List<DonationHistoryResponseDTO> getMyDonationHistory(
-            @AuthenticationPrincipal Account currentUser) {
-        return donationHistoryService.getHistoriesByUser(currentUser.getId());
-    }
 }

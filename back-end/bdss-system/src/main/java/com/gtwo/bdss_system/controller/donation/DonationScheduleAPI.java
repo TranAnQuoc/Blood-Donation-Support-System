@@ -29,7 +29,7 @@ public class DonationScheduleAPI {
     }
 
     @GetMapping("staff-view")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('STAFF')")
     public List<DonationSchedule> getAllForStaff() {
         return service.getAllForStaff();
     }
@@ -69,7 +69,7 @@ public class DonationScheduleAPI {
     }
 
     @PreAuthorize("hasRole('STAFF')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/restore/{id}")
     public ResponseEntity<Void> restore(@PathVariable Long id) {
         service.restore(id);
         return ResponseEntity.noContent().build();
