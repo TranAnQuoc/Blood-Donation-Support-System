@@ -213,7 +213,7 @@ function RegisterForm() {
         { label: 'O-', id: '8' }
     ];
 
-    const genders = ['Male', 'Female', 'Other'];
+    const genders = ['MALE', 'FEMALE', 'OTHER'];
 
     return (
         <div className={styles.registerContainer}>

@@ -1,0 +1,45 @@
+/* src/components/staff-components/leftPanel/UserManagementDropdown.module.css */
+/* Các style tương tự RequestManagementDropdown.module.css */
+.dropdownMenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #f0f2f5; /* Nền nhẹ hơn để phân biệt với NavButton */
+    border-radius: 5px;
+    margin-top: 5px; /* Khoảng cách với nút cha */
+    overflow: hidden; /* Đảm bảo góc bo tròn */
+}
+
+.dropdownMenuItem {
+    padding: 10px 15px 10px 45px; /* Giảm padding left để lùi vào so với NavButton */
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.dropdownMenuItem:hover {
+    background-color: #e0e4e8;
+    color: #007bff; /* Màu xanh khi hover */
+}
+
+.dropdownMenuItem.active {
+    background-color: #d1e0fc; /* Màu nền khi active */
+    color: #0056b3; /* Màu chữ khi active */
+    font-weight: 600; /* In đậm khi active */
+}
+
+.dropdownMenuItem.active::before {
+    content: '';
+    position: absolute;
+    left: 15px; /* Align with NavButton text start */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #007bff;
+    border-radius: 50%;
+}

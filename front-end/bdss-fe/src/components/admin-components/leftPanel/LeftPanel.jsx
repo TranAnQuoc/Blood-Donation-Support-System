@@ -1,6 +1,6 @@
 // src/components/LeftPanel/LeftPanel.jsx
 import React from 'react';
-import AdminDropdown from './AdminDropdown'; // Đảm bảo component này đã được tạo
+import AdminDropdown from './AdminDropdown';
 import NavButton from './NavButton';
 import styles from './LeftPanel.module.css';
 
@@ -37,7 +37,7 @@ const LeftPanel = ({ onNavClick }) => {
 
   return (
     <div className={styles.leftPanel}>
-      <AdminDropdown adminName="Nguyen" /> {/* Đảm bảo prop adminName được sử dụng đúng cách trong AdminDropdown */}
+      <AdminDropdown adminName="Admin" /> {/* Đảm bảo prop adminName được sử dụng đúng cách trong AdminDropdown */}
       <div className={styles.navButtonsContainer}>
         {navItems.map(item => (
           <NavButton

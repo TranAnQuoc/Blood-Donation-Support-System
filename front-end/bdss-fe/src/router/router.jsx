@@ -5,6 +5,9 @@ import LayoutStaff from '../layouts/LayoutStaff.jsx';
 import LoginForm from '../components/authen-form/LoginForm.jsx';
 import RegisterForm from '../components/authen-form/RegisterForm.jsx';
 import ProtectedRoute from '../components/ProtectedRoute';
+import RegisterDonation from '../components/member-features/RegisterDonation';
+import MemberDashboard from '../pages/MemberDashboard.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -55,7 +58,8 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      // các route con của member
+      { index: true, element: <MemberDashboard /> },
+      { path: "register-donation", element: <RegisterDonation /> },
     ]
   }
 ]);
