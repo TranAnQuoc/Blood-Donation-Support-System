@@ -1,13 +1,15 @@
+// src/components/common/ScheduleSearchAndList.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../configs/axios';
-import DataTable from './DataTable'; // Component DataTable bạn đã tạo ở bước trước (Option 1)
+import DataTable from '../common/Table/DataTable'; // Đảm bảo đường dẫn này đúng với vị trí DataTable.jsx
 import styles from './ScheduleSearchAndList.module.css';
 
 const ScheduleSearchAndList = () => {
     const [schedules, setSchedules] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [hasSearched, setHasSearched] = useState(false); // Theo dõi xem đã tìm kiếm lần nào chưa
+    const [hasSearched, setHasSearched] = useState(false);
+    const [dateError, setDateError] = useState(''); // <-- THÊM STATE MỚI CHO LỖI NGÀY
 
     // Hàm fetchSchedules được cập nhật để nhận tham số ngày
     const fetchSchedulesByDate = useCallback(async (start, end) => {
@@ -16,51 +18,53 @@ const ScheduleSearchAndList = () => {
             const params = {};
 
             if (start) {
-                params.startDate = start;
+                params.from = start; // Sửa lại nếu backend dùng 'startDate'
             }
             if (end) {
-                params.endDate = end;
+                params.to = end; // Sửa lại nếu backend dùng 'endDate'
             }
 
-            // Chỉ thêm params vào URL nếu có ít nhất một ngày được chọn
             const response = await axiosInstance.get(url, { params });
             setSchedules(response.data);
-            setHasSearched(true); // Đánh dấu là đã tìm kiếm
+            setHasSearched(true);
             console.log('Lịch hiến máu theo ngày:', response.data);
         } catch (error) {
             console.error('Lỗi khi tải lịch hiến máu theo ngày:', error);
-            setSchedules([]); // Xóa dữ liệu cũ nếu có lỗi
-            setHasSearched(true); // Vẫn đánh dấu đã tìm kiếm để hiển thị thông báo "Không có lịch"
-            alert('Không thể tải lịch hiến máu. Vui lòng thử lại.');
+            setSchedules([]);
+            setHasSearched(true);
+            // Xử lý lỗi từ backend (ví dụ: lỗi tham số 'from' không có)
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(`Lỗi từ máy chủ: ${error.response.data.message}`);
+            } else {
+                alert('Không thể tải lịch hiến máu. Vui lòng thử lại.');
+            }
         }
     }, []);
 
-    // Load tất cả lịch khi component mount lần đầu (nếu muốn hiển thị tất cả trước khi lọc)
-    // Hoặc chỉ load khi có ngày được chọn. Ở đây, tôi sẽ không gọi mặc định để tránh load quá nhiều
-    // Nếu bạn muốn hiển thị tất cả khi load, hãy dùng endpoint GET /api/schedules/staff-view
-    // và đổi tên thành fetchAllSchedules và gọi nó trong useEffect đầu tiên
     useEffect(() => {
-        // Tùy chọn: Gọi API với ngày hiện tại đến tương lai làm mặc định
-        const today = new Date().toISOString().split('T')[0]; // Định dạng YYYY-MM-DD
-        setStartDate(today); // Đặt ngày bắt đầu mặc định là hôm nay
+        const today = new Date().toISOString().split('T')[0];
+        setStartDate(today);
         // fetchSchedulesByDate(today, ''); // Có thể tự động gọi tìm kiếm khi tải trang
     }, [fetchSchedulesByDate]);
 
 
     const handleSearch = (e) => {
         e.preventDefault();
-        // Kiểm tra nếu cả hai ngày đều trống
+        setDateError(''); // <-- RESET LỖI NGÀY MỖI KHI TÌM KIẾM MỚI
+
         if (!startDate && !endDate) {
-            alert('Vui lòng chọn ít nhất một ngày để tìm kiếm.');
-            setSchedules([]); // Xóa dữ liệu cũ nếu người dùng xóa cả hai ngày
-            setHasSearched(false); // Reset trạng thái tìm kiếm
+            setDateError('Vui lòng chọn ít nhất một ngày để tìm kiếm.'); // <-- SỬ DỤNG dateError
+            setSchedules([]);
+            setHasSearched(false);
             return;
         }
 
         // Đảm bảo startDate <= endDate
         if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-            alert('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
-            return;
+            setDateError('Ngày bắt đầu không được lớn hơn ngày kết thúc.'); // <-- SỬ DỤNG dateError
+            setSchedules([]); // Xóa dữ liệu cũ
+            setHasSearched(false); // Reset trạng thái tìm kiếm
+            return; // Dừng hàm nếu có lỗi ngày
         }
         
         fetchSchedulesByDate(startDate, endDate);
@@ -79,7 +83,7 @@ const ScheduleSearchAndList = () => {
                     if (!timeString) return '';
                     const [hours, minutes] = timeString.split(':');
                     const hour = parseInt(hours, 10);
-                    const ampm = hour >= 12 ? 'PM' : 'AM'; // Hoặc 'CH' và 'SA'
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
                     const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
                     return `${formattedHour}:${minutes} ${ampm}`;
                 };
@@ -90,9 +94,9 @@ const ScheduleSearchAndList = () => {
         },
         { header: 'Địa điểm', accessor: 'address' },
         {
-            header: 'Cơ sở', // Đổi header cho thân thiện hơn
+            header: 'Cơ sở',
             accessor: 'facilityName',
-            render: (row) => row.facility ? row.facility.name : 'N/A' // Hiển thị tên cơ sở
+            render: (row) => row.facility ? row.facility.name : 'N/A'
         },
         {
             header: 'SL Hiện tại/Tối đa',
@@ -113,7 +117,10 @@ const ScheduleSearchAndList = () => {
                         type="date"
                         id="startDate"
                         value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
+                        onChange={(e) => {
+                            setStartDate(e.target.value);
+                            setDateError(''); // Xóa lỗi khi người dùng thay đổi ngày
+                        }}
                     />
                 </div>
                 <div className={styles.formGroup}>
@@ -122,22 +129,30 @@ const ScheduleSearchAndList = () => {
                         type="date"
                         id="endDate"
                         value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
+                        onChange={(e) => {
+                            setEndDate(e.target.value);
+                            setDateError(''); // Xóa lỗi khi người dùng thay đổi ngày
+                        }}
                     />
                 </div>
                 <button type="submit" className={styles.searchButton}>Tìm kiếm</button>
             </form>
 
+            {/* HIỂN THỊ THÔNG BÁO LỖI NGÀY Ở ĐÂY */}
+            {dateError && (
+                <p className={styles.dateErrorMessage}>{dateError}</p>
+            )}
+
             <div className={styles.resultsSection}>
                 <h3>Kết quả tìm kiếm</h3>
-                {hasSearched ? ( // Chỉ hiển thị kết quả nếu đã có tìm kiếm
+                {hasSearched ? (
                     schedules.length > 0 ? (
                         <DataTable data={schedules} columns={scheduleColumns} />
                     ) : (
                         <p>Không tìm thấy lịch hiến máu nào trong khoảng thời gian đã chọn.</p>
                     )
                 ) : (
-                    <p>Sử dụng bộ lọc trên để tìm kiếm lịch hiến máu.</p> // Thông báo ban đầu
+                    <p>Sử dụng bộ lọc trên để tìm kiếm lịch hiến máu.</p>
                 )}
             </div>
         </div>

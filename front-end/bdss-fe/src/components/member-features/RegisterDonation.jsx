@@ -14,6 +14,7 @@ const RegisterDonation = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [hasRegisteredBefore, setHasRegisteredBefore] = useState(false);
 
     const staticBloodTypes = [
         { id: 1, bloodName: 'A+' },
@@ -85,7 +86,6 @@ const RegisterDonation = () => {
 
         try {
             setIsSubmitting(true);
-            
             const res = await axiosInstance.post(`/donation-requests/register/${selectedSchedule.value}`, payload);
 
             if (res.data && res.data.message) {
@@ -98,14 +98,31 @@ const RegisterDonation = () => {
             setSelectedBloodType(null);
             setQuantityMl('');
             setReason('');
+            setHasRegisteredBefore(false);
 
             setDonationSchedules(prevSchedules =>
                 prevSchedules.map(s =>
-                    s.id === selectedSchedule.value ? { ...s, currentSlot: s.currentSlot + 1 } : s // Tăng currentSlot lên 1
+                    s.id === selectedSchedule.value ? { ...s, currentSlot: s.currentSlot + 1 } : s
                 )
             );
         } catch (err) {
             console.error('Lỗi khi đăng ký hiến máu:', err);
+            if (err.response) {
+                const errorMessage = err.response.data?.message || 'Có lỗi xảy ra từ máy chủ.';
+                toast.error(`Lỗi hệ thống: ${errorMessage}`);
+
+                if (errorMessage.includes('Tài khoản này đã đăng ký hiến máu trước đó')) {
+                    setHasRegisteredBefore(true);
+                } else {
+                    setHasRegisteredBefore(false);
+                }
+            } else if (err.request) {
+                toast.error('Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng của bạn.');
+                setHasRegisteredBefore(false);
+            } else {
+                toast.error('Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.');
+                setHasRegisteredBefore(false);
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -132,6 +149,12 @@ const RegisterDonation = () => {
     return (
         <div className="container mx-auto p-4 max-w-2xl bg-white shadow-lg rounded-lg">
             <h2 className="text-3xl font-bold mb-8 text-center text-red-700">Đăng Ký Hiến Máu</h2>
+                {hasRegisteredBefore && (
+                    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                        <p className="font-bold">Lưu ý:</p>
+                        <p>Tài khoản của bạn đã đăng ký hiến máu cho một lịch trình trước đó. Vui lòng kiểm tra trạng thái yêu cầu của bạn hoặc đợi lịch trình hiện tại kết thúc trước khi đăng ký lại.</p>
+                    </div>
+                )}
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                     <label htmlFor="schedule" className="block text-gray-800 text-base font-semibold mb-2">
