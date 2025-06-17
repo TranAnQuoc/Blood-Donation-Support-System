@@ -180,6 +180,7 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         MedicalFacility facility = schedule.getFacility();
         DonationHistory history = new DonationHistory();
         history.setStaff(process.getPerformer());
+        history.setDonor(donor);
         history.setFullName(donor.getFullName());
         history.setPhone(donor.getPhone());
         history.setGender(donor.getGender());
