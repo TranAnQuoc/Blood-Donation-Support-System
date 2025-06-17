@@ -10,4 +10,5 @@ public interface MedicalFacilityService {
     List<MedicalFacility> getAll();
     MedicalFacility update(Long id, MedicalFacility medicalFacility);
     void delete(Long id);
+    void restore(Long id);
 }

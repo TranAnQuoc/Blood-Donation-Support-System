@@ -14,4 +14,5 @@ public interface DonationScheduleService {
     DonationSchedule create(DonationScheduleDTO schedule);
     DonationSchedule update(Long id, DonationScheduleDTO schedule);
     void delete(Long id);
+    void restore(Long id);
 }

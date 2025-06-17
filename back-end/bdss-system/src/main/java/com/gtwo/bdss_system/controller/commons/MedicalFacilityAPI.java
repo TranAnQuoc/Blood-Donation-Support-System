@@ -25,35 +25,41 @@ public class MedicalFacilityAPI {
     private ModelMapper modelMapper;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity create(@Valid @RequestBody MedicalDTO dto) {
         MedicalFacility entity = modelMapper.map(dto, MedicalFacility.class);
         entity.setStatus(Status.ACTIVE);
         return ResponseEntity.ok(service.create(entity));
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @GetMapping("/search/{id}")
     public MedicalFacility getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @GetMapping("/list-facility")
     public List<MedicalFacility> getAll() {
         return service.getAll();
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public MedicalFacility update(@PathVariable Long id,@Valid @RequestBody MedicalDTO medicalFacility) {
         MedicalFacility mapped = modelMapper.map(medicalFacility, MedicalFacility.class);
         return service.update(id, mapped);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @DeleteMapping("/restore/{id}")
+    public void restore(@PathVariable Long id) {
+        service.restore(id);
     }
 }

@@ -122,4 +122,12 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
         schedule.setStatus(Status.INACTIVE);
         repository.save(schedule);
     }
+
+    @Override
+    public void restore(Long id) {
+        DonationSchedule schedule = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + id));
+        schedule.setStatus(Status.ACTIVE);
+        repository.save(schedule);
+    }
 }

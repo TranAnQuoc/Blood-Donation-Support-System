@@ -67,4 +67,11 @@ public class DonationScheduleAPI {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasRole('STAFF')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> restore(@PathVariable Long id) {
+        service.restore(id);
+        return ResponseEntity.noContent().build();
+    }
 }

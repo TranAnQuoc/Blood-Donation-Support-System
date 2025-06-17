@@ -25,8 +25,11 @@ public class Account implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "Email")
+    @Column(name = "Email", unique = true)
     private String email;
+
+    @Column(name = "CCCD", unique = true)
+    private String CCCD;
 
     @Column(name = "Password")
     private String password;
@@ -50,7 +53,7 @@ public class Account implements UserDetails {
     @Column(name = "Date_of_birth")
     private Date dateOfBirth;
 
-    @Column(name = "Phone")
+    @Column(name = "Phone", unique = true)
     private String phone;
 
     @Column(name = "Address")

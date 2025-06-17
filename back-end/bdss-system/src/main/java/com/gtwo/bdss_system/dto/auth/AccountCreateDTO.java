@@ -1,30 +1,32 @@
 package com.gtwo.bdss_system.dto.auth;
 
 import com.gtwo.bdss_system.enums.Gender;
+import com.gtwo.bdss_system.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.sql.Date;
 
 @Data
-public class RegisterRequest {
-
+public class AccountCreateDTO {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
-
-    @NotBlank(message = "Full name is required")
-    private String fullName;
 
     @NotBlank(message = "CCCD is required")
     private String CCCD;
 
+    @NotBlank(message = "Full name is required")
+    private String fullName;
+
     @NotNull(message = "Gender is required")
     private Gender gender;
+
+    @NotNull(message = "Role is required")
+    private Role role;
 
     @NotNull(message = "Blood type is required")
     private Long bloodTypeId;

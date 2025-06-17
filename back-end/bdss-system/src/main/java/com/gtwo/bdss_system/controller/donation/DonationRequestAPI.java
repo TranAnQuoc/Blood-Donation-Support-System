@@ -37,7 +37,7 @@ public class DonationRequestAPI {
     }
 
     @PreAuthorize("hasRole('STAFF')")
-    @PutMapping("/{id}/approved")
+    @PutMapping("/approved/{id}")
     public ResponseEntity<DonationRequest> approvedRequest(
             @PathVariable Long id,
             @RequestParam boolean accept,
@@ -49,7 +49,7 @@ public class DonationRequestAPI {
     }
 
     @PreAuthorize("hasRole('MEMBER')")
-    @PutMapping("/{id}/cancel-own")
+    @PutMapping("/cancel/{id}")
     public ResponseEntity<DonationRequest> cancelOwnRequest(
             @PathVariable Long id,
             @RequestParam(required = false) String note,
@@ -58,8 +58,8 @@ public class DonationRequestAPI {
         return ResponseEntity.ok(cancelled);
     }
 
-    @GetMapping
-    @PreAuthorize("permitAll()")
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<List<DonationRequestDTO>> getAll() {
         List<DonationRequest> requests = service.getAll();
         List<DonationRequestDTO> dtoList = requests.stream()
@@ -68,8 +68,18 @@ public class DonationRequestAPI {
         return ResponseEntity.ok(dtoList);
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<List<DonationRequestDTO>> getPendingRequests() {
+        List<DonationRequest> requests = donationRequestService.getPendingRequests();
+        List<DonationRequestDTO> dtoList = requests.stream()
+                .map(request -> donationRequestService.requestTable(request))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
+    }
+
+    @GetMapping("/search/{id}")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<DonationRequestDTO> getById(@PathVariable Long id) {
         DonationRequest entity = service.getById(id);
         DonationRequestDTO dto = service.requestTable(entity);

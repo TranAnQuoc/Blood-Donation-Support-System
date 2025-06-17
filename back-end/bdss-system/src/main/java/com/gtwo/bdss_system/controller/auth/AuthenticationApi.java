@@ -5,6 +5,7 @@ import com.gtwo.bdss_system.dto.auth.LoginRequest;
 import com.gtwo.bdss_system.dto.auth.RegisterRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.service.auth.AuthenticationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +17,14 @@ public class AuthenticationApi {
     private AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequest account) {
+    public ResponseEntity register(@Valid @RequestBody RegisterRequest account) {
         System.out.println("Blood type ID: " + account.getBloodTypeId());
         Account newAccount = authenticationService.register(account);
         return ResponseEntity.ok(newAccount);
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
         AccountResponse account = authenticationService.login(loginRequest);
         return ResponseEntity.ok(account);
     }

@@ -1,11 +1,13 @@
 package com.gtwo.bdss_system.controller.donation;
 
 import com.gtwo.bdss_system.dto.donation.DonationHistoryResponseDTO;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.service.donation.DonationHistoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +21,21 @@ public class DonationHistoryAPI {
     private DonationHistoryService donationHistoryService;
 
     @GetMapping("/all")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public List<DonationHistoryResponseDTO> getAll() {
         return donationHistoryService.getAllHistories();
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
+    @GetMapping("/search/{id}")
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public DonationHistoryResponseDTO getById(@PathVariable Long id) {
         return donationHistoryService.getHistoryById(id);
+    }
+
+    @GetMapping("/my-history")
+    @PreAuthorize("hasRole('MEMBER')")
+    public List<DonationHistoryResponseDTO> getMyDonationHistory(
+            @AuthenticationPrincipal Account currentUser) {
+        return donationHistoryService.getHistoriesByUser(currentUser.getId());
     }
 }

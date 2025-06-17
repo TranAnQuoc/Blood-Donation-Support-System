@@ -25,8 +25,8 @@ public class DonationProcessAPI {
     @Autowired
     private ModelMapper mapper;
 
-    @GetMapping
-    @PreAuthorize("permitAll()")
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<List<DonationProcessViewDTO>> getAll() {
         List<DonationProcess> processes = service.getAllActive();
         List<DonationProcessViewDTO> dto = processes.stream()
@@ -35,8 +35,8 @@ public class DonationProcessAPI {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
+    @GetMapping("/search/{id}")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<DonationProcessViewDTO> getById(@PathVariable Long id) {
         DonationProcess entity = service.getById(id);
         DonationProcessViewDTO dto = service.processViewDTO(entity);
@@ -44,7 +44,7 @@ public class DonationProcessAPI {
     }
 
     @PreAuthorize("hasRole('STAFF')")
-    @PutMapping("/update/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<DonationProcess> update(@PathVariable Long id,
                                                   @RequestBody DonationProcessDTO dto) {
         DonationProcess updated = service.update(id, dto);
@@ -53,7 +53,7 @@ public class DonationProcessAPI {
     }
 
     @PreAuthorize("hasRole('STAFF')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.ok().build();

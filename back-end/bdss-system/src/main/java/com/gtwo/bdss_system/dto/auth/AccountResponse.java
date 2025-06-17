@@ -6,7 +6,7 @@ import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusDonation;
 import lombok.Data;
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 public class AccountResponse {

@@ -65,4 +65,11 @@ public class MedicalFacibilityServiceImpl implements MedicalFacilityService {
         facility.setStatus(Status.INACTIVE);
         repository.save(facility);
     }
+
+    @Override
+    public void restore(Long id) {
+        MedicalFacility facility = getById(id);
+        facility.setStatus(Status.ACTIVE);
+        repository.save(facility);
+    }
 }

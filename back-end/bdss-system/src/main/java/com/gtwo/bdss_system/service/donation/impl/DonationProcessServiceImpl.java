@@ -197,6 +197,7 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setAddress(facility.getAddress());
         history.setNote(process.getNotes());
         history.setStatus(process.getProcess());
+        process.setStatus(Status.INACTIVE);
         historyRepository.save(history);
     }
 }

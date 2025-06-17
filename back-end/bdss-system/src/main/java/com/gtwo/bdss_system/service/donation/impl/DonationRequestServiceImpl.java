@@ -87,11 +87,16 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         return repository.save(request);
     }
 
-
     @Override
     public List<DonationRequest> getAll() {
         return repository.findAll();
     }
+
+    @Override
+    public List<DonationRequest> getPendingRequests() {
+        return repository.findByStatusRequest(StatusRequest.PENDING);
+    }
+
 
     @Override
     public DonationRequest getById(Long id) {

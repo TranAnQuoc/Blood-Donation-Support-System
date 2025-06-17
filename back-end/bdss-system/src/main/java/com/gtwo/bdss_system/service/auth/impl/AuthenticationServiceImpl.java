@@ -42,7 +42,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     BloodTypeService bloodTypeService;
 
+    @Override
     public Account register(RegisterRequest dto) {
+        if (authenticationRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+        if (authenticationRepository.existsByPhone(dto.getPhone())) {
+            throw new IllegalArgumentException("Phone number already in use");
+        }
+        if (authenticationRepository.existsByCCCD(dto.getCCCD())) {
+            throw new IllegalArgumentException("CCCD already in use");
+        }
+        if (!dto.getCCCD().matches("\\d{12}")) {
+            throw new IllegalArgumentException("CCCD must be exactly 12 digits");
+        }
         Account account = new Account();
         account.setEmail(dto.getEmail());
         account.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -51,6 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setDateOfBirth(dto.getDateOfBirth());
         account.setPhone(dto.getPhone());
         account.setAddress(dto.getAddress());
+        account.setCCCD(dto.getCCCD());
         account.setRole(Role.MEMBER);
         account.setStatus(Status.ACTIVE);
         account.setStatusDonation(StatusDonation.AVAILABLE);

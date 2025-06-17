@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.config;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.exception.exceptions.AuthenticationException;
+import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.service.auth.impl.TokenServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -32,14 +33,21 @@ public class Filter extends OncePerRequestFilter {
     @Autowired
     TokenServiceImpl tokenService;
 
+    @Autowired
+    AuthenticationRepository authenticationRepository;
+
     private final List<String> PUBLIC_API = List.of(
             "POST:/api/register",
-            "POST:/api/login"
+            "POST:/api/login",
+            "GET:/swagger-ui/**",
+            "GET:/v3/api-docs/**",
+            "GET:/swagger-resources/**",
+            "GET:/webjars/**",
+            "GET:/swagger-ui.html"
     );
 
     public boolean isPublicAPI(String uri, String method) {
         AntPathMatcher matcher = new AntPathMatcher();
-        if(method.equals("GET")) return true;
         return PUBLIC_API.stream().anyMatch(pattern -> {
             String[] parts = pattern.split(":", 2);
             if (parts.length != 2) return false;
