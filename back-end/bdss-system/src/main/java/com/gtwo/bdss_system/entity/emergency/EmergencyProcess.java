@@ -2,7 +2,7 @@ package com.gtwo.bdss_system.entity.emergency;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.MedicalFacility;
-import com.gtwo.bdss_system.enums.StatusProcess;
+import com.gtwo.bdss_system.enums.EmergencyStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -44,5 +44,5 @@ public class EmergencyProcess {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private StatusProcess status;
+    private EmergencyStatus status;
 }

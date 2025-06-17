@@ -1,8 +1,11 @@
 package com.gtwo.bdss_system.repository.emergency;
-import com.gtwo.bdss_system.entity.emergency.EmergencyHistory;
+
+import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmergencyHistoryRepository extends JpaRepository<EmergencyHistory, Long> {
+public interface EmergencyProcessRepository extends JpaRepository<EmergencyProcess, Long> {
 }
+
+
