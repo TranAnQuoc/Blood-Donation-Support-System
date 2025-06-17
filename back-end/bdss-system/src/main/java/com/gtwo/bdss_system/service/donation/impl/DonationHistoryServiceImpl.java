@@ -31,7 +31,7 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
     @Override
     public DonationHistoryResponseDTO getHistoryById(Long id) {
         DonationHistory history = donationHistoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("DonationHistory not found with ID: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("DonationHistory not found with ID: " + id));
         return mapToDTO(history);
     }
 
@@ -52,5 +52,11 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
         dto.setNote(history.getNote());
         dto.setStatus(history.getStatus() != null ? history.getStatus().name() : null);
         return dto;
+    }
+
+    @Override
+    public DonationHistory getLatestHistoryByCurrentUser(Long donorId) {
+        return donationHistoryRepository.findFirstByDonor_IdOrderByDonationDateDesc(donorId)
+                .orElseThrow(() -> new IllegalArgumentException("No donation history found for this user."));
     }
 }

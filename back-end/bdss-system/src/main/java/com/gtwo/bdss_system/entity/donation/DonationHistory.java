@@ -24,6 +24,11 @@ public class DonationHistory {
     @JoinColumn(name = "Staff_ID")
     private Account staff;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "Donor_ID")
+    private Account donor;
+
     @Column(name = "Donor_Name")
     private String fullName;
 
