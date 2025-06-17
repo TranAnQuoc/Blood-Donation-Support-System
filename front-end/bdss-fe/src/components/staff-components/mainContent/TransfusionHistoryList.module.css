@@ -1,0 +1,79 @@
+/* src/components/staff-components/mainContent/TransfusionHistoryList.module.css */
+.tableContainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+}
+
+.title {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+
+.description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tableHeader {
+    background-color: #007bff;
+    color: white;
+}
+
+.tableCell {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.95em;
+}
+
+.tableRow:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tableRow:hover {
+    background-color: #e9e9e9;
+    cursor: pointer;
+}
+
+/* Common styles for messages */
+.loadingMessage,
+.errorMessage,
+.noDataMessage {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.loadingMessage {
+    background-color: #e6f7ff;
+    color: #0056b3;
+    border: 1px solid #91d5ff;
+}
+
+.errorMessage {
+    background-color: #fff0f0;
+    color: #cf1322;
+    border: 1px solid #ffa39e;
+}
+
+.noDataMessage {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #ddd;
+}

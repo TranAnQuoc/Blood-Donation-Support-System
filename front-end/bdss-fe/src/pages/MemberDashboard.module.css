@@ -1,0 +1,98 @@
+/* src/pages/MemberDashboard.module.css */
+
+.dashboardContainer {
+    padding: 2rem;
+    max-width: 1200px; /* Giới hạn chiều rộng để không quá rộng trên màn hình lớn */
+    margin: 2rem auto; /* Căn giữa */
+    background-color: #f9f9f9; /* Nền nhẹ nhàng */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Tạo bóng đổ nhẹ */
+    text-align: center; /* Căn giữa tiêu đề và đoạn văn */
+}
+
+.dashboardContainer h1 {
+    font-size: 2.5rem; /* Kích thước tiêu đề lớn */
+    color: #b91c1c; /* Màu đỏ nổi bật */
+    margin-bottom: 1rem;
+    font-weight: 700; /* Đậm */
+}
+
+.dashboardContainer p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.featureGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 2rem; /* Khoảng cách giữa các card */
+    margin-top: 3rem;
+}
+
+.featureCard {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Bóng đổ cho card */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng hover */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Đảm bảo nút ở dưới cùng */
+    align-items: center; /* Căn giữa nội dung card */
+    text-align: center;
+}
+
+.featureCard:hover {
+    transform: translateY(-5px); /* Nâng nhẹ card lên khi hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Bóng đổ đậm hơn */
+}
+
+.featureCard h3 {
+    font-size: 1.8rem;
+    color: #b91c1c;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.featureCard p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    flex-grow: 1; /* Để đoạn văn chiếm đủ không gian */
+}
+
+.actionButton {
+    display: inline-block;
+    background-color: #ef4444; /* bg-red-500 */
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.actionButton:hover {
+    background-color: #dc2626; /* bg-red-600 */
+    transform: translateY(-2px); /* Hiệu ứng nhấn nhẹ */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboardContainer {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+
+    .dashboardContainer h1 {
+        font-size: 2rem;
+    }
+
+    .featureGrid {
+        grid-template-columns: 1fr; /* Một cột trên màn hình nhỏ */
+    }
+}

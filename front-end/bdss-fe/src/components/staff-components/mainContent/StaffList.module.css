@@ -1,0 +1,77 @@
+/* src/components/staff-components/mainContent/StaffList.module.css */
+/* Các style cơ bản giống các list khác */
+.tableContainer {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tableContainer h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.tableContainer p {
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tableHeader {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
+}
+
+.tableCell {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+.tableHeader .tableCell {
+    font-weight: bold;
+    color: #555;
+    background-color: #eef1f6;
+}
+
+.tableRow:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tableRow:hover {
+    background-color: #f0f0f0;
+}
+
+.actionButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s ease;
+    margin-right: 5px;
+}
+
+.actionButton:hover {
+    background-color: #0056b3;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}

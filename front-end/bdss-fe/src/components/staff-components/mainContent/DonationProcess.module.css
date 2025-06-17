@@ -1,0 +1,251 @@
+/* src/components/staff-components/mainContent/DonationProcess.module.css */
+.container {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 900px;
+    margin: 20px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.title {
+    color: #0056b3;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+.introText {
+    font-size: 1.1em;
+    color: #555;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.processInfo {
+    font-size: 1.1em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+    background-color: #e6f7ff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #91d5ff;
+}
+
+.processTracker {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+    padding: 10px 0;
+}
+
+.processTracker::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #e0e0e0;
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.stepIndicator {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.stepIndicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    border: 2px solid #e0e0e0;
+}
+
+.stepIndicator.activeStep .stepNumber,
+.stepIndicator.activeStep .stepName {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.stepIndicator.activeStep::before {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.stepIndicator.completedStep .stepNumber,
+.stepIndicator.completedStep .stepName {
+    color: #28a745; /* Green for completed steps */
+}
+
+.stepIndicator.completedStep::before {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+
+.stepNumber {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #888;
+}
+
+.stepName {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.currentStepContent {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 30px;
+}
+
+.currentStepTitle {
+    color: #007bff;
+    font-size: 1.6em;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.currentStepContent ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.currentStepContent li {
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.formGroup {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.notesTextarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 80px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.nextButton,
+.prevButton {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nextButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.nextButton:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.prevButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.prevButton:hover:not(:disabled) {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.nextButton:disabled,
+.prevButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.footerText {
+    font-size: 1.1em;
+    color: #0056b3;
+    text-align: center;
+    margin-top: 40px;
+    font-weight: 600;
+}
+
+/* Common messages */
+.loadingMessage,
+.errorMessage,
+.noDataMessage {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.loadingMessage {
+    background-color: #e6f7ff;
+    color: #0056b3;
+    border: 1px solid #91d5ff;
+}
+
+.errorMessage {
+    background-color: #fff0f0;
+    color: #cf1322;
+    border: 1px solid #ffa39e;
+}
+
+.noDataMessage {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #ddd;
+}
