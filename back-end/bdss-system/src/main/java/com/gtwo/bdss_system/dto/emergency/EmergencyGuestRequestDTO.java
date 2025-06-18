@@ -6,7 +6,7 @@ import java.sql.Date;
 
 
 @Data
-public class EmergencyRequestDTO {
+public class EmergencyGuestRequestDTO {
     private String fullName;
     private String phone;
     private Date dateOfBirth;

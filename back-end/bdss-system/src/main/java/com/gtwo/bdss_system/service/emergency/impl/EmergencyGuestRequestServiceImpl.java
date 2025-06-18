@@ -1,6 +1,6 @@
 package com.gtwo.bdss_system.service.emergency.impl;
 
-import com.gtwo.bdss_system.dto.emergency.EmergencyRequestDTO;
+import com.gtwo.bdss_system.dto.emergency.EmergencyGuestRequestDTO;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
@@ -8,14 +8,14 @@ import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
-import com.gtwo.bdss_system.service.emergency.EmergencyRequestService;
+import com.gtwo.bdss_system.service.emergency.EmergencyGuestRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
-public class EmergencyRequestServiceImpl implements EmergencyRequestService {
+public class EmergencyGuestRequestServiceImpl implements EmergencyGuestRequestService {
 
     @Autowired
     private EmergencyRequestRepository emergencyRequestRepository;
@@ -27,7 +27,7 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
     private BloodComponentRepository bloodComponentRepository;
 
     @Override
-    public void createEmergencyRequest(EmergencyRequestDTO dto) {
+    public void createEmergencyRequest(EmergencyGuestRequestDTO dto) {
         if (emergencyRequestRepository.existsByPhone(dto.getPhone())) {
             throw new RuntimeException("Phone number already used in another request.");
         }
