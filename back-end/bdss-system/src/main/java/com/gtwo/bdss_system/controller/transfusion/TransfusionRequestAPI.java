@@ -28,7 +28,7 @@ public class TransfusionRequestAPI {
         this.mapper = mapper;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @PostMapping
     public ResponseEntity<TransfusionRequestResponseDTO> create(
             @Validated @RequestBody TransfusionRequestDTO dto) {
@@ -37,7 +37,7 @@ public class TransfusionRequestAPI {
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @GetMapping
     public List<TransfusionRequestResponseDTO> getAll() {
         return service.findAll().stream()
@@ -45,7 +45,7 @@ public class TransfusionRequestAPI {
                 .collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @GetMapping("/{id}")
     public ResponseEntity<TransfusionRequestResponseDTO> getById(@PathVariable Long id) {
         TransfusionRequest req = service.findById(id);
@@ -53,7 +53,7 @@ public class TransfusionRequestAPI {
         return ResponseEntity.ok(resp);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @PutMapping("/{id}")
     public ResponseEntity<TransfusionRequestResponseDTO> update(@PathVariable Long id,
                                                                 @Validated @RequestBody TransfusionRequestDTO dto) {
@@ -62,7 +62,7 @@ public class TransfusionRequestAPI {
         return ResponseEntity.ok(resp);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
