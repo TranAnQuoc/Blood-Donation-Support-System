@@ -7,6 +7,10 @@ import RegisterForm from '../components/authen-form/RegisterForm.jsx';
 import ProtectedRoute from '../components/ProtectedRoute';
 import RegisterDonation from '../components/member-features/RegisterDonation';
 import MemberDashboard from '../pages/MemberDashboard.jsx';
+import DonationRequestList from '../components/staff-components/mainContent/DonationRequestList';
+import DonationProcess from '../components/staff-components/mainContent/DonationProcess';
+import DonationHistoryList from '../components/staff-components/mainContent/DonationHistoryList';
+
 
 
 const router = createBrowserRouter([
@@ -45,7 +49,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      // các route con của staff
+      { index: true, element: <div>Trang chủ Bảng điều khiển Staff</div> },
+            { path: 'donation-requests', element: <DonationRequestList /> },
+            { path: 'donation-processes', element: <DonationProcess /> },
++           { path: 'donation-histories', element: <DonationHistoryList /> },
     ]
   },
   {

@@ -1,237 +1,364 @@
 // src/components/staff-components/mainContent/DonationProcess.jsx
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../../configs/axios';
 import styles from './DonationProcess.module.css';
 
-// Giả định các trạng thái quy trình
-const PROCESS_STEPS = [
-    { id: 'REGISTRATION_CHECK', name: 'Đăng ký & Kiểm tra sức khỏe' },
-    { id: 'BLOOD_COLLECTION', name: 'Lấy máu' },
-    { id: 'POST_DONATION_CARE', name: 'Chăm sóc sau hiến máu' },
-    { id: 'COMPLETED', name: 'Hoàn thành' }
-];
+const formatDateTime = (isoString) => {
+    if (!isoString) return 'N/A';
+    try {
+        if (isoString.includes('T')) {
+            const date = new Date(isoString);
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            return date.toLocaleString('vi-VN', options);
+        } else {
+            const [year, month, day] = isoString.split('-');
+            return `${day}/${month}/${year}`;
+        }
+    } catch (e) {
+        console.error("Chuỗi ngày/giờ không hợp lệ:", isoString, e);
+        return 'Ngày/giờ không hợp lệ';
+    }
+};
 
-const DonationProcess = ({ donationRequestId }) => { // Nhận ID yêu cầu hiến máu từ props hoặc URL
-    const [currentProcess, setCurrentProcess] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+const DonationProcess = () => {
+    const [processes, setProcesses] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentStepId, setCurrentStepId] = useState(''); // Trạng thái hiện tại của quá trình
-    const [notes, setNotes] = useState(''); // Ghi chú cho từng bước
+    const [editingProcessId, setEditingProcessId] = useState(null);
+    const [currentEditData, setCurrentEditData] = useState({});
+    const [bloodTypes, setBloodTypes] = useState([]);
 
-    // Tải thông tin quá trình khi component mount hoặc donationRequestId thay đổi
+    const fetchProcesses = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axiosInstance.get('/donation-processes/list');
+            setProcesses(response.data);
+            console.log("Đã tải danh sách quy trình hiến máu:", response.data);
+        } catch (err) {
+            console.error("Lỗi khi tải danh sách quy trình:", err);
+            setError('Không thể tải danh sách quy trình hiến máu. Vui lòng thử lại sau.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchBloodTypes = async () => {
+        try {
+            const response = await axiosInstance.get('/blood-types');
+            setBloodTypes(response.data);
+        } catch (err) {
+            console.error("Lỗi khi tải nhóm máu:", err);
+        }
+    };
+
     useEffect(() => {
-        if (donationRequestId) {
-            fetchProcessDetails(donationRequestId);
-        } else {
-            // Có thể hiển thị form để nhập ID hoặc tạo mới
-            console.warn("donationRequestId không được cung cấp. Cần ID để tải quá trình.");
-            setIsLoading(false);
-        }
-    }, [donationRequestId]);
+        fetchProcesses();
+        fetchBloodTypes();
+    }, []);
 
-    const fetchProcessDetails = async (id) => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            // API để lấy thông tin quá trình hiến máu đang diễn ra hoặc đã có
-            // Dựa trên backend của bạn, có thể là GET /api/donation-process/{id}
-            const response = await fetch(`http://localhost:8080/api/donation/process/${id}`, {
-                headers: {
-                    // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json',
-                }
-            });
+    const handleEditClick = (processToEdit) => {
+        setEditingProcessId(processToEdit.id);
+        setCurrentEditData({
+            ...processToEdit,
+            date: processToEdit.date && typeof processToEdit.date === 'string' ? processToEdit.date.split('T')[0] : '',
+            bloodTypeId: processToEdit.bloodType ? processToEdit.bloodType.id : '',
+        });
+    };
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Không thể tải chi tiết quá trình hiến máu.');
+    const handleCancelEdit = () => {
+        setEditingProcessId(null);
+        setCurrentEditData({});
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setCurrentEditData(prevData => ({
+            ...prevData,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleUpdateProcess = async (processId) => {
+        if (window.confirm(`Bạn có chắc chắn muốn cập nhật quy trình ID ${processId} này không?`)) {
+            try {
+                const response = await axiosInstance.put(`/donation-processes/edit/${processId}`, currentEditData);
+                console.log("Quy trình đã được cập nhật:", response.data);
+                alert(`Quy trình ID ${processId} đã được cập nhật thành công!`);
+                setEditingProcessId(null);
+                fetchProcesses();
+            } catch (err) {
+                console.error("Lỗi khi cập nhật quy trình:", err);
+                const errorMessage = err.response?.data?.message || 'Có lỗi xảy ra khi cập nhật quy trình. Vui lòng thử lại.';
+                alert(errorMessage);
             }
-
-            const data = await response.json();
-            setCurrentProcess(data);
-            setCurrentStepId(data.currentStatus || PROCESS_STEPS[0].id); // Lấy trạng thái hiện tại từ API
-            setNotes(data.notes || '');
-        } catch (err) {
-            console.error("Lỗi khi tải quá trình hiến máu:", err);
-            setError(err.message);
-            setCurrentProcess(null);
-        } finally {
-            setIsLoading(false);
         }
     };
 
-    const handleUpdateProcess = async (newStatusId) => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            // API để cập nhật trạng thái/bước của quá trình hiến máu
-            // Dựa trên backend của bạn, có thể là PUT /api/donation-process/{id}
-            const response = await fetch(`http://localhost:8080/api/donation/process/${currentProcess.id}`, {
-                method: 'PUT',
-                headers: {
-                    // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...currentProcess, // Giữ lại các thông tin khác
-                    currentStatus: newStatusId,
-                    notes: notes,
-                    // Có thể thêm userId, donorId nếu cần thiết cho API của bạn
-                }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Cập nhật quá trình hiến máu thất bại.');
-            }
-
-            const data = await response.json();
-            setCurrentProcess(data);
-            setCurrentStepId(data.currentStatus);
-            alert(`Cập nhật trạng thái thành công: ${PROCESS_STEPS.find(s => s.id === data.currentStatus)?.name}`);
-        } catch (err) {
-            console.error("Lỗi khi cập nhật quá trình hiến máu:", err);
-            setError(err.message);
-            alert(`Lỗi: ${err.message}`);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // Hàm để chuyển sang bước tiếp theo
-    const handleNextStep = () => {
-        const currentIndex = PROCESS_STEPS.findIndex(step => step.id === currentStepId);
-        if (currentIndex < PROCESS_STEPS.length - 1) {
-            const nextStep = PROCESS_STEPS[currentIndex + 1];
-            handleUpdateProcess(nextStep.id);
-        } else {
-            alert('Quy trình đã hoàn tất!');
-        }
-    };
-
-    const handlePrevStep = () => {
-        const currentIndex = PROCESS_STEPS.findIndex(step => step.id === currentStepId);
-        if (currentIndex > 0) {
-            const prevStep = PROCESS_STEPS[currentIndex - 1];
-            handleUpdateProcess(prevStep.id);
-        }
-    };
-
-    const renderStepContent = (stepId) => {
-        switch (stepId) {
-            case 'REGISTRATION_CHECK':
-                return (
-                    <ul>
-                        <li>Kiểm tra thông tin đăng ký và lịch sử y tế.</li>
-                        <li>Đo huyết áp, nhịp tim, nhiệt độ, xét nghiệm nhanh Hemoglobin.</li>
-                        <li>Khám tổng quát và tư vấn với bác sĩ.</li>
-                    </ul>
-                );
-            case 'BLOOD_COLLECTION':
-                return (
-                    <ul>
-                        <li>Sát trùng vị trí lấy máu, đặt kim vô trùng.</li>
-                        <li>Thu thập máu vào túi chuyên dụng (10-15 phút).</li>
-                        <li>Rút kim và băng ép.</li>
-                    </ul>
-                );
-            case 'POST_DONATION_CARE':
-                return (
-                    <ul>
-                        <li>Nghỉ ngơi tại chỗ 10-15 phút.</li>
-                        <li>Uống nước và ăn nhẹ để phục hồi.</li>
-                        <li>Theo dõi các dấu hiệu bất thường, tư vấn chăm sóc tại nhà.</li>
-                    </ul>
-                );
-            case 'COMPLETED':
-                return <p>Quy trình hiến máu đã hoàn tất. Cảm ơn sự đóng góp của bạn!</p>;
-            default:
-                return <p>Đang chờ bắt đầu quy trình.</p>;
-        }
-    };
-
-    if (isLoading && !currentProcess) {
-        return <div className={styles.loadingMessage}>Đang tải chi tiết quá trình...</div>;
+    if (loading) {
+        return <div className={styles.loadingMessage}>Đang tải danh sách quy trình hiến máu...</div>;
     }
 
     if (error) {
-        return <div className={styles.errorMessage}>Lỗi: {error}</div>;
-    }
-
-    if (!currentProcess && !donationRequestId) {
-        // Có thể hiển thị form để nhập ID yêu cầu hoặc ID người hiến để bắt đầu/tìm kiếm quá trình
-        return (
-            <div className={styles.container}>
-                <h2 className={styles.title}>Quản Lý Quy Trình Hiến Máu</h2>
-                <p className={styles.introText}>Vui lòng cung cấp ID yêu cầu hiến máu để quản lý quá trình.</p>
-                {/* Đây là nơi bạn có thể thêm input để nhập ID và nút submit */}
-                <p>Ví dụ: `<DonationProcess donationRequestId="123" />`</p>
-            </div>
-        );
+        return <div className={styles.errorMessage}>{error}</div>;
     }
 
     return (
-        <div className={styles.container}>
-            <h2 className={styles.title}>Quản Lý Quy Trình Hiến Máu</h2>
-            {currentProcess && (
-                <p className={styles.processInfo}>
-                    **Mã Yêu Cầu Hiến Máu:** {currentProcess.donationRequestId || donationRequestId} |
-                    **Người Hiến:** {currentProcess.donorName || 'Chưa có thông tin'} |
-                    **Nhóm Máu:** {currentProcess.bloodType || 'N/A'}
-                </p>
-            )}
+        <div className={styles.donationProcessContainer}>
+            <div className={styles.tableWrapper}>
+                {processes.length === 0 ? (
+                    <p className={styles.noProcessesMessage}>Không có quy trình hiến máu nào đang chờ xử lý.</p>
+                ) : (
+                    <table className={styles.donationProcessTable}>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Người hiến</th>
+                                <th>Ngày hiến (ĐK)</th>
+                                <th>Cơ sở (ĐK)</th>
+                                <th>Nhóm máu ĐK</th>
+                                <th>Nhóm máu TT</th>
+                                <th>Ngày hiến TT</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                                <th>Hemoglobin</th>
+                                <th>Huyết áp</th>
+                                <th>SL (ml)</th>
+                                <th>Loại hiến</th>
+                                <th>Kiểm tra SK</th>
+                                <th>Ghi chú</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {processes.map((process) => (
+                                <tr key={process.id}>
+                                    <td>{process.id}</td>
+                                    <td>{process.donorFullName || 'N/A'}</td>
+                                    <td>{formatDateTime(process.scheduleDate) || 'N/A'}</td>
+                                    <td>{process.medicalFacilityName || 'N/A'}</td>
+                                    <td>
+                                        {process.donorBloodType ?
+                                            `${process.donorBloodType.type}${process.donorBloodType.rhFactor}` : 'N/A'}
+                                    </td>
 
-            <div className={styles.processTracker}>
-                {PROCESS_STEPS.map((step, index) => (
-                    <div
-                        key={step.id}
-                        className={`${styles.stepIndicator} ${currentStepId === step.id ? styles.activeStep : ''} ${
-                            PROCESS_STEPS.findIndex(s => s.id === currentStepId) > index ? styles.completedStep : ''
-                        }`}
-                    >
-                        <span className={styles.stepNumber}>{index + 1}</span>
-                        <span className={styles.stepName}>{step.name}</span>
-                    </div>
-                ))}
+                                    {/* Nhóm máu Thực tế */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <select
+                                                name="bloodTypeId"
+                                                value={currentEditData.bloodTypeId || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.selectInput}
+                                            >
+                                                <option value="">Chọn nhóm máu</option>
+                                                {bloodTypes.map(bt => (
+                                                    <option key={bt.id} value={bt.id}>
+                                                        {bt.type}{bt.rhFactor}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            (process.bloodType ? `${process.bloodType.type}${process.bloodType.rhFactor}` : 'Unknown / Chưa cập nhật')
+                                        )}
+                                    </td>
+                                    {/* Ngày hiến Thực tế (date) */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="date"
+                                                name="date"
+                                                value={currentEditData.date || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.textInput}
+                                            />
+                                        ) : (
+                                            formatDateTime(process.date) || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Thời gian Bắt đầu */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="time"
+                                                name="startTime"
+                                                value={currentEditData.startTime || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.textInput}
+                                            />
+                                        ) : (
+                                            process.startTime || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Thời gian Kết thúc */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="time"
+                                                name="endTime"
+                                                value={currentEditData.endTime || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.textInput}
+                                            />
+                                        ) : (
+                                            process.endTime || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Hemoglobin */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="number"
+                                                name="hemoglobin"
+                                                value={currentEditData.hemoglobin || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.numberInput}
+                                                step="0.1"
+                                            />
+                                        ) : (
+                                            process.hemoglobin || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Huyết áp */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="text"
+                                                name="bloodPressure"
+                                                value={currentEditData.bloodPressure || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.textInput}
+                                            />
+                                        ) : (
+                                            process.bloodPressure || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Số lượng */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="number"
+                                                name="quantity"
+                                                value={currentEditData.quantity || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.numberInput}
+                                            />
+                                        ) : (
+                                            process.quantity || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Loại hiến */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <select
+                                                name="type"
+                                                value={currentEditData.type || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.selectInput}
+                                            >
+                                                <option value="">Chọn loại</option>
+                                                <option value="WHOLE_BLOOD">Máu toàn phần</option>
+                                                <option value="PLASMA">Huyết tương</option>
+                                                <option value="PLATELETS">Tiểu cầu</option>
+                                                <option value="RED_BLOOD_CELLS">Hồng cầu</option>
+                                            </select>
+                                        ) : (
+                                            process.type || 'N/A'
+                                        )}
+                                    </td>
+                                    {/* Kiểm tra Sức khỏe */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <input
+                                                type="checkbox"
+                                                name="healthCheck"
+                                                checked={currentEditData.healthCheck || false}
+                                                onChange={handleInputChange}
+                                            />
+                                        ) : (
+                                            process.healthCheck ? 'Đã kiểm tra' : 'Chưa kiểm tra'
+                                        )}
+                                    </td>
+                                    {/* Ghi chú */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <textarea
+                                                name="notes"
+                                                value={currentEditData.notes || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.textareaInput}
+                                            />
+                                        ) : (
+                                            process.notes || 'Không có'
+                                        )}
+                                    </td>
+                                    {/* Trạng thái */}
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <select
+                                                name="process"
+                                                value={currentEditData.process || ''}
+                                                onChange={handleInputChange}
+                                                className={styles.selectInput}
+                                            >
+                                                <option value="">Chọn trạng thái</option>
+                                                {/* Cập nhật các option theo enum StatusProcess mới */}
+                                                <option value="IN_PROCESS">Đang tiến hành</option>
+                                                <option value="COMPLETED">Hoàn thành</option>
+                                                <option value="FAILED">Thất bại</option>
+                                            </select>
+                                        ) : (
+                                            <span className={`${styles.statusBadge} ${styles[process.process ? process.process.toLowerCase() : '']}`}>
+                                                {/* Cập nhật logic hiển thị trạng thái */}
+                                                {process.process === 'IN_PROCESS' ? 'Đang tiến hành' :
+                                                 (process.process === 'COMPLETED' ? 'Hoàn thành' :
+                                                 (process.process === 'FAILED' ? 'Thất bại' : 'N/A'))}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingProcessId === process.id ? (
+                                            <>
+                                                <button
+                                                    className={styles.saveButton}
+                                                    onClick={() => handleUpdateProcess(process.id)}
+                                                >
+                                                    Lưu
+                                                </button>
+                                                <button
+                                                    className={styles.cancelEditButton}
+                                                    onClick={handleCancelEdit}
+                                                >
+                                                    Hủy
+                                                </button>
+                                            </>
+                                        ) : (
+                                            // Chỉ cho phép chỉnh sửa nếu trạng thái chưa phải là COMPLETED hoặc FAILED
+                                            process.process !== 'COMPLETED' && process.process !== 'FAILED' && (
+                                                <button
+                                                    className={styles.editButton}
+                                                    onClick={() => handleEditClick(process)}
+                                                >
+                                                    Chỉnh sửa
+                                                </button>
+                                            )
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
-
-            <div className={styles.currentStepContent}>
-                <h3 className={styles.currentStepTitle}>
-                    Bước Hiện Tại: {PROCESS_STEPS.find(step => step.id === currentStepId)?.name || 'Chưa bắt đầu'}
-                </h3>
-                {renderStepContent(currentStepId)}
-
-                <div className={styles.formGroup}>
-                    <label htmlFor="notes">Ghi chú quá trình:</label>
-                    <textarea
-                        id="notes"
-                        className={styles.notesTextarea}
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="Thêm ghi chú về quá trình hiến máu..."
-                    />
-                </div>
-
-                <div className={styles.actionButtons}>
-                    <button
-                        className={styles.prevButton}
-                        onClick={handlePrevStep}
-                        disabled={isLoading || PROCESS_STEPS.findIndex(step => step.id === currentStepId) === 0}
-                    >
-                        &lt; Bước trước
-                    </button>
-                    <button
-                        className={styles.nextButton}
-                        onClick={handleNextStep}
-                        disabled={isLoading || currentStepId === 'COMPLETED'}
-                    >
-                        {currentStepId === 'COMPLETED' ? 'Hoàn thành' : 'Bước tiếp theo >'}
-                    </button>
-                </div>
-            </div>
-
-            <p className={styles.footerText}>
-                Theo dõi và quản lý quá trình hiến máu để đảm bảo an toàn và hiệu quả.
-            </p>
         </div>
     );
 };

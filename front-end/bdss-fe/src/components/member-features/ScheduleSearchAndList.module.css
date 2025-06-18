@@ -67,6 +67,27 @@
     text-align: center;
 }
 
+.registerButton {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.registerButton:hover {
+    background-color: #0056b3;
+}
+
+.unavailableText {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
 /* Styling cho DataTable */
 .data-table {
     width: 100%;
@@ -95,16 +116,16 @@
 }
 
 .dateErrorMessage {
-    color: #ff0000; /* Màu đỏ */
-    background-color: #ffe0e0; /* Nền nhạt */
-    border: 1px solid #ffaaaa; /* Viền đỏ nhạt */
+    color: #ff0000;
+    background-color: #ffe0e0;
+    border: 1px solid #ffaaaa;
     padding: 8px 12px;
     margin-top: 10px;
-    margin-bottom: 20px; /* Khoảng cách dưới form */
+    margin-bottom: 20px;
     border-radius: 5px;
     text-align: center;
     font-size: 0.95em;
-    animation: fadeIn 0.3s ease-out; /* Hiệu ứng mờ dần */
+    animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
