@@ -1,6 +1,8 @@
 package com.gtwo.bdss_system.controller.emergency;
 import com.gtwo.bdss_system.dto.emergency.EmergencyGuestRequestDTO;
 import com.gtwo.bdss_system.service.emergency.EmergencyGuestRequestService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

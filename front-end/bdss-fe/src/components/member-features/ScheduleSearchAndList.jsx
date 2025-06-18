@@ -1,27 +1,27 @@
-// src/components/common/ScheduleSearchAndList.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../configs/axios';
-import DataTable from '../common/Table/DataTable'; // Đảm bảo đường dẫn này đúng với vị trí DataTable.jsx
+import DataTable from '../common/Table/DataTable';
 import styles from './ScheduleSearchAndList.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const ScheduleSearchAndList = () => {
     const [schedules, setSchedules] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [hasSearched, setHasSearched] = useState(false);
-    const [dateError, setDateError] = useState(''); // <-- THÊM STATE MỚI CHO LỖI NGÀY
+    const [dateError, setDateError] = useState('');
+    const navigate = useNavigate();
 
-    // Hàm fetchSchedules được cập nhật để nhận tham số ngày
     const fetchSchedulesByDate = useCallback(async (start, end) => {
         try {
             let url = 'schedules/by-date';
             const params = {};
 
             if (start) {
-                params.from = start; // Sửa lại nếu backend dùng 'startDate'
+                params.from = start;
             }
             if (end) {
-                params.to = end; // Sửa lại nếu backend dùng 'endDate'
+                params.to = end;
             }
 
             const response = await axiosInstance.get(url, { params });
@@ -32,7 +32,6 @@ const ScheduleSearchAndList = () => {
             console.error('Lỗi khi tải lịch hiến máu theo ngày:', error);
             setSchedules([]);
             setHasSearched(true);
-            // Xử lý lỗi từ backend (ví dụ: lỗi tham số 'from' không có)
             if (error.response && error.response.data && error.response.data.message) {
                 alert(`Lỗi từ máy chủ: ${error.response.data.message}`);
             } else {
@@ -44,33 +43,34 @@ const ScheduleSearchAndList = () => {
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
         setStartDate(today);
-        // fetchSchedulesByDate(today, ''); // Có thể tự động gọi tìm kiếm khi tải trang
     }, [fetchSchedulesByDate]);
 
 
     const handleSearch = (e) => {
         e.preventDefault();
-        setDateError(''); // <-- RESET LỖI NGÀY MỖI KHI TÌM KIẾM MỚI
+        setDateError('');
 
         if (!startDate && !endDate) {
-            setDateError('Vui lòng chọn ít nhất một ngày để tìm kiếm.'); // <-- SỬ DỤNG dateError
+            setDateError('Vui lòng chọn ít nhất một ngày để tìm kiếm.');
             setSchedules([]);
             setHasSearched(false);
             return;
         }
 
-        // Đảm bảo startDate <= endDate
         if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-            setDateError('Ngày bắt đầu không được lớn hơn ngày kết thúc.'); // <-- SỬ DỤNG dateError
-            setSchedules([]); // Xóa dữ liệu cũ
-            setHasSearched(false); // Reset trạng thái tìm kiếm
-            return; // Dừng hàm nếu có lỗi ngày
+            setDateError('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
+            setSchedules([]);
+            setHasSearched(false);
+            return;
         }
         
         fetchSchedulesByDate(startDate, endDate);
     };
 
-    // Định nghĩa các cột cho DataTable, tương tự như ScheduleManagement nhưng có thể điều chỉnh
+    const handleRegisterClick = (scheduleId) => {
+        navigate(`/member/register-donation?scheduleId=${scheduleId}`);
+    };
+
     const scheduleColumns = [
         { header: 'ID', accessor: 'id' },
         { header: 'Tên Sự kiện', accessor: 'name' },
@@ -103,7 +103,25 @@ const ScheduleSearchAndList = () => {
             accessor: 'slots',
             render: (row) => `${row.currentSlot || 0}/${row.maxSlot}`
         },
-        { header: 'Trạng thái', accessor: 'status' },
+        {
+            header: 'Thao tác',
+            accessor: 'actions',
+            render: (row) => {
+                const isAvailable = row.status === 'ACTIVE' && (row.currentSlot < row.maxSlot);
+                return (
+                    isAvailable ? (
+                        <button
+                            className={styles.registerButton} // Sử dụng CSS module
+                            onClick={() => handleRegisterClick(row.id)}
+                        >
+                            Đăng ký
+                        </button>
+                    ) : (
+                        <span className={styles.unavailableText}>Không khả dụng</span>
+                    )
+                );
+            }
+        },
     ];
 
     return (
@@ -119,7 +137,7 @@ const ScheduleSearchAndList = () => {
                         value={startDate}
                         onChange={(e) => {
                             setStartDate(e.target.value);
-                            setDateError(''); // Xóa lỗi khi người dùng thay đổi ngày
+                            setDateError('');
                         }}
                     />
                 </div>
@@ -131,14 +149,13 @@ const ScheduleSearchAndList = () => {
                         value={endDate}
                         onChange={(e) => {
                             setEndDate(e.target.value);
-                            setDateError(''); // Xóa lỗi khi người dùng thay đổi ngày
+                            setDateError('');
                         }}
                     />
                 </div>
                 <button type="submit" className={styles.searchButton}>Tìm kiếm</button>
             </form>
 
-            {/* HIỂN THỊ THÔNG BÁO LỖI NGÀY Ở ĐÂY */}
             {dateError && (
                 <p className={styles.dateErrorMessage}>{dateError}</p>
             )}

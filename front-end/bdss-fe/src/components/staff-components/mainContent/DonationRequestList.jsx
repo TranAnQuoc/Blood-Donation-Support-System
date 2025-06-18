@@ -1,270 +1,184 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../configs/axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import dayjs from 'dayjs';
+import styles from './DonationRequestList.module.css';
+
+const formatDateTime = (isoString) => {
+    if (!isoString) return 'N/A';
+    try {
+        const date = new Date(isoString);
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+        return date.toLocaleString('vi-VN', options);
+    } catch (e) {
+        console.error("Chuỗi ngày không hợp lệ:", isoString, e);
+        return 'Ngày không hợp lệ';
+    }
+};
 
 const DonationRequestList = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filterStatus, setFilterStatus] = useState('');
-    const [rejectionReason, setRejectionReason] = useState('');
-    const [selectedRequestId, setSelectedRequestId] = useState(null);
-    const [isApproving, setIsApproving] = useState(false);
-    const [isRejecting, setIsRejecting] = useState(false);
 
-    const fetchRequests = useCallback(async () => {
+    const fetchDonationRequests = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            const params = filterStatus ? { status: filterStatus } : {};
-            // SỬA: Thay đổi endpoint
-            const res = await axiosInstance.get('/donation-requests', { params });
-            setRequests(Array.isArray(res.data) ? res.data : []);
-            setError(null);
+            const response = await axiosInstance.get('/donation-requests/pending');
+            setRequests(response.data);
+            console.log("Đã lấy yêu cầu hiến máu ĐANG CHỜ:", response.data);
         } catch (err) {
-            console.error('Error fetching donation requests:', err);
-            setError('Không thể tải danh sách yêu cầu hiến máu.');
+            console.error("Lỗi khi lấy yêu cầu hiến máu:", err);
+            setError('Không thể tải danh sách yêu cầu hiến máu. Vui lòng thử lại sau.');
         } finally {
             setLoading(false);
         }
-    }, [filterStatus]);
+    };
+
+    const handleApproveRequest = async (requestId) => {
+        if (window.confirm(`Bạn có chắc chắn muốn DUYỆT yêu cầu ID ${requestId} này không?`)) {
+            try {
+                const response = await axiosInstance.put(`/donation-requests/approved/${requestId}`, null, {
+                    params: {
+                        accept: true,
+                        // Nếu cần ghi chú khi duyệt, có thể thêm vào đây:
+                        // note: "Đã duyệt bởi Staff ABC"
+                    }
+                });
+                console.log("Yêu cầu đã được duyệt:", response.data);
+
+                fetchDonationRequests();
+                alert(`Yêu cầu ID ${requestId} đã được duyệt thành công!`);
+            } catch (err) {
+                console.error("Lỗi khi duyệt yêu cầu:", err);
+                const errorMessage = err.response?.data?.message || 'Có lỗi xảy ra khi duyệt yêu cầu. Vui lòng thử lại.';
+                alert(errorMessage);
+            }
+        }
+    };
+
+    const handleRejectRequest = async (requestId) => {
+        const note = prompt(`Bạn có muốn thêm ghi chú cho việc từ chối yêu cầu ID ${requestId} này không?`);
+        if (note !== null) {
+            if (window.confirm(`Bạn có chắc chắn muốn TỪ CHỐI yêu cầu ID ${requestId} này không?`)) {
+                try {
+                    const response = await axiosInstance.put(`/donation-requests/approved/${requestId}`, null, {
+                        params: {
+                            accept: false,
+                            note: note || "Không có ghi chú"
+                        }
+                    });
+                    console.log("Yêu cầu đã được từ chối:", response.data);
+                    
+                    fetchDonationRequests();
+                    alert(`Yêu cầu ID ${requestId} đã được từ chối.`);
+                } catch (err) {
+                    console.error("Lỗi khi từ chối yêu cầu:", err);
+                    const errorMessage = err.response?.data?.message || 'Có lỗi xảy ra khi từ chối yêu cầu. Vui lòng thử lại.';
+                    alert(errorMessage);
+                }
+            }
+        }
+    };
+
 
     useEffect(() => {
-        fetchRequests();
-    }, [fetchRequests]);
-
-    const handleApprove = async (requestId) => {
-        const requestToProcess = requests.find(req => req.id === requestId);
-        if (requestToProcess && requestToProcess.status !== 'PENDING') {
-            toast.warn('Chỉ có thể duyệt các yêu cầu ở trạng thái PENDING.');
-            return;
-        }
-
-        if (window.confirm('Bạn có chắc chắn muốn duyệt yêu cầu này không?')) {
-            setIsApproving(true);
-            try {
-                const res = await axiosInstance.put(`/donation-requests/${requestId}/approved`);
-
-                if (res.data && res.data.message) {
-                    toast.success(res.data.message);
-                } else {
-                    toast.success('Yêu cầu đã được duyệt thành công!');
-                }
-
-                setRequests(prevRequests =>
-                    prevRequests.map(req =>
-                        req.id === requestId ? { ...req, status: 'APPROVED' } : req
-                    )
-                );
-
-            } catch (err) {
-                console.error('Lỗi khi duyệt yêu cầu:', err);
-                toast.error('Có lỗi xảy ra khi duyệt yêu cầu. Vui lòng thử lại.');
-            } finally {
-                setIsApproving(false);
-            }
-        }
-    };
-
-    const handleReject = async () => {
-        if (!selectedRequestId) return;
-
-        const requestToProcess = requests.find(req => req.id === selectedRequestId);
-        if (requestToProcess && requestToProcess.status !== 'PENDING') {
-            toast.warn('Chỉ có thể từ chối các yêu cầu ở trạng thái PENDING.');
-            setSelectedRequestId(null);
-            setRejectionReason('');
-            return;
-        }
-
-        if (!rejectionReason.trim()) {
-            toast.error('Vui lòng nhập lý do từ chối.');
-            return;
-        }
-
-        if (window.confirm('Bạn có chắc chắn muốn từ chối yêu cầu này không?')) {
-            setIsRejecting(true);
-            try {
-                const res = await axiosInstance.put(`/donation-requests/${selectedRequestId}/rejected`, { reason: rejectionReason.trim() });
-
-                if (res.data && res.data.message) {
-                    toast.success(res.data.message);
-                } else {
-                    toast.success('Yêu cầu đã được từ chối thành công!');
-                }
-
-                setRequests(prevRequests =>
-                    prevRequests.map(req =>
-                        req.id === selectedRequestId ? { ...req, status: 'REJECTED', note: rejectionReason.trim() } : req
-                    )
-                );
-
-                setSelectedRequestId(null);
-                setRejectionReason('');
-
-            } catch (err) {
-                console.error('Lỗi khi từ chối yêu cầu:', err);
-                toast.error('Có lỗi xảy ra khi từ chối yêu cầu. Vui lòng thử lại.');
-            } finally {
-                setIsRejecting(false);
-            }
-        }
-    };
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'PENDING': return 'bg-blue-100 text-blue-800';
-            case 'APPROVED': return 'bg-green-100 text-green-800';
-            case 'REJECTED': return 'bg-red-100 text-red-800';
-            case 'CANCELLED': return 'bg-gray-200 text-gray-800';
-            default: return 'bg-gray-100 text-gray-800';
-        }
-    };
+        fetchDonationRequests();
+    }, []);
 
     if (loading) {
-        return <div className="text-center py-6 text-xl font-medium text-gray-600">Đang tải danh sách yêu cầu...</div>;
+        return <div className={styles.loadingMessage}>Đang tải yêu cầu hiến máu...</div>;
     }
 
     if (error) {
-        return <div className="text-center py-6 text-xl font-bold text-red-600">{error}</div>;
+        return <div className={styles.errorMessage}>{error}</div>;
     }
 
     return (
-        <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-xl">
-            <h2 className="text-3xl font-bold mb-8 text-center text-red-700">Quản Lý Yêu Cầu Hiến Máu</h2>
-
-            <div className="mb-6 flex justify-end items-center space-x-2">
-                <label htmlFor="statusFilter" className="text-gray-700 text-base font-semibold">
-                    Lọc theo trạng thái:
-                </label>
-                <select
-                    id="statusFilter"
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="shadow-sm border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
-                >
-                    <option value="">Tất cả</option>
-                    <option value="PENDING">Chờ Duyệt</option>
-                    <option value="APPROVED">Đã Duyệt</option>
-                    <option value="REJECTED">Từ Chối</option>
-                    <option value="CANCELLED">Đã Hủy</option>
-                </select>
-            </div>
-
-            {requests.length === 0 ? (
-                <p className="text-center text-gray-700 text-lg p-6 border rounded-lg bg-white shadow-sm">
-                    Không có yêu cầu hiến máu nào phù hợp với bộ lọc hiện tại.
-                </p>
-            ) : (
-                <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
-                    <table className="min-w-full bg-white">
-                        <thead className="bg-red-600 text-white">
+        <div className={styles.donationRequestListContainer}>
+            <h2 className="text-3xl font-bold mb-8 text-center text-red-700">Yêu Cầu Hiến Máu</h2>
+            <div className={styles.tableWrapper}>
+                {requests.length === 0 ? (
+                    <p className={styles.noRequestsMessage}>Không tìm thấy yêu cầu hiến máu nào đang chờ duyệt.</p>
+                ) : (
+                    <table className={styles.donationRequestTable}>
+                        <thead>
                             <tr>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">ID</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Người Yêu Cầu</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Lịch Hiến Máu</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Địa Điểm</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Nhóm Máu</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Số Lượng (ml)</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Lý Do</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Trạng Thái</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Ngày Gửi</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Ghi Chú</th>
-                                <th className="py-3 px-4 text-left text-sm font-semibold">Hành Động</th>
+                                <th>ID</th>
+                                <th>Tên Người hiến</th>
+                                <th>Giới tính</th>
+                                <th>Nhóm máu</th>
+                                <th>Tên Lịch hẹn</th>
+                                <th>Cơ sở</th>
+                                <th>Thời gian yêu cầu</th>
+                                <th>Trạng thái</th>
+                                <th>Người duyệt</th>
+                                <th>Thời gian duyệt</th>
+                                <th>Ghi chú</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {requests.map((req) => (
-                                <tr key={req.id} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors duration-150">
-                                    <td className="py-3 px-4 text-sm">{req.id}</td>
-                                    <td className="py-3 px-4 text-sm">
-                                        <span className="font-medium">{req.requester?.fullName}</span><br/>
-                                        <span className="text-gray-500 text-xs">{req.requester?.email}</span>
+                            {requests.map((request) => (
+                                <tr key={request.id}>
+                                    <td>{request.id}</td>
+                                    <td>{request.donorFullName}</td>
+                                    <td>{request.donorGender === 'MALE' ? 'Nam' : (request.donorGender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
+                                    <td>
+                                        {request.donorBloodType ?
+                                            `${request.donorBloodType.type}${request.donorBloodType.rhFactor}` : 'Chưa rõ'}
                                     </td>
-                                    <td className="py-3 px-4 text-sm">{req.donationSchedule?.name || 'N/A'}</td>
-                                    <td className="py-3 px-4 text-sm">{req.donationSchedule?.facility?.name || 'N/A'}</td>
-                                    <td className="py-3 px-4 text-sm">{req.bloodType?.bloodName || 'N/A'}</td>
-                                    <td className="py-3 px-4 text-sm">{req.quantityMl}</td>
-                                    <td className="py-3 px-4 text-sm">{req.reason}</td>
-                                    <td className="py-3 px-4 text-sm">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(req.status)}`}>
-                                            {req.status}
+                                    <td>{request.scheduleName}</td>
+                                    <td>{request.medicalFacilityName}</td>
+                                    <td>{formatDateTime(request.requestTime)}</td>
+                                    <td>
+                                        <span className={`${styles.statusBadge} ${styles[request.statusRequest.toLowerCase()]}`}>
+                                            {/* Hiển thị rõ ràng hơn cho người dùng */}
+                                            {request.statusRequest === 'PENDING' ? 'Đang chờ' :
+                                             (request.statusRequest === 'APPROVED' ? 'Đã duyệt' :
+                                             (request.statusRequest === 'REJECTED' ? 'Đã từ chối' :
+                                             (request.statusRequest === 'CANCELLED' ? 'Đã hủy' : request.statusRequest)))}
                                         </span>
                                     </td>
-                                    <td className="py-3 px-4 text-sm">{dayjs(req.createdAt).format('DD/MM/YYYY HH:mm')}</td>
-                                    <td className="py-3 px-4 text-sm">{req.note || 'Không có'}</td>
-                                    <td className="py-3 px-4">
-                                        {req.status === 'PENDING' && (
-                                            <div className="flex flex-col space-y-2">
+                                    <td>{request.approverFullName || 'Chưa duyệt'}</td>
+                                    <td>{formatDateTime(request.approvedTime)}</td>
+                                    <td>{request.note || 'Không có'}</td>
+                                    <td>
+                                        {/* Hiển thị nút Duyệt/Từ chối chỉ khi trạng thái là PENDING */}
+                                        {request.statusRequest === 'PENDING' && (
+                                            <>
                                                 <button
-                                                    onClick={() => handleApprove(req.id)}
-                                                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded text-xs transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                    disabled={isApproving || isRejecting}
+                                                    className={styles.approveButton}
+                                                    onClick={() => handleApproveRequest(request.id)}
                                                 >
-                                                    {isApproving ? 'Đang duyệt...' : 'Duyệt'}
+                                                    Duyệt
                                                 </button>
                                                 <button
-                                                    onClick={() => setSelectedRequestId(req.id)}
-                                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                    disabled={isApproving || isRejecting}
+                                                    className={styles.cancelButton} // Có thể đổi tên class nếu muốn style khác cho "Từ chối"
+                                                    onClick={() => handleRejectRequest(request.id)}
                                                 >
-                                                    Từ Chối
+                                                    Từ chối
                                                 </button>
-                                            </div>
+                                            </>
                                         )}
+                                        {/* Bạn có thể thêm các nút xem chi tiết cho các trạng thái khác nếu cần */}
+                                        {/* {request.statusRequest !== 'PENDING' && (
+                                            <button className={styles.viewButton}>Xem chi tiết</button>
+                                        )} */}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                </div>
-            )}
-
-            {selectedRequestId && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md animate-fade-in-up">
-                        <h3 className="text-xl font-bold mb-6 text-gray-800">Từ Chối Yêu Cầu Hiến Máu</h3>
-                        <p className="mb-4 text-gray-700">
-                            Bạn đang từ chối yêu cầu #<span className="font-semibold">{selectedRequestId}</span>. Vui lòng nhập lý do từ chối:
-                        </p>
-                        <div className="mb-6">
-                            <label htmlFor="rejectionReason" className="block text-gray-700 text-sm font-bold mb-2">
-                                Lý do từ chối:
-                            </label>
-                            <textarea
-                                id="rejectionReason"
-                                rows="4"
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-red-500 transition duration-200"
-                                value={rejectionReason}
-                                onChange={(e) => setRejectionReason(e.target.value)}
-                                placeholder="Ví dụ: Người yêu cầu không đủ điều kiện sức khỏe; Thông tin không hợp lệ..."
-                                required
-                                disabled={isRejecting}
-                            ></textarea>
-                        </div>
-                        <div className="flex justify-end space-x-3">
-                            <button
-                                onClick={() => {
-                                    setSelectedRequestId(null);
-                                    setRejectionReason('');
-                                }}
-                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-5 rounded-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={isRejecting}
-                            >
-                                Hủy
-                            </button>
-                            <button
-                                onClick={handleReject}
-                                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 rounded-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={isRejecting}
-                            >
-                                {isRejecting ? 'Đang gửi...' : 'Xác Nhận Từ Chối'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
