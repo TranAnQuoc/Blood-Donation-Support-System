@@ -17,32 +17,27 @@ const RegisterDonation = () => {
     const [hasRegisteredBefore, setHasRegisteredBefore] = useState(false);
 
     const staticBloodTypes = [
-        { id: 1, bloodName: 'A+' },
-        { id: 2, bloodName: 'A-' },
-        { id: 3, bloodName: 'B+' },
-        { id: 4, bloodName: 'B-' },
-        { id: 5, bloodName: 'AB+' },
-        { id: 6, bloodName: 'AB-' },
-        { id: 7, bloodName: 'O+' },
-        { id: 8, bloodName: 'O-' },
+        { id: 1, bloodName: 'Unknown' },
+        { id: 2, bloodName: 'A+' },
+        { id: 3, bloodName: 'A-' },
+        { id: 4, bloodName: 'B+' },
+        { id: 5, bloodName: 'B-' },
+        { id: 6, bloodName: 'AB+' },
+        { id: 7, bloodName: 'AB-' },
+        { id: 8, bloodName: 'O+' },
+        { id: 9, bloodName: 'O-' },
     ];
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                
                 const scheduleRes = await axiosInstance.get('/schedules');
-
                 console.log("Raw schedules from API:", scheduleRes.data);
-
                 const activeSchedules = scheduleRes.data.filter((s) => {
-                    
                     const availableSlots = s.maxSlot - s.currentSlot;
-
                     const scheduleDateTimeString = `${s.date}T${s.startTime}`;
                     const scheduleDateTime = dayjs(scheduleDateTimeString);
-
                     return (
                         availableSlots > 0 &&
                         scheduleDateTime.isAfter(dayjs())
@@ -78,7 +73,6 @@ const RegisterDonation = () => {
         }
 
         const payload = {
-            
             bloodTypeId: selectedBloodType.value,
             quantityMl: parsedQuantityMl,
             reason: reason.trim(),

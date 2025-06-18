@@ -1,251 +1,168 @@
 /* src/components/staff-components/mainContent/DonationProcess.module.css */
-.container {
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 900px;
-    margin: 20px auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-}
 
-.title {
-    color: #0056b3;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2.2em;
-    font-weight: 700;
-}
-
-.introText {
-    font-size: 1.1em;
-    color: #555;
-    text-align: center;
-    margin-bottom: 30px;
-    padding: 0 20px;
-}
-
-.processInfo {
-    font-size: 1.1em;
-    color: #333;
-    text-align: center;
-    margin-bottom: 25px;
-    background-color: #e6f7ff;
-    padding: 15px;
+.donationProcessContainer {
+    padding: 20px;
+    background-color: #f8f9fa;
     border-radius: 8px;
-    border: 1px solid #91d5ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.processTracker {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 40px;
-    position: relative;
-    padding: 10px 0;
-}
-
-.processTracker::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background-color: #e0e0e0;
-    z-index: 1;
-    transform: translateY(-50%);
-}
-
-.stepIndicator {
-    flex: 1;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-    background-color: #fff;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.stepIndicator::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    border: 2px solid #e0e0e0;
-}
-
-.stepIndicator.activeStep .stepNumber,
-.stepIndicator.activeStep .stepName {
-    color: #007bff;
-    font-weight: bold;
-}
-
-.stepIndicator.activeStep::before {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.stepIndicator.completedStep .stepNumber,
-.stepIndicator.completedStep .stepName {
-    color: #28a745; /* Green for completed steps */
-}
-
-.stepIndicator.completedStep::before {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-
-
-.stepNumber {
-    display: block;
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #888;
-}
-
-.stepName {
-    display: block;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.currentStepContent {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 25px;
-    margin-top: 30px;
-}
-
-.currentStepTitle {
-    color: #007bff;
-    font-size: 1.6em;
-    margin-bottom: 20px;
-    text-align: center;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-}
-
-.currentStepContent ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin-bottom: 20px;
-}
-
-.currentStepContent li {
-    margin-bottom: 8px;
-    color: #444;
-}
-
-.formGroup {
+.tableWrapper {
+    overflow-x: auto;
     margin-top: 20px;
-    margin-bottom: 20px;
 }
 
-.formGroup label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
-}
-
-.notesTextarea {
+.donationProcessTable {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    min-height: 80px;
-    font-size: 1em;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.actionButtons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+.donationProcessTable th,
+.donationProcessTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
 }
 
-.nextButton,
-.prevButton {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.nextButton {
+.donationProcessTable th {
     background-color: #007bff;
     color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
 }
 
-.nextButton:hover:not(:disabled) {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+.donationProcessTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
-.prevButton {
-    background-color: #6c757d;
-    color: white;
+.donationProcessTable tbody tr:hover {
+    background-color: #e9ecef;
 }
 
-.prevButton:hover:not(:disabled) {
-    background-color: #5a6268;
-    transform: translateY(-2px);
-}
-
-.nextButton:disabled,
-.prevButton:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.footerText {
-    font-size: 1.1em;
-    color: #0056b3;
-    text-align: center;
-    margin-top: 40px;
-    font-weight: 600;
-}
-
-/* Common messages */
 .loadingMessage,
 .errorMessage,
-.noDataMessage {
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 8px;
-    font-size: 16px;
+.noProcessesMessage {
     text-align: center;
-    font-weight: 500;
-}
-
-.loadingMessage {
-    background-color: #e6f7ff;
-    color: #0056b3;
-    border: 1px solid #91d5ff;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
 }
 
 .errorMessage {
-    background-color: #fff0f0;
-    color: #cf1322;
-    border: 1px solid #ffa39e;
+    color: #dc3545;
+    font-weight: bold;
 }
 
-.noDataMessage {
-    background-color: #f0f0f0;
-    color: #666;
-    border: 1px solid #ddd;
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
+}
+
+/* Các màu sắc cho trạng thái quy trình */
+.statusBadge.pending {
+    background-color: #ffc107; /* Màu vàng */
+    color: #343a40;
+}
+.statusBadge.in_progress {
+    background-color: #17a2b8; /* Màu xanh ngọc */
+    color: white;
+}
+.statusBadge.completed {
+    background-color: #28a745; /* Màu xanh lá cây */
+    color: white;
+}
+.statusBadge.incompleted {
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}
+
+/* Kiểu cho input, select, textarea */
+.textInput,
+.numberInput,
+.selectInput,
+.textareaInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+    font-size: 0.9em;
+}
+
+.textareaInput {
+    min-height: 50px;
+    resize: vertical; /* Cho phép thay đổi kích thước theo chiều dọc */
+}
+
+/* Kiểu cho nút */
+.editButton,
+.saveButton,
+.cancelEditButton {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease-in-out;
+    white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
+}
+
+.editButton {
+    background-color: #007bff;
+    color: white;
+}
+.editButton:hover {
+    background-color: #0056b3;
+}
+
+.saveButton {
+    background-color: #28a745;
+    color: white;
+}
+.saveButton:hover {
+    background-color: #218838;
+}
+
+.cancelEditButton {
+    background-color: #6c757d;
+    color: white;
+}
+.cancelEditButton:hover {
+    background-color: #5a6268;
+}
+
+/* Optional: Kiểu cho các biểu tượng hoặc dấu tick/cross */
+.icon {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+.icon.check {
+    color: #28a745;
+}
+.icon.cross {
+    color: #dc3545;
+}
+
+.statusBadge.in_process { /* Đổi từ .statusBadge.in_progress sang .in_process nếu cần */
+    background-color: #17a2b8; /* Màu xanh ngọc */
+    color: white;
+}
+.statusBadge.completed {
+    background-color: #28a745; /* Màu xanh lá cây */
+    color: white;
+}
+.statusBadge.failed { /* Thêm style cho trạng thái FAILED */
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
 }
