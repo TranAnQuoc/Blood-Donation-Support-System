@@ -44,7 +44,8 @@ public class Filter extends OncePerRequestFilter {
             "GET:/swagger-resources/**",
             "GET:/webjars/**",
             "GET:/swagger-ui.html",
-            "POST:/api/emergency-requests/guest"
+            "POST:/api/emergency-requests/guest",
+            "POST:/api/reset-password-request"
     );
 
     public boolean isPublicAPI(String uri, String method) {

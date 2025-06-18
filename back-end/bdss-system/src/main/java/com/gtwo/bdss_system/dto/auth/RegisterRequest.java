@@ -20,8 +20,7 @@ public class RegisterRequest {
     @NotBlank(message = "Full name is required")
     private String fullName;
 
-    @NotBlank(message = "CCCD is required")
-    private String CCCD;
+    private String cccd;
 
     @NotNull(message = "Gender is required")
     private Gender gender;

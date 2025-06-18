@@ -124,6 +124,13 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.3</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<version>3.5.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

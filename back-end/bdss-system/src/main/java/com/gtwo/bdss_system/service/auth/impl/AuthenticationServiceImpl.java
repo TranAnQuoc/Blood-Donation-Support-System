@@ -1,8 +1,11 @@
 package com.gtwo.bdss_system.service.auth.impl;
 
 import com.gtwo.bdss_system.dto.auth.AccountResponse;
+import com.gtwo.bdss_system.dto.auth.ForgotPasswordRequest;
 import com.gtwo.bdss_system.dto.auth.LoginRequest;
 import com.gtwo.bdss_system.dto.auth.RegisterRequest;
+import com.gtwo.bdss_system.dto.commons.EmailDetailForForgotPassword;
+import com.gtwo.bdss_system.dto.commons.EmailDetailForRegister;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.enums.Role;
@@ -13,6 +16,7 @@ import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.service.auth.AuthenticationService;
 import com.gtwo.bdss_system.service.auth.TokenService;
 import com.gtwo.bdss_system.service.commons.BloodTypeService;
+import com.gtwo.bdss_system.service.commons.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +46,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     BloodTypeService bloodTypeService;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public Account register(RegisterRequest dto) {
         if (authenticationRepository.existsByEmail(dto.getEmail())) {
@@ -50,10 +57,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (authenticationRepository.existsByPhone(dto.getPhone())) {
             throw new IllegalArgumentException("Phone number already in use");
         }
-        if (authenticationRepository.existsByCCCD(dto.getCCCD())) {
+        if (authenticationRepository.existsByCCCD(dto.getCccd())) {
             throw new IllegalArgumentException("CCCD already in use");
         }
-        if (!dto.getCCCD().matches("\\d{12}")) {
+        if (!dto.getCccd().matches("\\d{12}")) {
             throw new IllegalArgumentException("CCCD must be exactly 12 digits");
         }
         Account account = new Account();
@@ -64,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setDateOfBirth(dto.getDateOfBirth());
         account.setPhone(dto.getPhone());
         account.setAddress(dto.getAddress());
-        account.setCCCD(dto.getCCCD());
+        account.setCCCD(dto.getCccd());
         account.setRole(Role.MEMBER);
         account.setStatus(Status.ACTIVE);
         account.setStatusDonation(StatusDonation.AVAILABLE);
@@ -72,6 +79,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             BloodType bloodType = bloodTypeService.findById(dto.getBloodTypeId());
             account.setBloodType(bloodType);
         }
+        EmailDetailForRegister emailDetailForRegister = new EmailDetailForRegister();
+        emailDetailForRegister.setToEmail(dto.getEmail());
+        emailDetailForRegister.setSubject("Hello");
+        emailService.sendRegisterSuccessEmail(emailDetailForRegister);
         return authenticationRepository.save(account);
     }
 
@@ -95,5 +106,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return (UserDetails) authenticationRepository.findAccountByEmail(email);
+    }
+
+    public void forgotPassword(ForgotPasswordRequest request) {
+        Account account = authenticationRepository.findAccountByEmail(request.getEmail());
+        if (account == null) {
+            throw new IllegalArgumentException("Tài khoản không tồn tại");
+        } else {
+            EmailDetailForForgotPassword emailDetailForForgotPassword = new EmailDetailForForgotPassword();
+            emailDetailForForgotPassword.setAccount(account);
+            emailDetailForForgotPassword.setSubject("Reset Password");
+            emailDetailForForgotPassword.setLink("https://bdss-system.herokuapp.com/reset-password?token=" + tokenService.generateToken(account));
+            emailService.sendResetPasswordEmail(emailDetailForForgotPassword);
+        }
     }
 }
