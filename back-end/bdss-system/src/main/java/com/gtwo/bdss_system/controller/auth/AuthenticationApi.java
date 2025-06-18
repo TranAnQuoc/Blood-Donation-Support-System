@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.controller.auth;
 
 import com.gtwo.bdss_system.dto.auth.AccountResponse;
+import com.gtwo.bdss_system.dto.auth.ForgotPasswordRequest;
 import com.gtwo.bdss_system.dto.auth.LoginRequest;
 import com.gtwo.bdss_system.dto.auth.RegisterRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
@@ -27,5 +28,11 @@ public class AuthenticationApi {
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
         AccountResponse account = authenticationService.login(loginRequest);
         return ResponseEntity.ok(account);
+    }
+
+    @PostMapping("/reset-password-request")
+    public ResponseEntity forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        authenticationService.forgotPassword(request);
+        return ResponseEntity.ok("Password reset email sent successfully.");
     }
 }
