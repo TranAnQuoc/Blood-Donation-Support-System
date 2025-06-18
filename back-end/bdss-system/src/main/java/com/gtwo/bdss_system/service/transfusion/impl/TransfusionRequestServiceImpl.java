@@ -1,8 +1,10 @@
 package com.gtwo.bdss_system.service.transfusion.impl;
 
 import com.gtwo.bdss_system.dto.transfusion.TransfusionRequestDTO;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.transfusion.TransfusionRequest;
 import com.gtwo.bdss_system.enums.StatusRequest;
+import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.repository.transfusion.TransfusionRequestRepository;
 import com.gtwo.bdss_system.service.transfusion.TransfusionRequestService;
 import org.modelmapper.ModelMapper;
@@ -14,18 +16,35 @@ import java.util.List;
 public class TransfusionRequestServiceImpl implements TransfusionRequestService {
 
     private final TransfusionRequestRepository repo;
+    private final AuthenticationRepository accountRepo;
     private final ModelMapper mapper;
 
-    public TransfusionRequestServiceImpl(TransfusionRequestRepository repo, ModelMapper mapper) {
+    public TransfusionRequestServiceImpl(
+            TransfusionRequestRepository repo,
+            AuthenticationRepository accountRepo,
+            ModelMapper mapper) {
         this.repo = repo;
+        this.accountRepo = accountRepo;
         this.mapper = mapper;
     }
 
     @Override
     public TransfusionRequest create(TransfusionRequestDTO dto) {
-        TransfusionRequest e = mapper.map(dto, TransfusionRequest.class);
+        TransfusionRequest e = new TransfusionRequest();
+
+        Account recipient = accountRepo.findById(dto.getRecipientId())
+                .orElseThrow(() -> new RuntimeException(
+                        "Không tìm thấy Account với id=" + dto.getRecipientId()));
+        e.setRecipient(recipient);
+
+        e.setBloodComponentNeeded(dto.getBloodComponentNeeded());
+        e.setQuantityNeeded(dto.getQuantityNeeded());
+        e.setDoctorDiagnosis(dto.getDoctorDiagnosis());
+        e.setPreCheckNotes(dto.getPreCheckNotes());
+
         e.setRequestedAt(LocalDateTime.now());
         e.setStatus(StatusRequest.PENDING);
+        
         return repo.save(e);
     }
 
@@ -52,4 +71,3 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
         repo.deleteById(id);
     }
 }
-
