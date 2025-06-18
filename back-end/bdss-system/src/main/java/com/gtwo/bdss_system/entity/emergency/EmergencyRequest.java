@@ -19,9 +19,14 @@ public class EmergencyRequest {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "requester_id")
-    private Account requester;
+    @Column(name = "Fullname")
+    private String fullName;
+
+    @Column(name = "CCCD", nullable = false, unique = true)
+    private String CCCD;
+
+    @Column(name = "Phone", nullable = false, unique = true)
+    private String phone;
 
     @Column(name = "submitted_at")
     private LocalDateTime submittedAt;

@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmergencyRequestRepository extends JpaRepository<EmergencyRequest, Long> {
+    boolean existsByPhone(String phone);
+    boolean existsByCCCD(String CCCD);
 }
