@@ -1,60 +1,58 @@
 package com.gtwo.bdss_system.service.emergency.impl;
 
 import com.gtwo.bdss_system.dto.emergency.EmergencyGuestRequestDTO;
-import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.StatusRequest;
-import com.gtwo.bdss_system.repository.auth.AccountRepository;
 import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
 import com.gtwo.bdss_system.service.emergency.EmergencyGuestRequestService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 public class EmergencyGuestRequestServiceImpl implements EmergencyGuestRequestService {
 
-    private final EmergencyRequestRepository emergencyRequestRepository;
-    private final BloodTypeRepository bloodTypeRepository;
-    private final BloodComponentRepository bloodComponentRepository;
-    private final AccountRepository accountRepository;
+    @Autowired
+    private EmergencyRequestRepository emergencyRequestRepository;
+
+    @Autowired
+    private BloodTypeRepository bloodTypeRepository;
+
+    @Autowired
+    private BloodComponentRepository bloodComponentRepository;
 
     @Override
-    public EmergencyRequest create(EmergencyGuestRequestDTO dto) {
-        // Tạo account khách
-        Account guest = new Account();
-        guest.setFullName(dto.getFullName());
-        guest.setPhone(dto.getPhone());
-        guest.setCCCD(dto.getCCCD());
-        guest.setDateOfBirth((Date) dto.getDateOfBirth());
+    public void createEmergencyRequest(EmergencyGuestRequestDTO dto) {
+        if (emergencyRequestRepository.existsByPhone(dto.getPhone())) {
+            throw new RuntimeException("Phone number already used in another request.");
+        }
+        if (emergencyRequestRepository.existsByCCCD(dto.getCCCD())) {
+            throw new RuntimeException("CCCD already used in another request.");
+        }
 
-        guest = accountRepository.save(guest); // lưu vào DB
+        BloodType bloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
+                .orElseThrow(() -> new RuntimeException("Invalid blood type ID"));
+        BloodComponent bloodComponent = bloodComponentRepository.findById(dto.getBloodComponentId())
+                .orElseThrow(() -> new RuntimeException("Invalid blood component ID"));
 
-        // Tạo request khẩn cấp
         EmergencyRequest request = new EmergencyRequest();
-        request.setRequester(guest);
+        request.setFullName(dto.getFullName());
+        request.setPhone(dto.getPhone());
+        request.setCCCD(dto.getCCCD());
         request.setSubmittedAt(LocalDateTime.now());
+        request.setBloodType(bloodType);
+        request.setBloodComponent(bloodComponent);
         request.setQuantity(dto.getQuantity());
         request.setLocation(dto.getLocation());
         request.setStatus(StatusRequest.PENDING);
+        request.setVerifiedBy(null);
+        request.setVerifiedAt(null);
 
-        // Lấy bloodType
-        BloodType bloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
-                .orElseThrow(() -> new RuntimeException("Blood type not found"));
-        request.setBloodType(bloodType);
-
-        // Lấy bloodComponent
-        BloodComponent bloodComponent = bloodComponentRepository.findById(dto.getBloodComponentId())
-                .orElseThrow(() -> new RuntimeException("Blood component not found"));
-        request.setBloodComponent(bloodComponent);
-
-        return emergencyRequestRepository.save(request);
+        emergencyRequestRepository.save(request);
     }
 }

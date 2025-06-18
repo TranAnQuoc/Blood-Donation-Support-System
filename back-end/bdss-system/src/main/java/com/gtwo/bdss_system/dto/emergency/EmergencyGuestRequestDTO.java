@@ -2,7 +2,8 @@ package com.gtwo.bdss_system.dto.emergency;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Date;
+
 
 @Data
 public class EmergencyGuestRequestDTO {
