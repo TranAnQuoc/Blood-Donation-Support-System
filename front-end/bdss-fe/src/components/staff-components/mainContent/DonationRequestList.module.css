@@ -1,67 +1,112 @@
 /* src/components/staff-components/mainContent/DonationRequestList.module.css */
-.tableContainer {
+
+.donationRequestListContainer {
     padding: 20px;
-    background-color: #fff;
+    background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.tableContainer h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 24px;
-}
-
-.tableContainer p {
-    color: #666;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
+.tableWrapper {
+    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
     margin-top: 20px;
 }
 
-.tableHeader {
-    background-color: #f2f2f2;
-    border-bottom: 2px solid #ddd;
+.donationRequestTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden; /* Đảm bảo góc bo tròn hiển thị đúng */
 }
 
-.tableCell {
+.donationRequestTable th,
+.donationRequestTable td {
     padding: 12px 15px;
     text-align: left;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    color: #333;
+    border-bottom: 1px solid #ddd;
 }
 
-.tableHeader .tableCell {
-    font-weight: bold;
-    color: #555;
-    background-color: #eef1f6;
-}
-
-.tableRow:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.tableRow:hover {
-    background-color: #f0f0f0;
-}
-
-.actionButton {
+.donationRequestTable th {
     background-color: #007bff;
     color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.2s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
 }
 
-.actionButton:hover {
-    background-color: #0056b3;
+.donationRequestTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.donationRequestTable tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.loadingMessage,
+.errorMessage,
+.noRequestsMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.errorMessage {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+}
+
+.statusBadge.pending { /* pending => đang chờ */
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.statusBadge.approved { /* approved => đã duyệt */
+    background-color: #28a745;
+    color: white;
+}
+
+.statusBadge.cancelled { /* cancelled => đã hủy */
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Các kiểu cho nút */
+.approveButton,
+.cancelButton {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.approveButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.approveButton:hover {
+    background-color: #218838;
+}
+
+.cancelButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #c82333;
 }
