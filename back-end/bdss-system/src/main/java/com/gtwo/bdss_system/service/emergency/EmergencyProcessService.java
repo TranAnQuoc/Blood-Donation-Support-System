@@ -1,13 +1,13 @@
 package com.gtwo.bdss_system.service.emergency;
-import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
+
+import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface EmergencyProcessService {
-    EmergencyProcess create(EmergencyProcess process);
-    EmergencyProcess update(Long id, EmergencyProcess process);
-    boolean delete(Long id);
-    Optional<EmergencyProcess> getById(Long id);
-    List<EmergencyProcess> getAll();
+    EmergencyProcessDTO create(EmergencyProcessDTO dto);
+    EmergencyProcessDTO getById(Long id);
+    List<EmergencyProcessDTO> getAll();
+    EmergencyProcessDTO update(Long id, EmergencyProcessDTO dto);
+    void delete(Long id);
 }
