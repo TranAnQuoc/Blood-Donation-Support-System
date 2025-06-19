@@ -3,6 +3,7 @@ package com.gtwo.bdss_system.entity.emergency;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
+import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class EmergencyRequest {
     private String fullName;
 
     @Column(name = "CCCD", nullable = false, unique = true)
-    private String CCCD;
+    private String cccd;
 
     @Column(name = "Phone", nullable = false, unique = true)
     private String phone;
@@ -45,9 +46,13 @@ public class EmergencyRequest {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "status_request")
+    @Enumerated(EnumType.STRING)
+    private StatusRequest statusRequest;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private StatusRequest status;
+    private Status status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "verified_by")
@@ -55,4 +60,10 @@ public class EmergencyRequest {
 
     @Column(name = "verified_at")
     private LocalDateTime verifiedAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.submittedAt = LocalDateTime.now();
+    }
+
 }

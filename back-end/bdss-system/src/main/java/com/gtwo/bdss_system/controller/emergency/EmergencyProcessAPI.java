@@ -1,6 +1,6 @@
 package com.gtwo.bdss_system.controller.emergency;
 
-import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
+import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +16,28 @@ public class EmergencyProcessAPI {
     private EmergencyProcessService service;
 
     @PostMapping
-    public ResponseEntity<EmergencyProcess> create(@RequestBody EmergencyProcess process) {
-        return ResponseEntity.ok(service.create(process));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<EmergencyProcess> update(@PathVariable Long id, @RequestBody EmergencyProcess process) {
-        EmergencyProcess updated = service.update(id, process);
-        if (updated != null) return ResponseEntity.ok(updated);
-        return ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return service.delete(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<EmergencyProcess> getById(@PathVariable Long id) {
-        return service.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> create(@RequestBody EmergencyProcessDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<EmergencyProcess>> getAll() {
+    public ResponseEntity<List<EmergencyProcessDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmergencyProcessDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmergencyProcessDTO> update(@PathVariable Long id, @RequestBody EmergencyProcessDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.ok("Deleted");
     }
 }
