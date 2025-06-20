@@ -14,7 +14,10 @@ import com.gtwo.bdss_system.service.donation.DonationRequestService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -33,6 +36,15 @@ public class DonationRequestServiceImpl implements DonationRequestService {
     public DonationRequest createRequest(Long scheduleId, Account currentUser) {
         if (!currentUser.getRole().equals(Role.MEMBER)) {
             throw new IllegalArgumentException("Chỉ người dùng với vai trò MEMBER mới được đăng ký hiến máu.");
+        }
+        if (currentUser.getDateOfBirth() == null) {
+            throw new IllegalArgumentException("Không có thông tin ngày sinh. Vui lòng cập nhật hồ sơ.");
+        }
+        LocalDate birthDate = currentUser.getDateOfBirth().toLocalDate();
+        LocalDate now = LocalDate.now();
+        Period age = Period.between(birthDate, now);
+        if (age.getYears() < 18) {
+            throw new IllegalArgumentException("Người hiến máu phải đủ 18 tuổi để đăng ký hiến máu.");
         }
         boolean exists = repository.existsByDonorId(currentUser.getId());
         if (exists) {

@@ -20,9 +20,9 @@ public class EmailServiceImpl implements EmailService {
         message.setFrom("demofortest999@gmail.com");
         message.setTo(emailDetail.getToEmail());
         message.setSubject(emailDetail.getSubject());
-
+        String loginLink = "http://localhost:5173/login";
         String body = String.format("""
-            Xin chào %s,
+            Xin chào!
 
             Tài khoản của bạn đã được đăng ký thành công với địa chỉ email: %s
 
@@ -33,10 +33,7 @@ public class EmailServiceImpl implements EmailService {
             Trân trọng,
             Hệ thống hỗ trợ
             """,
-                emailDetail.getFullName(),
-                emailDetail.getToEmail(),
-                emailDetail.getLink() != null ? "Trang đăng nhập: " + emailDetail.getLink() : "");
-
+                emailDetail.getToEmail(), loginLink);
         message.setText(body);
         mailSender.send(message);
     }
@@ -44,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendResetPasswordEmail(EmailDetailForForgotPassword emailDetailForForgotPassword) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("demofortest999@gmail.com"); // hoặc để Spring tự lấy từ config
+        message.setFrom("demofortest999@gmail.com");
         message.setTo(emailDetailForForgotPassword.getAccount().getEmail());
         message.setSubject(emailDetailForForgotPassword.getSubject());
 
