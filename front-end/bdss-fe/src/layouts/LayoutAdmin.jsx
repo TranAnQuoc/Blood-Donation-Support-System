@@ -5,7 +5,7 @@ import MainContent from '../components/admin-components/mainContent/MainContent'
 import styles from './LayoutAdmin.module.css';
 
 const LayoutAdmin = () => {
-  const [activePage, setActivePage] = useState('Trang chủ'); // Mặc định là 'Trang chủ'
+  const [activePage, setActivePage] = useState('Trang chủ');
 
   const handleNavClick = (pageName) => {
     setActivePage(pageName);

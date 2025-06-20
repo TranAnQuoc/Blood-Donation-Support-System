@@ -1,4 +1,3 @@
-// src/components/LeftPanel/NavButton.jsx
 import React from 'react';
 import styles from './NavButton.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,7 +11,7 @@ const NavButton = ({ icon, label, onClick, isActive, hasDropdown, isArrowUp }) =
         >
             <div className={styles.iconContainer}>{icon}</div>
             <span className={styles.label}>{label}</span>
-            {hasDropdown && ( // Chỉ hiển thị mũi tên nếu hasDropdown là true
+            {hasDropdown && (
                 <FontAwesomeIcon
                     icon={isArrowUp ? faChevronUp : faChevronDown}
                     className={styles.arrowIcon}

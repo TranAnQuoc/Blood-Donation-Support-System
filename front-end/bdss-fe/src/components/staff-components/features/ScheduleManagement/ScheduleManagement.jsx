@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ScheduleManagement.module.css';
-import DataTableContainer from './DataTableContainer';
-import axiosInstance from '../../../configs/axios.js';
+import DataTableContainer from '../../mainContent/DataTableContainer';
+import axiosInstance from '../../../../configs/axios';
 
 const ScheduleManagement = () => {
     
@@ -212,27 +212,28 @@ const ScheduleManagement = () => {
             <div className={styles.scheduleList}>
                 <h3>Danh sách Lịch Hiến Máu Hiện có</h3>
                 {schedules.length > 0 ? (
-                    // Render bảng trực tiếp ở đây, KHÔNG DÙNG DataTableContainer ở đây nữa
-                    <table className={styles.dataTable}> {/* Sử dụng class từ module CSS của bạn */}
-                        <thead>
-                            <tr>
-                                {scheduleColumns.map((col, index) => (
-                                    <th key={col.header || index}>{col.header}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {schedules.map((row, rowIndex) => (
-                                <tr key={row.id || rowIndex}>
-                                    {scheduleColumns.map((col, colIndex) => (
-                                        <td key={colIndex}>
-                                            {col.render ? col.render(row) : row[col.accessor]}
-                                        </td>
+                    <DataTableContainer>
+                        <table className={styles.dataTable}>
+                            <thead>
+                                <tr>
+                                    {scheduleColumns.map((col, index) => (
+                                        <th key={col.header || index}>{col.header}</th>
                                     ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {schedules.map((row, rowIndex) => (
+                                    <tr key={row.id || rowIndex}>
+                                        {scheduleColumns.map((col, colIndex) => (
+                                            <td key={colIndex}>
+                                                {col.render ? col.render(row) : row[col.accessor]}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </DataTableContainer>
                 ) : (
                     <p>Chưa có lịch hiến máu nào được tạo.</p>
                 )}

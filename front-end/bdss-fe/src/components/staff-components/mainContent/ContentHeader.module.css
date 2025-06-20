@@ -1,18 +1,17 @@
-/* src/components/MainContent/ContentHeader.module.css */
 .contentHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 25px;
   border-bottom: 1px solid #eee;
-  background-color: #f8f9fa; /* Màu nền header */
+  background-color: #f8f9fa;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .rightSection {
   display: flex;
   align-items: center;
-  gap: 20px; /* Khoảng cách giữa các phần tử */
+  gap: 20px;
 }
 
 .menuIcon {

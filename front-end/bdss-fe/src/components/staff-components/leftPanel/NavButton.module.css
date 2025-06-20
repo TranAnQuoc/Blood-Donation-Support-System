@@ -1,4 +1,3 @@
-/* src/components/LeftPanel/NavButton.module.css */
 .navButton {
   display: flex;
   align-items: center;
@@ -14,9 +13,9 @@
 }
 
 .navButton:hover,
-.navButton.active { /* Thêm class .active để đánh dấu nút đang chọn */
+.navButton.active {
   background-color: rgba(0, 0, 0, 0.1);
-  border-left: 5px solid #f9bfbf; /* Ví dụ đường viền nổi bật */
+  border-left: 5px solid #f9bfbf;
   padding-left: 15px;
 }
 

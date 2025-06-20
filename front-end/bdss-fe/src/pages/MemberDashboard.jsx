@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MemberDashboard.module.css';
-import ScheduleSearchAndList from '../components/member-features/ScheduleSearchAndList';
+import ScheduleSearchAndList from '../components/member-components/features/ScheduleSearchAndList';
 
 const MemberDashboard = () => {
     return (
@@ -23,13 +23,9 @@ const MemberDashboard = () => {
                 <div className={styles.featureCard}>
                     <h3>Yêu cầu Nhận máu</h3>
                     <p>Gửi yêu cầu nhận máu cho bản thân hoặc người thân.</p>
-                    <Link to="/member/receive-blood" className={styles.actionButton}>Yêu cầu nhận máu</Link>
+                    <Link to="/member/request-transfusion" className={styles.actionButton}>Yêu cầu nhận máu</Link>
                 </div>
             </div>
-
-            
-            
-
         </div>
     );
 };

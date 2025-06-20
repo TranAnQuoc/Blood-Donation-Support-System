@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../configs/axios';
+import axiosInstance from '../../../configs/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 import dayjs from 'dayjs';
+import styles from './RegisterDonation.module.css';
 
 const RegisterDonation = () => {
     const [donationSchedules, setDonationSchedules] = useState([]);
@@ -103,12 +104,12 @@ const RegisterDonation = () => {
             console.error('Lỗi khi đăng ký hiến máu:', err);
             if (err.response) {
                 const errorMessage = err.response.data?.message || 'Có lỗi xảy ra từ máy chủ.';
-                toast.error(`Lỗi hệ thống: ${errorMessage}`);
-
-                if (errorMessage.includes('Tài khoản này đã đăng ký hiến máu trước đó')) {
+                if (errorMessage.includes('Tài khoản này đã đăng ký hiến máu trước đó.')) {
                     setHasRegisteredBefore(true);
+                    toast.warn('Bạn đã đăng ký hiến máu cho một lịch trình trước đó. Vui lòng kiểm tra trạng thái.');
                 } else {
                     setHasRegisteredBefore(false);
+                    toast.error(`Lỗi hệ thống: ${errorMessage}`);
                 }
             } else if (err.request) {
                 toast.error('Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng của bạn.');
@@ -123,11 +124,11 @@ const RegisterDonation = () => {
     };
 
     if (loading) {
-        return <div className="text-center py-4 text-lg">Đang tải dữ liệu...</div>;
+        return <div className={styles.loadingContainer}>Đang tải dữ liệu...</div>;
     }
 
     if (error) {
-        return <div className="text-center py-4 text-red-600 text-lg">{error}</div>;
+        return <div className={styles.errorContainer}>{error}</div>;
     }
 
     const scheduleOptions = donationSchedules.map((schedule) => ({
@@ -141,17 +142,17 @@ const RegisterDonation = () => {
     }));
 
     return (
-        <div className="container mx-auto p-4 max-w-2xl bg-white shadow-lg rounded-lg">
-            <h2 className="text-3xl font-bold mb-8 text-center text-red-700">Đăng Ký Hiến Máu</h2>
-                {hasRegisteredBefore && (
-                    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
-                        <p className="font-bold">Lưu ý:</p>
-                        <p>Tài khoản của bạn đã đăng ký hiến máu cho một lịch trình trước đó. Vui lòng kiểm tra trạng thái yêu cầu của bạn hoặc đợi lịch trình hiện tại kết thúc trước khi đăng ký lại.</p>
-                    </div>
-                )}
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <div className={styles.container}>
+            <h2 className={styles.heading}>Đăng Ký Hiến Máu</h2>
+            {hasRegisteredBefore && (
+                <div className={styles.warningBanner} role="alert">
+                    <p className={styles.warningTitle}>Lưu ý:</p>
+                    <p>Tài khoản của bạn đã đăng ký hiến máu cho một lịch trình trước đó. Vui lòng kiểm tra trạng thái yêu cầu của bạn hoặc đợi lịch trình hiện tại kết thúc trước khi đăng ký lại.</p>
+                </div>
+            )}
+            <form onSubmit={handleSubmit} className={styles.form}>
                 <div>
-                    <label htmlFor="schedule" className="block text-gray-800 text-base font-semibold mb-2">
+                    <label htmlFor="schedule" className={styles.label}>
                         Chọn Lịch Hiến Máu:
                     </label>
                     <Select
@@ -162,41 +163,41 @@ const RegisterDonation = () => {
                         placeholder="Chọn một lịch hiến máu..."
                         isClearable
                         required
-                        className="react-select-container"
+                        className={styles.reactSelectContainer}
                         classNamePrefix="react-select"
                         isDisabled={isSubmitting}
                     />
                     {scheduleOptions.length === 0 && !loading && (
-                        <p className="text-sm text-red-500 mt-2">Hiện không có lịch hiến máu nào khả dụng.</p>
+                        <p className={styles.noScheduleMessage}>Hiện không có lịch hiến máu nào khả dụng.</p>
                     )}
                 </div>
 
                 <div>
-                <label htmlFor="bloodType" className="block text-gray-800 text-base font-semibold mb-2">
-                    Nhóm Máu Bạn Muốn Hiến:
-                </label>
-                <Select
-                    id="bloodType"
-                    options={bloodTypeOptions}
-                    value={selectedBloodType}
-                    onChange={setSelectedBloodType}
-                    placeholder="Chọn nhóm máu của bạn..."
-                    isClearable
-                    required
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    isDisabled={isSubmitting}
-                />
-            </div>
+                    <label htmlFor="bloodType" className={styles.label}>
+                        Nhóm Máu Bạn Muốn Hiến:
+                    </label>
+                    <Select
+                        id="bloodType"
+                        options={bloodTypeOptions}
+                        value={selectedBloodType}
+                        onChange={setSelectedBloodType}
+                        placeholder="Chọn nhóm máu của bạn..."
+                        isClearable
+                        required
+                        className={styles.reactSelectContainer}
+                        classNamePrefix="react-select"
+                        isDisabled={isSubmitting}
+                    />
+                </div>
 
                 <div>
-                    <label htmlFor="quantityMl" className="block text-gray-800 text-base font-semibold mb-2">
+                    <label htmlFor="quantityMl" className={styles.label}>
                         Số Lượng Máu (ml):
                     </label>
                     <input
                         type="number"
                         id="quantityMl"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline transition duration-200"
+                        className={styles.input}
                         value={quantityMl}
                         onChange={(e) => setQuantityMl(e.target.value)}
                         placeholder="Ví dụ: 250, 350, 450"
@@ -207,13 +208,13 @@ const RegisterDonation = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="reason" className="block text-gray-800 text-base font-semibold mb-2">
+                    <label htmlFor="reason" className={styles.label}>
                         Lý Do Đăng Ký Hiến Máu:
                     </label>
                     <textarea
                         id="reason"
                         rows="4"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline transition duration-200"
+                        className={styles.textarea}
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="Ví dụ: Tôi muốn góp phần giúp đỡ cộng đồng và những người cần máu."
@@ -224,7 +225,7 @@ const RegisterDonation = () => {
 
                 <button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-800 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={styles.submitButton}
                     disabled={isSubmitting}
                 >
                     {isSubmitting ? 'Đang gửi...' : 'Gửi Yêu Cầu Đăng Ký'}

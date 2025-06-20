@@ -1,6 +1,5 @@
-// src/components/staff-components/mainContent/DonationProcess.jsx
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../../configs/axios';
+import axiosInstance from '../../../../configs/axios';
 import styles from './DonationProcess.module.css';
 
 const formatDateTime = (isoString) => {
@@ -34,7 +33,19 @@ const DonationProcess = () => {
     const [error, setError] = useState(null);
     const [editingProcessId, setEditingProcessId] = useState(null);
     const [currentEditData, setCurrentEditData] = useState({});
-    const [bloodTypes, setBloodTypes] = useState([]);
+    
+    const staticBloodTypes = [
+        { id: 1, type: 'UNKNOWN', rhFactor: 'UNKNOWN' },
+        { id: 2, type: 'A', rhFactor: '+' },
+        { id: 3, type: 'A', rhFactor: '-' },
+        { id: 4, type: 'B', rhFactor: '+' },
+        { id: 5, type: 'B', rhFactor: '-' },
+        { id: 6, type: 'AB', rhFactor: '+' },
+        { id: 7, type: 'AB', rhFactor: '-' },
+        { id: 8, type: 'O', rhFactor: '+' },
+        { id: 9, type: 'O', rhFactor: '-' },
+    ];
+    const [bloodTypes] = useState(staticBloodTypes);
 
     const fetchProcesses = async () => {
         setLoading(true);
@@ -51,18 +62,8 @@ const DonationProcess = () => {
         }
     };
 
-    const fetchBloodTypes = async () => {
-        try {
-            const response = await axiosInstance.get('/blood-types');
-            setBloodTypes(response.data);
-        } catch (err) {
-            console.error("Lỗi khi tải nhóm máu:", err);
-        }
-    };
-
     useEffect(() => {
         fetchProcesses();
-        fetchBloodTypes();
     }, []);
 
     const handleEditClick = (processToEdit) => {
@@ -90,7 +91,28 @@ const DonationProcess = () => {
     const handleUpdateProcess = async (processId) => {
         if (window.confirm(`Bạn có chắc chắn muốn cập nhật quy trình ID ${processId} này không?`)) {
             try {
-                const response = await axiosInstance.put(`/donation-processes/edit/${processId}`, currentEditData);
+                const storedUser = localStorage.getItem('user');
+                let performerId = null;
+                if (storedUser) {
+                    try {
+                        const userObject = JSON.parse(storedUser);
+                        performerId = userObject.id;
+                    } catch (parseError) {
+                        console.error("Lỗi khi phân tích JSON từ localStorage:", parseError);
+                    }
+                }
+
+                if (!performerId) {
+                    alert('Không thể xác định người thực hiện (performerId). Vui lòng đăng nhập lại.');
+                    return;
+                }
+
+                const payload = {
+                    ...currentEditData,
+                    performerId: performerId
+                };
+
+                const response = await axiosInstance.put(`/donation-processes/edit/${processId}`, payload);
                 console.log("Quy trình đã được cập nhật:", response.data);
                 alert(`Quy trình ID ${processId} đã được cập nhật thành công!`);
                 setEditingProcessId(null);
@@ -163,12 +185,12 @@ const DonationProcess = () => {
                                                 <option value="">Chọn nhóm máu</option>
                                                 {bloodTypes.map(bt => (
                                                     <option key={bt.id} value={bt.id}>
-                                                        {bt.type}{bt.rhFactor}
+                                                        {bt.type}{bt.rhFactor === 'UNKNOWN' ? '' : bt.rhFactor}
                                                     </option>
                                                 ))}
                                             </select>
                                         ) : (
-                                            (process.bloodType ? `${process.bloodType.type}${process.bloodType.rhFactor}` : 'Unknown / Chưa cập nhật')
+                                            (process.bloodType ? `${process.bloodType.type}${process.bloodType.rhFactor === 'UNKNOWN' ? '' : process.bloodType.rhFactor}` : 'Unknown / Chưa cập nhật')
                                         )}
                                     </td>
                                     {/* Ngày hiến Thực tế (date) */}
@@ -311,17 +333,15 @@ const DonationProcess = () => {
                                                 className={styles.selectInput}
                                             >
                                                 <option value="">Chọn trạng thái</option>
-                                                {/* Cập nhật các option theo enum StatusProcess mới */}
                                                 <option value="IN_PROCESS">Đang tiến hành</option>
                                                 <option value="COMPLETED">Hoàn thành</option>
                                                 <option value="FAILED">Thất bại</option>
                                             </select>
                                         ) : (
                                             <span className={`${styles.statusBadge} ${styles[process.process ? process.process.toLowerCase() : '']}`}>
-                                                {/* Cập nhật logic hiển thị trạng thái */}
                                                 {process.process === 'IN_PROCESS' ? 'Đang tiến hành' :
-                                                 (process.process === 'COMPLETED' ? 'Hoàn thành' :
-                                                 (process.process === 'FAILED' ? 'Thất bại' : 'N/A'))}
+                                                    (process.process === 'COMPLETED' ? 'Hoàn thành' :
+                                                        (process.process === 'FAILED' ? 'Thất bại' : 'N/A'))}
                                             </span>
                                         )}
                                     </td>
@@ -342,7 +362,6 @@ const DonationProcess = () => {
                                                 </button>
                                             </>
                                         ) : (
-                                            // Chỉ cho phép chỉnh sửa nếu trạng thái chưa phải là COMPLETED hoặc FAILED
                                             process.process !== 'COMPLETED' && process.process !== 'FAILED' && (
                                                 <button
                                                     className={styles.editButton}
