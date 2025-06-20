@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./index.module.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
-import MemberDropdown from "./MemberDropdown";
+import MemberDropdown from "../member-components/sidebar/MemberDropdown";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -28,21 +28,19 @@ const closeMenu = () => {
                 </div>
             </div>
 
-            {/* Hamburger icon (sẽ được căn chỉnh riêng) */}
             <div className={styles.hamburger} onClick={toggleMenu}>
                 <span className={styles.bar}></span>
                 <span className={styles.bar}></span>
                 <span className={styles.bar}></span>
             </div>
 
-            {/* mainNav */}
             <div className={`${styles.mainNav} ${menuOpen ? styles.open : ""}`}>
                 <nav>
                     <ul>
                         {isAuthenticated && user?.role === "MEMBER" ? (
-                            <li><Link to="/member" onClick={closeMenu}>HOME</Link></li> // Nếu là member, HOME dẫn đến /member
+                            <li><Link to="/member" onClick={closeMenu}>HOME</Link></li>
                         ) : (
-                            <li><Link to="/" onClick={closeMenu}>HOME</Link></li> // Nếu không, HOME dẫn đến /
+                            <li><Link to="/" onClick={closeMenu}>HOME</Link></li>
                         )}
                         <li><Link to="/service" onClick={closeMenu}>SERVICE</Link></li>
                         <li><Link to="/emergency" onClick={closeMenu}>EMERGENCY</Link></li>

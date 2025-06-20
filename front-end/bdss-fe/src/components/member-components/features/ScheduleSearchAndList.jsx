@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axiosInstance from '../../configs/axios';
-import DataTable from '../common/Table/DataTable';
+import axiosInstance from '../../../configs/axios';
+import DataTable from '../../common/Table/DataTable';
 import styles from './ScheduleSearchAndList.module.css';
 import { useNavigate } from 'react-router-dom';
 

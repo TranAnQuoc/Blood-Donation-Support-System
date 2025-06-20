@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styles from "./MemberDropdown.module.css";
+import styles from "../sidebar/MemberDropdown.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/features/userSlice";
+import { logout } from "../../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const MemberDropdown = () => {
@@ -32,7 +32,7 @@ const MemberDropdown = () => {
 
       {open && (
         <div className={styles.menu}>
-          <button onClick={() => navigate("/profile")}>Profile</button>
+          <button onClick={() => navigate("/member/profile")}>Profile</button>
           <button onClick={handleLogout}>Log Out</button>
         </div>
       )}

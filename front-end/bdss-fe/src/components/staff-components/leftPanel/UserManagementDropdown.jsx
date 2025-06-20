@@ -1,22 +1,29 @@
-// src/components/staff-components/leftPanel/UserManagementDropdown.jsx
 import React from 'react';
-import styles from './UserManagementDropdown.module.css'; // Tạo file CSS này
+import { Link, useLocation } from 'react-router-dom';
+import commonStyles from '../leftPanel/commonDropdown.module.css';
 
-const UserManagementDropdown = ({ onSelectSubItem, activeItem }) => {
+const UserManagementDropdown = () => {
+    const location = useLocation();
+
+    const isSubItemActive = (pathSegment) => {
+        return location.pathname.startsWith(`/staff-dashboard/${pathSegment}`);
+    };
+
     const subItems = [
-        { id: 'user-staff-list', label: 'Danh Sách Nhân Viên' },
-        { id: 'user-member-list', label: 'Danh Sách Thành Viên' },
+        { id: 'staff-list', label: 'Danh Sách Nhân Viên', path: 'user-management/staff-list' },
+        { id: 'member-list', label: 'Danh Sách Thành Viên', path: 'user-management/member-list' },
     ];
 
     return (
-        <ul className={styles.dropdownMenu}>
+        <ul className={commonStyles.dropdownMenu}>
             {subItems.map(item => (
-                <li
-                    key={item.id}
-                    className={`${styles.dropdownMenuItem} ${activeItem === item.id ? styles.active : ''}`}
-                    onClick={() => onSelectSubItem(item.id)}
-                >
-                    {item.label}
+                <li key={item.id}>
+                    <Link
+                        to={`/staff-dashboard/${item.path}`}
+                        className={`${commonStyles.dropdownMenuItem} ${isSubItemActive(item.path) ? commonStyles.active : ''}`}
+                    >
+                        {item.label}
+                    </Link>
                 </li>
             ))}
         </ul>

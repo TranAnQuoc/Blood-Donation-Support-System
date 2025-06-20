@@ -1,6 +1,7 @@
-// src/components/LeftPanel/LeftPanel.jsx
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+
 import StaffDropdown from './StaffDropdown';
 import NavButton from './NavButton';
 import RequestManagementDropdown from './RequestManagementDropdown';
@@ -10,36 +11,36 @@ import HistoryDropdown from './HistoryDropdown';
 
 import styles from './LeftPanel.module.css';
 
-// Import FontAwesome icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faHome,           // Trang Chủ
-    faUsers,          // Quản Lý Người Dùng
-    faClipboardList,  // Quản Lý Yêu Cầu
-    faBook,           // Quản Lý Quy Trình
-    faHistory,        // Lịch Sử
-    faFileAlt,        // Đơn Đăng Ký
-    faCalendarAlt,    // Quản Lý Lịch Hiến Máu
-    faBox,            // Kho Máu
-    faBuilding,       // Điều Phối Liên Cơ Sở
-    faHourglassHalf,  // Trạng Thái Hiến Máu
-    faBell,           // Thông Báo
-    faCalendarCheck,  // Nhắc Nhở Hồi Phục
-    faNewspaper,      // Bài Viết Cộng Đồng
-    faChartBar,       // Báo Cáo
-    faHeadset         // Trung Tâm Hỗ Trợ
+    faHome,
+    faUsers,
+    faClipboardList,
+    faBook,
+    faHistory,
+    faFileAlt,
+    faCalendarAlt,
+    faBox,
+    faBuilding,
+    faHourglassHalf,
+    faBell,
+    faCalendarCheck,
+    faNewspaper,
+    faChartBar,
+    faHeadset
 } from '@fortawesome/free-solid-svg-icons';
 
-const LeftPanel = ({ onNavClick, activeItem }) => {
+const LeftPanel = () => {
     const [isRequestDropdownOpen, setIsRequestDropdownOpen] = useState(false);
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const [isProcessDropdownOpen, setIsProcessDropdownOpen] = useState(false);
     const [isHistoryDropdownOpen, setIsHistoryDropdownOpen] = useState(false);
 
     const user = useSelector(state => state.user);
-    const isLoggedIn = !!user?.token;// Giả sử user state có token khi đăng nhập thành công
+    const isLoggedIn = !!user?.token;
 
-    // Helper để đóng tất cả các dropdown khác
+    const location = useLocation();
+
     const closeAllDropdownsExcept = (dropdownToKeepOpen) => {
         if (dropdownToKeepOpen !== 'request') setIsRequestDropdownOpen(false);
         if (dropdownToKeepOpen !== 'user') setIsUserDropdownOpen(false);
@@ -67,61 +68,43 @@ const LeftPanel = ({ onNavClick, activeItem }) => {
         setIsHistoryDropdownOpen(!isHistoryDropdownOpen);
     };
 
-    const handleNavButtonClick = (id) => {
-        if (id === 'requestManagement') {
-            toggleRequestDropdown();
-        } else if (id === 'userManagement') {
-            toggleUserDropdown();
-        } else if (id === 'process') {
-            toggleProcessDropdown();
-        } else if (id === 'history') {
-            toggleHistoryDropdown();
-        }
-        else {
-            // Nếu là một NavButton độc lập, đóng tất cả dropdown và điều hướng
-            closeAllDropdownsExcept(null);
-            onNavClick(id);
-        }
-    };
-
-    const handleUserSubItemClick = (subItemId) => {
-        setIsUserDropdownOpen(false);
-        onNavClick(subItemId);
-    };
     
-    const handleRequestSubItemClick = (subItemId) => {
-        setIsRequestDropdownOpen(false); // Đóng dropdown sau khi chọn mục con
-        onNavClick(subItemId); // Gửi ID của mục con lên Layout
+    const isNavItemActive = (expectedPathSegment) => {
+        if (expectedPathSegment === 'userManagement') {
+            return location.pathname.startsWith('/staff-dashboard/user-management');
+        }
+        if (expectedPathSegment === 'requestManagement') {
+            return location.pathname.startsWith('/staff-dashboard/transfusion-requests-management') || location.pathname.startsWith('/staff-dashboard/donation-requests') || location.pathname.startsWith('/staff-dashboard/emergency-transfusion-requests');
+        }
+        if (expectedPathSegment === 'process') {
+            return location.pathname.startsWith('/staff-dashboard/donation-processes') || location.pathname.startsWith('/staff-dashboard/transfusion-processes') || location.pathname.startsWith('/staff-dashboard/emergency-transfusion-processes');
+        }
+        if (expectedPathSegment === 'history') {
+            return location.pathname.startsWith('/staff-dashboard/donation-histories');
+        }
+
+        if (expectedPathSegment === '') {
+            return location.pathname === '/staff-dashboard' || location.pathname === '/staff-dashboard/';
+        }
+        return location.pathname.startsWith(`/staff-dashboard/${expectedPathSegment}`);
     };
 
-    const handleProcessSubItemClick = (subItemId) => {
-        setIsProcessDropdownOpen(false);
-        onNavClick(subItemId);
-    };
-
-    const handleHistorySubItemClick = (subItemId) => {
-        setIsHistoryDropdownOpen(false);
-        onNavClick(subItemId);
-    };
-
-
-    // Điều chỉnh lại navItems để khớp với hình ảnh và sử dụng FontAwesome icons
     const navItems = [
-        { id: 'home', icon: faHome, label: 'Trang chủ' },
-        { id: 'userManagement', icon: faUsers, label: 'Quản Lý Người Dùng', hasDropdown: true }, // Có dropdown
-        { id: 'requestManagement', icon: faClipboardList, label: 'Quản Lý Yêu Cầu', hasDropdown: true }, // Có dropdown
-        { id: 'process', icon: faBook, label: 'Quy Trình', hasDropdown: true }, // Có dropdown
-        { id: 'history', icon: faHistory, label: 'Lịch Sử', hasDropdown: true }, // Có dropdown
-        { id: 'registrationList', icon: faFileAlt, label: 'Đơn Đăng Ký' },
-        { id: 'scheduleManagement', icon: faCalendarAlt, label: 'Quản Lý Lịch Hiến Máu' },
-        { id: 'bloodStock', icon: faBox, label: 'Kho Máu' },
-        { id: 'interFacilityCoordination', icon: faBuilding, label: 'Điều Phối Liên Cơ Sở' },
-        { id: 'donationStatus', icon: faHourglassHalf, label: 'Trạng Thái Hiến Máu' },
-        { id: 'notifications', icon: faBell, label: 'Thông Báo' },
-        { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục' },
-        { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng' },
-        { id: 'reports', icon: faChartBar, label: 'Báo Cáo' },
-        { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ' },
+        { id: 'home', icon: faHome, label: 'Trang chủ', fullPath: '/staff-dashboard' },
+        { id: 'userManagement', icon: faUsers, label: 'Quản Lý Người Dùng', hasDropdown: true },
+        { id: 'requestManagement', icon: faClipboardList, label: 'Quản Lý Yêu Cầu', hasDropdown: true },
+        { id: 'process', icon: faBook, label: 'Quy Trình', hasDropdown: true },
+        { id: 'history', icon: faHistory, label: 'Lịch Sử', hasDropdown: true },
+        { id: 'registrationList', icon: faFileAlt, label: 'Đơn Đăng Ký', fullPath: '/staff-dashboard/registration-list' },
+        { id: 'scheduleManagement', icon: faCalendarAlt, label: 'Quản Lý Lịch Hiến Máu', fullPath: '/staff-dashboard/schedule-management' },
+        { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-stock' },
+        { id: 'interFacilityCoordination', icon: faBuilding, label: 'Điều Phối Liên Cơ Sở', fullPath: '/staff-dashboard/inter-facility-coordination' },
+        { id: 'donationStatus', icon: faHourglassHalf, label: 'Trạng Thái Hiến Máu', fullPath: '/staff-dashboard/donation-status' },
+        { id: 'notifications', icon: faBell, label: 'Thông Báo', fullPath: '/staff-dashboard/notifications' },
+        { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/staff-dashboard/recovery-reminders' },
+        { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/staff-dashboard/community-posts' },
+        { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/staff-dashboard/reports' },
+        { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ', fullPath: '/staff-dashboard/support-center' },
     ];
 
     return (
@@ -129,71 +112,66 @@ const LeftPanel = ({ onNavClick, activeItem }) => {
             <StaffDropdown />
             <div className={styles.navButtonsContainer}>
                 {navItems.map(item => {
-                    // Tính toán trạng thái active cho NavButton
-                    const isActive = activeItem === item.id ||
-                        (typeof activeItem === 'string' && activeItem.startsWith('request-')) ||
-                        (typeof activeItem === 'string' && activeItem.startsWith('user-')) ||
-                        (typeof activeItem === 'string' && activeItem.startsWith('process-')) ||
-                        (typeof activeItem === 'string' && activeItem.startsWith('history-'));
-
-                    // Logic render cho từng loại mục
-                    // --- Start: Logic chung cho các NavButton có dropdown ---
-                    if (item.hasDropdown) {
-                        let isDropdownOpen;
-                        let DropdownComponent;
-                        let handleSubItemClick;
-
-                        if (item.id === 'userManagement') {
-                            if (!isLoggedIn) return null; // Không render nếu chưa đăng nhập
-                            isDropdownOpen = isUserDropdownOpen;
-                            DropdownComponent = UserManagementDropdown;
-                            handleSubItemClick = handleUserSubItemClick;
-                        } else if (item.id === 'requestManagement') {
-                            isDropdownOpen = isRequestDropdownOpen;
-                            DropdownComponent = RequestManagementDropdown;
-                            handleSubItemClick = handleRequestSubItemClick;
-                        } else if (item.id === 'process') {
-                            isDropdownOpen = isProcessDropdownOpen;
-                            DropdownComponent = ProcessDropdown;
-                            handleSubItemClick = handleProcessSubItemClick;
-                        } else if (item.id === 'history') {
-                            isDropdownOpen = isHistoryDropdownOpen;
-                            DropdownComponent = HistoryDropdown;
-                            handleSubItemClick = handleHistorySubItemClick;
+                    const handleNavButtonClick = () => {
+                        if (item.id === 'userManagement') toggleUserDropdown();
+                        else if (item.id === 'requestManagement') toggleRequestDropdown();
+                        else if (item.id === 'process') toggleProcessDropdown();
+                        else if (item.id === 'history') toggleHistoryDropdown();
+                        else {
+                            closeAllDropdownsExcept(null);
                         }
+                    };
 
-                        return (
-                            <div key={item.id}>
-                                <NavButton
-                                    icon={<FontAwesomeIcon icon={item.icon} />}
-                                    label={item.label}
-                                    onClick={() => handleNavButtonClick(item.id)}
-                                    isActive={isActive}
-                                    hasDropdown={true} // Luôn là true cho các mục này vì chúng có dropdown
-                                    isArrowUp={isDropdownOpen}
-                                />
-                                {isDropdownOpen && (
-                                    <DropdownComponent onSelectSubItem={handleSubItemClick} activeItem={activeItem} />
-                                )}
-                            </div>
-                        );
-                    }
-                    // --- End: Logic chung cho các NavButton có dropdown ---
+                    let isDropdownOpen = false;
+                    let DropdownComponent = null;
 
-                    // --- Start: Logic cho các NavButton không có dropdown (độc lập) ---
-                    else {
-                        return (
-                            <NavButton
-                                key={item.id}
-                                icon={<FontAwesomeIcon icon={item.icon} />}
-                                label={item.label}
-                                onClick={() => handleNavButtonClick(item.id)}
-                                isActive={isActive}
-                                hasDropdown={false} // Luôn là false cho các mục này
-                            />
-                        );
+                    if (item.id === 'userManagement') {
+                        if (!isLoggedIn) return null;
+                        isDropdownOpen = isUserDropdownOpen;
+                        DropdownComponent = UserManagementDropdown;
+                    } else if (item.id === 'requestManagement') {
+                        isDropdownOpen = isRequestDropdownOpen;
+                        DropdownComponent = RequestManagementDropdown;
+                    } else if (item.id === 'process') {
+                        isDropdownOpen = isProcessDropdownOpen;
+                        DropdownComponent = ProcessDropdown;
+                    } else if (item.id === 'history') {
+                        isDropdownOpen = isHistoryDropdownOpen;
+                        DropdownComponent = HistoryDropdown;
                     }
-                    // --- End: Logic cho các NavButton không có dropdown (độc lập) ---
+
+                    return (
+                        <div key={item.id}>
+                            {item.hasDropdown ? (
+                                <>
+                                    <NavButton
+                                        icon={<FontAwesomeIcon icon={item.icon} />}
+                                        label={item.label}
+                                        onClick={handleNavButtonClick}
+                                        isActive={isNavItemActive(item.id)}
+                                        hasDropdown={true}
+                                        isArrowUp={isDropdownOpen}
+                                    />
+                                    {isDropdownOpen && DropdownComponent && (
+                                        <DropdownComponent />
+                                    )}
+                                </>
+                            ) : (
+                                <Link
+                                    to={item.fullPath}
+                                    className={`${styles.navItem} ${isNavItemActive(item.path || item.id) ? styles.active : ''}`}
+                                    onClick={handleNavButtonClick}
+                                >
+                                    <NavButton
+                                        icon={<FontAwesomeIcon icon={item.icon} />}
+                                        label={item.label}
+                                        isActive={isNavItemActive(item.path || item.id)}
+                                        hasDropdown={false}
+                                    />
+                                </Link>
+                            )}
+                        </div>
+                    );
                 })}
             </div>
         </div>

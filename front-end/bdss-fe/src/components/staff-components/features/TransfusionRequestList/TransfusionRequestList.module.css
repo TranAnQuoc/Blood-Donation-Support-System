@@ -1,0 +1,207 @@
+/* src/components/staff-components/TransfusionRequestList.module.css */
+
+/* Đồng bộ với .donationRequestListContainer */
+.container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Màu nền nhẹ hơn */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bóng nhẹ */
+    max-width: 95%; /* Tăng max-width để hiển thị nhiều cột hơn */
+    margin: 30px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container h2 {
+    /* Đã dùng text-3xl font-bold mb-8 text-center text-red-700 trong JSX,
+       nên các style này trong CSS có thể bị Tailwind override hoặc bạn không cần nữa.
+       Nếu không dùng Tailwind cho h2, hãy giữ các style này. */
+    color: #007bff; /* Thay đổi màu theo thiết kế của bạn */
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: 600;
+}
+
+/* Đồng bộ với .tableWrapper */
+.tableWrapper {
+    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
+    margin-top: 20px;
+}
+
+/* Đồng bộ với .donationRequestTable */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden; /* Đảm bảo góc bo tròn hiển thị đúng */
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Đồng bộ với .donationRequestTable th */
+.table th {
+    background-color: #007bff; /* Màu xanh dương cho header */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+/* Đồng bộ với .donationRequestTable tbody tr:nth-child(even) */
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Hàng chẵn màu xám nhạt */
+}
+
+/* Đồng bộ với .donationRequestTable tbody tr:hover */
+.table tbody tr:hover {
+    background-color: #e9ecef; /* Hiệu ứng hover */
+}
+
+/* Đồng bộ với .loadingMessage, .errorMessage, .noRequestsMessage */
+.loadingMessage,
+.errorMessage,
+.noRequestsMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.errorMessage {
+    color: #dc3545; /* Màu đỏ cho lỗi */
+    font-weight: bold;
+}
+
+/* Đồng bộ với .statusBadge */
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+}
+
+/* Đồng bộ với các trạng thái */
+.statusBadge.pending {
+    background-color: #ffc107; /* Màu vàng */
+    color: #343a40;
+}
+
+.statusBadge.approved {
+    background-color: #28a745; /* Màu xanh lá cây */
+    color: white;
+}
+
+.statusBadge.rejected { /* Thêm trạng thái rejected nếu có */
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}
+
+.statusBadge.cancelled {
+    background-color: #6c757d; /* Màu xám */
+    color: white;
+}
+
+/* Đồng bộ với các kiểu cho nút Duyệt/Từ chối */
+.approveButton,
+.cancelButton {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.approveButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.approveButton:hover {
+    background-color: #218838;
+}
+
+.cancelButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #c82333;
+}
+
+/* Responsive design (giữ nguyên) */
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #555;
+    }
+}
+
+.viewButton {
+    padding: 8px 12px;
+    background-color: #007bff; /* Màu xanh dương */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    text-decoration: none; /* Bỏ gạch chân cho Link */
+    display: inline-block; /* Để padding và margin hoạt động */
+    text-align: center;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.viewButton:hover {
+    background-color: #0056b3;
+}
+
+/* Cập nhật responsive table để tính cho cột hành động */
+@media (max-width: 768px) {
+    /* ... các style đã có ... */
+    .table td[data-label="Hành động"] {
+        text-align: center; /* Căn giữa nút hành động trên mobile */
+        padding-left: 15px; /* Giảm padding trái nếu không cần label */
+    }
+    .table td[data-label="Hành động"]::before {
+        display: none; /* Ẩn label "Hành động" trên mobile nếu nút đã rõ ràng */
+    }
+}

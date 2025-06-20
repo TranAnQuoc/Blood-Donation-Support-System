@@ -85,7 +85,7 @@ function LoginForm() {
       if (userData.role === 'ADMIN') {
         navigate('/admin');
       } else if (userData.role === 'STAFF') {
-        navigate('/staff');
+        navigate('/staff-dashboard');
       } else if (userData.role === 'MEMBER') {
         navigate('/member');
       } else {

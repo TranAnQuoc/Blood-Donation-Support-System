@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../../configs/axios';
+import axiosInstance from '../../../../configs/axios';
 import styles from './DonationHistoryList.module.css';
 
 const formatDateTime = (isoString) => {
