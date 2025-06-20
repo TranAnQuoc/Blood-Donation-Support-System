@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.entity.transfusion;
 
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import com.gtwo.bdss_system.enums.StatusProcess;
@@ -9,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "transfusion_process")
-public class TransfusionProcess {
+public class TransfusionProcess implements Persistable<Long>{
 
     @Id
     @Column(name = "transfusion_request_id")
@@ -50,5 +51,14 @@ public class TransfusionProcess {
 
     @Column(name = "allergy_notes", columnDefinition = "TEXT")
     private String allergyNotes;
+
+    @Transient
+    private boolean isNew = false;
+
+    public void markAsNew() { this.isNew = true; }
+
+    @Override public Long getId() { return id; }
+    @Override public boolean isNew() { return isNew; }
+
 
 }

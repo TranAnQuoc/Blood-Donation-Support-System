@@ -36,17 +36,19 @@ public class TransfusionProcessServiceImpl implements TransfusionProcessService 
         TransfusionProcess proc = procRepo.findById(requestId)
                 .orElseGet(() -> {
                     TransfusionProcess p = new TransfusionProcess();
-                    p.setRequest(req);
                     p.setId(requestId);
+                    p.setRequest(req);
+                    p.markAsNew();
                     return p;
                 });
 
-        mapper.map(dto, proc);
 
+        mapper.map(dto, proc);
         if (proc.getTransfusionStartedAt() == null) {
             proc.setTransfusionStartedAt(LocalDateTime.now());
         }
         proc.setStatus(StatusProcess.IN_PROCESS);
+
         return procRepo.save(proc);
     }
 

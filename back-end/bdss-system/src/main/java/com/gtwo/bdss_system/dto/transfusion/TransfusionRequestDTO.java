@@ -8,9 +8,6 @@ import lombok.Data;
 @Data
 public class TransfusionRequestDTO {
 
-    @NotNull
-    private Long recipientId;
-
     @NotNull @Size(max = 50)
     private String bloodComponentNeeded;
 

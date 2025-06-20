@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.controller.transfusion;
 
 import com.gtwo.bdss_system.dto.transfusion.TransfusionRequestDTO;
 import com.gtwo.bdss_system.dto.transfusion.TransfusionRequestResponseDTO;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.transfusion.TransfusionRequest;
 import com.gtwo.bdss_system.service.transfusion.TransfusionRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +33,9 @@ public class TransfusionRequestAPI {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @PostMapping
     public ResponseEntity<TransfusionRequestResponseDTO> create(
+            @AuthenticationPrincipal Account account,
             @Validated @RequestBody TransfusionRequestDTO dto) {
-        TransfusionRequest req = service.create(dto);
+        TransfusionRequest req = service.create(account, dto);
         TransfusionRequestResponseDTO resp = mapper.map(req, TransfusionRequestResponseDTO.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
