@@ -29,13 +29,10 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
     }
 
     @Override
-    public TransfusionRequest create(TransfusionRequestDTO dto) {
+    public TransfusionRequest create(Account account, TransfusionRequestDTO dto) {
         TransfusionRequest e = new TransfusionRequest();
 
-        Account recipient = accountRepo.findById(dto.getRecipientId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Không tìm thấy Account với id=" + dto.getRecipientId()));
-        e.setRecipient(recipient);
+        e.setRecipient(account);
 
         e.setBloodComponentNeeded(dto.getBloodComponentNeeded());
         e.setQuantityNeeded(dto.getQuantityNeeded());
@@ -44,7 +41,7 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
 
         e.setRequestedAt(LocalDateTime.now());
         e.setStatus(StatusRequest.PENDING);
-        
+
         return repo.save(e);
     }
 
