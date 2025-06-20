@@ -1,48 +1,4 @@
-/* src/components/staff-components/mainContent/DonationProcess.module.css */
-
-.donationProcessContainer {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.tableWrapper {
-    overflow-x: auto;
-    margin-top: 20px;
-}
-
-.donationProcessTable {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.donationProcessTable th,
-.donationProcessTable td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    vertical-align: middle; /* Căn giữa theo chiều dọc */
-}
-
-.donationProcessTable th {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.9em;
-}
-
-.donationProcessTable tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.donationProcessTable tbody tr:hover {
-    background-color: #e9ecef;
-}
+/* src/components/DonationProcess/DonationProcess.module.css */
 
 .loadingMessage,
 .errorMessage,
@@ -54,115 +10,102 @@
 }
 
 .errorMessage {
-    color: #dc3545;
+    color: #dc3545; /* Red for errors */
     font-weight: bold;
+}
+
+.donationProcessListContainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 1200px; /* Có thể điều chỉnh */
+    margin: 20px auto;
+}
+
+.donationProcessListContainer h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.processCardsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid for cards */
+    gap: 20px;
+    justify-content: center;
+}
+
+.processCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.processCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.processCard h3 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.processCard p {
+    margin-bottom: 8px;
+    color: #666;
+}
+
+.processCard strong {
+    color: #333;
 }
 
 .statusBadge {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.85em;
-    text-transform: uppercase;
-    white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
-}
-
-/* Các màu sắc cho trạng thái quy trình */
-.statusBadge.pending {
-    background-color: #ffc107; /* Màu vàng */
-    color: #343a40;
-}
-.statusBadge.in_progress {
-    background-color: #17a2b8; /* Màu xanh ngọc */
-    color: white;
-}
-.statusBadge.completed {
-    background-color: #28a745; /* Màu xanh lá cây */
-    color: white;
-}
-.statusBadge.incompleted {
-    background-color: #dc3545; /* Màu đỏ */
-    color: white;
-}
-
-/* Kiểu cho input, select, textarea */
-.textInput,
-.numberInput,
-.selectInput,
-.textareaInput {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 4px 8px;
     border-radius: 4px;
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+    margin-left: 10px;
     font-size: 0.9em;
 }
 
-.textareaInput {
-    min-height: 50px;
-    resize: vertical; /* Cho phép thay đổi kích thước theo chiều dọc */
+.statusBadge.in_process {
+    background-color: #ffc107; /* yellow */
 }
 
-/* Kiểu cho nút */
-.editButton,
-.saveButton,
-.cancelEditButton {
-    padding: 8px 12px;
-    margin-right: 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.2s ease-in-out;
-    white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
+.statusBadge.completed {
+    background-color: #28a745; /* green */
 }
 
-.editButton {
+.statusBadge.failed {
+    background-color: #dc3545; /* red */
+}
+
+.viewDetailButton {
     background-color: #007bff;
     color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px;
+    width: 100%;
+    transition: background-color 0.2s ease;
 }
-.editButton:hover {
+
+.viewDetailButton:hover {
     background-color: #0056b3;
 }
 
-.saveButton {
-    background-color: #28a745;
-    color: white;
-}
-.saveButton:hover {
-    background-color: #218838;
-}
-
-.cancelEditButton {
-    background-color: #6c757d;
-    color: white;
-}
-.cancelEditButton:hover {
-    background-color: #5a6268;
-}
-
-/* Optional: Kiểu cho các biểu tượng hoặc dấu tick/cross */
-.icon {
-    font-size: 1.2em;
-    vertical-align: middle;
-}
-.icon.check {
-    color: #28a745;
-}
-.icon.cross {
-    color: #dc3545;
-}
-
-.statusBadge.in_process { /* Đổi từ .statusBadge.in_progress sang .in_process nếu cần */
-    background-color: #17a2b8; /* Màu xanh ngọc */
-    color: white;
-}
-.statusBadge.completed {
-    background-color: #28a745; /* Màu xanh lá cây */
-    color: white;
-}
-.statusBadge.failed { /* Thêm style cho trạng thái FAILED */
-    background-color: #dc3545; /* Màu đỏ */
-    color: white;
-}
+/* Bạn có thể bỏ qua các style table cũ như .donationProcessTable, .tableWrapper nếu không còn dùng bảng nữa */

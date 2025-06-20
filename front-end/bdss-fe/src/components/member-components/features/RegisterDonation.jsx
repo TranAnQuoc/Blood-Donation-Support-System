@@ -10,7 +10,7 @@ const RegisterDonation = () => {
     const [donationSchedules, setDonationSchedules] = useState([]);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
     const [selectedBloodType, setSelectedBloodType] = useState(null);
-    const [quantityMl, setQuantityMl] = useState('');
+    //const [quantityMl, setQuantityMl] = useState('');
     const [reason, setReason] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -62,20 +62,20 @@ const RegisterDonation = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!selectedSchedule || !selectedBloodType || !quantityMl || !reason) {
+        if (!selectedSchedule || !selectedBloodType ||  !reason) { //!quantityMl ||
             toast.error('Vui lòng điền đầy đủ tất cả các trường.');
             return;
         }
 
-        const parsedQuantityMl = parseInt(quantityMl);
-        if (isNaN(parsedQuantityMl) || parsedQuantityMl <= 0) {
-            toast.error('Số lượng máu phải là một số dương.');
-            return;
-        }
+        // const parsedQuantityMl = parseInt(quantityMl);
+        // if (isNaN(parsedQuantityMl) || parsedQuantityMl <= 0) {
+        //     toast.error('Số lượng máu phải là một số dương.');
+        //     return;
+        // }
 
         const payload = {
             bloodTypeId: selectedBloodType.value,
-            quantityMl: parsedQuantityMl,
+            //quantityMl: parsedQuantityMl,
             reason: reason.trim(),
         };
 
@@ -91,7 +91,7 @@ const RegisterDonation = () => {
 
             setSelectedSchedule(null);
             setSelectedBloodType(null);
-            setQuantityMl('');
+            //setQuantityMl('');
             setReason('');
             setHasRegisteredBefore(false);
 
@@ -190,7 +190,7 @@ const RegisterDonation = () => {
                     />
                 </div>
 
-                <div>
+                {/* <div>
                     <label htmlFor="quantityMl" className={styles.label}>
                         Số Lượng Máu (ml):
                     </label>
@@ -205,7 +205,7 @@ const RegisterDonation = () => {
                         required
                         disabled={isSubmitting}
                     />
-                </div>
+                </div> */}
 
                 <div>
                     <label htmlFor="reason" className={styles.label}>
