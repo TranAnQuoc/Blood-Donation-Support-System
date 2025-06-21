@@ -17,4 +17,5 @@ public interface DonationProcessService {
     void restore(Long id);
     DonationProcess autoCreateByRequest(DonationRequest request);
     DonationProcessViewDTO processViewDTO(DonationProcess entity);
+    DonationProcessDTO getMyLatestProcess(Long userId);
 }

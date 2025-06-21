@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.entity.donation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.DonationType;
 import com.gtwo.bdss_system.enums.Status;
@@ -19,8 +20,9 @@ public class DonationProcess {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "RequestId")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Request_ID", unique = true)
+    @JsonIgnore
     private DonationRequest request;
 
     @Column(name = "StartTime")
@@ -55,6 +57,7 @@ public class DonationProcess {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Performer_ID")
+    @JsonIgnore
     private Account performer;
 
     @Column(name = "Status_Activate")
