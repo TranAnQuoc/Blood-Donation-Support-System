@@ -19,6 +19,7 @@ import com.gtwo.bdss_system.repository.donation.DonationProcessRepository;
 import com.gtwo.bdss_system.service.donation.DonationProcessService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class DonationProcessServiceImpl implements DonationProcessService {
 
     @Autowired
     private DonationHistoryRepository historyRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public DonationProcess getById(Long id) {
@@ -200,5 +204,12 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setStatus(process.getProcess());
         process.setStatus(Status.INACTIVE);
         historyRepository.save(history);
+    }
+
+    @Override
+    public DonationProcessDTO getMyLatestProcess(Long userId) {
+        DonationProcess process = processRepository.findLatestByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Bạn chưa có tiến trình hiến máu nào."));
+        return modelMapper.map(process, DonationProcessDTO.class);
     }
 }
