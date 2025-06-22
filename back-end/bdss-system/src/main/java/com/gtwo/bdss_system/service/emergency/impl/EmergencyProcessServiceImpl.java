@@ -20,7 +20,6 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
 
     @Autowired private EmergencyProcessRepository repository;
     @Autowired private EmergencyRequestRepository requestRepository;
-    @Autowired private MedicalFacilityRepository facilityRepository;
     @Autowired private AuthenticationRepository accountRepository;
 
     @Override
@@ -59,15 +58,15 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
     private EmergencyProcess mapToEntity(EmergencyProcessDTO dto) {
         EmergencyRequest request = requestRepository.findById(dto.getRequestId())
                 .orElseThrow(() -> new RuntimeException("Invalid request ID"));
-        MedicalFacility facility = facilityRepository.findById(dto.getAssignedFacilityId())
-                .orElseThrow(() -> new RuntimeException("Invalid facility ID"));
+        //MedicalFacility facility = facilityRepository.findById(dto.getAssignedFacilityId())
+                //.orElseThrow(() -> new RuntimeException("Invalid facility ID"));
         Account staff = accountRepository.findById(dto.getAssignedStaffId())
                 .orElseThrow(() -> new RuntimeException("Invalid staff ID"));
 
         EmergencyProcess entity = new EmergencyProcess();
         entity.setId(dto.getId());
         entity.setEmergencyRequest(request);
-        entity.setAssignedFacility(facility);
+        //entity.setAssignedFacility(facility);
         entity.setAssignedStaff(staff);
         entity.setConfirmed(dto.getConfirmed());
         entity.setHealthCheckSummary(dto.getHealthCheckSummary());
@@ -81,7 +80,7 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         EmergencyProcessDTO dto = new EmergencyProcessDTO();
         dto.setId(entity.getId());
         dto.setRequestId(entity.getEmergencyRequest().getId());
-        dto.setAssignedFacilityId(entity.getAssignedFacility().getId());
+        //dto.setAssignedFacilityId(entity.getAssignedFacility().getId());
         dto.setAssignedStaffId(entity.getAssignedStaff().getId());
         dto.setHealthCheckSummary(entity.getHealthCheckSummary());
         dto.setConfirmed(entity.getConfirmed());

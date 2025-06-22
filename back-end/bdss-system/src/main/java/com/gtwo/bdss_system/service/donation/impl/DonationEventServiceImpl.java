@@ -1,11 +1,11 @@
 package com.gtwo.bdss_system.service.donation.impl;
 
-import com.gtwo.bdss_system.dto.donation.DonationScheduleDTO;
-import com.gtwo.bdss_system.entity.donation.DonationSchedule;
+import com.gtwo.bdss_system.dto.donation.DonationEventDTO;
+import com.gtwo.bdss_system.entity.donation.DonationEvent;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
-import com.gtwo.bdss_system.repository.donation.DonationScheduleRepository;
-import com.gtwo.bdss_system.service.donation.DonationScheduleService;
+import com.gtwo.bdss_system.repository.donation.DonationEventRepository;
+import com.gtwo.bdss_system.service.donation.DonationEventService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,44 +16,44 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
-public class DonationScheduleServiceImpl implements DonationScheduleService {
+public class DonationEventServiceImpl implements DonationEventService {
 
     @Autowired
-    private DonationScheduleRepository repository;
+    private DonationEventRepository repository;
 
     @Autowired
     private DonationRequestRepository donationRequestRepository;
 
     @Override
-    public List<DonationSchedule> getAll() {
-        List<DonationSchedule> schedules = repository.findAllByStatus(Status.ACTIVE);
-        for (DonationSchedule schedule : schedules) {
+    public List<DonationEvent> getAll() {
+        List<DonationEvent> schedules = repository.findAllByStatus(Status.ACTIVE);
+        for (DonationEvent schedule : schedules) {
             schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(schedule.getId()));
         }
         return schedules;
     }
 
     @Override
-    public List<DonationSchedule> getAllForStaff() {
-        List<DonationSchedule> schedules = repository.findAll();
-        for (DonationSchedule schedule : schedules) {
+    public List<DonationEvent> getAllForStaff() {
+        List<DonationEvent> schedules = repository.findAll();
+        for (DonationEvent schedule : schedules) {
             schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(schedule.getId()));
         }
         return schedules;
     }
 
     @Override
-    public DonationSchedule getById(Long id) {
-        DonationSchedule schedule = repository.findById(id)
+    public DonationEvent getById(Long id) {
+        DonationEvent schedule = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hiến máu với ID: " + id));
         schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(id));
         return schedule;
     }
 
     @Override
-    public List<DonationSchedule> getByDateRange(Date fromDate, Date toDate) {
-        List<DonationSchedule> schedules = repository.findByDateRangeAndActive(fromDate, toDate);
-        for (DonationSchedule schedule : schedules) {
+    public List<DonationEvent> getByDateRange(Date fromDate, Date toDate) {
+        List<DonationEvent> schedules = repository.findByDateRangeAndActive(fromDate, toDate);
+        for (DonationEvent schedule : schedules) {
             int approved = donationRequestRepository.countScheduleIdInRequest(schedule.getId());
             schedule.setCurrentSlot(approved);
         }
@@ -61,8 +61,8 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
     }
 
     @Override
-    public DonationSchedule create(DonationScheduleDTO dto) {
-        DonationSchedule schedule = new DonationSchedule();
+    public DonationEvent create(DonationEventDTO dto) {
+        DonationEvent schedule = new DonationEvent();
         LocalTime start = dto.getStartTime().toLocalTime();
         LocalTime end = dto.getEndTime().toLocalTime();
         long duration = ChronoUnit.MINUTES.between(start, end);
@@ -84,8 +84,8 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
 
 
     @Override
-    public DonationSchedule update(Long id, DonationScheduleDTO updated) {
-        DonationSchedule existing = getById(id);
+    public DonationEvent update(Long id, DonationEventDTO updated) {
+        DonationEvent existing = getById(id);
         LocalTime start = updated.getStartTime().toLocalTime();
         LocalTime end = updated.getEndTime().toLocalTime();
         long duration = ChronoUnit.MINUTES.between(start, end);
@@ -108,7 +108,7 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
 
     @Override
     public void delete(Long id) {
-        DonationSchedule schedule = repository.findById(id)
+        DonationEvent schedule = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + id));
         schedule.setStatus(Status.INACTIVE);
         repository.save(schedule);
@@ -116,7 +116,7 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
 
     @Override
     public void restore(Long id) {
-        DonationSchedule schedule = repository.findById(id)
+        DonationEvent schedule = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Schedule not found with id: " + id));
         schedule.setStatus(Status.ACTIVE);
         repository.save(schedule);

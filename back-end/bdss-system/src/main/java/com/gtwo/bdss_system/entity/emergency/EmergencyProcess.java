@@ -27,9 +27,9 @@ public class EmergencyProcess {
     @Column(name = "confirmed")
     private Boolean confirmed;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "assigned_facility_id")
-    private MedicalFacility assignedFacility;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "assigned_facility_id")
+//    private MedicalFacility assignedFacility;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_staff")

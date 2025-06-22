@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DonationRequestRepository extends JpaRepository<DonationRequest, Long> {
-    @Query("SELECT COUNT(r) FROM DonationRequest r WHERE r.schedule.id = :scheduleId AND r.statusRequest = 'APPROVED'")
+    @Query("SELECT COUNT(r) FROM DonationRequest r WHERE r.event.id = :scheduleId AND r.statusRequest = 'APPROVED'")
     int countScheduleIdInRequest(@Param("scheduleId") Long scheduleId);
     List<DonationRequest> findByStatusRequest(StatusRequest statusRequest);
     @Query("""

@@ -1,5 +1,5 @@
 package com.gtwo.bdss_system.enums;
 
 public enum StatusProcess {
-    IN_PROCESS, COMPLETED, FAILED
+    WAITING, SCREENING, SCREENING_FAILED, IN_PROCESS, COMPLETED, FAILED, DONOR_CANCEL
 }

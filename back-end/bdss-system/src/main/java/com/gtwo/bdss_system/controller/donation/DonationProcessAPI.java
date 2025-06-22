@@ -68,10 +68,18 @@ public class DonationProcessAPI {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("/my-process")
     public ResponseEntity<DonationProcessDTO> getMyProcess(@AuthenticationPrincipal Account user) {
         Long userId = user.getId();
         DonationProcessDTO dto = service.getMyLatestProcess(userId);
         return ResponseEntity.ok(dto);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/auto-cancel")
+    public ResponseEntity<String> autoCancel() {
+        service.autoCancelExpiredProcesses();
+        return ResponseEntity.ok("Đã cập nhật các đơn quá hạn.");
     }
 }
