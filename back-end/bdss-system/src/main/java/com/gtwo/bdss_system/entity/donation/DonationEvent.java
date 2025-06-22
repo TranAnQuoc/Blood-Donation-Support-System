@@ -10,7 +10,7 @@ import java.sql.Time;
 @Entity
 @Table(name = "Donation_Schedule")
 @Data
-public class DonationSchedule {
+public class DonationEvent {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

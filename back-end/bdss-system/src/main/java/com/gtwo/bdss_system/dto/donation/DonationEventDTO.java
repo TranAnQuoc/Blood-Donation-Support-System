@@ -12,7 +12,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
-public class DonationScheduleDTO {
+public class DonationEventDTO {
     @NotBlank(message = "Tên lịch hiến máu không được để trống")
     private String name;
 

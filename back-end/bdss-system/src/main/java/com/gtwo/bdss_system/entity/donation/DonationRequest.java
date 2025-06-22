@@ -23,8 +23,8 @@ public class DonationRequest {
     private Account donor;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Schedule_ID")
-    private DonationSchedule schedule;
+    @JoinColumn(name = "Event_ID")
+    private DonationEvent event;
 
     @Column(name = "Request_Time")
     private LocalDateTime requestTime;

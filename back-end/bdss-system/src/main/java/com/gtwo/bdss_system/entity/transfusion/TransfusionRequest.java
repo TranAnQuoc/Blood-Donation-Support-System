@@ -30,8 +30,8 @@ public class TransfusionRequest {
     @Column(name="approved_at")
     private LocalDateTime approvedAt;
 
-    @ManyToOne @JoinColumn(name="facility_id")
-    private MedicalFacility facility;
+//    @ManyToOne @JoinColumn(name="facility_id")
+//    private MedicalFacility facility;
 
     @Column(name="blood_component_needed", length=50)
     private String bloodComponentNeeded;

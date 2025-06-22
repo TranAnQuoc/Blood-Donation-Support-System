@@ -4,12 +4,12 @@ import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
-import com.gtwo.bdss_system.entity.donation.DonationSchedule;
+import com.gtwo.bdss_system.entity.donation.DonationEvent;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
-import com.gtwo.bdss_system.repository.donation.DonationScheduleRepository;
+import com.gtwo.bdss_system.repository.donation.DonationEventRepository;
 import com.gtwo.bdss_system.service.donation.DonationProcessService;
 import com.gtwo.bdss_system.service.donation.DonationRequestService;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,7 +30,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
     private DonationRequestRepository repository;
 
     @Autowired
-    private DonationScheduleRepository scheduleRepository;
+    private DonationEventRepository scheduleRepository;
 
     @Autowired
     private DonationProcessService donationProcessService;
@@ -68,17 +68,18 @@ public class DonationRequestServiceImpl implements DonationRequestService {
                         throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
                     }
                     case FAILED -> {
+                        throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
                     }
                 }
             } else {
                 throw new IllegalArgumentException("Bạn đã đăng ký hiến máu và đang chờ xử lý.");
             }
         }
-        DonationSchedule schedule = scheduleRepository.findById(scheduleId)
+        DonationEvent event = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hiến máu."));
         DonationRequest request = new DonationRequest();
         request.setDonor(currentUser);
-        request.setSchedule(schedule);
+        request.setEvent(event);
         request.setRequestTime(LocalDateTime.now());
         request.setStatusRequest(StatusRequest.PENDING);
         request.setApprover(null);
@@ -102,7 +103,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         if (decision == StatusRequest.APPROVED) {
             donationProcessService.autoCreateByRequest(savedRequest);
         }
-        DonationSchedule schedule = request.getSchedule();
+        DonationEvent schedule = request.getEvent();
         int approved = repository.countScheduleIdInRequest(schedule.getId());
         if (approved >= schedule.getMaxSlot()) {
             schedule.setStatus(Status.INACTIVE);
@@ -146,7 +147,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         dto.setDonorFullName(entity.getDonor().getFullName());
         dto.setDonorGender(entity.getDonor().getGender().toString());
         dto.setDonorBloodType(entity.getDonor().getBloodType());
-        dto.setScheduleName(entity.getSchedule().getName());
+        dto.setScheduleName(entity.getEvent().getName());
         dto.setRequestTime(entity.getRequestTime());
         dto.setStatusRequest(entity.getStatusRequest().toString());
         if (entity.getApprover() != null) {

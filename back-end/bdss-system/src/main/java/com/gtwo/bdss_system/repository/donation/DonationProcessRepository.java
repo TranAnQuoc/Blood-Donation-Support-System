@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.repository.donation;
 
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +18,5 @@ public interface DonationProcessRepository extends JpaRepository<DonationProcess
     ORDER BY dp.startTime DESC
 """)
     Optional<DonationProcess> findLatestByUserId(@Param("userId") Long userId);
+    List<DonationProcess> findByProcess(StatusProcess process);
 }

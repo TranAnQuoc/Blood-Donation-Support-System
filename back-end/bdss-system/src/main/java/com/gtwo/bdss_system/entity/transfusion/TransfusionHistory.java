@@ -20,8 +20,8 @@ public class TransfusionHistory {
     private String rhFactorSnapshot;
     @Column(name="transfusion_date")
     private LocalDate transfusionDate;
-    @ManyToOne @JoinColumn(name="facility_id")
-    private MedicalFacility facility;
+//    @ManyToOne @JoinColumn(name="facility_id")
+//    private MedicalFacility facility;
     @Column(name="component_received", length=50)
     private String componentReceived;
     private Integer quantity;
