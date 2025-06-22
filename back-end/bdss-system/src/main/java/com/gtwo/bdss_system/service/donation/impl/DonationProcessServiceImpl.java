@@ -4,7 +4,6 @@ import com.gtwo.bdss_system.dto.donation.DonationProcessDTO;
 import com.gtwo.bdss_system.dto.donation.DonationProcessViewDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
@@ -157,7 +156,6 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         dto.setDonorBloodType(donor.getBloodType());
         DonationSchedule schedule = entity.getRequest().getSchedule();
         dto.setScheduleName(schedule.getName());
-        dto.setFacilityName(schedule.getFacility().getName());
         dto.setStartTime(entity.getStartTime());
         dto.setEndTime(entity.getEndTime());
         dto.setHealthCheck(entity.getHealthCheck() != null ? entity.getHealthCheck() : false);
@@ -181,7 +179,6 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         DonationRequest request = process.getRequest();
         Account donor = request.getDonor();
         DonationSchedule schedule = request.getSchedule();
-        MedicalFacility facility = schedule.getFacility();
         DonationHistory history = new DonationHistory();
         history.setStaff(process.getPerformer());
         history.setDonor(donor);
@@ -198,8 +195,6 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setDonationDate(java.sql.Date.valueOf(process.getEndTime().toLocalDate()));
         history.setDonationType(process.getType().toString());
         history.setQuantity(process.getQuantity());
-        history.setFacilityName(facility.getName());
-        history.setAddress(facility.getAddress());
         history.setNote(process.getNotes());
         history.setStatus(process.getProcess());
         process.setStatus(Status.INACTIVE);

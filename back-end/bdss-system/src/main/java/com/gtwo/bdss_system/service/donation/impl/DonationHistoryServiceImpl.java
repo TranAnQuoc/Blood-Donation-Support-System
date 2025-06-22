@@ -17,9 +17,6 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
     @Autowired
     private DonationHistoryRepository donationHistoryRepository;
 
-    @Autowired
-    private AuthenticationRepository accountRepository;
-
     @Override
     public List<DonationHistoryResponseDTO> getAllHistories() {
         return donationHistoryRepository.findAll()
@@ -47,7 +44,6 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
         dto.setDonationDate(history.getDonationDate());
         dto.setDonationType(history.getDonationType());
         dto.setQuantity(history.getQuantity());
-        dto.setFacilityName(history.getFacilityName());
         dto.setAddress(history.getAddress());
         dto.setNote(history.getNote());
         dto.setStatus(history.getStatus() != null ? history.getStatus().name() : null);

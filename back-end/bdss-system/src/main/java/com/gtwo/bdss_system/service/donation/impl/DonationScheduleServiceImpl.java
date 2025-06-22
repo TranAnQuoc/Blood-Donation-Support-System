@@ -1,12 +1,10 @@
 package com.gtwo.bdss_system.service.donation.impl;
 
 import com.gtwo.bdss_system.dto.donation.DonationScheduleDTO;
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.entity.donation.DonationSchedule;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
 import com.gtwo.bdss_system.repository.donation.DonationScheduleRepository;
-import com.gtwo.bdss_system.service.commons.MedicalFacilityService;
 import com.gtwo.bdss_system.service.donation.DonationScheduleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +20,6 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
 
     @Autowired
     private DonationScheduleRepository repository;
-
-    @Autowired
-    private MedicalFacilityService medicalFacilityService;
 
     @Autowired
     private DonationRequestRepository donationRequestRepository;
@@ -67,7 +62,6 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
 
     @Override
     public DonationSchedule create(DonationScheduleDTO dto) {
-        MedicalFacility facility = medicalFacilityService.getById(dto.getFacilityId());
         DonationSchedule schedule = new DonationSchedule();
         LocalTime start = dto.getStartTime().toLocalTime();
         LocalTime end = dto.getEndTime().toLocalTime();
@@ -76,7 +70,6 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
             throw new IllegalArgumentException("Thời gian kết thúc phải sau thời gian bắt đầu ít nhất 1 tiếng");
         }
         schedule.setName(dto.getName());
-        schedule.setFacility(facility);
         schedule.setDate(dto.getDate());
         schedule.setStartTime(dto.getStartTime());
         schedule.setEndTime(dto.getEndTime());
@@ -105,8 +98,6 @@ public class DonationScheduleServiceImpl implements DonationScheduleService {
         existing.setEndTime(updated.getEndTime());
         existing.setAddress(updated.getAddress());
         existing.setMaxSlot(updated.getMaxSlot());
-        MedicalFacility facility = medicalFacilityService.getById(updated.getFacilityId());
-        existing.setFacility(facility);
         boolean isDuplicate = repository.existsByNameAndAddress(updated.getName(), updated.getAddress());
         if (isDuplicate &&
                 (!existing.getName().equals(updated.getName()) || !existing.getAddress().equals(updated.getAddress()))) {

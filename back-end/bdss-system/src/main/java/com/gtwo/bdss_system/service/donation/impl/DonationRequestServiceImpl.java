@@ -147,7 +147,6 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         dto.setDonorGender(entity.getDonor().getGender().toString());
         dto.setDonorBloodType(entity.getDonor().getBloodType());
         dto.setScheduleName(entity.getSchedule().getName());
-        dto.setMedicalFacilityName(entity.getSchedule().getFacility().getName());
         dto.setRequestTime(entity.getRequestTime());
         dto.setStatusRequest(entity.getStatusRequest().toString());
         if (entity.getApprover() != null) {

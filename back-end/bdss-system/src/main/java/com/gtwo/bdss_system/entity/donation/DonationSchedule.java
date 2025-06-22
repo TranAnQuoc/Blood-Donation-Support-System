@@ -1,6 +1,5 @@
 package com.gtwo.bdss_system.entity.donation;
 
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,10 +19,6 @@ public class DonationSchedule {
     @Column(name = "Schedule_Name")
     @Nationalized
     private String name;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "MedicalFacilityID")
-    private MedicalFacility facility;
 
     @Column(name = "Date")
     private Date date;
