@@ -2,12 +2,10 @@ package com.gtwo.bdss_system.service.emergency.impl;
 
 import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.EmergencyStatus;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
-import com.gtwo.bdss_system.repository.commons.MedicalFacilityRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;

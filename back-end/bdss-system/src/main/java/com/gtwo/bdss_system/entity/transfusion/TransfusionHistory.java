@@ -1,7 +1,6 @@
 package com.gtwo.bdss_system.entity.transfusion;
 
 import com.gtwo.bdss_system.entity.auth.Account;
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;

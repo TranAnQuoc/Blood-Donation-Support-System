@@ -30,6 +30,7 @@ public class DonationHistory {
     private Account donor;
 
     @Column(name = "Donor_Name")
+    @Nationalized
     private String fullName;
 
     @Column(name = "Donor_Phone")
@@ -54,10 +55,8 @@ public class DonationHistory {
     @Column(name = "Quantity")
     private int quantity;
 
-    @Column(name = "Facility_Name")
-    private String facilityName;
-
     @Column(name = "Address")
+    @Nationalized
     private String address;
 
     @Column(name = "Note")

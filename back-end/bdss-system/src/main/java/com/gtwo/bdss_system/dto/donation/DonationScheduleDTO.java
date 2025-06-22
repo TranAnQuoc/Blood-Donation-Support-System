@@ -16,9 +16,6 @@ public class DonationScheduleDTO {
     @NotBlank(message = "Tên lịch hiến máu không được để trống")
     private String name;
 
-    @NotNull(message = "ID cơ sở y tế không được để trống")
-    private Long facilityId;
-
     @NotNull(message = "Ngày diễn ra không được để trống")
     @FutureOrPresent(message = "Ngày diễn ra phải là hôm nay hoặc tương lai")
     private Date date;
