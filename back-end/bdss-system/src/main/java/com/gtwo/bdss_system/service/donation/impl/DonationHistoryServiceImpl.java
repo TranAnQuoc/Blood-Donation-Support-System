@@ -2,7 +2,6 @@ package com.gtwo.bdss_system.service.donation.impl;
 
 import com.gtwo.bdss_system.dto.donation.DonationHistoryResponseDTO;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
-import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.repository.donation.DonationHistoryRepository;
 import com.gtwo.bdss_system.service.donation.DonationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;

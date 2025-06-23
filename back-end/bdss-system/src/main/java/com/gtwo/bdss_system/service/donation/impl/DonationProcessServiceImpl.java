@@ -8,7 +8,6 @@ import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationEvent;
-import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -57,27 +57,32 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     }
 
     @Override
-    public DonationProcess update(Long processId, DonationProcessDTO dto) {
+    public DonationProcess update(Long processId, DonationProcessDTO dto, Account performer) {
         DonationProcess existing = getById(processId);
+        if (existing.getProcess() == StatusProcess.WAITING && existing.getDate() != null) {
+            LocalDate processDate = existing.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            LocalDate today = LocalDate.now();
+            if (processDate.isAfter(today)) {
+                throw new IllegalStateException("Chưa đến ngày thực hiện, không thể chỉnh sửa quy trình hiến máu.");
+            }
+        }
         LocalDateTime now = LocalDateTime.now();
         existing.setStartTime(existing.getStartTime() == null ? now : existing.getStartTime());
         existing.setEndTime(now);
-        if (dto.getPerformerId() == null) {
-            throw new IllegalArgumentException("Người thực hiện không được để trống.");
-        }
-        Account performer = accountRepository.findById(dto.getPerformerId())
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người thực hiện với ID: " + dto.getPerformerId()));
-        if (!performer.getRole().equals(Role.STAFF)) {
-            throw new IllegalArgumentException("Chỉ nhân viên (STAFF) mới được phép thực hiện quy trình.");
-        }
-        if (dto.getBloodPressure() == null || !dto.getBloodPressure().matches("\\d{2,3}/\\d{2,3}")) {
-            throw new IllegalArgumentException("Huyết áp không hợp lệ. Ví dụ hợp lệ: 120/80");
-        }
-        if (dto.getQuantity() <= 249 || dto.getQuantity() > 500) {
-            throw new IllegalArgumentException("Lượng máu hiến phải nằm trong khoảng 250 - 500 ml.");
-        }
-        if (dto.getType() == null) {
-            throw new IllegalArgumentException("Loại hiến máu không được để trống.");
+        existing.setPerformer(performer);
+        StatusProcess inputStatus = dto.getProcess();
+        if (inputStatus == StatusProcess.COMPLETED) {
+            if (dto.getBloodPressure() == null || !dto.getBloodPressure().matches("\\d{2,3}/\\d{2,3}")) {
+                throw new IllegalArgumentException("Huyết áp không hợp lệ. Ví dụ hợp lệ: 120/80");
+            }
+            if (dto.getQuantity() <= 249 || dto.getQuantity() > 500) {
+                throw new IllegalArgumentException("Lượng máu hiến phải nằm trong khoảng 250 - 500 ml.");
+            }
+            if (dto.getType() == null) {
+                throw new IllegalArgumentException("Loại hiến máu không được để trống.");
+            }
         }
         if (dto.getBloodTypeId() != null) {
             if (dto.getBloodTypeId() == 1L || !bloodTypeRepository.existsById(dto.getBloodTypeId())) {
@@ -95,15 +100,37 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         existing.setHealthCheck(dto.isHealthCheck());
         existing.setHemoglobin(dto.getHemoglobin());
         existing.setBloodPressure(dto.getBloodPressure());
+        existing.setScreeningNote(dto.getScreeningNote());
         existing.setQuantity(dto.getQuantity());
         existing.setNotes(dto.getNotes());
         existing.setType(dto.getType());
         existing.setProcess(dto.getProcess());
         existing.setPerformer(performer);
-        if (dto.getProcess() == StatusProcess.COMPLETED) {
+
+        StatusProcess currentStatus = existing.getProcess();
+        if (currentStatus != StatusProcess.COMPLETED &&
+                currentStatus != StatusProcess.FAILED &&
+                currentStatus != StatusProcess.SCREENING_FAILED &&
+                currentStatus != StatusProcess.DONOR_CANCEL) {
+            if (Boolean.TRUE.equals(dto.getHasChronicDisease()) ||
+                    Boolean.TRUE.equals(dto.getHasRecentTattoo()) ||
+                    Boolean.TRUE.equals(dto.getHasUsedDrugs())) {
+                existing.setProcess(StatusProcess.SCREENING_FAILED);
+            } else if (Boolean.FALSE.equals(dto.getHasChronicDisease()) ||
+                    Boolean.FALSE.equals(dto.getHasRecentTattoo()) ||
+                    Boolean.FALSE.equals(dto.getHasUsedDrugs())) {
+                existing.setProcess(StatusProcess.SCREENING);
+            } else {
+                existing.setProcess(StatusProcess.IN_PROCESS);
+            }
+        }
+        StatusProcess newStatus = existing.getProcess();
+        if (newStatus == StatusProcess.COMPLETED) {
             existing.setStatus(Status.INACTIVE);
             createDonationHistory(existing);
-        } else if (dto.getProcess() == StatusProcess.FAILED || dto.getProcess() == StatusProcess.SCREENING_FAILED) {
+        } else if (newStatus == StatusProcess.FAILED ||
+                newStatus == StatusProcess.SCREENING_FAILED ||
+                newStatus == StatusProcess.DONOR_CANCEL) {
             createDonationHistory(existing);
         }
         DonationProcess saved = processRepository.save(existing);
@@ -128,7 +155,9 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     @Override
     public DonationProcess autoCreateByRequest(DonationRequest request) {
         DonationProcess process = new DonationProcess();
+        DonationEvent event = request.getEvent();
         process.setRequest(request);
+        process.setDate(event.getDate());
         process.setStatus(Status.ACTIVE);
         process.setProcess(StatusProcess.WAITING);
         return processRepository.save(process);
@@ -162,7 +191,11 @@ public class DonationProcessServiceImpl implements DonationProcessService {
 
     @Transactional
     public void createDonationHistory(DonationProcess process) {
-        if (process.getProcess() != StatusProcess.COMPLETED && process.getProcess() != StatusProcess.FAILED) {
+        StatusProcess p = process.getProcess();
+        if (p != StatusProcess.COMPLETED &&
+                p != StatusProcess.FAILED &&
+                p != StatusProcess.SCREENING_FAILED &&
+                p != StatusProcess.DONOR_CANCEL) {
             return;
         }
         DonationRequest request = process.getRequest();
@@ -185,8 +218,10 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setDonationType(process.getType().toString());
         history.setQuantity(process.getQuantity());
         history.setNote(process.getNotes());
-        history.setStatus(process.getProcess());
-        process.setStatus(Status.INACTIVE);
+        history.setStatus(p);
+        if (p == StatusProcess.COMPLETED) {
+            process.setStatus(Status.INACTIVE);
+        }
         historyRepository.save(history);
     }
 
@@ -198,10 +233,9 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     }
 
     @Transactional
-    public void autoCancelExpiredProcesses() {
+    public void autoSetupExpiredProcesses() {
         LocalDate today = LocalDate.now();
         List<DonationProcess> pendingProcesses = processRepository.findByProcess(StatusProcess.WAITING);
-
         for (DonationProcess process : pendingProcesses) {
             DonationEvent event = process.getRequest().getEvent();
             if (event != null) {
@@ -215,5 +249,16 @@ public class DonationProcessServiceImpl implements DonationProcessService {
                 }
             }
         }
+        for (DonationProcess process : pendingProcesses) {
+            DonationEvent event = process.getRequest().getEvent();
+            if (event != null) {
+                LocalDate eventDate = event.getDate().toLocalDate();
+                if (eventDate.isEqual(today)) {
+                    process.setProcess(StatusProcess.WAITING_DONOR);
+                    processRepository.save(process);
+                }
+            }
+        }
     }
+
 }
