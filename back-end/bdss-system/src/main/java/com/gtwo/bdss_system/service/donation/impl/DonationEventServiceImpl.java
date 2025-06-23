@@ -28,7 +28,7 @@ public class DonationEventServiceImpl implements DonationEventService {
     public List<DonationEvent> getAll() {
         List<DonationEvent> schedules = repository.findAllByStatus(Status.ACTIVE);
         for (DonationEvent schedule : schedules) {
-            schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(schedule.getId()));
+            schedule.setCurrentSlot(donationRequestRepository.countEventIdInRequest(schedule.getId()));
         }
         return schedules;
     }
@@ -37,7 +37,7 @@ public class DonationEventServiceImpl implements DonationEventService {
     public List<DonationEvent> getAllForStaff() {
         List<DonationEvent> schedules = repository.findAll();
         for (DonationEvent schedule : schedules) {
-            schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(schedule.getId()));
+            schedule.setCurrentSlot(donationRequestRepository.countEventIdInRequest(schedule.getId()));
         }
         return schedules;
     }
@@ -46,7 +46,7 @@ public class DonationEventServiceImpl implements DonationEventService {
     public DonationEvent getById(Long id) {
         DonationEvent schedule = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hiến máu với ID: " + id));
-        schedule.setCurrentSlot(donationRequestRepository.countScheduleIdInRequest(id));
+        schedule.setCurrentSlot(donationRequestRepository.countEventIdInRequest(id));
         return schedule;
     }
 
@@ -54,7 +54,7 @@ public class DonationEventServiceImpl implements DonationEventService {
     public List<DonationEvent> getByDateRange(Date fromDate, Date toDate) {
         List<DonationEvent> schedules = repository.findByDateRangeAndActive(fromDate, toDate);
         for (DonationEvent schedule : schedules) {
-            int approved = donationRequestRepository.countScheduleIdInRequest(schedule.getId());
+            int approved = donationRequestRepository.countEventIdInRequest(schedule.getId());
             schedule.setCurrentSlot(approved);
         }
         return schedules;

@@ -8,7 +8,6 @@ import java.sql.Date;
 
 @Data
 public class DonationProcessDTO {
-    private Long performerId;
     private Long bloodTypeId;
     private Date date;
     private boolean healthCheck;

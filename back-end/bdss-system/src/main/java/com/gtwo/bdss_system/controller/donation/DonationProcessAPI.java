@@ -45,11 +45,13 @@ public class DonationProcessAPI {
         return ResponseEntity.ok(dto);
     }
 
+    // BUGGGG active and inactive
     @PreAuthorize("hasRole('STAFF')")
     @PutMapping("/edit/{id}")
     public ResponseEntity<DonationProcess> update(@PathVariable Long id,
-                                                  @RequestBody DonationProcessDTO dto) {
-        DonationProcess updated = service.update(id, dto);
+                                                  @RequestBody DonationProcessDTO dto,
+                                                  @AuthenticationPrincipal Account currentUser) {
+        DonationProcess updated = service.update(id, dto, currentUser);
         DonationProcess response = mapper.map(updated, DonationProcess.class);
         return ResponseEntity.ok(response);
     }
@@ -77,9 +79,9 @@ public class DonationProcessAPI {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/auto-cancel")
-    public ResponseEntity<String> autoCancel() {
-        service.autoCancelExpiredProcesses();
+    @PostMapping("/auto-setup")
+    public ResponseEntity<String> autoSetup() {
+        service.autoSetupExpiredProcesses();
         return ResponseEntity.ok("Đã cập nhật các đơn quá hạn.");
     }
 }

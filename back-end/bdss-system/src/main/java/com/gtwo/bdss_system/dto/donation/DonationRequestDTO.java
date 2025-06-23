@@ -11,7 +11,7 @@ public class DonationRequestDTO {
     private String donorFullName;
     private String donorGender;
     private BloodType donorBloodType;
-    private String scheduleName;
+    private String eventName;
     private LocalDateTime requestTime;
     private String statusRequest;
     private String approverFullName;

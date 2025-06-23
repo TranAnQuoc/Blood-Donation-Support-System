@@ -103,11 +103,11 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         if (decision == StatusRequest.APPROVED) {
             donationProcessService.autoCreateByRequest(savedRequest);
         }
-        DonationEvent schedule = request.getEvent();
-        int approved = repository.countScheduleIdInRequest(schedule.getId());
-        if (approved >= schedule.getMaxSlot()) {
-            schedule.setStatus(Status.INACTIVE);
-            scheduleRepository.save(schedule);
+        DonationEvent event = request.getEvent();
+        int approved = repository.countEventIdInRequest(event.getId());
+        if (approved >= event.getMaxSlot()) {
+            event.setStatus(Status.INACTIVE);
+            scheduleRepository.save(event);
         }
         return savedRequest;
     }
@@ -147,7 +147,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         dto.setDonorFullName(entity.getDonor().getFullName());
         dto.setDonorGender(entity.getDonor().getGender().toString());
         dto.setDonorBloodType(entity.getDonor().getBloodType());
-        dto.setScheduleName(entity.getEvent().getName());
+        dto.setEventName(entity.getEvent().getName());
         dto.setRequestTime(entity.getRequestTime());
         dto.setStatusRequest(entity.getStatusRequest().toString());
         if (entity.getApprover() != null) {
