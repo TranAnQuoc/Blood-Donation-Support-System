@@ -121,4 +121,9 @@ public class DonationEventServiceImpl implements DonationEventService {
         schedule.setStatus(Status.ACTIVE);
         repository.save(schedule);
     }
+
+    @Override
+    public List<DonationEvent> searchByName(String keyword) {
+        return repository.findByNameContainingIgnoreCaseOrderByNameAsc(keyword);
+    }
 }

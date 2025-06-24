@@ -4,12 +4,12 @@ import com.gtwo.bdss_system.enums.DonationType;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import lombok.Data;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 public class DonationProcessDTO {
     private Long bloodTypeId;
-    private Date date;
+    private LocalDate date;
     private boolean healthCheck;
     private String heartRate;
     private Double temperature;

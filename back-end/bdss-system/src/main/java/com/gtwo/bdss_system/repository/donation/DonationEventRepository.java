@@ -17,4 +17,5 @@ public interface DonationEventRepository extends JpaRepository<DonationEvent, Lo
             @Param("fromDate") Date fromDate,
             @Param("toDate") Date toDate
     );
+    List<DonationEvent> findByNameContainingIgnoreCaseOrderByNameAsc(String keyword);
 }

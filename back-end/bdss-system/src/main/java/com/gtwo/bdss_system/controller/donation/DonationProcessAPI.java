@@ -28,7 +28,7 @@ public class DonationProcessAPI {
     private ModelMapper mapper;
 
     @GetMapping("/list")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public ResponseEntity<List<DonationProcessViewDTO>> getAll() {
         List<DonationProcess> processes = service.getAllActive();
         List<DonationProcessViewDTO> dto = processes.stream()
@@ -38,14 +38,13 @@ public class DonationProcessAPI {
     }
 
     @GetMapping("/search/{id}")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public ResponseEntity<DonationProcessViewDTO> getById(@PathVariable Long id) {
         DonationProcess entity = service.getById(id);
         DonationProcessViewDTO dto = service.processViewDTO(entity);
         return ResponseEntity.ok(dto);
     }
 
-    // BUGGGG active and inactive
     @PreAuthorize("hasRole('STAFF')")
     @PutMapping("/edit/{id}")
     public ResponseEntity<DonationProcess> update(@PathVariable Long id,

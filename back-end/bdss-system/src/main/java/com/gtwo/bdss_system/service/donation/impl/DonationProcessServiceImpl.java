@@ -60,9 +60,7 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     public DonationProcess update(Long processId, DonationProcessDTO dto, Account performer) {
         DonationProcess existing = getById(processId);
         if (existing.getProcess() == StatusProcess.WAITING && existing.getDate() != null) {
-            LocalDate processDate = existing.getDate().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
+            LocalDate processDate = existing.getDate();
             LocalDate today = LocalDate.now();
             if (processDate.isAfter(today)) {
                 throw new IllegalStateException("Chưa đến ngày thực hiện, không thể chỉnh sửa quy trình hiến máu.");
@@ -98,8 +96,15 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         }
         existing.setDate(dto.getDate());
         existing.setHealthCheck(dto.isHealthCheck());
+        existing.setHeartRate(dto.getHeartRate());
+        existing.setTemperature(dto.getTemperature());
+        existing.setWeight(dto.getWeight());
+        existing.setHeight(dto.getHeight());
         existing.setHemoglobin(dto.getHemoglobin());
         existing.setBloodPressure(dto.getBloodPressure());
+        existing.setHasChronicDisease(dto.getHasChronicDisease());
+        existing.setHasRecentTattoo(dto.getHasRecentTattoo());
+        existing.setHasUsedDrugs(dto.getHasUsedDrugs());
         existing.setScreeningNote(dto.getScreeningNote());
         existing.setQuantity(dto.getQuantity());
         existing.setNotes(dto.getNotes());
@@ -207,6 +212,7 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setFullName(donor.getFullName());
         history.setPhone(donor.getPhone());
         history.setGender(donor.getGender());
+        history.setAddress(event.getAddress());
         history.setDateOfBirth(donor.getDateOfBirth());
         BloodType bloodType = donor.getBloodType();
         if (bloodType != null) {
@@ -239,7 +245,7 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         for (DonationProcess process : pendingProcesses) {
             DonationEvent event = process.getRequest().getEvent();
             if (event != null) {
-                LocalDate eventDate = event.getDate().toLocalDate();
+                LocalDate eventDate = event.getDate();
                 if (eventDate.isBefore(today)) {
                     process.setProcess(StatusProcess.DONOR_CANCEL);
                     process.setStatus(Status.INACTIVE);
@@ -252,13 +258,12 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         for (DonationProcess process : pendingProcesses) {
             DonationEvent event = process.getRequest().getEvent();
             if (event != null) {
-                LocalDate eventDate = event.getDate().toLocalDate();
+                LocalDate eventDate = event.getDate();
                 if (eventDate.isEqual(today)) {
-                    process.setProcess(StatusProcess.WAITING_DONOR);
+                    process.setProcess(StatusProcess.IN_PROCESS);
                     processRepository.save(process);
                 }
             }
         }
     }
-
 }

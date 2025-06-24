@@ -7,9 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-
-import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 
 @Data
 public class DonationEventDTO {
@@ -18,7 +17,7 @@ public class DonationEventDTO {
 
     @NotNull(message = "Ngày diễn ra không được để trống")
     @FutureOrPresent(message = "Ngày diễn ra phải là hôm nay hoặc tương lai")
-    private Date date;
+    private LocalDate date;
 
     @NotNull(message = "Thời gian bắt đầu không được để trống")
     private Time startTime;

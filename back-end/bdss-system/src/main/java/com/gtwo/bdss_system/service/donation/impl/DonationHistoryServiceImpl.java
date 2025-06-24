@@ -50,8 +50,7 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
     }
 
     @Override
-    public DonationHistory getLatestHistoryByCurrentUser(Long donorId) {
-        return donationHistoryRepository.findFirstByDonor_IdOrderByDonationDateDesc(donorId)
-                .orElseThrow(() -> new IllegalArgumentException("No donation history found for this user."));
+    public List<DonationHistory> getAllHistoryByDonorId(Long donorId) {
+        return donationHistoryRepository.findAllByDonor_IdOrderByDonationDateDesc(donorId);
     }
 }

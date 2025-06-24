@@ -23,7 +23,6 @@ public class DonationEventAPI {
     private DonationEventService service;
 
     @GetMapping
-    @PreAuthorize("permitAll()")
     public List<DonationEvent> getAll() {
         return service.getAll();
     }
@@ -34,14 +33,7 @@ public class DonationEventAPI {
         return service.getAllForStaff();
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<DonationEvent> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getById(id));
-    }
-
     @GetMapping("/by-date")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<List<DonationEvent>> getByDateRange(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
@@ -73,5 +65,10 @@ public class DonationEventAPI {
     public ResponseEntity<Void> restore(@PathVariable Long id) {
         service.restore(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<DonationEvent>> searchByName(@RequestParam String keyword) {
+        return ResponseEntity.ok(service.searchByName(keyword));
     }
 }
