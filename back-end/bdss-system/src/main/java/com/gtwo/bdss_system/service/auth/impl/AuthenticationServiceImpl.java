@@ -74,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setCCCD(dto.getCccd());
         account.setRole(Role.MEMBER);
         account.setStatus(Status.ACTIVE);
-        account.setStatusDonation(StatusDonation.AVAILABLE);
+        account.setStatusDonation(StatusDonation.INACTIVE);
         if (dto.getBloodTypeId() != null) {
             BloodType bloodType = bloodTypeService.findById(dto.getBloodTypeId());
             account.setBloodType(bloodType);

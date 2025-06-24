@@ -8,5 +8,5 @@ import java.util.List;
 public interface DonationHistoryService {
     List<DonationHistoryResponseDTO> getAllHistories();
     DonationHistoryResponseDTO getHistoryById(Long id);
-    DonationHistory getLatestHistoryByCurrentUser(Long donorId);
+    List<DonationHistory> getAllHistoryByDonorId(Long donorId);
 }

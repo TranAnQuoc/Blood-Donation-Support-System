@@ -4,8 +4,8 @@ import com.gtwo.bdss_system.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
-import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Donation_Schedule")
@@ -21,7 +21,7 @@ public class DonationEvent {
     private String name;
 
     @Column(name = "Date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "Start_Time")
     private Time startTime;

@@ -15,4 +15,5 @@ public interface DonationEventService {
     DonationEvent update(Long id, DonationEventDTO schedule);
     void delete(Long id);
     void restore(Long id);
+    List<DonationEvent> searchByName(String keyword);
 }

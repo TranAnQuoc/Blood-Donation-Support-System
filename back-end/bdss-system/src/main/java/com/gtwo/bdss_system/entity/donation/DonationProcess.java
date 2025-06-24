@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,7 +27,7 @@ public class DonationProcess {
     private DonationRequest request;
 
     @Column(name = "Date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "StartTime")
     private LocalDateTime startTime;

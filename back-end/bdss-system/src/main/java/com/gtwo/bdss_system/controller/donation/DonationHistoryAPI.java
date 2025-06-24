@@ -35,12 +35,9 @@ public class DonationHistoryAPI {
         return donationHistoryService.getHistoryById(id);
     }
 
-    @GetMapping("/my-latest")
-    @PreAuthorize("hasAnyRole('MEMBER')")
-    public ResponseEntity<DonationHistory> getMyLatestDonationHistory(
-            @AuthenticationPrincipal Account currentUser) {
-        DonationHistory latestHistory = donationHistoryService
-                .getLatestHistoryByCurrentUser(currentUser.getId());
-        return ResponseEntity.ok(latestHistory);
+    @GetMapping("/my-history")
+    public ResponseEntity<List<DonationHistory>> getAllHistoryByUser(@AuthenticationPrincipal Account donor) {
+        Long donorId = donor.getId();
+        return ResponseEntity.ok(donationHistoryService.getAllHistoryByDonorId(donorId));
     }
 }
