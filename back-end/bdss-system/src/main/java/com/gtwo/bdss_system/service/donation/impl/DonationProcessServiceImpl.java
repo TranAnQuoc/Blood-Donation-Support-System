@@ -8,6 +8,7 @@ import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationEvent;
+import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -80,6 +80,30 @@ public class DonationProcessServiceImpl implements DonationProcessService {
             }
             if (dto.getType() == null) {
                 throw new IllegalArgumentException("Loại hiến máu không được để trống.");
+            }
+            if (dto.getHeartRate() == null || !dto.getHeartRate().matches("\\d{2,3}")) {
+                throw new IllegalArgumentException("Nhịp tim không hợp lệ. Vui lòng nhập số từ 60 đến 100.");
+            } else {
+                int heartRateValue = Integer.parseInt(dto.getHeartRate());
+                if (heartRateValue < 60 || heartRateValue > 100) {
+                    throw new IllegalArgumentException("Nhịp tim phải từ 60 đến 100 lần/phút.");
+                }
+            }
+            if (dto.getTemperature() == null || dto.getTemperature() < 36.0 || dto.getTemperature() > 37.5) {
+                throw new IllegalArgumentException("Nhiệt độ cơ thể phải từ 36.0°C đến 37.5°C.");
+            }
+            if (dto.getHeight() == null || dto.getHeight() < 145) {
+                throw new IllegalArgumentException("Chiều cao phải từ 145 cm trở lên.");
+            }
+            if (dto.getWeight() == null) {
+                throw new IllegalArgumentException("Cân nặng không được để trống.");
+            }
+            Gender gender = existing.getRequest().getDonor().getGender();
+            if (gender == Gender.MALE && dto.getWeight() < 45) {
+                throw new IllegalArgumentException("Nam giới phải nặng ít nhất 45 kg để hiến máu.");
+            }
+            if (gender == Gender.FEMALE && dto.getWeight() < 42) {
+                throw new IllegalArgumentException("Nữ giới phải nặng ít nhất 42 kg để hiến máu.");
             }
         }
         if (dto.getBloodTypeId() != null) {
