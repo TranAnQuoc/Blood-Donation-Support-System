@@ -1,0 +1,71 @@
+package com.gtwo.bdss_system.entity.commons;
+
+import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.enums.StatusBloodStorage;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.Nationalized;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+public class BloodStorage {
+    @Id
+    @Column(name = "blood_storage_id")
+    private Long id;
+
+    @ManyToOne
+    @Column(name = "donor_id")
+    private Account donor;
+
+    @ManyToOne
+    @Column(name = "blood_type_id")
+    private BloodType bloodType;
+
+    @ManyToOne
+    @Column(name = "blood_component_id")
+    private BloodComponent bloodComponent;
+
+    @Column(name = "Quantity")
+    private Integer quantity;
+
+    @Column(name = "Blood_Status")
+    @Enumerated(jakarta.persistence.EnumType.STRING)
+    private StatusBloodStorage bloodStatus;
+
+    @Column(name = "Create_At")
+    private LocalDateTime createAt;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private Account createdBy;
+
+    @Column(name = "Approved_At")
+    private LocalDateTime approvedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "approved_by")
+    private Account approvedBy;
+
+    @Column(name = "Verified_At")
+    private LocalDateTime verifiedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "verified_by")
+    private Account verifiedBy;
+
+    @Column(name = "Usage_Reason")
+    @Nationalized
+    private String usageReason;
+
+    @Column(name = "Take_At")
+    private LocalDateTime takeAt;
+
+    @ManyToOne
+    @JoinColumn(name = "take_by")
+    private Account takeBy;
+
+    @Column(name = "Use_At")
+    private LocalDateTime useAt;
+}
