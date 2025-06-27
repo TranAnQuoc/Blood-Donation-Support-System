@@ -1,9 +1,8 @@
-// src/components/staff-components/features/MemberList/MemberList.jsx
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../../../configs/axios'; // CẬP NHẬT ĐƯỜNG DẪN TƯƠNG ĐỐI
-import styles from './MemberList.module.css'; // Đổi tên file CSS
+import axiosInstance from '../../../../configs/axios';
+import styles from './MemberList.module.css';
 
-const MemberList = () => { // Đổi tên component cho phù hợp
+const MemberList = () => {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,7 +12,6 @@ const MemberList = () => { // Đổi tên component cho phù hợp
             setLoading(true);
             setError(null);
             try {
-                // Đảm bảo URL này khớp với @RequestMapping trong backend (ví dụ: "/api/account/list-account/member")
                 const response = await axiosInstance.get('/account/list-account/member');
                 setMembers(response.data);
                 console.log("Danh sách thành viên:", response.data);

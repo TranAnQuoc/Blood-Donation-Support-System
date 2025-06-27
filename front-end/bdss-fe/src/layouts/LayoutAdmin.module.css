@@ -1,6 +1,17 @@
-.dashboardLayout {
-  display: flex;
-  height: 100vh; 
-  background-color: rgb(226, 241, 252); 
-  font-family: Arial, sans-serif;
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.mainContentArea {
+    display: flex;
+    flex: 1;
+}
+
+.outletContainer {
+    flex: 1;
+    padding: 20px;
+    background-color: #f0f2f5;
+    overflow-y: auto;
 }

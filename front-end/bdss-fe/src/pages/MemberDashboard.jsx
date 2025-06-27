@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MemberDashboard.module.css';
-import ScheduleSearchAndList from '../components/member-components/features/ScheduleSearchAndList';
+import EventSearchAndList from '../components/member-components/features/EventSearchAndList/EventSearchAndList';
 
 const MemberDashboard = () => {
     return (
@@ -9,8 +9,8 @@ const MemberDashboard = () => {
             <h1>Chào mừng, Thành viên!</h1>
             <p>Tại đây bạn có thể đăng ký hiến máu, yêu cầu nhận máu và theo dõi lịch sử của mình.</p>
 
-            <div className={styles.scheduleSection}>
-                <ScheduleSearchAndList />
+            <div className={styles.eventSection}>
+                <EventSearchAndList />
             </div>
 
             <div className={styles.featureGrid}>

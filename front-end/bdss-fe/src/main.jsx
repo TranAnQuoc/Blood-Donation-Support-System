@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
-    <ToastContainer 
+    <ToastContainer
       position="top-right"
       autoClose={5000}
       hideProgressBar={false}

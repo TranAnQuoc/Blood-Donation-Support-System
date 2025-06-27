@@ -28,6 +28,20 @@ const formatDateTime = (isoString) => {
     }
 };
 
+// Hàm mới để dịch trạng thái sang tiếng Việt
+const getStatusName = (status) => {
+    switch (status) {
+        case 'WAITING': return 'Đang chờ';
+        case 'SCREENING': return 'Đang sàng lọc';
+        case 'SCREENING_FAILED': return 'Sàng lọc thất bại';
+        case 'IN_PROCESS': return 'Đang tiến hành';
+        case 'COMPLETED': return 'Hoàn thành';
+        case 'FAILED': return 'Thất bại';
+        case 'DONOR_CANCEL': return 'Người hiến hủy bỏ';
+        default: return 'Không xác định';
+    }
+};
+
 const DonationProcess = () => {
     const [processes, setProcesses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -78,18 +92,30 @@ const DonationProcess = () => {
         setSelectedProcess(null);
         setEditingProcessId(null);
         setCurrentEditData({});
+        fetchProcesses();
     };
 
-    const handleEditClick = (processToEdit) => {
+    const handleStartEdit = (processToEdit) => {
+        const eventStartDate = processToEdit.startTime ? new Date(processToEdit.startTime) : null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (eventStartDate && eventStartDate > today) {
+            alert(`Quy trình hiến máu cho sự kiện này (${formatDateTime(processToEdit.startTime)}) chưa tới ngày. Không thể chỉnh sửa.`);
+            return;
+        }
+
+        // Vẫn giữ quy tắc không chỉnh sửa khi COMPLETED hoặc WAITING
+        if (processToEdit.process === 'COMPLETED' || processToEdit.process === 'WAITING') {
+            alert(`Không thể chỉnh sửa quy trình đang ở trạng thái "${getStatusName(processToEdit.process)}".`);
+            return;
+        }
+
         setEditingProcessId(processToEdit.id);
         setCurrentEditData({
             ...processToEdit,
-            
-            date: processToEdit.date && typeof processToEdit.date === 'string' ? processToEdit.date.split('T')[0] : '',
-            
-            bloodTypeId: processToEdit.bloodType ? processToEdit.bloodType.id : '',
-            
-            type: processToEdit.type || ''
+            quantity: processToEdit.quantity || 0,
+            typeDonation: processToEdit.typeDonation || ''
         });
     };
 
@@ -106,65 +132,84 @@ const DonationProcess = () => {
         }));
     };
 
-    const handleUpdateProcess = async (processId) => {
-        if (window.confirm(`Bạn có chắc chắn muốn cập nhật quy trình ID ${processId} này không?`)) {
-            try {
-                const storedUser = localStorage.getItem('user');
-                let performerId = null;
-                if (storedUser) {
-                    try {
-                        const userObject = JSON.parse(storedUser);
-                        performerId = userObject.id;
-                    } catch (parseError) {
-                        console.error("Lỗi khi phân tích JSON từ localStorage:", parseError);
-                    }
+    const handleSaveProcess = async (processId) => {
+        if (!window.confirm(`Bạn có chắc chắn muốn cập nhật quy trình ID ${processId} này không?`)) {
+            return;
+        }
+
+        if (currentEditData.process === 'COMPLETED') {
+            const requiredFields = [
+                'quantity', 'typeDonation',
+                'hemoglobin', 'bloodPressure', 'heartRate', 'temperature', 'weight', 'height', 'healthCheck'
+            ];
+            
+            const missingFields = requiredFields.filter(field => {
+                const value = currentEditData[field];
+                if (typeof value === 'boolean') {
+                    return value === undefined; 
                 }
+                return value === null || value === undefined || String(value).trim() === '';
+            });
 
-                if (!performerId) {
-                    alert('Không thể xác định người thực hiện (performerId). Vui lòng đăng nhập lại.');
-                    return;
-                }
-
-                const selectedBloodType = bloodTypes.find(bt => bt.id === parseInt(currentEditData.bloodTypeId));
-                if (!selectedBloodType && currentEditData.bloodTypeId) {
-                    alert('Nhóm máu được chọn không hợp lệ.');
-                    return;
-                }
-
-                const payload = {
-                    ...currentEditData,
-                    performerId: performerId,
-                    bloodType: selectedBloodType ? { id: selectedBloodType.id } : null,
-                    bloodTypeId: undefined,
-                };
-
-                ['hemoglobin', 'quantity'].forEach(field => {
-                    if (payload[field] === '') {
-                        payload[field] = null;
-                    } else if (payload[field] !== null && typeof payload[field] === 'string') {
-                        payload[field] = parseFloat(payload[field]);
-                    }
-                });
-                ['bloodPressure', 'notes', 'startTime', 'endTime'].forEach(field => {
-                    if (payload[field] === '') {
-                        payload[field] = null;
-                    }
-                });
-
-
-                const response = await axiosInstance.put(`/donation-processes/edit/${processId}`, payload);
-                console.log("Quy trình đã được cập nhật:", response.data);
-                alert(`Quy trình ID ${processId} đã được cập nhật thành công!`);
-                setEditingProcessId(null);
-                
-                await fetchProcesses();
-                
-                setSelectedProcess(response.data);
-            } catch (err) {
-                console.error("Lỗi khi cập nhật quy trình:", err);
-                const errorMessage = err.response?.data?.message || 'Có lỗi xảy ra khi cập nhật quy trình. Vui lòng thử lại.';
-                alert(errorMessage);
+            if (missingFields.length > 0) {
+                alert(`Không thể hoàn thành quy trình. Vui lòng điền đầy đủ các trường sau: ${missingFields.join(', ')}. ` +
+                      `Hoặc thay đổi trạng thái sang "Đang tiến hành" để lưu nháp.`);
+                return;
             }
+        }
+
+        try {
+            const storedUser = localStorage.getItem('user');
+            let performerId = null;
+            if (storedUser) {
+                try {
+                    const userObject = JSON.parse(storedUser);
+                    performerId = userObject.id;
+                } catch (parseError) {
+                    console.error("Lỗi khi phân tích JSON từ localStorage:", parseError);
+                }
+            }
+
+            if (!performerId) {
+                alert('Không thể xác định người thực hiện (performerId). Vui lòng đăng nhập lại.');
+                return;
+            }
+            
+            const payload = {
+                ...currentEditData,
+                performerId: performerId,
+            };
+
+            ['hemoglobin', 'temperature', 'weight', 'height'].forEach(field => {
+                if (payload[field] === '') {
+                    payload[field] = null;
+                } else if (payload[field] !== null && typeof payload[field] === 'string') {
+                    payload[field] = parseFloat(payload[field]);
+                }
+            });
+            if (payload.quantity === '') {
+                payload.quantity = null;
+            } else if (payload.quantity !== null && typeof payload.quantity === 'string') {
+                payload.quantity = parseInt(payload.quantity, 10);
+            }
+
+            ['bloodPressure', 'notes', 'heartRate', 'screeningNote'].forEach(field => {
+                if (payload[field] === '') {
+                    payload[field] = null;
+                }
+            });
+
+            const response = await axiosInstance.put(`/donation-processes/edit/${processId}`, payload);
+            console.log("Quy trình đã được cập nhật:", response.data);
+            alert(`Quy trình ID ${processId} đã được cập nhật thành công!`);
+            setEditingProcessId(null);
+            
+            await fetchProcesses();
+            setSelectedProcess(response.data);
+        } catch (err) {
+            console.error("Lỗi khi cập nhật quy trình:", err);
+            const errorMessage = err.response?.data?.message || 'Có lỗi xảy ra khi cập nhật quy trình. Vui lòng thử lại.';
+            alert(errorMessage);
         }
     };
 
@@ -182,7 +227,8 @@ const DonationProcess = () => {
                 process={selectedProcess}
                 onBack={handleBackToList}
                 bloodTypes={bloodTypes}
-                onUpdate={editingProcessId === selectedProcess.id ? handleUpdateProcess : handleEditClick} 
+                onStartEdit={handleStartEdit}
+                onSave={handleSaveProcess}
                 onCancelEdit={handleCancelEdit}
                 currentEditData={currentEditData}
                 handleInputChange={handleInputChange}
@@ -194,6 +240,7 @@ const DonationProcess = () => {
     return (
         <div className={styles.donationProcessListContainer}>
             <h2>Danh sách Quy trình Hiến máu</h2>
+            
             {processes.length === 0 ? (
                 <p className={styles.noProcessesMessage}>Không có quy trình hiến máu nào đang chờ xử lý.</p>
             ) : (
@@ -202,14 +249,13 @@ const DonationProcess = () => {
                         <div key={process.id} className={styles.processCard}>
                             <h3>ID Quy trình: {process.id}</h3>
                             <p><strong>Người hiến:</strong> {process.donorFullName || 'N/A'}</p>
-                            <p><strong>Ngày hiến (ĐK):</strong> {formatDateTime(process.scheduleDate) || 'N/A'}</p>
-                            <p><strong>Cơ sở (ĐK):</strong> {process.medicalFacilityName || 'N/A'}</p>
+                            <p><strong>Nhóm máu ĐK:</strong> {process.donorBloodType ? `${process.donorBloodType.type}${process.donorBloodType.rhFactor}` : 'N/A'}</p>
+                            <p><strong>Sự kiện:</strong> {process.eventName || 'N/A'}</p>
+                            <p><strong>Thời gian sự kiện:</strong> {formatDateTime(process.startTime) || 'N/A'}</p>
                             <p>
                                 <strong>Trạng thái:</strong>
                                 <span className={`${styles.statusBadge} ${styles[process.process ? process.process.toLowerCase() : '']}`}>
-                                    {process.process === 'IN_PROCESS' ? 'Đang tiến hành' :
-                                        (process.process === 'COMPLETED' ? 'Hoàn thành' :
-                                            (process.process === 'FAILED' ? 'Thất bại' : 'N/A'))}
+                                    {getStatusName(process.process)} {/* SỬ DỤNG HÀM MỚI */}
                                 </span>
                             </p>
                             <button

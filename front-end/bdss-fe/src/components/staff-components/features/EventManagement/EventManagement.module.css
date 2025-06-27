@@ -1,4 +1,4 @@
-.scheduleManagement {
+.eventManagement {
     padding: 20px;
 }
 
@@ -73,14 +73,14 @@
     background-color: #218838;
 }
 
-.scheduleList {
+.eventList {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
 }
 
-.scheduleList h3 {
+.eventList h3 {
     margin-top: 0;
     color: #333;
     margin-bottom: 20px;

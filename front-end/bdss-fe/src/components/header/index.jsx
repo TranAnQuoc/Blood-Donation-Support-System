@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styles from "./index.module.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
-import MemberDropdown from "../member-components/sidebar/MemberDropdown";
 import { useSelector } from "react-redux";
+
+import MemberDropdown from "../member-components/sidebar/MemberDropdown";
 
 const Header = () => {
 const [menuOpen, setMenuOpen] = useState(false);

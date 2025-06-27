@@ -1,0 +1,163 @@
+/* src/components/member-components/features/EventSearchAndList.module.css */
+
+.eventSearchAndList { /* Changed from .scheduleSearchAndList */
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.pageTitle {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 40px;
+    font-size: 2em;
+    font-weight: 600;
+}
+
+.searchForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    align-items: flex-end; /* Align items to the bottom */
+}
+
+.formGroup {
+    flex: 1;
+    min-width: 200px; /* Adjust as needed */
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.formGroup input[type="date"],
+.formGroup input[type="text"] {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.searchButton {
+    padding: 10px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.05em;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.searchButton:hover {
+    background-color: #0056b3;
+}
+
+.dateErrorMessage {
+    color: #dc3545; /* Red */
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.resultsSection h3 {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 25px;
+    font-size: 1.6em;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 15px;
+}
+
+.resultsSection p {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+}
+
+/* DataTable styles (assuming your DataTable component has its own internal styling or expects these) */
+.dataTable { /* This class should be applied to the DataTable component if it accepts it */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.dataTable th,
+.dataTable td {
+    border: 1px solid #dee2e6;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.dataTable th {
+    background-color: #e9ecef;
+    font-weight: bold;
+    color: #495057;
+}
+
+.dataTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.dataTable tbody tr:hover {
+    background-color: #e2f0ff;
+}
+
+.registerButton {
+    background-color: #28a745; /* Green for register button */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.registerButton:hover {
+    background-color: #218838;
+}
+
+.unavailableText {
+    color: #6c757d; /* Grey text for unavailable */
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    width: 100%; /* Take full width */
+}
+
+.radioGroup label {
+    display: flex;
+    align-items: center;
+    font-weight: normal; /* Reset font-weight from formGroup label */
+    color: #343a40;
+}
+
+.radioGroup input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.1); /* Slightly larger radio buttons */
+}

@@ -1,52 +1,51 @@
-/* Container cho bảng, để xử lý responsive tốt hơn với overflow-x */
 .data-table-container {
-    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
-    width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng có thể */
+    overflow-x: auto;
+    width: 100%;
 }
 
 .data-table {
-    width: 100%; /* Bảng chiếm 100% chiều rộng của container */
-    border-collapse: collapse; /* Gộp các đường viền của ô */
-    margin-top: 20px; /* Khoảng cách trên */
-    font-size: 0.9em; /* Kích thước font nhỏ hơn một chút */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng rõ ràng hơn */
-    border-radius: 8px; /* Bo tròn góc bảng */
-    overflow: hidden; /* Đảm bảo bo tròn góc hoạt động tốt với các border */
-    min-width: 600px; /* Đảm bảo bảng không quá hẹp trên màn hình nhỏ */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.9em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 600px;
 }
 
 /* Kiểu cho tiêu đề bảng (th) và ô dữ liệu (td) */
 .data-table th,
 .data-table td {
-    border: 1px solid #e0e0e0; /* Đường viền nhẹ nhàng */
-    padding: 12px 15px; /* Đệm cho ô */
-    text-align: left; /* Căn lề trái */
-    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    border: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
 }
 
 /* Kiểu cho tiêu đề bảng */
 .data-table th {
-    background-color: #f5f5f5; /* Màu nền cho tiêu đề */
-    color: #333; /* Màu chữ tiêu đề */
+    background-color: #f5f5f5;
+    color: #333;
     font-weight: bold;
-    text-transform: uppercase; /* Chữ hoa tiêu đề */
-    letter-spacing: 0.03em; /* Khoảng cách chữ */
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 /* Kiểu cho hàng chẵn */
 .data-table tr:nth-child(even) {
-    background-color: #fcfcfc; /* Màu nền xen kẽ cho hàng chẵn */
+    background-color: #fcfcfc;
 }
 
 /* Hiệu ứng khi di chuột qua hàng */
 .data-table tr:hover {
-    background-color: #eaf6ff; /* Màu nền khi di chuột qua hàng */
-    transition: background-color 0.2s ease; /* Hiệu ứng chuyển đổi mượt mà */
+    background-color: #eaf6ff;
+    transition: background-color 0.2s ease;
 }
 
 /* Kiểu cho ô dữ liệu */
 .data-table td {
-    color: #666; /* Màu chữ cho dữ liệu */
+    color: #666;
 }
 
 /* Kiểu khi không có dữ liệu */
@@ -64,17 +63,17 @@
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .data-table {
-        min-width: unset; /* Xóa min-width trên màn hình nhỏ hơn */
-        display: block; /* Chuyển bảng thành block để cuộn */
+        min-width: unset;
+        display: block;
     }
 
     .data-table thead, .data-table tbody, .data-table th, .data-table td, .data-table tr {
-        display: block; /* Biến tất cả thành block */
+        display: block;
     }
 
     .data-table thead tr {
         position: absolute;
-        top: -9999px; /* Ẩn tiêu đề bảng */
+        top: -9999px;
         left: -9999px;
     }
 
@@ -86,19 +85,18 @@
     }
 
     .data-table td {
-        border: none; /* Bỏ border của td */
-        border-bottom: 1px solid #eee; /* Chỉ giữ border dưới */
+        border: none;
+        border-bottom: 1px solid #eee;
         position: relative;
-        padding-left: 50%; /* Tạo khoảng trống cho label ảo */
+        padding-left: 50%;
         text-align: right;
     }
 
     .data-table td:last-child {
-        border-bottom: 0; /* Loại bỏ border cuối cùng */
+        border-bottom: 0;
     }
 
     .data-table td::before {
-        /* Tạo label ảo từ header */
         position: absolute;
         top: 0;
         left: 6px;
@@ -107,7 +105,7 @@
         white-space: nowrap;
         text-align: left;
         font-weight: bold;
-        content: attr(data-label); /* Sử dụng data-label để hiển thị tiêu đề */
+        content: attr(data-label);
         color: #555;
     }
 }
