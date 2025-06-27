@@ -59,10 +59,11 @@ public class DataInitializr implements CommandLineRunner {
     private void initBloodComponents() {
         if (bloodComponentRepository.count() == 0) {
             List<BloodComponent> components = List.of(
-                    createBloodComponent("Plasma"),
-                    createBloodComponent("Red Blood Cells"),
-                    createBloodComponent("Platelets"),
-                    createBloodComponent("White Blood Cells")
+                    createBloodComponent("Unknow"),
+                    createBloodComponent("Huyết tương"),
+                    createBloodComponent("Hồng cầu"),
+                    createBloodComponent("Tiểu cầu"),
+                    createBloodComponent("Bạch cầu")
             );
             bloodComponentRepository.saveAll(components);
             System.out.println("✅ Seeded blood components");

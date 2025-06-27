@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.entity.commons;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
+import com.gtwo.bdss_system.enums.StatusVerified;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class BloodStorage {
     @Id
     @Column(name = "blood_storage_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -59,15 +61,16 @@ public class BloodStorage {
     @JoinColumn(name = "take_by")
     private Account takeBy;
 
-    @Column(name = "Use_At")
-    private LocalDateTime useAt;
-
     @Column(name = "Verified_At")
     private LocalDateTime verifiedAt;
 
     @ManyToOne
     @JoinColumn(name = "verified_by")
     private Account verifiedBy;
+
+    @Column(name = "verified_status")
+    @Enumerated(EnumType.STRING)
+    private StatusVerified verifiedStatus;
 
     @Column(name = "verified_note")
     @Nationalized

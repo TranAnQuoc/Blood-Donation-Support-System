@@ -5,11 +5,14 @@ import com.gtwo.bdss_system.dto.commons.BloodStorageUseDTO;
 import com.gtwo.bdss_system.dto.commons.VerifiedNote;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
+import com.gtwo.bdss_system.entity.commons.BloodStorageHistory;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
+import com.gtwo.bdss_system.enums.StatusVerified;
 import com.gtwo.bdss_system.repository.auth.AccountRepository;
 import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
 import com.gtwo.bdss_system.repository.commons.BloodStorageRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
+import com.gtwo.bdss_system.service.commons.BloodStorageHistoryService;
 import com.gtwo.bdss_system.service.commons.BloodStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,9 @@ public class BloodStorageServiceImpl implements BloodStorageService {
 
     @Autowired
     private BloodComponentRepository bloodComponentRepository;
+
+    @Autowired
+    private BloodStorageHistoryService historyService;
 
     @Override
     public BloodStorage create(BloodStorageDTO dto, Account creater) {
@@ -55,16 +61,18 @@ public class BloodStorageServiceImpl implements BloodStorageService {
     }
 
     @Override
-    public BloodStorage use(Long id, BloodStorageUseDTO useDto) {
+    public BloodStorage use(Long id, BloodStorageUseDTO useDto, Account user) {
         BloodStorage storage = repository.findById(id).orElseThrow();
         if (storage.getBloodStatus() != StatusBloodStorage.STORED)
             throw new IllegalStateException("Túi máu không sẵn sàng để sử dụng.");
-
-        storage.setBloodStatus(StatusBloodStorage.IN_USED);
+        StatusBloodStorage status = useDto.getStatus();
+        if (status != StatusBloodStorage.IN_USED && status != StatusBloodStorage.TRANSFERRED) {
+            throw new IllegalArgumentException("Trạng thái không hợp lệ. Chỉ được chọn IN_USED hoặc TRANSFERRED.");
+        }
+        storage.setBloodStatus(status);
         storage.setUsageReason(useDto.getReason());
-        storage.setTakeBy(useDto.getTakeBy());
+        storage.setTakeBy(user);
         storage.setTakeAt(LocalDateTime.now());
-        storage.setUseAt(LocalDateTime.now());
         return repository.save(storage);
     }
 
@@ -73,7 +81,12 @@ public class BloodStorageServiceImpl implements BloodStorageService {
         BloodStorage storage = repository.findById(id).orElseThrow();
         storage.setVerifiedAt(LocalDateTime.now());
         storage.setVerifiedBy(verifier);
+        storage.setVerifiedStatus(verifiedNote.getStatus());
         storage.setVerifiedNote(verifiedNote.getVerifiedNote());
+        if (storage.getVerifiedStatus() == StatusVerified.CONFIRMED
+                || storage.getVerifiedStatus() == StatusVerified.UNCONFIRMED) {
+            historyService.createSnapshot(storage);
+        }
         return repository.save(storage);
     }
 
