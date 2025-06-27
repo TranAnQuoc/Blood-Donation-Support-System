@@ -91,7 +91,7 @@ public class AccountServiceImpl implements AccountService {
         if (currentUser.getRole() == Role.MEMBER) {
             AccountProfileDTO dto = modelMapper.map(currentUser, AccountProfileDTO.class);
             if (currentUser.getBloodType() != null) {
-                dto.setBloodTypeId(currentUser.getBloodType().getId());
+                dto.setBloodType(currentUser.getBloodType());
             }
             return dto;
         } else {

@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.dto.auth;
 
+import com.gtwo.bdss_system.entity.commons.BloodType;
 import jakarta.validation.constraints.*;
 import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.StatusDonation;
@@ -21,6 +22,9 @@ public class AccountProfileDTO {
     @Past(message = "Date of birth must be in the past")
     private Date dateOfBirth;
 
+    @NotBlank(message = "CCCD is required")
+    private String cccd;
+
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^(0[0-9]{9})$", message = "Phone number must start with 0 and have 10 digits")
     private String phone;
@@ -28,7 +32,7 @@ public class AccountProfileDTO {
     @NotBlank(message = "Address is required")
     private String address;
 
-    private Long bloodTypeId;
+    private BloodType bloodType;
 
     @NotNull(message = "Status donation is required")
     private StatusDonation statusDonation;
