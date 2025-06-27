@@ -145,3 +145,40 @@
 .togglePasswordButton:hover {
     color: #333;
 }
+
+.inputGroup {
+    position: relative; /* Rất quan trọng để position button bên trong input field */
+    margin-bottom: 1rem; /* Khoảng cách giữa các nhóm input */
+}
+
+.inputField {
+    /* ... (các style hiện có) ... */
+    padding-right: 2.5rem; /* Tăng padding-right để tránh text bị che bởi icon */
+}
+
+.togglePasswordButton {
+    position: absolute;
+    right: 0.75rem; /* Đặt nút cách mép phải 0.75rem */
+    top: 50%; /* Đặt nút ở giữa theo chiều dọc */
+    transform: translateY(-50%); /* Dịch lên 50% chiều cao của chính nó để căn giữa hoàn hảo */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888; /* Màu icon */
+    font-size: 1rem; /* Kích thước icon */
+    padding: 0.25rem; /* Padding nhỏ để dễ click */
+}
+
+.togglePasswordButton:hover {
+    color: #333;
+}
+
+.errorMessage {
+    color: #e53e3e; /* Màu đỏ cho thông báo lỗi */
+    font-size: 0.875rem; /* Kích thước font nhỏ */
+    margin-top: 0.25rem; /* Khoảng cách trên */
+}
+
+.inputError {
+    border-color: #e53e3e; /* Border màu đỏ khi có lỗi */
+}

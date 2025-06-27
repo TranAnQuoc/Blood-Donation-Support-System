@@ -85,4 +85,12 @@ public class DonationRequestAPI {
         DonationRequestDTO dto = service.requestTable(entity);
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/my-latest")
+    @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<List<DonationRequestDTO>> getMyRequests(@AuthenticationPrincipal Account user) {
+        Long userId = user.getId();
+        List<DonationRequestDTO> dtos = service.getAllRequestsByMember(userId);
+        return ResponseEntity.ok(dtos);
+    }
 }

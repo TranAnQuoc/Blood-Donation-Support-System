@@ -12,9 +12,11 @@ import java.util.List;
 public interface DonationProcessService {
     DonationProcess getById(Long id);
     List<DonationProcess> getAllActive();
-    DonationProcess update(Long processId, DonationProcessDTO dto);
+    DonationProcess update(Long processId, DonationProcessDTO dto, Account currentUser);
     void delete(Long id);
     void restore(Long id);
     DonationProcess autoCreateByRequest(DonationRequest request);
     DonationProcessViewDTO processViewDTO(DonationProcess entity);
+    DonationProcessDTO getMyLatestProcess(Long userId);
+    void autoSetupExpiredProcesses();
 }

@@ -30,6 +30,7 @@ public class DonationHistory {
     private Account donor;
 
     @Column(name = "Donor_Name")
+    @Nationalized
     private String fullName;
 
     @Column(name = "Donor_Phone")
@@ -54,10 +55,42 @@ public class DonationHistory {
     @Column(name = "Quantity")
     private int quantity;
 
-    @Column(name = "Facility_Name")
-    private String facilityName;
+    @Column(name = "Health_Check")
+    private Boolean healthCheck;
+
+    @Column(name = "Heart_Rate")
+    private String heartRate;
+
+    @Column(name = "Temperature")
+    private Double temperature;
+
+    @Column(name = "Weight")
+    private Double weight;
+
+    @Column(name = "Height")
+    private Double height;
+
+    @Column(name = "Hemoglobin_Level")
+    private Double hemoglobin;
+
+    @Column(name = "Blood_Pressure")
+    private String bloodPressure;
+
+    @Column(name = "Has_Chronic_Disease")
+    private Boolean hasChronicDisease;
+
+    @Column(name = "Has_Recent_Tattoo")
+    private Boolean hasRecentTattoo;
+
+    @Column(name = "Has_Used_Drugs")
+    private Boolean hasUsedDrugs;
+
+    @Column(name = "Screening_Note")
+    @Nationalized
+    private String screeningNote;
 
     @Column(name = "Address")
+    @Nationalized
     private String address;
 
     @Column(name = "Note")

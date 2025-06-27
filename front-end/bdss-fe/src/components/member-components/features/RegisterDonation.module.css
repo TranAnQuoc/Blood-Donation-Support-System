@@ -1,0 +1,183 @@
+.container {
+    margin: 1rem auto;
+    padding: 1.5rem;
+    max-width: 42rem;
+    background-color: #ffffff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem;
+}
+
+.heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #dc2626;
+}
+
+/* Thông báo lỗi/cảnh báo */
+.warningBanner {
+    background-color: #fffbeb; /* bg-yellow-100 */
+    border-left: 4px solid #f59e0b; /* border-l-4 border-yellow-500 */
+    color: #b45309; /* text-yellow-700 */
+    padding: 1rem; /* p-4 */
+    margin-bottom: 1.5rem; /* mb-6 */
+    border-radius: 0.25rem; /* to match general rounded-ness, optional */
+}
+
+.warningTitle {
+    font-weight: 700; /* font-bold */
+}
+
+.loadingContainer,
+.errorContainer {
+    text-align: center; /* text-center */
+    padding-top: 1rem; /* py-4 */
+    font-size: 1.125rem; /* text-lg */
+}
+
+.errorContainer {
+    color: #dc2626; /* text-red-600 */
+}
+
+/* Form layout */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* space-y-6 */
+}
+
+/* Label */
+.label {
+    display: block; /* block */
+    color: #1f2937; /* text-gray-800 */
+    font-size: 1rem; /* text-base */
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+/* Input và Textarea (đã được định nghĩa tốt trước đó, chỉ cần đảm bảo class match) */
+.input,
+.textarea {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow */
+    appearance: none; /* appearance-none */
+    border: 1px solid #d1d5db; /* border */
+    border-radius: 0.25rem; /* rounded */
+    width: 100%; /* w-full */
+    padding: 0.5rem 0.75rem; /* py-2 px-3 */
+    color: #374151; /* text-gray-700 */
+    line-height: 1.25; /* leading-tight */
+    transition: all 0.2s ease; /* transition duration-200 */
+    box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none; /* focus:outline-none */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:shadow-outline, custom blue */
+    border-color: #3b82f6; /* custom blue */
+}
+
+.input:disabled,
+.textarea:disabled {
+    background-color: #e5e7eb; /* bg-gray-200 */
+    cursor: not-allowed; /* cursor-not-allowed */
+    opacity: 0.7; /* disabled:opacity-50 */
+}
+
+
+/* Message when no schedules are available */
+.noScheduleMessage {
+    font-size: 0.875rem; /* text-sm */
+    color: #ef4444; /* text-red-500 */
+    margin-top: 0.5rem; /* mt-2 */
+}
+
+/* Submit button */
+.submitButton {
+    background-color: #dc2626; /* bg-red-600 */
+    color: #ffffff; /* text-white */
+    font-weight: 700; /* font-bold */
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    width: 100%; /* w-full */
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out; /* transition duration-300 ease-in-out */
+}
+
+.submitButton:hover {
+    background-color: #991b1b; /* hover:bg-red-800 */
+}
+
+.submitButton:focus {
+    outline: none; /* focus:outline-none */
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5); /* focus:shadow-outline, custom red */
+}
+
+.submitButton:disabled {
+    opacity: 0.5; /* disabled:opacity-50 */
+    cursor: not-allowed; /* disabled:cursor-not-allowed */
+}
+
+/* Custom styles for react-select - KEEP THESE AS THEY ARE SPECIFICALLY FOR REACT-SELECT */
+/* The className={styles.reactSelectContainer} in JSX will target this */
+.react-select-container .react-select__control {
+    border-radius: 0.5rem; /* rounded-lg equivalent */
+    border: 1px solid #e2e8f0; /* default border color */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow equivalent */
+    min-height: 40px; /* Adjust height as needed */
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+.react-select-container .react-select__control--is-focused {
+    border-color: #3b82f6; /* focus:outline-none focus:shadow-outline equivalent for blue */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* blue shadow on focus */
+}
+
+.react-select-container .react-select__value-container {
+    padding: 0.5rem 0.75rem; /* py-2 px-3 equivalent */
+}
+
+.react-select-container .react-select__placeholder {
+    color: #a0aec0; /* text-gray-500 equivalent */
+}
+
+.react-select-container .react-select__single-value {
+    color: #4a5568; /* text-gray-700 equivalent */
+}
+
+.react-select-container .react-select__indicator-separator {
+    background-color: #cbd5e0; /* light gray separator */
+}
+
+.react-select-container .react-select__dropdown-indicator {
+    color: #a0aec0; /* default indicator color */
+}
+
+.react-select-container .react-select__menu {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-top: 0.5rem;
+    z-index: 9999; /* Ensure dropdown is above other content */
+}
+
+.react-select-container .react-select__option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.react-select-container .react-select__option--is-focused {
+    background-color: #f0f4f8; /* Light gray on hover/focus */
+}
+
+.react-select-container .react-select__option--is-selected {
+    background-color: #bfdbfe; /* bg-blue-200 equivalent */
+    color: #1e40af; /* text-blue-800 equivalent */
+    font-weight: 500;
+}
+
+.react-select-container .react-select__control--is-disabled {
+    background-color: #edf2f7; /* gray-200 */
+    cursor: not-allowed;
+}

@@ -1,23 +1,30 @@
-// src/components/staff-components/leftPanel/ProcessDropdown.jsx
 import React from 'react';
-import styles from './ProcessDropdown.module.css';
+import { Link, useLocation } from 'react-router-dom';
+import commonStyles from '../leftPanel/commonDropdown.module.css';
 
-const ProcessDropdown = ({ onSelectSubItem, activeItem }) => {
+const ProcessDropdown = () => {
+    const location = useLocation();
+
+    const isSubItemActive = (pathSegment) => {
+        return location.pathname.startsWith(`/staff-dashboard/${pathSegment}`);
+    };
+
     const subItems = [
-        { id: 'process-donation', label: 'Quy Trình Hiến' },
-        { id: 'process-transfusion', label: 'Quy Trình Nhận' },
-        { id: 'process-emergency-transfusion', label: 'Quy Trình Nhận Khẩn Cấp' },
+        { id: 'donation-process', label: 'Quy Trình Hiến', path: 'donation-processes' },
+        { id: 'transfusion-process', label: 'Quy Trình Nhận', path: 'transfusion-processes' },
+        { id: 'emergency-transfusion-process', label: 'Quy Trình Nhận Khẩn Cấp', path: 'emergency-transfusion-processes' },
     ];
 
     return (
-        <ul className={styles.dropdownMenu}>
+        <ul className={commonStyles.dropdownMenu}>
             {subItems.map(item => (
-                <li
-                    key={item.id}
-                    className={`${styles.dropdownMenuItem} ${activeItem === item.id ? styles.active : ''}`}
-                    onClick={() => onSelectSubItem(item.id)}
-                >
-                    {item.label}
+                <li key={item.id}>
+                    <Link
+                        to={`/staff-dashboard/${item.path}`}
+                        className={`${commonStyles.dropdownMenuItem} ${isSubItemActive(item.path) ? commonStyles.active : ''}`}
+                    >
+                        {item.label}
+                    </Link>
                 </li>
             ))}
         </ul>

@@ -97,7 +97,6 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setStatus(StatusProcess.IN_PROCESS);
         process.setConfirmed(false);
         process.setAssignedStaff(request.getVerifiedBy());
-
         processRepo.save(process);
     }
 

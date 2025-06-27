@@ -2,19 +2,25 @@ package com.gtwo.bdss_system.service.donation.impl;
 
 import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
-import com.gtwo.bdss_system.entity.donation.DonationSchedule;
+import com.gtwo.bdss_system.entity.donation.DonationEvent;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
-import com.gtwo.bdss_system.repository.donation.DonationScheduleRepository;
+import com.gtwo.bdss_system.repository.donation.DonationEventRepository;
 import com.gtwo.bdss_system.service.donation.DonationProcessService;
 import com.gtwo.bdss_system.service.donation.DonationRequestService;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -24,25 +30,56 @@ public class DonationRequestServiceImpl implements DonationRequestService {
     private DonationRequestRepository repository;
 
     @Autowired
-    private DonationScheduleRepository scheduleRepository;
+    private DonationEventRepository scheduleRepository;
 
     @Autowired
     private DonationProcessService donationProcessService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public DonationRequest createRequest(Long scheduleId, Account currentUser) {
         if (!currentUser.getRole().equals(Role.MEMBER)) {
             throw new IllegalArgumentException("Chỉ người dùng với vai trò MEMBER mới được đăng ký hiến máu.");
         }
-        boolean exists = repository.existsByDonorId(currentUser.getId());
-        if (exists) {
-            throw new IllegalArgumentException("Tài khoản này đã đăng ký hiến máu trước đó.");
+        if (currentUser.getDateOfBirth() == null) {
+            throw new IllegalArgumentException("Không có thông tin ngày sinh. Vui lòng cập nhật hồ sơ.");
         }
-        DonationSchedule schedule = scheduleRepository.findById(scheduleId)
+        LocalDate birthDate = currentUser.getDateOfBirth().toLocalDate();
+        LocalDate now = LocalDate.now();
+        Period age = Period.between(birthDate, now);
+        if (age.getYears() < 18) {
+            throw new IllegalArgumentException("Người hiến máu phải đủ 18 tuổi để đăng ký hiến máu.");
+        }
+        List<DonationRequest> previousRequests = repository.findAllByUserIdOrderByRequestTimeDesc(currentUser.getId());
+        if (!previousRequests.isEmpty()) {
+            DonationRequest lastRequest = previousRequests.get(0);
+            DonationProcess process = lastRequest.getProcess();
+            if (process != null) {
+                switch (process.getProcess()) {
+                    case COMPLETED -> {
+                        LocalDate completedDate = process.getEndTime().toLocalDate();
+                        if (ChronoUnit.WEEKS.between(completedDate, LocalDate.now()) < 12) {
+                            throw new IllegalArgumentException("Bạn cần chờ ít nhất 12 tuần sau khi hiến máu để đăng ký lại.");
+                        }
+                    }
+                    case IN_PROCESS -> {
+                        throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
+                    }
+                    case FAILED -> {
+                        throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Bạn đã đăng ký hiến máu và đang chờ xử lý.");
+            }
+        }
+        DonationEvent event = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy lịch hiến máu."));
         DonationRequest request = new DonationRequest();
         request.setDonor(currentUser);
-        request.setSchedule(schedule);
+        request.setEvent(event);
         request.setRequestTime(LocalDateTime.now());
         request.setStatusRequest(StatusRequest.PENDING);
         request.setApprover(null);
@@ -66,11 +103,11 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         if (decision == StatusRequest.APPROVED) {
             donationProcessService.autoCreateByRequest(savedRequest);
         }
-        DonationSchedule schedule = request.getSchedule();
-        int approved = repository.countScheduleIdInRequest(schedule.getId());
-        if (approved >= schedule.getMaxSlot()) {
-            schedule.setStatus(Status.INACTIVE);
-            scheduleRepository.save(schedule);
+        DonationEvent event = request.getEvent();
+        int approved = repository.countEventIdInRequest(event.getId());
+        if (approved >= event.getMaxSlot()) {
+            event.setStatus(Status.INACTIVE);
+            scheduleRepository.save(event);
         }
         return savedRequest;
     }
@@ -110,8 +147,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         dto.setDonorFullName(entity.getDonor().getFullName());
         dto.setDonorGender(entity.getDonor().getGender().toString());
         dto.setDonorBloodType(entity.getDonor().getBloodType());
-        dto.setScheduleName(entity.getSchedule().getName());
-        dto.setMedicalFacilityName(entity.getSchedule().getFacility().getName());
+        dto.setEventName(entity.getEvent().getName());
         dto.setRequestTime(entity.getRequestTime());
         dto.setStatusRequest(entity.getStatusRequest().toString());
         if (entity.getApprover() != null) {
@@ -120,5 +156,13 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         }
         dto.setNote(entity.getNote());
         return dto;
+    }
+
+    @Override
+    public List<DonationRequestDTO> getAllRequestsByMember(Long userId) {
+        List<DonationRequest> requests = repository.findAllByUserIdOrderBySubmittedAtDesc(userId);
+        return requests.stream()
+                .map(entity -> modelMapper.map(entity, DonationRequestDTO.class))
+                .toList();
     }
 }

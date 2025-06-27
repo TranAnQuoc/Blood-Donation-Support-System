@@ -9,8 +9,19 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DonationRequestRepository extends JpaRepository<DonationRequest, Long> {
-    @Query("SELECT COUNT(r) FROM DonationRequest r WHERE r.schedule.id = :scheduleId AND r.statusRequest = 'APPROVED'")
-    int countScheduleIdInRequest(@Param("scheduleId") Long scheduleId);
-    boolean existsByDonorId(Long donorId);
+    @Query("SELECT COUNT(r) FROM DonationRequest r WHERE r.event.id = :scheduleId AND r.statusRequest = 'APPROVED'")
+    int countEventIdInRequest(@Param("scheduleId") Long eventId);
     List<DonationRequest> findByStatusRequest(StatusRequest statusRequest);
+    @Query("""
+        SELECT r FROM DonationRequest r 
+        WHERE r.donor.id = :userId 
+        ORDER BY r.requestTime DESC
+    """)
+    List<DonationRequest> findAllByUserIdOrderBySubmittedAtDesc(@Param("userId") Long userId);
+    @Query("""
+    SELECT r FROM DonationRequest r
+    WHERE r.donor.id = :userId
+    ORDER BY r.requestTime DESC
+""")
+    List<DonationRequest> findAllByUserIdOrderByRequestTimeDesc(@Param("userId") Long userId);
 }

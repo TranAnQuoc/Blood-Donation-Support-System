@@ -1,10 +1,9 @@
-/* src/components/MainContent/DataTableContainer.module.css */
 .dataTableContainer {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   padding: 20px;
   margin-top: 20px;
-  min-height: 400px; /* Chiều cao tối thiểu cho nội dung */
-  overflow: hidden; /* Đảm bảo nội dung bảng không tràn ra ngoài */
+  min-height: 400px;
+  overflow: hidden;
 }

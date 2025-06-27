@@ -2,7 +2,6 @@ package com.gtwo.bdss_system.service.donation.impl;
 
 import com.gtwo.bdss_system.dto.donation.DonationHistoryResponseDTO;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
-import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.repository.donation.DonationHistoryRepository;
 import com.gtwo.bdss_system.service.donation.DonationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,6 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
 
     @Autowired
     private DonationHistoryRepository donationHistoryRepository;
-
-    @Autowired
-    private AuthenticationRepository accountRepository;
 
     @Override
     public List<DonationHistoryResponseDTO> getAllHistories() {
@@ -47,7 +43,6 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
         dto.setDonationDate(history.getDonationDate());
         dto.setDonationType(history.getDonationType());
         dto.setQuantity(history.getQuantity());
-        dto.setFacilityName(history.getFacilityName());
         dto.setAddress(history.getAddress());
         dto.setNote(history.getNote());
         dto.setStatus(history.getStatus() != null ? history.getStatus().name() : null);
@@ -55,8 +50,7 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
     }
 
     @Override
-    public DonationHistory getLatestHistoryByCurrentUser(Long donorId) {
-        return donationHistoryRepository.findFirstByDonor_IdOrderByDonationDateDesc(donorId)
-                .orElseThrow(() -> new IllegalArgumentException("No donation history found for this user."));
+    public List<DonationHistory> getAllHistoryByDonorId(Long donorId) {
+        return donationHistoryRepository.findAllByDonor_IdOrderByDonationDateDesc(donorId);
     }
 }

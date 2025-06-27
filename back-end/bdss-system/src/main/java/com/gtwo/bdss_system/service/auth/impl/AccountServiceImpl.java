@@ -83,11 +83,6 @@ public class AccountServiceImpl implements AccountService {
         currentUser.setPhone(dto.getPhone());
         currentUser.setAddress(dto.getAddress());
         currentUser.setStatusDonation(dto.getStatusDonation());
-        if (dto.getBloodTypeId() != null) {
-            BloodType bloodType = bloodTypeRepo.findById(dto.getBloodTypeId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
-            currentUser.setBloodType(bloodType);
-        }
         accountRepo.save(currentUser);
     }
 

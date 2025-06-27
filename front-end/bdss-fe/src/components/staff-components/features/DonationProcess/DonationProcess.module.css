@@ -1,0 +1,111 @@
+/* src/components/DonationProcess/DonationProcess.module.css */
+
+.loadingMessage,
+.errorMessage,
+.noProcessesMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.errorMessage {
+    color: #dc3545; /* Red for errors */
+    font-weight: bold;
+}
+
+.donationProcessListContainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 1200px; /* Có thể điều chỉnh */
+    margin: 20px auto;
+}
+
+.donationProcessListContainer h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.processCardsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid for cards */
+    gap: 20px;
+    justify-content: center;
+}
+
+.processCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.processCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.processCard h3 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.processCard p {
+    margin-bottom: 8px;
+    color: #666;
+}
+
+.processCard strong {
+    color: #333;
+}
+
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+
+.statusBadge.in_process {
+    background-color: #ffc107; /* yellow */
+}
+
+.statusBadge.completed {
+    background-color: #28a745; /* green */
+}
+
+.statusBadge.failed {
+    background-color: #dc3545; /* red */
+}
+
+.viewDetailButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px;
+    width: 100%;
+    transition: background-color 0.2s ease;
+}
+
+.viewDetailButton:hover {
+    background-color: #0056b3;
+}
+
+/* Bạn có thể bỏ qua các style table cũ như .donationProcessTable, .tableWrapper nếu không còn dùng bảng nữa */

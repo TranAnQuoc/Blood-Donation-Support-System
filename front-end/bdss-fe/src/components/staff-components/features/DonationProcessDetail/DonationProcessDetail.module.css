@@ -1,0 +1,146 @@
+/* src/components/DonationProcess/DonationProcessDetail.module.css */
+.detailContainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.backButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.backButton:hover {
+    background-color: #0056b3;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.detailCard {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.detailItem {
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.detailItem strong {
+    flex: 0 0 180px; /* Độ rộng cố định cho nhãn */
+    margin-right: 10px;
+    color: #555;
+}
+
+.detailItem span,
+.detailItem input,
+.detailItem select,
+.detailItem textarea {
+    flex: 1; /* Cho phép các trường input/select/textarea chiếm phần còn lại */
+    min-width: 150px; /* Đảm bảo không quá nhỏ */
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.detailItem input[type="checkbox"] {
+    width: auto;
+    margin-left: 0;
+}
+
+.selectInput,
+.textInput,
+.numberInput,
+.textareaInput {
+    box-sizing: border-box; /* Đảm bảo padding và border không làm tăng kích thước */
+}
+
+.textareaInput {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.statusBadge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.statusBadge.in_process {
+    background-color: #ffc107; /* yellow */
+}
+
+.statusBadge.completed {
+    background-color: #28a745; /* green */
+}
+
+.statusBadge.failed {
+    background-color: #dc3545; /* red */
+}
+
+.detailActions {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.editButton,
+.saveButton,
+.cancelButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 0 10px;
+    transition: background-color 0.2s ease;
+}
+
+.editButton {
+    background-color: #17a2b8; /* info blue */
+    color: white;
+}
+
+.editButton:hover {
+    background-color: #138496;
+}
+
+.saveButton {
+    background-color: #28a745; /* green */
+    color: white;
+}
+
+.saveButton:hover {
+    background-color: #218838;
+}
+
+.cancelButton {
+    background-color: #6c757d; /* gray */
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+}

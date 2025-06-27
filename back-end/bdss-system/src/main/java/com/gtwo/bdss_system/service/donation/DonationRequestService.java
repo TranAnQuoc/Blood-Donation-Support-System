@@ -15,4 +15,5 @@ public interface DonationRequestService {
     DonationRequest getById(Long id);
     DonationRequestDTO requestTable(DonationRequest entity);
     List<DonationRequest> getPendingRequests();
+    List<DonationRequestDTO> getAllRequestsByMember(Long userId);
 }

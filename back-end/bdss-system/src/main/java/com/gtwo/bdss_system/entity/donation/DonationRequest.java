@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.entity.donation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
@@ -18,12 +19,12 @@ public class DonationRequest {
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Donor_ID", unique = true)
+    @JoinColumn(name = "Donor_ID")
     private Account donor;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Schedule_ID")
-    private DonationSchedule schedule;
+    @JoinColumn(name = "Event_ID")
+    private DonationEvent event;
 
     @Column(name = "Request_Time")
     private LocalDateTime requestTime;
@@ -42,4 +43,8 @@ public class DonationRequest {
     @Column(name = "Pre_Check_Note")
     @Nationalized
     private String note;
+
+    @OneToOne(mappedBy = "request", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private DonationProcess process;
 }

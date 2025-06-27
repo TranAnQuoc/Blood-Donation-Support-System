@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styles from './register.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify'; // Import toast
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesome
+import axiosInstance from '../../configs/axios';
+import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import dayjs from 'dayjs';
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ function RegisterForm() {
         password: '',
         confirmPassword: '',
         fullName: '',
+        cccd: '',
         gender: '',
         bloodTypeId: '',
         dateOfBirth: '',
@@ -19,15 +21,25 @@ function RegisterForm() {
         address: ''
     });
 
-    // State for validation errors
     const [errors, setErrors] = useState({});
-
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
     const navigate = useNavigate();
 
-    // --- Validation Functions ---
+    const staticBloodTypes = [
+        { id: 1, label: 'Unknown' },
+        { id: 2, label: 'A+' },
+        { id: 3, label: 'A-' },
+        { id: 4, label: 'B+' },
+        { id: 5, label: 'B-' },
+        { id: 6, label: 'AB+' },
+        { id: 7, label: 'AB-' },
+        { id: 8, label: 'O+' },
+        { id: 9, label: 'O-' }
+    ];
+
+    const genders = ['MALE', 'FEMALE', 'OTHER'];
+
     const validateEmail = (email) => {
         if (!email) return 'Email là bắt buộc.';
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Email không đúng định dạng.';
@@ -37,9 +49,8 @@ function RegisterForm() {
     const validatePassword = (password) => {
         if (!password) return 'Mật khẩu là bắt buộc.';
         if (password.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự.';
-        // Có thể thêm regex để yêu cầu chữ hoa, chữ thường, số, ký tự đặc biệt
         if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(password)) {
-          return 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt.';
+            return 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt.';
         }
         return '';
     };
@@ -56,29 +67,32 @@ function RegisterForm() {
         return '';
     };
 
+    const validateCccd = (cccd) => {
+        if (cccd && !/^\d{12}$/.test(cccd)) return 'CCCD phải gồm 12 chữ số.';
+        return '';
+    };
+
     const validateGender = (gender) => {
         if (!gender) return 'Giới tính là bắt buộc.';
         return '';
     };
 
-    // eslint-disable-next-line no-unused-vars
     const validateBloodType = (bloodTypeId) => {
-        // bloodTypeId có thể là rỗng hoặc "null" từ select, không cần validate nếu bạn cho phép "Unknow"
-        // if (!bloodTypeId || bloodTypeId === 'null') return 'Nhóm máu là bắt buộc.';
+        if (!bloodTypeId) return 'Nhóm máu là bắt buộc.';
         return '';
     };
 
     const validateDateOfBirth = (dateOfBirth) => {
         if (!dateOfBirth) return 'Ngày sinh là bắt buộc.';
-        const today = new Date();
-        const birthDate = new Date(dateOfBirth);
-        if (birthDate >= today) return 'Ngày sinh không hợp lệ.';
+        const today = dayjs();
+        const birthDate = dayjs(dateOfBirth);
+        if (birthDate.isAfter(today)) return 'Ngày sinh không hợp lệ.';
+        if (today.diff(birthDate, 'year') < 18) return 'Bạn phải đủ 18 tuổi để đăng ký.';
         return '';
     };
 
     const validatePhone = (phone) => {
         if (!phone) return 'Số điện thoại là bắt buộc.';
-        // Regex cho số điện thoại Việt Nam (10 chữ số, bắt đầu bằng 0)
         if (!/^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(phone)) return 'Số điện thoại không đúng định dạng.';
         return '';
     };
@@ -88,7 +102,6 @@ function RegisterForm() {
         return '';
     };
 
-    // --- Event Handlers ---
     const handleInputChange = (event) => {
         const { id, value } = event.target;
         setFormData(prevData => ({
@@ -96,7 +109,6 @@ function RegisterForm() {
             [id]: value
         }));
 
-        // Validate on change
         let errorMessage = '';
         switch (id) {
             case 'email':
@@ -104,7 +116,6 @@ function RegisterForm() {
                 break;
             case 'password':
                 errorMessage = validatePassword(value);
-                // Re-validate confirm password if password changes
                 setErrors(prev => ({
                     ...prev,
                     confirmPassword: validateConfirmPassword(formData.confirmPassword, value)
@@ -115,6 +126,9 @@ function RegisterForm() {
                 break;
             case 'fullName':
                 errorMessage = validateFullName(value);
+                break;
+            case 'cccd':
+                errorMessage = validateCccd(value);
                 break;
             case 'gender':
                 errorMessage = validateGender(value);
@@ -148,14 +162,14 @@ function RegisterForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Validate all fields on submit
         const newErrors = {
             email: validateEmail(formData.email),
             password: validatePassword(formData.password),
             confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password),
             fullName: validateFullName(formData.fullName),
+            cccd: validateCccd(formData.cccd),
             gender: validateGender(formData.gender),
-            bloodTypeId: validateBloodType(formData.bloodTypeId), // Nếu bạn muốn bắt buộc chọn
+            bloodTypeId: validateBloodType(formData.bloodTypeId),
             dateOfBirth: validateDateOfBirth(formData.dateOfBirth),
             phone: validatePhone(formData.phone),
             address: validateAddress(formData.address)
@@ -163,7 +177,6 @@ function RegisterForm() {
 
         setErrors(newErrors);
 
-        // Check if there are any errors
         const hasErrors = Object.values(newErrors).some(error => error !== '');
         if (hasErrors) {
             toast.error('Vui lòng điền đầy đủ và đúng thông tin.');
@@ -175,16 +188,15 @@ function RegisterForm() {
                 email: formData.email,
                 password: formData.password,
                 fullName: formData.fullName,
+                cccd: formData.cccd,
                 gender: formData.gender,
-                bloodTypeId: formData.bloodTypeId === '' || formData.bloodTypeId === 'null'
-                    ? null
-                    : Number(formData.bloodTypeId),
+                bloodTypeId: Number(formData.bloodTypeId),
                 dateOfBirth: formData.dateOfBirth,
                 phone: formData.phone,
                 address: formData.address
             };
 
-            const response = await axios.post('http://localhost:8080/api/register', payload);
+            const response = await axiosInstance.post('/register', payload);
 
             if (response.status === 200 || response.status === 201) {
                 toast.success('Đăng ký thành công! Vui lòng đăng nhập để truy cập tài khoản của bạn.');
@@ -201,19 +213,6 @@ function RegisterForm() {
             }
         }
     };
-
-    const bloodTypes = [
-        { label: 'A+', id: '1' },
-        { label: 'A-', id: '2' },
-        { label: 'B+', id: '3' },
-        { label: 'B-', id: '4' },
-        { label: 'AB+', id: '5' },
-        { label: 'AB-', id: '6' },
-        { label: 'O+', id: '7' },
-        { label: 'O-', id: '8' }
-    ];
-
-    const genders = ['MALE', 'FEMALE', 'OTHER'];
 
     return (
         <div className={styles.registerContainer}>
@@ -287,6 +286,18 @@ function RegisterForm() {
                 </div>
 
                 <div className={styles.inputGroup}>
+                    <input
+                        type="text"
+                        id="cccd"
+                        className={`${styles.inputField} ${errors.cccd ? styles.inputError : ''}`}
+                        placeholder="CCCD (Optional)"
+                        value={formData.cccd}
+                        onChange={handleInputChange}
+                    />
+                    {errors.cccd && <p className={styles.errorMessage}>{errors.cccd}</p>}
+                </div>
+
+                <div className={styles.inputGroup}>
                     <select
                         id="gender"
                         className={`${styles.inputField} ${errors.gender ? styles.inputError : ''}`}
@@ -308,11 +319,10 @@ function RegisterForm() {
                         className={`${styles.inputField} ${errors.bloodTypeId ? styles.inputError : ''}`}
                         value={formData.bloodTypeId}
                         onChange={handleInputChange}
-                        required // Bạn có thể bỏ required nếu muốn cho phép "Unknow" mà không cần chọn
+                        required
                     >
                         <option value="">Select Blood Type</option>
-                        <option value="null">Unknow</option>
-                        {bloodTypes.map(bt => (
+                        {staticBloodTypes.map(bt => (
                             <option key={bt.id} value={bt.id}>{bt.label}</option>
                         ))}
                     </select>

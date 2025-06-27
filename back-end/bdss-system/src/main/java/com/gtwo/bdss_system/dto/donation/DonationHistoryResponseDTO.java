@@ -17,7 +17,6 @@ public class DonationHistoryResponseDTO {
     private Date donationDate;
     private String donationType;
     private int quantity;
-    private String facilityName;
     private String address;
     private String note;
     private String status;
