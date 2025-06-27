@@ -16,15 +16,15 @@ public class BloodStorage {
     private Long id;
 
     @ManyToOne
-    @Column(name = "donor_id")
+    @JoinColumn(name = "donor_id")
     private Account donor;
 
     @ManyToOne
-    @Column(name = "blood_type_id")
+    @JoinColumn(name = "blood_type_id")
     private BloodType bloodType;
 
     @ManyToOne
-    @Column(name = "blood_component_id")
+    @JoinColumn(name = "blood_component_id")
     private BloodComponent bloodComponent;
 
     @Column(name = "Quantity")
@@ -48,13 +48,6 @@ public class BloodStorage {
     @JoinColumn(name = "approved_by")
     private Account approvedBy;
 
-    @Column(name = "Verified_At")
-    private LocalDateTime verifiedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "verified_by")
-    private Account verifiedBy;
-
     @Column(name = "Usage_Reason")
     @Nationalized
     private String usageReason;
@@ -68,4 +61,15 @@ public class BloodStorage {
 
     @Column(name = "Use_At")
     private LocalDateTime useAt;
+
+    @Column(name = "Verified_At")
+    private LocalDateTime verifiedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "verified_by")
+    private Account verifiedBy;
+
+    @Column(name = "verified_note")
+    @Nationalized
+    private String verifiedNote;
 }
