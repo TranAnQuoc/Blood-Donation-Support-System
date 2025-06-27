@@ -2,91 +2,125 @@ package com.gtwo.bdss_system.service.emergency.impl;
 
 import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.entity.emergency.EmergencyHistory;
 import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
-import com.gtwo.bdss_system.enums.EmergencyStatus;
-import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
+import com.gtwo.bdss_system.enums.EmergencyResult;
+import com.gtwo.bdss_system.enums.StatusProcess;
+import com.gtwo.bdss_system.repository.emergency.EmergencyHistoryRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EmergencyProcessServiceImpl implements EmergencyProcessService {
 
-    @Autowired private EmergencyProcessRepository repository;
-    @Autowired private EmergencyRequestRepository requestRepository;
-    @Autowired private AuthenticationRepository accountRepository;
+    private final EmergencyProcessRepository processRepo;
+    private final EmergencyRequestRepository requestRepo;
+    private final EmergencyHistoryRepository historyRepo;
 
     @Override
-    public EmergencyProcessDTO create(EmergencyProcessDTO dto) {
-        EmergencyProcess process = mapToEntity(dto);
-        return mapToDTO(repository.save(process));
+    public EmergencyProcessDTO update(Long id, EmergencyProcessDTO dto, Account account) {
+        EmergencyProcess process = processRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy quy trình xử lý"));
+
+        EmergencyRequest request = requestRepo.findById(dto.getRequestId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu cần cập nhật"));
+
+        process.setHealthCheckSummary(dto.getHealthCheckSummary());
+        process.setConfirmed(dto.getConfirmed());
+        process.setAssignedStaff(account);
+        process.setEmergencyRequest(request);
+        process.setSymptoms(dto.getSymptoms());
+        process.setVitalSigns(dto.getVitalSigns());
+        process.setHemoglobinLevel(dto.getHemoglobinLevel());
+        process.setBloodGroupConfirmed(dto.getBloodGroupConfirmed());
+        process.setCrossmatchResult(dto.getCrossmatchResult());
+        process.setNeedComponent(dto.getNeedComponent());
+        process.setReasonForTransfusion(dto.getReasonForTransfusion());
+        process.setStartedAt(dto.getStartedAt());
+        process.setCompletedAt(LocalDateTime.now());
+        process.setStatus(dto.getStatus());
+
+        EmergencyProcess saved = processRepo.save(process);
+
+        if (saved.getStatus() == StatusProcess.COMPLETED) {
+            boolean alreadyExists = historyRepo.findByDeleteFalse().stream()
+                    .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.getId()));
+            if (!alreadyExists) {
+                EmergencyHistory history = new EmergencyHistory();
+                history.setEmergencyRequest(saved.getEmergencyRequest());
+                history.setResolvedAt(LocalDateTime.now());
+                history.setFullNameSnapshot(request.getFullName());
+                history.setBloodType(request.getBloodType());
+                history.setComponent(request.getBloodComponent());
+                history.setQuantity(request.getQuantity());
+                history.setResult(saved.getConfirmed() != null && saved.getConfirmed() ? EmergencyResult.FULLFILLED : EmergencyResult.UNFULLFILLED);
+                history.setNotes(saved.getHealthCheckSummary());
+                history.setDelete(false);
+                historyRepo.save(history);
+            }
+        }
+        return toDTO(saved);
     }
 
     @Override
     public EmergencyProcessDTO getById(Long id) {
-        return repository.findById(id)
-                .map(this::mapToDTO)
-                .orElseThrow(() -> new RuntimeException("Not found"));
+        return toDTO(processRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy")));
+    }
+
+    @Override
+    public List<EmergencyProcessDTO> getByStaffId(Long staffId) {
+        return processRepo.findByAssignedStaff_Id(staffId).stream()
+                .map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<EmergencyProcessDTO> getAll() {
-        return repository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+        return processRepo.findAll().stream()
+                .map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public EmergencyProcessDTO update(Long id, EmergencyProcessDTO dto) {
-        EmergencyProcess existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
-        dto.setId(id);
-        EmergencyProcess updated = mapToEntity(dto);
-        updated.setStartedAt(existing.getStartedAt()); // Optional: preserve started time
-        return mapToDTO(repository.save(updated));
+    public void autoCreateByRequest(EmergencyRequest request) {
+        EmergencyProcess process = new EmergencyProcess();
+        process.setEmergencyRequest(request);
+        process.setStartedAt(LocalDateTime.now());
+        process.setStatus(StatusProcess.IN_PROCESS);
+        process.setConfirmed(false);
+        process.setAssignedStaff(request.getVerifiedBy());
+        processRepo.save(process);
     }
 
-    @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
-    }
-
-    private EmergencyProcess mapToEntity(EmergencyProcessDTO dto) {
-        EmergencyRequest request = requestRepository.findById(dto.getRequestId())
-                .orElseThrow(() -> new RuntimeException("Invalid request ID"));
-        //MedicalFacility facility = facilityRepository.findById(dto.getAssignedFacilityId())
-                //.orElseThrow(() -> new RuntimeException("Invalid facility ID"));
-        Account staff = accountRepository.findById(dto.getAssignedStaffId())
-                .orElseThrow(() -> new RuntimeException("Invalid staff ID"));
-
-        EmergencyProcess entity = new EmergencyProcess();
-        entity.setId(dto.getId());
-        entity.setEmergencyRequest(request);
-        //entity.setAssignedFacility(facility);
-        entity.setAssignedStaff(staff);
-        entity.setConfirmed(dto.getConfirmed());
-        entity.setHealthCheckSummary(dto.getHealthCheckSummary());
-        entity.setStartedAt(dto.getStartedAt());
-        entity.setCompletedAt(dto.getCompletedAt());
-        entity.setStatus(EmergencyStatus.valueOf(String.valueOf(dto.getStatus())));
-        return entity;
-    }
-
-    private EmergencyProcessDTO mapToDTO(EmergencyProcess entity) {
+    private EmergencyProcessDTO toDTO(EmergencyProcess entity) {
         EmergencyProcessDTO dto = new EmergencyProcessDTO();
         dto.setId(entity.getId());
         dto.setRequestId(entity.getEmergencyRequest().getId());
-        //dto.setAssignedFacilityId(entity.getAssignedFacility().getId());
-        dto.setAssignedStaffId(entity.getAssignedStaff().getId());
         dto.setHealthCheckSummary(entity.getHealthCheckSummary());
         dto.setConfirmed(entity.getConfirmed());
+        dto.setSymptoms(entity.getSymptoms());
+        dto.setVitalSigns(entity.getVitalSigns());
+        dto.setHemoglobinLevel(entity.getHemoglobinLevel());
+        dto.setBloodGroupConfirmed(entity.getBloodGroupConfirmed());
+        dto.setCrossmatchResult(entity.getCrossmatchResult());
+        dto.setNeedComponent(entity.getNeedComponent());
+        dto.setReasonForTransfusion(entity.getReasonForTransfusion());
         dto.setStartedAt(entity.getStartedAt());
         dto.setCompletedAt(entity.getCompletedAt());
-        dto.setStatus(EmergencyStatus.valueOf(entity.getStatus().name()));
+        dto.setStatus(entity.getStatus());
+
+        if (entity.getAssignedStaff() != null) {
+            dto.setAssignedStaffId(entity.getAssignedStaff().getId());
+            dto.setStaffName(entity.getAssignedStaff().getFullName());
+        }
         return dto;
     }
 }

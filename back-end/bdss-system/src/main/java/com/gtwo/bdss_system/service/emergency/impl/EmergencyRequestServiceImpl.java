@@ -7,14 +7,13 @@ import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
-import com.gtwo.bdss_system.repository.auth.AccountRepository;
 import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
+import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
 import com.gtwo.bdss_system.service.emergency.EmergencyRequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,10 +33,12 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
     private BloodComponentRepository bloodComponentRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private EmergencyProcessService emergencyProcessService;
+
+
 
     @Override
-    public void createEmergencyRequest(EmergencyRequestDTO dto) {
+    public void createEmergencyRequest(EmergencyRequestDTO dto, Account account) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime limitTime = now.minusHours(24); // chống spam trong 24h
 
@@ -48,16 +49,18 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         if (emergencyRequestRepository.existsByCccdAndSubmittedAtAfter(dto.getCccd(), limitTime)) {
             throw new RuntimeException("CCCD đã gửi yêu cầu trong vòng 24 giờ.");
         }
+
         if (emergencyRequestRepository.existsByPhone(dto.getPhone())) {
             throw new RuntimeException("Số điện thoại đã tồn tại.");
         }
+
         if (emergencyRequestRepository.existsByCccd(dto.getCccd())) {
             throw new RuntimeException("CCCD đã tồn tại.");
         }
 
-
         BloodType bloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid blood type ID"));
+
         BloodComponent bloodComponent = bloodComponentRepository.findById(dto.getBloodComponentId())
                 .orElseThrow(() -> new RuntimeException("Invalid blood component ID"));
 
@@ -70,6 +73,7 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         request.setBloodComponent(bloodComponent);
         request.setQuantity(dto.getQuantity());
         request.setLocation(dto.getLocation());
+        request.setCreatedBy(account);
         request.setStatusRequest(StatusRequest.PENDING);
         request.setVerifiedBy(null);
         request.setVerifiedAt(null);
@@ -77,6 +81,7 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
 
         emergencyRequestRepository.save(request);
     }
+
 
     @Override
     public List<EmergencyRequestDTO> getAllRequests() {
@@ -126,26 +131,42 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
             request.setBloodComponent(component);
         }
 
-        if (dto.getQuantity() != null) request.setQuantity(dto.getQuantity());
-        if (dto.getLocation() != null) request.setLocation(dto.getLocation());
+        if (dto.getQuantity() != null) {
+            request.setQuantity(dto.getQuantity());
+        }
+
+        if (dto.getLocation() != null) {
+            request.setLocation(dto.getLocation());
+        }
 
         // XỬ LÝ THAY ĐỔI STATUS_REQUEST
         if (dto.getStatusRequest() != null) {
-            StatusRequest newStatus = StatusRequest.valueOf(dto.getStatusRequest());
-            if (!request.getStatusRequest().equals(newStatus)) {
+            StatusRequest newStatus = dto.getStatusRequest();
+            StatusRequest currentStatus = request.getStatusRequest();
+
+            // Nếu trạng thái thay đổi
+            if (currentStatus == null || !currentStatus.equals(newStatus)) {
                 request.setStatusRequest(newStatus);
+
                 if (newStatus != StatusRequest.PENDING) {
-                    // Lấy account từ token hiện tại
-
-
                     request.setVerifiedBy(account);
                     request.setVerifiedAt(LocalDateTime.now());
+
+                    // Nếu là APPROVED thì tạo mới emergency_process
+                    if (newStatus == StatusRequest.APPROVED) {
+                        try {
+                            emergencyProcessService.autoCreateByRequest(request);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Không thể tạo quy trình xử lý: " + e.getMessage());
+                        }
+                    }
                 }
             }
         }
 
         emergencyRequestRepository.save(request);
     }
+
 
 
     @Override
@@ -175,6 +196,7 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         dto.setBloodComponentId(request.getBloodComponent().getId());
         dto.setQuantity(request.getQuantity());
         dto.setLocation(request.getLocation());
+        dto.setStatusRequest(request.getStatusRequest());
         return dto;
     }
 }

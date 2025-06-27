@@ -1,44 +1,54 @@
 package com.gtwo.bdss_system.controller.emergency;
 
-import com.gtwo.bdss_system.entity.emergency.EmergencyHistory;
+import com.gtwo.bdss_system.dto.emergency.EmergencyHistoryDTO;
 import com.gtwo.bdss_system.service.emergency.EmergencyHistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/emergency-histories")
+@RequiredArgsConstructor
+@SecurityRequirement(name = "api")
 public class EmergencyHistoryAPI {
 
-    @Autowired
-    private EmergencyHistoryService service;
+    private final EmergencyHistoryService historyService;
 
-    @PostMapping
-    public ResponseEntity<EmergencyHistory> create(@RequestBody EmergencyHistory history) {
-        return ResponseEntity.ok(service.create(history));
+    @GetMapping
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public ResponseEntity<List<EmergencyHistoryDTO>> getAll() {
+        return ResponseEntity.ok(historyService.getAll());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EmergencyHistory> update(@PathVariable Long id, @RequestBody EmergencyHistory history) {
-        EmergencyHistory updated = service.update(id, history);
-        if (updated != null) return ResponseEntity.ok(updated);
-        return ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return service.delete(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    @GetMapping("/deleted")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public ResponseEntity<List<EmergencyHistoryDTO>> getAllDeleted() {
+        return ResponseEntity.ok(historyService.getAllDeleted());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmergencyHistory> getById(@PathVariable Long id) {
-        return service.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public ResponseEntity<EmergencyHistoryDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(historyService.getById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<EmergencyHistory>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    @PutMapping("/restore/{id}")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public ResponseEntity<Void> restore(@PathVariable Long id) {
+        historyService.restore(id);
+        return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public ResponseEntity<Void> softDelete(@PathVariable Long id) {
+        historyService.softDelete(id);
+        return ResponseEntity.ok().build();
+    }
+
+
 }
