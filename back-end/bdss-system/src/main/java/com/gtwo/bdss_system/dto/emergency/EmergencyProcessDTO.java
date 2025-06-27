@@ -1,28 +1,42 @@
 package com.gtwo.bdss_system.dto.emergency;
 
-import com.gtwo.bdss_system.enums.StatusProcess;
+import com.gtwo.bdss_system.enums.EmergencyStatus;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.*;
 
 @Data
 public class EmergencyProcessDTO {
-    private Long id;
-    private Long requestId;
-    private String healthCheckSummary;
-    private Boolean confirmed;
-    private Long assignedStaffId;
-    private String staffName;
-    private String facilityName;
-    private LocalDateTime startedAt;
-    private LocalDateTime completedAt;
-    private StatusProcess status;
-    private String symptoms;
-    private String vitalSigns;
-    private Double hemoglobinLevel;
-    private Boolean bloodGroupConfirmed;
-    private String crossmatchResult;
-    private String needComponent;
-    private String reasonForTransfusion;
 
+    @Size(max = 1000, message = "Health check summary must be less than 1000 characters.")
+    private String healthCheckSummary;
+
+    @NotNull(message = "Confirm is required.")
+    private Boolean confirmed;
+
+    @NotNull(message = "Status is required.")
+    private EmergencyStatus status;
+
+    @NotBlank(message = "Symptoms must not be blank.")
+    private String symptoms;
+
+    @NotBlank(message = "Vital signs must not be blank.")
+    private String vitalSigns;
+
+    @NotNull(message = "Hemoglobin level is required.")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Hemoglobin level must be positive.")
+    private Double hemoglobinLevel;
+
+    @NotNull(message = "Blood group confirmation status is required.")
+    private Boolean bloodGroupConfirmed;
+
+    @NotBlank(message = "Crossmatch result is required.")
+    private String crossmatchResult;
+
+    @NotBlank(message = "Component need must be specified.")
+    private String needComponent;
+
+    @NotBlank(message = "Reason for transfusion is required.")
+    private String reasonForTransfusion;
 }
+

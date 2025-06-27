@@ -3,7 +3,6 @@ package com.gtwo.bdss_system.entity.emergency;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
@@ -65,17 +64,15 @@ public class EmergencyRequest {
     @Column(name = "verified_at")
     private LocalDateTime verifiedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "medical_facility_id")
-    private MedicalFacility medicalFacility;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private Account createdBy;
-
+    @Column(name ="emergency_proof")
+    @Nationalized
+    private String emergencyProof;
     @PrePersist
     public void onCreate() {
         this.submittedAt = LocalDateTime.now();
     }
 
+    @Column(name= "staff_note")
+    @Nationalized
+    private String staffNote;
 }

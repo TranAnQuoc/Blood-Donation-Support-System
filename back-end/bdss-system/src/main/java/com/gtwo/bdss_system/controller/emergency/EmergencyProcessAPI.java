@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ public class EmergencyProcessAPI {
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<EmergencyProcessDTO> updateProcess(
             @PathVariable Long id,
-            @RequestBody EmergencyProcessDTO dto,
+            @Valid @RequestBody EmergencyProcessDTO dto,
             @AuthenticationPrincipal Account account) {
         EmergencyProcessDTO updated = emergencyProcessService.update(id, dto, account);
         return ResponseEntity.ok(updated);

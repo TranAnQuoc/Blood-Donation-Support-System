@@ -1,6 +1,9 @@
 package com.gtwo.bdss_system.controller.emergency;
 import com.gtwo.bdss_system.dto.emergency.EmergencyRequestDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.entity.donation.DonationRequest;
+import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
+import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.service.emergency.EmergencyRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -40,11 +43,18 @@ public class EmergencyRequestAPI {
         EmergencyRequestDTO dto = service.getRequestById(id);
         return ResponseEntity.ok(dto);
     }
+
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<?> updateRequest(@PathVariable Long id, @RequestBody EmergencyRequestDTO dto , @AuthenticationPrincipal Account account) {
-        service.updateEmergencyRequest(id, dto, account);
-        return ResponseEntity.ok("Cập nhật thành công.");
+    public ResponseEntity<?>  updateRequest(
+            @PathVariable Long id,
+            @RequestParam boolean accept,
+            @RequestParam(required = false) String note,
+            @AuthenticationPrincipal Account staff) {
+        StatusRequest decision = accept ? StatusRequest.APPROVED : StatusRequest.REJECTED;
+        service.updateEmergencyRequest(id, decision, note, staff);
+        return ResponseEntity.ok("Update Succesfull");
     }
 
     @DeleteMapping("/{id}")
