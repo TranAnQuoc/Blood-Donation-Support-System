@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../configs/axios';
-import styles from './Profile.module.css';
+import styles from './MemberProfile.module.css';
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -25,7 +25,7 @@ const Profile = () => {
         };
 
         fetchProfile();
-    }, []); // useEffect với mảng rỗng để chỉ chạy một lần khi component mount
+    }, []);
 
     if (loading) {
         return <div className={styles.loadingMessage}>Đang tải profile...</div>;

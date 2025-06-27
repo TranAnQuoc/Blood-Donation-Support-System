@@ -21,6 +21,14 @@
   color: #C02044;
 }
 
+.requiredFieldsMessage {
+    text-align: center;
+    color: #555; /* A subtle grey */
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    padding: 0 10px; /* Add some padding if the container is narrow */
+}
+
 .inputGroup {
   position: relative;
   margin-bottom: 20px;

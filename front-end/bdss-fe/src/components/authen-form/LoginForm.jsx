@@ -83,13 +83,13 @@ function LoginForm() {
       toast.success('Login successful!');
 
       if (userData.role === 'ADMIN') {
-        navigate('/admin');
+        navigate('/admin-dashboard');
       } else if (userData.role === 'STAFF') {
         navigate('/staff-dashboard');
       } else if (userData.role === 'MEMBER') {
         navigate('/member');
       } else {
-        navigate('/'); // Fallback for other roles or no specific role
+        navigate('/');
       }
     } catch (error) {
       console.error(error);

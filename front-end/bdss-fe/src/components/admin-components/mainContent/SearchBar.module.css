@@ -1,4 +1,3 @@
-/* src/components/MainContent/SearchBar.module.css */
 .searchBar {
   position: relative;
   display: flex;
@@ -7,7 +6,7 @@
 
 .searchInput {
   padding: 10px 15px;
-  padding-right: 40px; /* Để icon không bị che */
+  padding-right: 40px;
   border: 1px solid #ddd;
   border-radius: 20px;
   font-size: 14px;

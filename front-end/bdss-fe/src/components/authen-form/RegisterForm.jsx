@@ -218,7 +218,9 @@ function RegisterForm() {
         <div className={styles.registerContainer}>
             <form onSubmit={handleSubmit} className={styles.registerForm}>
                 <h2>Register</h2>
-
+                <p className={styles.requiredFieldsMessage}>
+                    Please fill in all required fields.
+                </p>
                 <div className={styles.inputGroup}>
                     <input
                         type="email"
@@ -290,7 +292,7 @@ function RegisterForm() {
                         type="text"
                         id="cccd"
                         className={`${styles.inputField} ${errors.cccd ? styles.inputError : ''}`}
-                        placeholder="CCCD (Optional)"
+                        placeholder="CCCD"
                         value={formData.cccd}
                         onChange={handleInputChange}
                     />

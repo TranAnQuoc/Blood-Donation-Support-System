@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import commonStyles from '../leftPanel/commonDropdown.module.css';
 
-
 const HistoryDropdown = () => {
     const location = useLocation();
 

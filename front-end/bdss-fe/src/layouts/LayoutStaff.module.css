@@ -1,22 +1,17 @@
-/* src/layouts/LayoutStaff.module.css */
-
 .dashboardContainer {
     display: flex;
-    flex-direction: column; /* Đặt các phần tử theo cột: Header trên, sau đó là MainContentArea */
-    min-height: 100vh; /* Đảm bảo dashboard chiếm toàn bộ chiều cao màn hình */
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .mainContentArea {
-    display: flex; /* Sử dụng flexbox để đặt LeftPanel và Outlet cạnh nhau */
-    flex: 1; /* Cho phép vùng này mở rộng để chiếm không gian còn lại */
+    display: flex;
+    flex: 1;
 }
 
 .outletContainer {
-    flex: 1; /* Vùng nội dung chính sẽ chiếm hết không gian còn lại */
-    padding: 20px; /* Thêm padding cho nội dung, tùy chỉnh theo ý bạn */
-    background-color: #f0f2f5; /* Màu nền cho khu vực nội dung */
-    overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+    flex: 1;
+    padding: 20px;
+    background-color: #f0f2f5;
+    overflow-y: auto;
 }
-
-/* Styles cho LeftPanel đã có trong LeftPanel.module.css */
-/* Styles cho HeaderStaff sẽ nằm trong HeaderStaff.module.css */

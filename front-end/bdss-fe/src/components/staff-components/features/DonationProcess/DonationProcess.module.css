@@ -70,26 +70,46 @@
 }
 
 .statusBadge {
+    display: inline-block;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 5px; /* Changed from 4px to 5px for consistency with prior suggestions */
     font-weight: bold;
     color: white;
-    display: inline-block;
-    margin-left: 10px;
     font-size: 0.9em;
+    text-transform: uppercase;
+    white-space: nowrap; /* Prevent text wrapping for badges */
+}
+
+/* Existing status badge styles (some colors updated for consistency with earlier suggestions) */
+.statusBadge.waiting {
+    background-color: #ffc107; /* yellow - Added this, it was missing */
 }
 
 .statusBadge.in_process {
-    background-color: #ffc107; /* yellow */
+    background-color: #28a745; /* green - Updated from yellow as per prior suggestion */
 }
 
 .statusBadge.completed {
-    background-color: #28a745; /* green */
+    background-color: #007bff; /* blue - Updated from green as per prior suggestion */
 }
 
 .statusBadge.failed {
     background-color: #dc3545; /* red */
 }
+
+/* NEW STATUS BADGE STYLES */
+.statusBadge.screening {
+    background-color: #6f42c1; /* Purple */
+}
+
+.statusBadge.screening_failed {
+    background-color: #fd7e14; /* Orange */
+}
+
+.statusBadge.donor_cancel {
+    background-color: #6c757d; /* Grey/Slate */
+}
+
 
 .viewDetailButton {
     background-color: #007bff;

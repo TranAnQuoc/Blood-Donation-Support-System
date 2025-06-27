@@ -1,57 +1,178 @@
-// src/components/LeftPanel/LeftPanel.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+
 import AdminDropdown from './AdminDropdown';
 import NavButton from './NavButton';
+import RequestManagementDropdown from './RequestManagementDropdown';
+import UserManagementDropdown from './UserManagementDropdown';
+import ProcessDropdown from './ProcessDropdown';
+import HistoryDropdown from './HistoryDropdown';
+
 import styles from './LeftPanel.module.css';
 
-// Import FontAwesome icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faHome,           // Trang chủ
-  faUsers,          // Quản Lý Người Dùng
-  faClipboardList,  // Quản Lý Yêu Cầu
-  faBox,            // Kho Máu
-  faBuilding,       // Điều Phối Liên Cơ Sở
-  faHourglassHalf,  // Trạng Thái Hiến Máu
-  faBell,           // Thông Báo
-  faCalendarCheck,  // Nhắc Nhở Hồi Phục
-  faNewspaper,      // Bài Viết Cộng Đồng
-  faChartBar,       // Báo Cáo
-  faHeadset         // Trung Tâm Hỗ Trợ
+    faHome,
+    faUsers,
+    faClipboardList,
+    faBook,
+    faHistory,
+    faFileAlt,
+    faCalendarAlt,
+    faBox,
+    // faBuilding,
+    // faHourglassHalf,
+    // faBell,
+    faCalendarCheck,
+    faNewspaper,
+    faChartBar,
+    faHeadset
 } from '@fortawesome/free-solid-svg-icons';
 
-const LeftPanel = ({ onNavClick }) => {
-  const navItems = [
-    { id: 'home', icon: faHome, label: 'Trang chủ' },
-    { id: 'userManagement', icon: faUsers, label: 'Quản Lý Người Dùng', hasDropdown: true }, // Có mũi tên sổ xuống
-    { id: 'requestManagement', icon: faClipboardList, label: 'Quản Lý Yêu Cầu', hasDropdown: true }, // Có mũi tên sổ xuống
-    { id: 'bloodStock', icon: faBox, label: 'Kho Máu' },
-    { id: 'interFacilityCoordination', icon: faBuilding, label: 'Điều Phối Liên Cơ Sở' },
-    { id: 'donationStatus', icon: faHourglassHalf, label: 'Trạng Thái Hiến Máu' },
-    { id: 'notifications', icon: faBell, label: 'Thông Báo' },
-    { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục' },
-    { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng' },
-    { id: 'reports', icon: faChartBar, label: 'Báo Cáo' },
-    { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ' },
-  ];
+const LeftPanel = () => {
+    const [isRequestDropdownOpen, setIsRequestDropdownOpen] = useState(false);
+    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+    const [isProcessDropdownOpen, setIsProcessDropdownOpen] = useState(false);
+    const [isHistoryDropdownOpen, setIsHistoryDropdownOpen] = useState(false);
 
-  return (
-    <div className={styles.leftPanel}>
-      <AdminDropdown adminName="Admin" /> {/* Đảm bảo prop adminName được sử dụng đúng cách trong AdminDropdown */}
-      <div className={styles.navButtonsContainer}>
-        {navItems.map(item => (
-          <NavButton
-            key={item.id}
-            // Truyền FontAwesome icon object trực tiếp vào prop icon
-            icon={<FontAwesomeIcon icon={item.icon} />}
-            label={item.label}
-            onClick={() => onNavClick(item.id)} // Khuyên dùng gửi item.id thay vì item.label để quản lý routing dễ hơn
-            hasDropdown={item.hasDropdown} // Truyền prop hasDropdown nếu có
-          />
-        ))}
-      </div>
-    </div>
-  );
+    const user = useSelector(state => state.user);
+    const isLoggedIn = !!user?.token;
+
+    const location = useLocation();
+
+    const closeAllDropdownsExcept = (dropdownToKeepOpen) => {
+        if (dropdownToKeepOpen !== 'request') setIsRequestDropdownOpen(false);
+        if (dropdownToKeepOpen !== 'user') setIsUserDropdownOpen(false);
+        if (dropdownToKeepOpen !== 'process') setIsProcessDropdownOpen(false);
+        if (dropdownToKeepOpen !== 'history') setIsHistoryDropdownOpen(false);
+    };
+
+    const toggleUserDropdown = () => {
+        closeAllDropdownsExcept('user');
+        setIsUserDropdownOpen(!isUserDropdownOpen);
+    };
+
+    const toggleRequestDropdown = () => {
+        closeAllDropdownsExcept('request');
+        setIsRequestDropdownOpen(!isRequestDropdownOpen);
+    };
+
+    const toggleProcessDropdown = () => {
+        closeAllDropdownsExcept('process');
+        setIsProcessDropdownOpen(!isProcessDropdownOpen);
+    };
+
+    const toggleHistoryDropdown = () => {
+        closeAllDropdownsExcept('history');
+        setIsHistoryDropdownOpen(!isHistoryDropdownOpen);
+    };
+
+    
+    const isNavItemActive = (expectedPathSegment) => {
+        if (expectedPathSegment === 'userManagement') {
+            return location.pathname.startsWith('/admin-dashboard/user-management');
+        }
+        if (expectedPathSegment === 'requestManagement') {
+            return location.pathname.startsWith('/admin-dashboard/transfusion-requests-management') || location.pathname.startsWith('/staff-dashboard/donation-requests') || location.pathname.startsWith('/staff-dashboard/emergency-transfusion-requests');
+        }
+        if (expectedPathSegment === 'process') {
+            return location.pathname.startsWith('/admin-dashboard/donation-processes') || location.pathname.startsWith('/staff-dashboard/transfusion-processes') || location.pathname.startsWith('/staff-dashboard/emergency-transfusion-processes');
+        }
+        if (expectedPathSegment === 'history') {
+            return location.pathname.startsWith('/admin-dashboard/donation-histories');
+        }
+
+        if (expectedPathSegment === '') {
+            return location.pathname === '/admin-dashboard' || location.pathname === '/staff-dashboard/';
+        }
+        return location.pathname.startsWith(`/admin-dashboard/${expectedPathSegment}`);
+    };
+
+    const navItems = [
+        { id: 'home', icon: faHome, label: 'Trang chủ', fullPath: '/admin-dashboard' },
+        { id: 'userManagement', icon: faUsers, label: 'Quản Lý Người Dùng', hasDropdown: true },
+        { id: 'requestManagement', icon: faClipboardList, label: 'Quản Lý Yêu Cầu', hasDropdown: true },
+        { id: 'process', icon: faBook, label: 'Quy Trình', hasDropdown: true },
+        { id: 'history', icon: faHistory, label: 'Lịch Sử', hasDropdown: true },
+        { id: 'registrationList', icon: faFileAlt, label: 'Đơn Đăng Ký', fullPath: '/admin-dashboard/registration-list' },
+        { id: 'eventManagement', icon: faCalendarAlt, label: 'Quản Lý Sự Kiện Hiến Máu', fullPath: '/admin-dashboard/event-management' },
+        { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-stock' },
+        { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/admin-dashboard/recovery-reminders' },
+        { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/admin-dashboard/community-posts' },
+        { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/admin-dashboard/reports' },
+        { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ', fullPath: '/admin-dashboard/support-center' },
+    ];
+
+    return (
+        <div className={styles.leftPanel}>
+            <AdminDropdown />
+            <div className={styles.navButtonsContainer}>
+                {navItems.map(item => {
+                    const handleNavButtonClick = () => {
+                        if (item.id === 'userManagement') toggleUserDropdown();
+                        else if (item.id === 'requestManagement') toggleRequestDropdown();
+                        else if (item.id === 'process') toggleProcessDropdown();
+                        else if (item.id === 'history') toggleHistoryDropdown();
+                        else {
+                            closeAllDropdownsExcept(null);
+                        }
+                    };
+
+                    let isDropdownOpen = false;
+                    let DropdownComponent = null;
+
+                    if (item.id === 'userManagement') {
+                        if (!isLoggedIn) return null;
+                        isDropdownOpen = isUserDropdownOpen;
+                        DropdownComponent = UserManagementDropdown;
+                    } else if (item.id === 'requestManagement') {
+                        isDropdownOpen = isRequestDropdownOpen;
+                        DropdownComponent = RequestManagementDropdown;
+                    } else if (item.id === 'process') {
+                        isDropdownOpen = isProcessDropdownOpen;
+                        DropdownComponent = ProcessDropdown;
+                    } else if (item.id === 'history') {
+                        isDropdownOpen = isHistoryDropdownOpen;
+                        DropdownComponent = HistoryDropdown;
+                    }
+
+                    return (
+                        <div key={item.id}>
+                            {item.hasDropdown ? (
+                                <>
+                                    <NavButton
+                                        icon={<FontAwesomeIcon icon={item.icon} />}
+                                        label={item.label}
+                                        onClick={handleNavButtonClick}
+                                        isActive={isNavItemActive(item.id)}
+                                        hasDropdown={true}
+                                        isArrowUp={isDropdownOpen}
+                                    />
+                                    {isDropdownOpen && DropdownComponent && (
+                                        <DropdownComponent />
+                                    )}
+                                </>
+                            ) : (
+                                <Link
+                                    to={item.fullPath}
+                                    className={`${styles.navItem} ${isNavItemActive(item.path || item.id) ? styles.active : ''}`}
+                                    onClick={handleNavButtonClick}
+                                >
+                                    <NavButton
+                                        icon={<FontAwesomeIcon icon={item.icon} />}
+                                        label={item.label}
+                                        isActive={isNavItemActive(item.path || item.id)}
+                                        hasDropdown={false}
+                                    />
+                                </Link>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
 };
 
 export default LeftPanel;

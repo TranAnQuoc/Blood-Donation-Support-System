@@ -1,6 +1,6 @@
 .layout {
     min-height: 100vh;
-    background: white; /* Thêm xanh và trắng */
+    background: white;
     display: flex;
     flex-direction: column;
 }

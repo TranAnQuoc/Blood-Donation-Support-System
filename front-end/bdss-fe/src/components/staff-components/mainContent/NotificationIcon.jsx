@@ -1,4 +1,3 @@
-// src/components/MainContent/NotificationIcon.jsx
 import React from 'react';
 import styles from './NotificationIcon.module.css';
 import { FaBell } from 'react-icons/fa';
