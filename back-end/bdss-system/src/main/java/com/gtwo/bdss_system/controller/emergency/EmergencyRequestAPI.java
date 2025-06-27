@@ -21,8 +21,10 @@ public class EmergencyRequestAPI {
     private EmergencyRequestService service;
 
     @PostMapping
-    public ResponseEntity<?> createEmergencyRequest(@RequestBody @Valid EmergencyRequestDTO dto) {
-        service.createEmergencyRequest(dto);
+    public ResponseEntity<?> createEmergencyRequest(
+            @RequestBody @Valid EmergencyRequestDTO dto,
+            @AuthenticationPrincipal Account account) {
+        service.createEmergencyRequest(dto, account);
         return ResponseEntity.ok("Emergency request submitted successfully.");
     }
     @GetMapping

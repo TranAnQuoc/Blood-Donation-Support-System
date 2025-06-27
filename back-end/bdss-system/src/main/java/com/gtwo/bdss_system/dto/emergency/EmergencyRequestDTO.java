@@ -1,4 +1,6 @@
 package com.gtwo.bdss_system.dto.emergency;
+import com.gtwo.bdss_system.entity.commons.MedicalFacility;
+import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -25,7 +27,7 @@ public class EmergencyRequestDTO {
     private String cccd;
 
     private LocalDateTime submittedAt;
-    private String statusRequest;
+    private StatusRequest statusRequest;
 
     @NotNull(message = "Phải chọn nhóm máu")
     private Long bloodTypeId;
@@ -39,5 +41,7 @@ public class EmergencyRequestDTO {
 
     @NotBlank(message = "Địa điểm không được để trống")
     private String location;
+
 }
+
 

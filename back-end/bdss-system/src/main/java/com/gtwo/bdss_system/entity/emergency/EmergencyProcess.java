@@ -1,10 +1,10 @@
 package com.gtwo.bdss_system.entity.emergency;
 
 import com.gtwo.bdss_system.entity.auth.Account;
-import com.gtwo.bdss_system.entity.commons.MedicalFacility;
-import com.gtwo.bdss_system.enums.EmergencyStatus;
+import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +15,6 @@ public class EmergencyProcess {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -23,14 +22,11 @@ public class EmergencyProcess {
     private EmergencyRequest emergencyRequest;
 
     @Column(name = "health_check_summary")
+    @Nationalized
     private String healthCheckSummary;
 
     @Column(name = "confirmed")
     private Boolean confirmed;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "assigned_facility_id")
-    private MedicalFacility assignedFacility;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_staff")
@@ -44,5 +40,31 @@ public class EmergencyProcess {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private EmergencyStatus status;
+    private StatusProcess status;
+
+    @Column(name = "symptoms")
+    @Nationalized
+    private String symptoms;
+
+    @Column(name = "vital_signs")
+    private String vitalSigns;
+
+    @Column(name = "hemoglobin_level")
+    private Double hemoglobinLevel;
+
+    @Column(name = "blood_group_confirmed")
+    private Boolean bloodGroupConfirmed;
+
+    @Column(name = "crossmatch_result")
+    @Nationalized
+    private String crossmatchResult;
+
+    @Column(name = "need_component")
+    @Nationalized
+    private String needComponent;
+
+    @Column(name = "reason_for_transfusion")
+    @Nationalized
+    private String reasonForTransfusion;
+
 }

@@ -3,10 +3,12 @@ package com.gtwo.bdss_system.entity.emergency;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
+import com.gtwo.bdss_system.entity.commons.MedicalFacility;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class EmergencyRequest {
     private Long id;
 
     @Column(name = "Fullname")
+    @Nationalized
     private String fullName;
 
     @Column(name = "CCCD", nullable = false, unique = true)
@@ -44,6 +47,7 @@ public class EmergencyRequest {
     private Integer quantity;
 
     @Column(name = "location")
+    @Nationalized
     private String location;
 
     @Column(name = "status_request")
@@ -60,6 +64,14 @@ public class EmergencyRequest {
 
     @Column(name = "verified_at")
     private LocalDateTime verifiedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "medical_facility_id")
+    private MedicalFacility medicalFacility;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private Account createdBy;
 
     @PrePersist
     public void onCreate() {
