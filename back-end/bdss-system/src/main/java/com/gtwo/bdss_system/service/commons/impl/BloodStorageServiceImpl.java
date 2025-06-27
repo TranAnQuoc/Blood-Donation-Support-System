@@ -2,6 +2,8 @@ package com.gtwo.bdss_system.service.commons.impl;
 
 import com.gtwo.bdss_system.dto.commons.BloodStorageDTO;
 import com.gtwo.bdss_system.dto.commons.BloodStorageUseDTO;
+import com.gtwo.bdss_system.dto.commons.VerifiedNote;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
 import com.gtwo.bdss_system.repository.auth.AccountRepository;
@@ -31,24 +33,24 @@ public class BloodStorageServiceImpl implements BloodStorageService {
     private BloodComponentRepository bloodComponentRepository;
 
     @Override
-    public BloodStorage create(BloodStorageDTO dto) {
+    public BloodStorage create(BloodStorageDTO dto, Account creater) {
         BloodStorage entity = new BloodStorage();
         entity.setDonor(accountRepository.findById(dto.getDonorId()).orElseThrow());
         entity.setBloodType(bloodTypeRepository.findById(dto.getBloodTypeId()).orElseThrow());
         entity.setBloodComponent(bloodComponentRepository.findById(dto.getComponentId()).orElseThrow());
         entity.setQuantity(dto.getQuantity());
         entity.setCreateAt(LocalDateTime.now());
-        entity.setCreatedBy(accountRepository.findById(dto.getCreatedBy()).orElseThrow());
+        entity.setCreatedBy(creater);
         entity.setBloodStatus(StatusBloodStorage.PENDING);
         return repository.save(entity);
     }
 
     @Override
-    public BloodStorage approve(Long id, Long approverId) {
+    public BloodStorage approve(Long id, Account approver) {
         BloodStorage storage = repository.findById(id).orElseThrow();
         storage.setBloodStatus(StatusBloodStorage.STORED);
         storage.setApprovedAt(LocalDateTime.now());
-        storage.setApprovedBy(accountRepository.findById(approverId).orElseThrow());
+        storage.setApprovedBy(approver);
         return repository.save(storage);
     }
 
@@ -60,17 +62,18 @@ public class BloodStorageServiceImpl implements BloodStorageService {
 
         storage.setBloodStatus(StatusBloodStorage.IN_USED);
         storage.setUsageReason(useDto.getReason());
-        storage.setTakeBy(accountRepository.findById(useDto.getTakeBy()).orElseThrow());
+        storage.setTakeBy(useDto.getTakeBy());
         storage.setTakeAt(LocalDateTime.now());
         storage.setUseAt(LocalDateTime.now());
         return repository.save(storage);
     }
 
     @Override
-    public BloodStorage verify(Long id, Long verifierId) {
+    public BloodStorage verify(Long id, VerifiedNote verifiedNote,Account verifier) {
         BloodStorage storage = repository.findById(id).orElseThrow();
         storage.setVerifiedAt(LocalDateTime.now());
-        storage.setVerifiedBy(accountRepository.findById(verifierId).orElseThrow());
+        storage.setVerifiedBy(verifier);
+        storage.setVerifiedNote(verifiedNote.getVerifiedNote());
         return repository.save(storage);
     }
 
@@ -80,13 +83,7 @@ public class BloodStorageServiceImpl implements BloodStorageService {
     }
 
     @Override
-    public List<BloodStorage> getAvailable(String bloodType, String component) {
-        return repository.findByBloodType_NameAndBloodComponent_NameAndBloodStatus(
-                bloodType, component, StatusBloodStorage.STORED);
-    }
-
-    @Override
-    public List<BloodStorage> getHistory() {
-        return repository.findByBloodStatusIn(List.of(StatusBloodStorage.IN_USED, StatusBloodStorage.REJECTED, StatusBloodStorage.EXPIRED));
+    public List<BloodStorage> getByStatus(StatusBloodStorage status) {
+        return repository.findByBloodStatus(status);
     }
 }

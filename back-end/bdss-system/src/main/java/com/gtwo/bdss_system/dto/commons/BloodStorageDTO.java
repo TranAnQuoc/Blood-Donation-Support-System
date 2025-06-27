@@ -8,5 +8,4 @@ public class BloodStorageDTO {
     private Long bloodTypeId;
     private Long componentId;
     private Integer quantity;
-    private Long createdBy;
 }
