@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Nationalized;
 
 @Entity
 @Table(name = "Blood_Component")
@@ -18,5 +19,6 @@ public class BloodComponent {
     private Long id;
 
     @Column(name = "Component")
+    @Nationalized
     private String name;
 }

@@ -14,7 +14,7 @@ public interface BloodStorageService {
 
     BloodStorage approve(Long id, Account approver);
 
-    BloodStorage use(Long id, BloodStorageUseDTO useDto);
+    BloodStorage use(Long id, BloodStorageUseDTO useDto, Account user);
 
     BloodStorage verify(Long id, VerifiedNote verifiedNote,Account verifier);
 

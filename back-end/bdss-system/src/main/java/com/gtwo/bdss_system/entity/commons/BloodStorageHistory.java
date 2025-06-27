@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.entity.commons;
 
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
+import com.gtwo.bdss_system.enums.StatusVerified;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
@@ -51,12 +52,6 @@ public class BloodStorageHistory {
     @Column(name = "approved_by_id")
     private Long approvedById;
 
-    @Column(name = "verified_at")
-    private LocalDateTime verifiedAt;
-
-    @Column(name = "verified_by_id")
-    private Long verifiedById;
-
     @Column(name = "usage_reason")
     @Nationalized
     private String usageReason;
@@ -67,13 +62,20 @@ public class BloodStorageHistory {
     @Column(name = "take_by_id")
     private Long takeById;
 
-    @Column(name = "use_at")
-    private LocalDateTime useAt;
+    @Column(name = "verified_at")
+    private LocalDateTime verifiedAt;
 
-    @Column(name = "archived_at")
-    private LocalDateTime archivedAt;
+    @Column(name = "verified_by_id")
+    private Long verifiedById;
+
+    @Column(name = "verified_status")
+    @Enumerated(EnumType.STRING)
+    private StatusVerified verifiedStatus;
 
     @Column(name = "note")
     @Nationalized
     private String note;
+
+    @Column(name = "archived_at")
+    private LocalDateTime archivedAt;
 }
