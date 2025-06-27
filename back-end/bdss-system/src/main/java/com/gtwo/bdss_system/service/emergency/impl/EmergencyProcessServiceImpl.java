@@ -6,7 +6,7 @@ import com.gtwo.bdss_system.entity.emergency.EmergencyHistory;
 import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.EmergencyResult;
-import com.gtwo.bdss_system.enums.StatusProcess;
+import com.gtwo.bdss_system.enums.EmergencyStatus;
 import com.gtwo.bdss_system.repository.emergency.EmergencyHistoryRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,14 +31,10 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
     public EmergencyProcessDTO update(Long id, EmergencyProcessDTO dto, Account account) {
         EmergencyProcess process = processRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy quy trình xử lý"));
-
-        EmergencyRequest request = requestRepo.findById(dto.getRequestId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu cần cập nhật"));
-
+        Optional<EmergencyRequest> request = requestRepo.findById(process.getEmergencyRequest().getId());
         process.setHealthCheckSummary(dto.getHealthCheckSummary());
         process.setConfirmed(dto.getConfirmed());
         process.setAssignedStaff(account);
-        process.setEmergencyRequest(request);
         process.setSymptoms(dto.getSymptoms());
         process.setVitalSigns(dto.getVitalSigns());
         process.setHemoglobinLevel(dto.getHemoglobinLevel());
@@ -45,23 +42,22 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setCrossmatchResult(dto.getCrossmatchResult());
         process.setNeedComponent(dto.getNeedComponent());
         process.setReasonForTransfusion(dto.getReasonForTransfusion());
-        process.setStartedAt(dto.getStartedAt());
         process.setCompletedAt(LocalDateTime.now());
         process.setStatus(dto.getStatus());
 
         EmergencyProcess saved = processRepo.save(process);
 
-        if (saved.getStatus() == StatusProcess.COMPLETED) {
+        if (saved.getStatus() == EmergencyStatus.COMPLETED) {
             boolean alreadyExists = historyRepo.findByDeleteFalse().stream()
-                    .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.getId()));
+                    .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.get().getId()));
             if (!alreadyExists) {
                 EmergencyHistory history = new EmergencyHistory();
                 history.setEmergencyRequest(saved.getEmergencyRequest());
                 history.setResolvedAt(LocalDateTime.now());
-                history.setFullNameSnapshot(request.getFullName());
-                history.setBloodType(request.getBloodType());
-                history.setComponent(request.getBloodComponent());
-                history.setQuantity(request.getQuantity());
+                history.setFullNameSnapshot(request.get().getFullName());
+                history.setBloodType(request.get().getBloodType());
+                history.setComponent(request.get().getBloodComponent());
+                history.setQuantity(request.get().getQuantity());
                 history.setResult(saved.getConfirmed() != null && saved.getConfirmed() ? EmergencyResult.FULLFILLED : EmergencyResult.UNFULLFILLED);
                 history.setNotes(saved.getHealthCheckSummary());
                 history.setDelete(false);
@@ -94,16 +90,13 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         EmergencyProcess process = new EmergencyProcess();
         process.setEmergencyRequest(request);
         process.setStartedAt(LocalDateTime.now());
-        process.setStatus(StatusProcess.IN_PROCESS);
-        process.setConfirmed(false);
+        process.setStatus(EmergencyStatus.IN_PROCESS);
         process.setAssignedStaff(request.getVerifiedBy());
         processRepo.save(process);
     }
 
     private EmergencyProcessDTO toDTO(EmergencyProcess entity) {
         EmergencyProcessDTO dto = new EmergencyProcessDTO();
-        dto.setId(entity.getId());
-        dto.setRequestId(entity.getEmergencyRequest().getId());
         dto.setHealthCheckSummary(entity.getHealthCheckSummary());
         dto.setConfirmed(entity.getConfirmed());
         dto.setSymptoms(entity.getSymptoms());
@@ -113,14 +106,7 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         dto.setCrossmatchResult(entity.getCrossmatchResult());
         dto.setNeedComponent(entity.getNeedComponent());
         dto.setReasonForTransfusion(entity.getReasonForTransfusion());
-        dto.setStartedAt(entity.getStartedAt());
-        dto.setCompletedAt(entity.getCompletedAt());
         dto.setStatus(entity.getStatus());
-
-        if (entity.getAssignedStaff() != null) {
-            dto.setAssignedStaffId(entity.getAssignedStaff().getId());
-            dto.setStaffName(entity.getAssignedStaff().getFullName());
-        }
         return dto;
     }
 }

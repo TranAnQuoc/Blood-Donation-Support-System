@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.dto.emergency.EmergencyHistoryDTO;
 import com.gtwo.bdss_system.entity.emergency.EmergencyHistory;
 import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
 import com.gtwo.bdss_system.enums.EmergencyResult;
+import com.gtwo.bdss_system.enums.EmergencyStatus;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.emergency.EmergencyHistoryRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
@@ -44,7 +45,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
 
     @Override
     public void autoCreateFromProcess(EmergencyProcess process) {
-        if (process.getStatus() != StatusProcess.COMPLETED) {
+        if (process.getStatus() != EmergencyStatus.COMPLETED) {
             throw new IllegalStateException("Không thể tạo lịch sử nếu quy trình chưa hoàn tất");
         }
 
@@ -58,10 +59,6 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         history.setResolvedAt(LocalDateTime.now());
         history.setFullNameSnapshot(process.getEmergencyRequest().getFullName());
         history.setBloodType(process.getEmergencyRequest().getBloodType());
-        history.setFacilityName(
-                process.getEmergencyRequest().getMedicalFacility() != null ?
-                        process.getEmergencyRequest().getMedicalFacility().getName() : null
-        );
         history.setComponent(process.getEmergencyRequest().getBloodComponent());
         history.setQuantity(process.getEmergencyRequest().getQuantity());
         history.setResult(
