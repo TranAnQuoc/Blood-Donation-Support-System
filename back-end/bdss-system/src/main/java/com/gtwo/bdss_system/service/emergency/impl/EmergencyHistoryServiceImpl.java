@@ -36,12 +36,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<EmergencyHistoryDTO> getAllDeleted() {
-        return historyRepo.findByDeleteTrue().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+
 
     @Override
     public void autoCreateFromProcess(EmergencyProcess process) {
@@ -49,7 +44,6 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
             throw new IllegalStateException("Không thể tạo lịch sử nếu quy trình chưa hoàn tất");
         }
 
-        // ✅ Sử dụng truy vấn trực tiếp để kiểm tra trùng
         if (historyRepo.findByEmergencyRequest_IdAndDeleteFalse(process.getEmergencyRequest().getId()).isPresent()) {
             throw new IllegalStateException("Lịch sử đã tồn tại cho yêu cầu này");
         }
@@ -72,15 +66,6 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         historyRepo.save(history);
     }
 
-
-    @Override
-    public void softDelete(Long id) {
-        EmergencyHistory history = historyRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy lịch sử cần xóa"));
-        history.setDelete(true);
-        historyRepo.save(history);
-    }
-
     @Override
     public void restore(Long id) {
         EmergencyHistory history = historyRepo.findById(id)
@@ -96,7 +81,6 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         dto.setResolvedAt(entity.getResolvedAt());
         dto.setFullNameSnapshot(entity.getFullNameSnapshot());
         dto.setBloodTypeId(entity.getBloodType() != null ? entity.getBloodType().getId() : null);
-        dto.setFacilityName(entity.getFacilityName());
         dto.setComponentId(entity.getComponent() != null ? entity.getComponent().getId() : null);
         dto.setQuantity(entity.getQuantity());
         dto.setResult(entity.getResult());

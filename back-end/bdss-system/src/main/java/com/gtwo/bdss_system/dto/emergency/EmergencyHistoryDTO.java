@@ -13,7 +13,6 @@ public class EmergencyHistoryDTO {
     private LocalDateTime resolvedAt;
     private String fullNameSnapshot;
     private Long bloodTypeId;
-    private String facilityName;
     private Long componentId;
     private Integer quantity;
     private EmergencyResult result;

@@ -5,6 +5,7 @@ import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.enums.EmergencyResult;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -25,14 +26,13 @@ public class EmergencyHistory {
     private LocalDateTime resolvedAt;
 
     @Column(name = "full_name_snapshot")
+    @Nationalized
     private String fullNameSnapshot;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blood_type_id")
     private BloodType bloodType;
 
-    @Column(name = "facility_name")
-    private String facilityName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "component_id")
@@ -46,6 +46,7 @@ public class EmergencyHistory {
     private EmergencyResult result;
 
     @Column(name = "notes")
+    @Nationalized
     private String notes;
 
     @Column(name = "deleted")

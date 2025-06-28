@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.entity.emergency;
 
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.EmergencyStatus;
+import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -43,11 +44,16 @@ public class EmergencyProcess {
     @Enumerated(EnumType.STRING)
     private EmergencyStatus status;
 
+    @Column(name = "status_available")
+    @Enumerated(EnumType.STRING)
+    private Status statusAvailable;
+
     @Column(name = "symptoms")
     @Nationalized
     private String symptoms;
 
     @Column(name = "vital_signs")
+    @Nationalized
     private String vitalSigns;
 
     @Column(name = "hemoglobin_level")
@@ -63,6 +69,9 @@ public class EmergencyProcess {
     @Column(name = "need_component")
     @Nationalized
     private String needComponent;
+
+    @Column(name ="blood_quantity")
+    private Integer quantity;
 
     @Column(name = "reason_for_transfusion")
     @Nationalized

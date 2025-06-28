@@ -28,7 +28,10 @@ public class EmergencyRequestDTO {
     private Long bloodComponentId;
 
 
+    @Positive(message = "Số lượng máu phải từ 250 ml trở lên")
+    @Min(value = 250, message = "Số lượng máu tối thiểu là 250 ml")
     private Integer quantity;
+
 
     @NotBlank(message = "Địa điểm không được để trống")
     private String location;
