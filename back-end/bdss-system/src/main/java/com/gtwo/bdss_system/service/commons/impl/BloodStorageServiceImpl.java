@@ -5,7 +5,6 @@ import com.gtwo.bdss_system.dto.commons.BloodStorageUseDTO;
 import com.gtwo.bdss_system.dto.commons.VerifiedNote;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
-import com.gtwo.bdss_system.entity.commons.BloodStorageHistory;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
 import com.gtwo.bdss_system.enums.StatusVerified;
 import com.gtwo.bdss_system.repository.auth.AccountRepository;

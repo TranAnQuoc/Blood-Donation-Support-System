@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "blood_storage_history")
 public class BloodStorageHistory {
 
     @Id

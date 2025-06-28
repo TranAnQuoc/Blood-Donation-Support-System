@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "blood_storage")
 public class BloodStorage {
     @Id
     @Column(name = "blood_storage_id")
