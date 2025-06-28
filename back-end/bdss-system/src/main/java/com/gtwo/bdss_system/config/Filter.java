@@ -48,7 +48,8 @@ public class Filter extends OncePerRequestFilter {
             "POST:/api/reset-password-request",
             "GET:/api/event",
             "GET:/api/event/by-date",
-            "GET:/api/event/search"
+            "GET:/api/event/search",
+            "GET:/compatibility-rule/check-compatibility"
     );
 
     public boolean isPublicAPI(String uri, String method) {
