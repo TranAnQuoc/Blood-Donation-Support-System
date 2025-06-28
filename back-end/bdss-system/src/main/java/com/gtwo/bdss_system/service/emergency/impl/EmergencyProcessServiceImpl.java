@@ -7,6 +7,7 @@ import com.gtwo.bdss_system.entity.emergency.EmergencyProcess;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.EmergencyResult;
 import com.gtwo.bdss_system.enums.EmergencyStatus;
+import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.repository.emergency.EmergencyHistoryRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
@@ -44,10 +45,13 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setReasonForTransfusion(dto.getReasonForTransfusion());
         process.setCompletedAt(LocalDateTime.now());
         process.setStatus(dto.getStatus());
-
+        process.setQuantity(dto.getQuantity());
+        if (process.getStatus() == EmergencyStatus.COMPLETED || process.getStatus() == EmergencyStatus.CANCELED) {
+            process.setStatusAvailable(Status.INACTIVE);
+        }
         EmergencyProcess saved = processRepo.save(process);
+        if (saved.getStatus() == EmergencyStatus.COMPLETED || saved.getStatus() == EmergencyStatus.CANCELED) {
 
-        if (saved.getStatus() == EmergencyStatus.COMPLETED) {
             boolean alreadyExists = historyRepo.findByDeleteFalse().stream()
                     .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.get().getId()));
             if (!alreadyExists) {
@@ -81,7 +85,7 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
 
     @Override
     public List<EmergencyProcessDTO> getAll() {
-        return processRepo.findAll().stream()
+        return processRepo.findByStatusAvailable(Status.ACTIVE).stream()
                 .map(this::toDTO).collect(Collectors.toList());
     }
 
@@ -92,6 +96,7 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setStartedAt(LocalDateTime.now());
         process.setStatus(EmergencyStatus.IN_PROCESS);
         process.setAssignedStaff(request.getVerifiedBy());
+        process.setStatusAvailable(Status.ACTIVE);
         processRepo.save(process);
     }
 
@@ -100,6 +105,7 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         dto.setHealthCheckSummary(entity.getHealthCheckSummary());
         dto.setConfirmed(entity.getConfirmed());
         dto.setSymptoms(entity.getSymptoms());
+        dto.setQuantity(entity.getQuantity());
         dto.setVitalSigns(entity.getVitalSigns());
         dto.setHemoglobinLevel(entity.getHemoglobinLevel());
         dto.setBloodGroupConfirmed(entity.getBloodGroupConfirmed());

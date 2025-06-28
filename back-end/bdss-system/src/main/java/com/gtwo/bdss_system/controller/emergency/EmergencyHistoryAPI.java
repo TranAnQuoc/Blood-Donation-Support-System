@@ -24,12 +24,6 @@ public class EmergencyHistoryAPI {
         return ResponseEntity.ok(historyService.getAll());
     }
 
-    @GetMapping("/deleted")
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public ResponseEntity<List<EmergencyHistoryDTO>> getAllDeleted() {
-        return ResponseEntity.ok(historyService.getAllDeleted());
-    }
-
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public ResponseEntity<EmergencyHistoryDTO> getById(@PathVariable Long id) {
@@ -42,13 +36,4 @@ public class EmergencyHistoryAPI {
         historyService.restore(id);
         return ResponseEntity.ok().build();
     }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public ResponseEntity<Void> softDelete(@PathVariable Long id) {
-        historyService.softDelete(id);
-        return ResponseEntity.ok().build();
-    }
-
-
 }

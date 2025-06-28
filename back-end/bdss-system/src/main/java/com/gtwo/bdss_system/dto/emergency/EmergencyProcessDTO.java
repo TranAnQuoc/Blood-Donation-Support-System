@@ -30,6 +30,9 @@ public class EmergencyProcessDTO {
     @NotNull(message = "Blood group confirmation status is required.")
     private Boolean bloodGroupConfirmed;
 
+    @NotNull(message ="blood quantity is required")
+    private Integer quantity;
+
     @NotBlank(message = "Crossmatch result is required.")
     private String crossmatchResult;
 
