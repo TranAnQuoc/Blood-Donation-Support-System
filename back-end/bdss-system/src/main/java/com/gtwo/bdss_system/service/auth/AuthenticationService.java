@@ -13,4 +13,5 @@ public interface AuthenticationService extends UserDetailsService {
     AccountResponse login(LoginRequest loginRequest);
     UserDetails loadUserByUsername(String email);
     void forgotPassword(ForgotPasswordRequest request);
+    void resetPassword(String token, String newPassword);
 }

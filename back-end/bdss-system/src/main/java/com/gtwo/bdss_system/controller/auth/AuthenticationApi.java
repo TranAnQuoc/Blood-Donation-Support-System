@@ -1,14 +1,12 @@
 package com.gtwo.bdss_system.controller.auth;
 
-import com.gtwo.bdss_system.dto.auth.AccountResponse;
-import com.gtwo.bdss_system.dto.auth.ForgotPasswordRequest;
-import com.gtwo.bdss_system.dto.auth.LoginRequest;
-import com.gtwo.bdss_system.dto.auth.RegisterRequest;
+import com.gtwo.bdss_system.dto.auth.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.service.auth.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,9 +28,15 @@ public class AuthenticationApi {
         return ResponseEntity.ok(account);
     }
 
-    @PostMapping("/reset-password-request")
+    @PostMapping("/forgot-password-request")
     public ResponseEntity forgotPassword(@RequestBody ForgotPasswordRequest request) {
         authenticationService.forgotPassword(request);
-        return ResponseEntity.ok("Password reset email sent successfully.");
+        return ResponseEntity.ok("Check your email to reset your password.");
+    }
+
+    @PostMapping("/reset-password-request")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        authenticationService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok("Password reset successfully.");
     }
 }

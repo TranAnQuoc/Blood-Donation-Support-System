@@ -120,4 +120,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             emailService.sendResetPasswordEmail(emailDetailForForgotPassword);
         }
     }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+        Account account = tokenService.extractAccount(token);
+        if (account == null) {
+            throw new IllegalArgumentException("Invalid or expired token");
+        }
+        account.setPassword(passwordEncoder.encode(newPassword));
+        authenticationRepository.save(account);
+    }
 }
