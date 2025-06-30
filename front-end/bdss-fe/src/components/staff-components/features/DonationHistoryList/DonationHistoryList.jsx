@@ -39,6 +39,10 @@ const DonationHistoryList = () => {
             const response = await axiosInstance.get('/donation-histories/all');
             setHistories(response.data);
             console.log("Đã tải lịch sử hiến máu:", response.data);
+            // Lọc chỉ các quy trình có trạng thái "COMPLETED"
+            // const completedHistories = response.data.filter(history => history.status === "COMPLETED");
+            // setHistories(completedHistories);
+            // console.log("Đã tải và lọc lịch sử hiến máu (chỉ Hoàn thành):", completedHistories);
         } catch (err) {
             console.error("Lỗi khi tải lịch sử hiến máu:", err);
             setError('Không thể tải lịch sử hiến máu. Vui lòng thử lại sau.');
@@ -61,7 +65,6 @@ const DonationHistoryList = () => {
 
     return (
         <div className={styles.donationHistoryListContainer}>
-            {/* <ContentHeader title="Lịch Sử Hiến Máu" /> */}
             <div className={styles.tableWrapper}>
                 {histories.length === 0 ? (
                     <p className={styles.noHistoryMessage}>Không có lịch sử hiến máu nào.</p>
@@ -78,7 +81,6 @@ const DonationHistoryList = () => {
                                 <th>Ngày hiến</th>
                                 <th>Loại hiến</th>
                                 <th>Số lượng (ml)</th>
-                                <th>Cơ sở</th>
                                 <th>Địa chỉ</th>
                                 <th>Ghi chú</th>
                                 <th>Trạng thái</th>
@@ -93,11 +95,10 @@ const DonationHistoryList = () => {
                                     <td>{history.donorPhone || 'N/A'}</td>
                                     <td>{history.donorGender === 'MALE' ? 'Nam' : (history.donorGender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
                                     <td>{formatDateTime(history.donorDateOfBirth) || 'N/A'}</td>
-                                    <td>{history.bloodType ? `${history.bloodType.type}${history.bloodType.rhFactor}` : 'N/A'}</td>
+                                    <td>{history.bloodType || 'N/A'}</td>
                                     <td>{formatDateTime(history.donationDate) || 'N/A'}</td>
                                     <td>{history.donationType || 'N/A'}</td>
                                     <td>{history.quantity || 'N/A'}</td>
-                                    <td>{history.facilityName || 'N/A'}</td>
                                     <td>{history.address || 'N/A'}</td>
                                     <td>{history.note || 'Không có'}</td>
                                     <td>

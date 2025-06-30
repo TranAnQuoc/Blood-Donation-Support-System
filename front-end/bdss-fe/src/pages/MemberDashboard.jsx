@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MemberDashboard.module.css';
 import EventSearchAndList from '../components/member-components/features/EventSearchAndList/EventSearchAndList';
+import BloodDonationParticipationStandard from '../components/common/BloodDonationParticipationStandard/BloodDonationParticipationStandard';
 
 const MemberDashboard = () => {
     return (
@@ -26,7 +27,12 @@ const MemberDashboard = () => {
                     <Link to="/member/request-transfusion" className={styles.actionButton}>Yêu cầu nhận máu</Link>
                 </div>
             </div>
+
+            <div className={styles.standardSection}>
+                <BloodDonationParticipationStandard/>
+            </div>
         </div>
+        
     );
 };
 

@@ -32,7 +32,7 @@ const MemberDropdown = () => {
 
       {open && (
         <div className={styles.menu}>
-          <button onClick={() => navigate("/member/profile")}>Profile</button>
+          <button onClick={() => navigate("/member/member-profile")}>Profile</button>
           <button onClick={handleLogout}>Log Out</button>
         </div>
       )}

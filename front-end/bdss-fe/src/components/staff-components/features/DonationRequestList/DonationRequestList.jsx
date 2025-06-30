@@ -57,8 +57,6 @@ const DonationRequestList = () => {
           {
             params: {
               accept: true,
-              // Nếu cần ghi chú khi duyệt, có thể thêm vào đây:
-              // note: "Đã duyệt bởi Staff ABC"
             },
           }
         );
@@ -129,7 +127,7 @@ const DonationRequestList = () => {
   return (
     <div className={styles.donationRequestListContainer}>
       <h2 className="text-3xl font-bold mb-8 text-center text-red-700">
-        Yêu Cầu Hiến Máu
+        Yêu Cầu Hiến Máu Đang Chờ Duyệt
       </h2>
       <div className={styles.tableWrapper}>
         {requests.length === 0 ? (
@@ -144,8 +142,7 @@ const DonationRequestList = () => {
                 <th>Tên Người hiến</th>
                 <th>Giới tính</th>
                 <th>Nhóm máu</th>
-                <th>Tên Lịch hẹn</th>
-                <th>Cơ sở</th>
+                <th>Tên Sự kiện</th>
                 <th>Thời gian yêu cầu</th>
                 <th>Trạng thái</th>
                 <th>Người duyệt</th>
@@ -171,8 +168,7 @@ const DonationRequestList = () => {
                       ? `${request.donorBloodType.type}${request.donorBloodType.rhFactor}`
                       : "Chưa rõ"}
                   </td>
-                  <td>{request.scheduleName}</td>
-                  <td>{request.medicalFacilityName}</td>
+                  <td>{request.eventName}</td>
                   <td>{formatDateTime(request.requestTime)}</td>
                   <td>
                     <span
@@ -180,7 +176,6 @@ const DonationRequestList = () => {
                         styles[request.statusRequest.toLowerCase()]
                       }`}
                     >
-                      {/* Hiển thị rõ ràng hơn cho người dùng */}
                       {request.statusRequest === "PENDING"
                         ? "Đang chờ"
                         : request.statusRequest === "APPROVED"
@@ -196,7 +191,6 @@ const DonationRequestList = () => {
                   <td>{formatDateTime(request.approvedTime)}</td>
                   <td>{request.note || "Không có"}</td>
                   <td>
-                    {/* Hiển thị nút Duyệt/Từ chối chỉ khi trạng thái là PENDING */}
                     {request.statusRequest === "PENDING" && (
                       <>
                         <button
@@ -206,17 +200,13 @@ const DonationRequestList = () => {
                           Duyệt
                         </button>
                         <button
-                          className={styles.cancelButton} // Có thể đổi tên class nếu muốn style khác cho "Từ chối"
+                          className={styles.cancelButton}
                           onClick={() => handleRejectRequest(request.id)}
                         >
                           Từ chối
                         </button>
                       </>
                     )}
-                    {/* Bạn có thể thêm các nút xem chi tiết cho các trạng thái khác nếu cần */}
-                    {/* {request.statusRequest !== 'PENDING' && (
-                                            <button className={styles.viewButton}>Xem chi tiết</button>
-                                        )} */}
                   </td>
                 </tr>
               ))}

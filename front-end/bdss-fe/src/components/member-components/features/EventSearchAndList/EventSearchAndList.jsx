@@ -1,24 +1,39 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import DataTable from '../../../common/Table/DataTable';
-import styles from './EventSearchAndList.module.css'; // Updated CSS import
+import styles from './EventSearchAndList.module.css';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const EventSearchAndList = () => {
-    const [events, setEvents] = useState([]); // Changed from schedules to events
+    const [events, setEvents] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [keyword, setKeyword] = useState(''); // New state for keyword search
+    const [keyword, setKeyword] = useState('');
     const [hasSearched, setHasSearched] = useState(false);
     const [dateError, setDateError] = useState('');
-    const [searchType, setSearchType] = useState('date'); // 'date' or 'keyword'
+    const [searchType, setSearchType] = useState('date');
+    const [loading, setLoading] = useState(true); // eslint-disable-line no-unused-vars
     const navigate = useNavigate();
 
-    // Helper to format ISO strings to 'HH:MM AM/PM'
+    //Xử lý lỗi NaN:NaN AM
     const formatTimeFromISO = (isoString) => {
         if (!isoString) return '';
         try {
-            const date = new Date(isoString);
+            // Kiểm tra xem chuỗi có phải là định dạng thời gian đơn giản không (HH:MM:SS)
+            let dateToParse = isoString;
+            if (isoString.match(/^\d{2}:\d{2}:\d{2}(.\d{3})?$/)) {
+                dateToParse = `2000-01-01T${isoString}`;
+            }
+            
+            const date = new Date(dateToParse);
+
+            //Kiểm tra nếu đối tượng Date không hợp lệ (Invalid Date)
+            if (isNaN(date.getTime())) {
+                console.warn("Invalid date string for time formatting:", isoString);
+                return 'N/A';
+            }
+
             const hours = date.getHours();
             const minutes = date.getMinutes();
             const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -32,9 +47,9 @@ const EventSearchAndList = () => {
     };
 
     const fetchEvents = useCallback(async (searchParams) => {
-        setEvents([]); // Clear previous results
-        setDateError(''); // Clear any previous date errors
-        setHasSearched(true); // Indicate that a search attempt has been made
+        setEvents([]);
+        setDateError('');
+        setHasSearched(true);
 
         try {
             let url = '';
@@ -42,67 +57,65 @@ const EventSearchAndList = () => {
 
             if (searchParams.type === 'keyword') {
                 if (!searchParams.keyword) {
-                    // Do not search if keyword is empty
                     setEvents([]);
-                    setHasSearched(false); // Reset if no keyword
+                    setHasSearched(false);
                     return;
                 }
-                url = '/event/search'; // Changed endpoint
+                url = '/event/search';
                 params.keyword = searchParams.keyword;
-            } else { // searchParams.type === 'date'
+            } else {
                 if (!searchParams.startDate && !searchParams.endDate) {
                     setDateError('Vui lòng chọn ít nhất một ngày để tìm kiếm.');
                     setEvents([]);
-                    setHasSearched(false); // Reset if no date
+                    setHasSearched(false);
                     return;
                 }
-                if (searchParams.startDate && searchParams.endDate && new Date(searchParams.startDate) > new Date(searchParams.endDate)) {
+                //Sử dụng dayjs để so sánh ngày tháng cho chính xác và nhất quán
+                if (searchParams.startDate && searchParams.endDate && dayjs(searchParams.startDate).isAfter(dayjs(searchParams.endDate))) {
                     setDateError('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
                     setEvents([]);
-                    setHasSearched(false); // Reset if invalid date range
+                    setHasSearched(false);
                     return;
                 }
 
                 url = '/event/by-date';
                 if (searchParams.startDate) {
-                    params.from = searchParams.startDate; // Ví dụ: "2025-06-25"
+                    params.from = searchParams.startDate;
                 } else {
-                    params.from = '2000-01-01'; // Ngày mặc định
+                    params.from = '2000-01-01';
                 }
                 if (searchParams.endDate) {
-                    params.to = searchParams.endDate;     // Ví dụ: "2025-06-25"
+                    params.to = searchParams.endDate;
                 } else {
-                    params.to = '2100-01-01'; // Ngày mặc định
+                    params.to = '2100-01-01';
                 }
             }
 
             const response = await axiosInstance.get(url, { params });
-            setEvents(response.data); // Changed from schedules to events
+            setEvents(response.data);
             console.log('Kết quả tìm kiếm sự kiện:', response.data);
         } catch (error) {
             console.error('Lỗi khi tải sự kiện hiến máu:', error);
-            setEvents([]); // Changed from schedules to events
+            setEvents([]);
             if (error.response && error.response.data && error.response.data.message) {
                 alert(`Lỗi từ máy chủ: ${error.response.data.message}`);
             } else {
                 alert('Không thể tải sự kiện hiến máu. Vui lòng thử lại.');
             }
+        } finally {
+            setLoading(false);
         }
     }, []);
 
-    // Initial load: Fetch events for today's date
     useEffect(() => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set to start of the day
-        const todayISO = today.toISOString().split('T')[0];
-        setStartDate(todayISO);
-        setEndDate(todayISO); // Set end date to today as well for a single day search
+        const today = dayjs().format('YYYY-MM-DD');
+        setStartDate(today);
+        setEndDate(today);
 
-        // Fetch events for today immediately
         fetchEvents({
             type: 'date',
-            startDate: todayISO,
-            endDate: todayISO
+            startDate: today,
+            endDate: today
         });
     }, [fetchEvents]);
 
@@ -111,24 +124,24 @@ const EventSearchAndList = () => {
         e.preventDefault();
         if (searchType === 'keyword') {
             fetchEvents({ type: 'keyword', keyword });
-        } else { // date search
+        } else {
             fetchEvents({ type: 'date', startDate, endDate });
         }
     };
 
-    const handleRegisterClick = (eventId) => { // Changed scheduleId to eventId
-        navigate(`/member/register-donation?eventId=${eventId}`); // Changed scheduleId to eventId
+    const handleRegisterClick = (eventId) => {
+        //Điều hướng đến trang đăng ký hiến máu với eventId
+        navigate(`/member/register-donation?eventId=${eventId}`); 
     };
 
-    const eventColumns = [ // Changed scheduleColumns to eventColumns
+    const eventColumns = [
         { header: 'ID', accessor: 'id' },
         { header: 'Tên Sự kiện', accessor: 'name' },
-        { header: 'Ngày', accessor: 'date' }, // Assuming API returns 'date' in 'YYYY-MM-DD'
+        { header: 'Ngày', accessor: 'date' },
         {
             header: 'Thời gian',
             accessor: 'timeRange',
             render: (row) => {
-                // API provides startTime and endTime as ISO strings
                 const start = formatTimeFromISO(row.startTime);
                 const end = formatTimeFromISO(row.endTime);
                 return `${start} - ${end}`;
@@ -144,13 +157,11 @@ const EventSearchAndList = () => {
             header: 'Trạng thái',
             accessor: 'status',
             render: (row) => {
-                // Assuming status could be 'ACTIVE', 'INACTIVE', etc.
                 const statusMap = {
                     'ACTIVE': 'Đang diễn ra',
                     'INACTIVE': 'Đã kết thúc',
-                    'UPCOMING': 'Sắp diễn ra', // Example status if applicable
-                    'CANCELLED': 'Đã hủy',     // Example status if applicable
-                    // Add more as per your backend enum
+                    'UPCOMING': 'Sắp diễn ra',
+                    'CANCELLED': 'Đã hủy',
                 };
                 return statusMap[row.status] || row.status;
             }
@@ -159,7 +170,6 @@ const EventSearchAndList = () => {
             header: 'Thao tác',
             accessor: 'actions',
             render: (row) => {
-                // An event is available if it's 'ACTIVE' and has available slots
                 const isAvailable = row.status === 'ACTIVE' && (row.currentSlot < row.maxSlot);
                 return (
                     isAvailable ? (
@@ -180,8 +190,8 @@ const EventSearchAndList = () => {
     ];
 
     return (
-        <div className={styles.eventSearchAndList}> {/* Updated CSS class name */}
-            <h2 className={styles.pageTitle}>Tìm kiếm Sự kiện Hiến Máu</h2> {/* Updated title */}
+        <div className={styles.eventSearchAndList}>
+            <h2 className={styles.pageTitle}>Tìm kiếm Sự kiện Hiến Máu</h2>
 
             <form onSubmit={handleSearch} className={styles.searchForm}>
                 <div className={styles.radioGroup}>
@@ -206,7 +216,7 @@ const EventSearchAndList = () => {
                 </div>
 
                 {searchType === 'date' ? (
-                    <>
+                    <div className={styles.dateSearchInputs}>
                         <div className={styles.formGroup}>
                             <label htmlFor="startDate">Từ ngày:</label>
                             <input
@@ -216,7 +226,7 @@ const EventSearchAndList = () => {
                                 onChange={(e) => {
                                     setStartDate(e.target.value);
                                     setDateError('');
-                                    setKeyword(''); // Clear keyword when switching to date search
+                                    setKeyword('');
                                 }}
                             />
                         </div>
@@ -232,26 +242,28 @@ const EventSearchAndList = () => {
                                 }}
                             />
                         </div>
-                    </>
+                        <button type="submit" className={styles.searchButton}>Tìm kiếm</button>
+                    </div>
                 ) : (
-                    <div className={styles.formGroup}>
-                        <label htmlFor="keyword">Từ khóa:</label>
-                        <input
-                            type="text"
-                            id="keyword"
-                            value={keyword}
-                            onChange={(e) => {
-                                setKeyword(e.target.value);
-                                setStartDate(''); // Clear dates when switching to keyword search
-                                setEndDate('');
-                                setDateError('');
-                            }}
-                            placeholder="Nhập tên sự kiện, địa điểm..."
-                        />
+                    <div className={styles.keywordSearchInput}>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="keyword">Từ khóa:</label>
+                            <input
+                                type="text"
+                                id="keyword"
+                                value={keyword}
+                                onChange={(e) => {
+                                    setKeyword(e.target.value);
+                                    setStartDate('');
+                                    setEndDate('');
+                                    setDateError('');
+                                }}
+                                placeholder="Nhập tên sự kiện, địa điểm..."
+                            />
+                        </div>
+                        <button type="submit" className={styles.searchButton}>Tìm kiếm</button>
                     </div>
                 )}
-                
-                <button type="submit" className={styles.searchButton}>Tìm kiếm</button>
             </form>
 
             {dateError && (
@@ -264,10 +276,10 @@ const EventSearchAndList = () => {
                     events.length > 0 ? (
                         <DataTable data={events} columns={eventColumns} />
                     ) : (
-                        <p>Không tìm thấy sự kiện hiến máu nào trong khoảng thời gian/từ khóa đã chọn.</p>
+                        <p className={styles.noResultsMessage}>Không tìm thấy sự kiện hiến máu nào trong khoảng thời gian/từ khóa đã chọn.</p>
                     )
                 ) : (
-                    <p>Sử dụng bộ lọc trên để tìm kiếm sự kiện hiến máu.</p>
+                    <p className={styles.initialSearchMessage}>Sử dụng bộ lọc trên để tìm kiếm sự kiện hiến máu.</p>
                 )}
             </div>
         </div>
