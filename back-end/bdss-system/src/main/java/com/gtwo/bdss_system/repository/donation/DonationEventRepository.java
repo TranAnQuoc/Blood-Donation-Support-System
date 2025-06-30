@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface DonationEventRepository extends JpaRepository<DonationEvent, Long> {
@@ -14,8 +14,8 @@ public interface DonationEventRepository extends JpaRepository<DonationEvent, Lo
     boolean existsByNameAndAddress(String name, String address);
     @Query("SELECT s FROM DonationEvent s WHERE s.date BETWEEN :fromDate AND :toDate AND s.status = 'ACTIVE'")
     List<DonationEvent> findByDateRangeAndActive(
-            @Param("fromDate") Date fromDate,
-            @Param("toDate") Date toDate
+            @Param("fromDate") LocalDate fromDate,
+            @Param("toDate") LocalDate toDate
     );
     List<DonationEvent> findByNameContainingIgnoreCaseOrderByNameAsc(String keyword);
 }

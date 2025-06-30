@@ -10,7 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -51,7 +51,7 @@ public class DonationEventServiceImpl implements DonationEventService {
     }
 
     @Override
-    public List<DonationEvent> getByDateRange(Date fromDate, Date toDate) {
+    public List<DonationEvent> getByDateRange(LocalDate fromDate, LocalDate toDate) {
         List<DonationEvent> schedules = repository.findByDateRangeAndActive(fromDate, toDate);
         for (DonationEvent schedule : schedules) {
             int approved = donationRequestRepository.countEventIdInRequest(schedule.getId());
