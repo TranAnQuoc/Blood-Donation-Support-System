@@ -68,6 +68,7 @@ public class DataInitializr implements CommandLineRunner {
         if (bloodComponentRepository.count() == 0) {
             List<BloodComponent> components = List.of(
                     createBloodComponent("Unknow"),
+                    createBloodComponent("Toàn phần"),
                     createBloodComponent("Huyết tương"),
                     createBloodComponent("Hồng cầu"),
                     createBloodComponent("Tiểu cầu"),
@@ -103,7 +104,7 @@ public class DataInitializr implements CommandLineRunner {
                         String rType = recipient.getType();
                         String rRh = recipient.getRhFactor();
                         // --- HỒNG CẦU ---
-                        if ("Hồng cầu".equals(component.getName())) {
+                        if ("Hồng cầu".equals(component.getName()) || "Toàn phần".equals(component.getName())) {
                             if ("O".equals(dType) && "-".equals(dRh)) {
                                 isCompatible = true;
                                 explanation = "O- có thể truyền cho tất cả (universal red cell donor)";
