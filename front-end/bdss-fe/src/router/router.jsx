@@ -1,5 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
+import PublicRoute from "../components/PublicRoute.jsx";
 
 //LAYOUT
 import Layout from "../layouts/Layout.jsx";
@@ -11,7 +12,7 @@ import LoginForm from "../components/authen-form/LoginForm.jsx";
 import RegisterForm from "../components/authen-form/RegisterForm.jsx";
 
 //GUEST
-
+import GuestDashboard from "../pages/GuestDashboard.jsx";
 
 //MEMBER
 import RegisterDonation from "../components/member-components/features/RegisterDonation/RegisterDonation.jsx";
@@ -49,13 +50,18 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <Layout>
-        <Outlet />
-      </Layout>
+      <PublicRoute>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </PublicRoute>
+      
     ),
     children: [
+      { index: true, element: <GuestDashboard /> },
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },
+      
     ],
   },
 
