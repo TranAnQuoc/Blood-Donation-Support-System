@@ -5,7 +5,6 @@ import { Link, useLocation } from 'react-router-dom';
 import StaffDropdown from './StaffDropdown';
 import NavButton from './NavButton';
 import RequestManagementDropdown from './RequestManagementDropdown';
-import UserManagementDropdown from './UserManagementDropdown';
 import ProcessDropdown from './ProcessDropdown';
 import HistoryDropdown from './HistoryDropdown';
 
@@ -21,9 +20,6 @@ import {
     faFileAlt,
     faCalendarAlt,
     faBox,
-    // faBuilding,
-    // faHourglassHalf,
-    // faBell,
     faCalendarCheck,
     faNewspaper,
     faChartBar,
@@ -32,7 +28,6 @@ import {
 
 const LeftPanel = () => {
     const [isRequestDropdownOpen, setIsRequestDropdownOpen] = useState(false);
-    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const [isProcessDropdownOpen, setIsProcessDropdownOpen] = useState(false);
     const [isHistoryDropdownOpen, setIsHistoryDropdownOpen] = useState(false);
 
@@ -43,14 +38,8 @@ const LeftPanel = () => {
 
     const closeAllDropdownsExcept = (dropdownToKeepOpen) => {
         if (dropdownToKeepOpen !== 'request') setIsRequestDropdownOpen(false);
-        if (dropdownToKeepOpen !== 'user') setIsUserDropdownOpen(false);
         if (dropdownToKeepOpen !== 'process') setIsProcessDropdownOpen(false);
         if (dropdownToKeepOpen !== 'history') setIsHistoryDropdownOpen(false);
-    };
-
-    const toggleUserDropdown = () => {
-        closeAllDropdownsExcept('user');
-        setIsUserDropdownOpen(!isUserDropdownOpen);
     };
 
     const toggleRequestDropdown = () => {
@@ -70,9 +59,6 @@ const LeftPanel = () => {
 
     
     const isNavItemActive = (expectedPathSegment) => {
-        if (expectedPathSegment === 'userManagement') {
-            return location.pathname.startsWith('/staff-dashboard/user-management');
-        }
         if (expectedPathSegment === 'requestManagement') {
             return location.pathname.startsWith('/staff-dashboard/transfusion-requests-management') || location.pathname.startsWith('/staff-dashboard/donation-requests') || location.pathname.startsWith('/staff-dashboard/emergency-transfusion-requests');
         }
@@ -90,17 +76,14 @@ const LeftPanel = () => {
     };
 
     const navItems = [
-        { id: 'home', icon: faHome, label: 'Trang chủ', fullPath: '/staff-dashboard' },
-        { id: 'userManagement', icon: faUsers, label: 'Quản Lý Người Dùng', hasDropdown: true },
+        { id: 'home', icon: faHome, label: 'Trang Chủ', fullPath: '/staff-dashboard' },
+        { id: 'memberList', icon: faUsers, label: 'Danh Sách Thành Viên', fullPath: '/staff-dashboard/member-list' },
         { id: 'requestManagement', icon: faClipboardList, label: 'Quản Lý Yêu Cầu', hasDropdown: true },
         { id: 'process', icon: faBook, label: 'Quy Trình', hasDropdown: true },
         { id: 'history', icon: faHistory, label: 'Lịch Sử', hasDropdown: true },
         { id: 'registrationList', icon: faFileAlt, label: 'Đơn Đăng Ký', fullPath: '/staff-dashboard/registration-list' },
         { id: 'eventManagement', icon: faCalendarAlt, label: 'Quản Lý Sự Kiện Hiến Máu', fullPath: '/staff-dashboard/event-management' },
         { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-stock' },
-        // { id: 'interFacilityCoordination', icon: faBuilding, label: 'Điều Phối Liên Cơ Sở', fullPath: '/staff-dashboard/inter-facility-coordination' },
-        // { id: 'donationStatus', icon: faHourglassHalf, label: 'Trạng Thái Hiến Máu', fullPath: '/staff-dashboard/donation-status' },
-        // { id: 'notifications', icon: faBell, label: 'Thông Báo', fullPath: '/staff-dashboard/notifications' },
         { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/staff-dashboard/recovery-reminders' },
         { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/staff-dashboard/community-posts' },
         { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/staff-dashboard/reports' },
@@ -113,8 +96,7 @@ const LeftPanel = () => {
             <div className={styles.navButtonsContainer}>
                 {navItems.map(item => {
                     const handleNavButtonClick = () => {
-                        if (item.id === 'userManagement') toggleUserDropdown();
-                        else if (item.id === 'requestManagement') toggleRequestDropdown();
+                        if (item.id === 'requestManagement') toggleRequestDropdown();
                         else if (item.id === 'process') toggleProcessDropdown();
                         else if (item.id === 'history') toggleHistoryDropdown();
                         else {
@@ -125,11 +107,7 @@ const LeftPanel = () => {
                     let isDropdownOpen = false;
                     let DropdownComponent = null;
 
-                    if (item.id === 'userManagement') {
-                        if (!isLoggedIn) return null;
-                        isDropdownOpen = isUserDropdownOpen;
-                        DropdownComponent = UserManagementDropdown;
-                    } else if (item.id === 'requestManagement') {
+                    if (item.id === 'requestManagement') {
                         isDropdownOpen = isRequestDropdownOpen;
                         DropdownComponent = RequestManagementDropdown;
                     } else if (item.id === 'process') {
@@ -138,6 +116,10 @@ const LeftPanel = () => {
                     } else if (item.id === 'history') {
                         isDropdownOpen = isHistoryDropdownOpen;
                         DropdownComponent = HistoryDropdown;
+                    }
+
+                    if (item.id === 'memberList' && !isLoggedIn) {
+                        return null;
                     }
 
                     return (
