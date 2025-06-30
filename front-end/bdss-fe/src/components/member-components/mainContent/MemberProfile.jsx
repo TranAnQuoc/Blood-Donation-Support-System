@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../configs/axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import styles from './MemberProfile.module.css';
 
 const MemberProfile = () => {
@@ -8,16 +11,28 @@ const MemberProfile = () => {
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
+    const navigate = useNavigate();
 
     const genderMap = {
-        'MALE' : 'Nam',
-        'FEMALE' : 'Nữ',
-        'OTHER' : 'Khác'
+        'MALE': 'Nam',
+        'FEMALE': 'Nữ',
+        'OTHER': 'Khác'
     };
 
     const statusDonationMap = {
-        'AVAILABLE' : 'Sẵn sàng hiến',
-        'INACTIVE' : 'Không sẵn sàng'
+        'AVAILABLE': 'Sẵn sàng hiến',
+        'INACTIVE': 'Không sẵn sàng'
+    };
+
+    const formatDisplayDate = (isoString) => {
+        if (!isoString) return 'Chưa cập nhật';
+        try {
+            const dateObj = new Date(isoString);
+            return dateObj.toLocaleDateString('vi-VN');
+        } catch (e) {
+            console.error("Lỗi định dạng ngày:", isoString, e);
+            return 'Ngày không hợp lệ';
+        }
     };
 
     const fetchProfile = async () => {
@@ -25,31 +40,32 @@ const MemberProfile = () => {
         setError(null);
         try {
             const response = await axiosInstance.get('/account/view-profile');
-            setProfile(response.data);
+            const fetchedProfile = response.data;
+            setProfile(fetchedProfile);
+
             let formattedDateOfBirth = '';
-            if (response.data.dateOfBirth) {
-                const dateObj = new Date(response.data.dateOfBirth);
+            if (fetchedProfile.dateOfBirth) {
+                const dateObj = new Date(fetchedProfile.dateOfBirth);
                 if (!isNaN(dateObj.getTime())) {
                     formattedDateOfBirth = dateObj.toISOString().split('T')[0];
                 } else {
-                    console.warn("Ngày sinh từ API không hợp lệ:", response.data.dateOfBirth);
+                    console.warn("Ngày sinh từ API không hợp lệ:", fetchedProfile.dateOfBirth);
                 }
             }
-                
+
             setEditData({
-                fullName: response.data.fullName || '',
-                gender: response.data.gender || '',
-                dateOfBirth: formattedDateOfBirth || '',
-                phone: response.data.phone || '',
-                address: response.data.address || '',
-                bloodTypeId: response.data.bloodTypeId || null,
-                statusDonation: response.data.statusDonation || '',
-            })
-            console.log("Profile của người dùng:", response.data);
+                fullName: fetchedProfile.fullName || '',
+                gender: fetchedProfile.gender || '',
+                dateOfBirth: formattedDateOfBirth,
+                phone: fetchedProfile.phone || '',
+                address: fetchedProfile.address || '',
+            });
+            console.log("Profile của người dùng:", fetchedProfile);
         } catch (err) {
             console.error("Lỗi khi tải profile:", err);
             const errorMessage = err.response?.data?.message || 'Không thể tải thông tin profile. Vui lòng thử lại.';
             setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -77,19 +93,21 @@ const MemberProfile = () => {
                 dateOfBirth: editData.dateOfBirth,
                 phone: editData.phone,
                 address: editData.address,
-                bloodTypeId: editData.bloodTypeId ? parseInt(editData.bloodTypeId, 10) : null,
-                statusDonation: editData.statusDonation,
-            }
+                bloodTypeId: profile.bloodType ? profile.bloodType.id : null,
+                cccd: profile.cccd || null,
+                statusDonation: profile.statusDonation || null, 
+            };
+
             await axiosInstance.put('/account/member/profile', dataToSend);
 
-            alert('Cập nhật thông tin thành công!');
+            toast.success('Cập nhật thông tin thành công!');
             setIsEditing(false);
             await fetchProfile();
         } catch (err) {
             console.error("Lỗi khi cập nhật profile:", err);
             const errorMessage = err.response?.data?.message || 'Không thể cập nhật thông tin profile. Vui lòng thử lại.';
             setError(errorMessage);
-            alert(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -98,7 +116,7 @@ const MemberProfile = () => {
     const handleCancel = () => {
         setIsEditing(false);
         const formattedDateOfBirth = profile.dateOfBirth
-        ? new Date(profile.dateOfBirth).toISOString().split('T')[0] 
+            ? new Date(profile.dateOfBirth).toISOString().split('T')[0]
             : '';
         setEditData({
             fullName: profile.fullName || '',
@@ -106,8 +124,6 @@ const MemberProfile = () => {
             dateOfBirth: formattedDateOfBirth,
             phone: profile.phone || '',
             address: profile.address || '',
-            bloodTypeId: profile.bloodTypeId || null,
-            statusDonation: profile.statusDonation || ''
         });
     };
 
@@ -130,23 +146,45 @@ const MemberProfile = () => {
                 <div className={styles.profileDetails}>
                     <p><strong>Email:</strong> {profile.email || 'Chưa cập nhật'}</p>
                     <p><strong>Họ và tên:</strong> {profile.fullName || 'Chưa cập nhật'}</p>
-                    {/* <p><strong>Vai trò:</strong> {profile.role || 'Chưa cập nhật'}</p> */}
+                    <p><strong>Vai trò:</strong> {profile.role || 'Chưa cập nhật'}</p> {/* Thêm Vai trò */}
                     <p><strong>Giới tính:</strong> {genderMap[profile.gender] || 'Chưa cập nhật'}</p>
-                    <p><strong>Nhóm máu:</strong> {profile.bloodType ? `${profile.bloodType.type}${profile.bloodType.rhFactor}` : 'Chưa cập nhật'}</p>
-                    <p><strong>Ngày sinh:</strong> {profile.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString('vi-VN') : 'Chưa cập nhật'}</p>
+                    <p>
+                        <strong>Nhóm máu:</strong>{' '}
+                        {profile.bloodType ? `${profile.bloodType.type}${profile.bloodType.rhFactor}` : 'Chưa cập nhật'}
+                    </p>
+                    <p><strong>Ngày sinh:</strong> {formatDisplayDate(profile.dateOfBirth)}</p>
                     <p><strong>Số điện thoại:</strong> {profile.phone || 'Chưa cập nhật'}</p>
                     <p><strong>Địa chỉ:</strong> {profile.address || 'Chưa cập nhật'}</p>
-                    <p><strong>CCCD:</strong> {profile.cccd || 'Chưa cập nhật'}</p>
-                    <p><strong>Trạng thái tài khoản:</strong> {profile.status ? (profile.status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động') : 'Chưa cập nhật'}</p>
-                    <p><strong>Trạng thái hiến máu:</strong> {statusDonationMap[profile.statusDonation] || 'Chưa cập nhật'}</p>
-                    <p><strong>Ngày tạo tài khoản:</strong> {profile.createAt ? new Date(profile.createAt).toLocaleDateString('vi-VN') : 'N/A'}</p>
+                    <p><strong>CCCD:</strong> {profile.cccd || 'Chưa cập nhật'}</p> {/* Thêm CCCD */}
+                    {/* <p><strong>Ngày tạo tài khoản:</strong> {formatDisplayDate(profile.createAt)}</p> */}
+                    {/* <p>
+                        <strong>Trạng thái tài khoản:</strong>{' '}
+                        {statusAccountMap[profile.status] || 'Chưa cập nhật'}
+                    </p> */}
+                    <p>
+                        <strong>Trạng thái hiến máu:</strong>{' '}
+                        {statusDonationMap[profile.statusDonation] || 'Chưa cập nhật'}
+                    </p>
                     
                     <button className={styles.editButton} onClick={() => setIsEditing(true)}>
                         Chỉnh sửa Profile
                     </button>
+                    <button className={styles.cancelButton} onClick={() => navigate(-1)}>
+                        Quay lại
+                    </button>
                 </div>
             ) : (
                 <div className={styles.editForm}>
+                    <div className={styles.formGroup}>
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={profile.email || ''}
+                            disabled
+                            className={styles.disabledInput}
+                        />
+                    </div>
                     <div className={styles.formGroup}>
                         <label>Họ và tên:</label>
                         <input
@@ -193,17 +231,33 @@ const MemberProfile = () => {
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        <label>ID Nhóm máu:</label> {/* Tạm thời dùng ID, lý tưởng là dropdown */}
+                        <label>Nhóm máu:</label>
                         <input
-                            type="number"
-                            name="bloodTypeId"
-                            value={editData.bloodTypeId || ''}
-                            onChange={handleInputChange}
+                            type="text"
+                            name="bloodType"
+                            value={profile.bloodType ? `${profile.bloodType.type}${profile.bloodType.rhFactor}` : 'Chưa cập nhật'}
+                            disabled 
+                            className={styles.disabledInput}
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>CCCD:</label>
+                        <input
+                            type="text"
+                            name="cccd"
+                            value={profile.cccd || 'Chưa cập nhật'}
+                            disabled
+                            className={styles.disabledInput}
                         />
                     </div>
                     <div className={styles.formGroup}>
                         <label>Trạng thái hiến máu:</label>
-                        <select name="statusDonation" value={editData.statusDonation} onChange={handleInputChange}>
+                        <select
+                            name="statusDonation"
+                            value={profile.statusDonation || ''}
+                            disabled
+                            className={styles.disabledInput}
+                        >
                             <option value="">Chọn trạng thái</option>
                             <option value="AVAILABLE">Sẵn sàng hiến</option>
                             <option value="INACTIVE">Không sẵn sàng</option>

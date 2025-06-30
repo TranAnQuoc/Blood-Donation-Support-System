@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './GuestDashboard.module.css';
 import BloodDonationParticipationStandard from '../components/common/BloodDonationParticipationStandard/BloodDonationParticipationStandard';
 
-const MemberDashboard = () => {
+const GuestDashboard = () => {
     return (
         <div className={styles.dashboardContainer}>
             <h1>Chào mừng, Khách!</h1>
@@ -15,4 +15,4 @@ const MemberDashboard = () => {
     );
 };
 
-export default MemberDashboard;
+export default GuestDashboard;
