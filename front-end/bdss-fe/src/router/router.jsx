@@ -20,9 +20,7 @@ import MemberProfile from "../components/member-components/mainContent/MemberPro
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
 
 //STAFF
-// import StaffProfile from "../components/staff-components/mainContent/StaffProfile.jsx"
-import StaffList from "../components/staff-components/features/UserManagement/StaffList.jsx";
-import MemberList from "../components/staff-components/features/UserManagement/MemberList.jsx";
+import MemberList from "../components/staff-components/features/MemberList/MemberList.jsx";
 import DonationRequestList from "../components/staff-components/features/DonationRequestList/DonationRequestList.jsx";
 import DonationProcess from "../components/staff-components/features/DonationProcess/DonationProcess.jsx";
 import DonationProcessDetail from "../components/staff-components/features/DonationProcessDetail/DonationProcessDetail.jsx";
@@ -79,7 +77,7 @@ const router = createBrowserRouter([
       //NAVIGATE
       //NAVIGATE
       //User Management
-      { path: "user-management/staff-list", element: <StaffList /> },
+      // { path: "user-management/staff-list", element: <StaffList /> },
       { path: "user-management/member-list", element: <MemberList /> },
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },
@@ -123,9 +121,7 @@ const router = createBrowserRouter([
       // { path: "staff-setting", element: <StaffSetting/> },
 
       //NAVIGATE
-      //User Management
-      { path: "user-management/staff-list", element: <StaffList /> },
-      { path: "user-management/member-list", element: <MemberList /> },
+      
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },
       { path: "donation-processes", element: <DonationProcess /> },
@@ -143,6 +139,7 @@ const router = createBrowserRouter([
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
 
       //OTHER
+      { path: "member-list", element: <MemberList /> },
       { path: "event-management", element: <EventManagement/>},
       // { path: "blood-bank", element: <BloodBank/> },
       // { path: "recovery-reminders", element: <RecoveryReminder/> },
