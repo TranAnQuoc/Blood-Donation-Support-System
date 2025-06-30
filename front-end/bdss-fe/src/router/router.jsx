@@ -14,7 +14,7 @@ import RegisterForm from "../components/authen-form/RegisterForm.jsx";
 
 
 //MEMBER
-import RegisterDonation from "../components/member-components/features/RegisterDonation";
+import RegisterDonation from "../components/member-components/features/RegisterDonation/RegisterDonation.jsx";
 import MemberDashboard from "../pages/MemberDashboard.jsx";
 import MemberProfile from "../components/member-components/mainContent/MemberProfile";
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
@@ -25,6 +25,7 @@ import StaffList from "../components/staff-components/features/UserManagement/St
 import MemberList from "../components/staff-components/features/UserManagement/MemberList.jsx";
 import DonationRequestList from "../components/staff-components/features/DonationRequestList/DonationRequestList.jsx";
 import DonationProcess from "../components/staff-components/features/DonationProcess/DonationProcess.jsx";
+import DonationProcessDetail from "../components/staff-components/features/DonationProcessDetail/DonationProcessDetail.jsx";
 import DonationHistoryList from "../components/staff-components/features/DonationHistoryList/DonationHistoryList.jsx";
 import TransfusionRequestList from "../components/staff-components/features/TransfusionRequestList/TransfusionRequestList.jsx";
 import TransfusionRequestDetail from "../components/staff-components/features/TransfusionRequestDetail/TransfusionRequestDetail.jsx";
@@ -128,6 +129,7 @@ const router = createBrowserRouter([
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },
       { path: "donation-processes", element: <DonationProcess /> },
+      { path: "donation-process/:id", element: <DonationProcessDetail />},
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
       { path: "transfusion-requests-management", element: <TransfusionRequestList /> },

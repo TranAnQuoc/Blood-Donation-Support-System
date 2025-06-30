@@ -217,9 +217,9 @@ function RegisterForm() {
     return (
         <div className={styles.registerContainer}>
             <form onSubmit={handleSubmit} className={styles.registerForm}>
-                <h2>Register</h2>
+                <h2>Đăng Ký</h2>
                 <p className={styles.requiredFieldsMessage}>
-                    Please fill in all required fields.
+                    Vui lòng điền vào tất cả các trường bắt buộc.
                 </p>
                 <div className={styles.inputGroup}>
                     <input
@@ -307,7 +307,7 @@ function RegisterForm() {
                         onChange={handleInputChange}
                         required
                     >
-                        <option value="">Select Gender</option>
+                        <option value="">Chọn giới tính</option>
                         {genders.map(gender => (
                             <option key={gender} value={gender}>{gender}</option>
                         ))}
@@ -323,7 +323,7 @@ function RegisterForm() {
                         onChange={handleInputChange}
                         required
                     >
-                        <option value="">Select Blood Type</option>
+                        <option value="">Chọn nhóm máu</option>
                         {staticBloodTypes.map(bt => (
                             <option key={bt.id} value={bt.id}>{bt.label}</option>
                         ))}
@@ -370,10 +370,10 @@ function RegisterForm() {
                 </div>
 
                 <button type="submit" className={styles.registerButton}>
-                    Register
+                    Đăng Ký
                 </button>
                 <div className={styles.loginPrompt}>
-                    Already have an account? <Link to="/login">Login</Link>
+                    Bạn đã có tài khoản? <Link to="/login">Đăng Nhập</Link>
                 </div>
             </form>
         </div>

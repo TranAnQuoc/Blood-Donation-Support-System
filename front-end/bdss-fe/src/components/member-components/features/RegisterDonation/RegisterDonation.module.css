@@ -1,0 +1,175 @@
+.container {
+    margin: 1rem auto;
+    padding: 1.5rem;
+    max-width: 42rem;
+    background-color: #ffffff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem;
+}
+
+.heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #dc2626;
+}
+
+.warningBanner {
+    background-color: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    color: #b45309;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.25rem;
+}
+
+.warningTitle {
+    font-weight: 700;
+}
+
+.loadingContainer,
+.errorContainer {
+    text-align: center;
+    padding-top: 1rem;
+    font-size: 1.125rem;
+}
+
+.errorContainer {
+    color: #dc2626;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.label {
+    display: block;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.input,
+.textarea {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    appearance: none;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    color: #374151;
+    line-height: 1.25;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    border-color: #3b82f6;
+}
+
+.input:disabled,
+.textarea:disabled {
+    background-color: #e5e7eb;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+.noScheduleMessage {
+    font-size: 0.875rem;
+    color: #ef4444;
+    margin-top: 0.5rem;
+}
+
+.submitButton {
+    background-color: #dc2626;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.submitButton:hover {
+    background-color: #991b1b;
+}
+
+.submitButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
+}
+
+.submitButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.react-select-container .react-select__control {
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    min-height: 40px;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+.react-select-container .react-select__control--is-focused {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.react-select-container .react-select__value-container {
+    padding: 0.5rem 0.75rem;
+}
+
+.react-select-container .react-select__placeholder {
+    color: #a0aec0;
+}
+
+.react-select-container .react-select__single-value {
+    color: #4a5568;
+}
+
+.react-select-container .react-select__indicator-separator {
+    background-color: #cbd5e0;
+}
+
+.react-select-container .react-select__dropdown-indicator {
+    color: #a0aec0;
+}
+
+.react-select-container .react-select__menu {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-top: 0.5rem;
+    z-index: 9999;
+}
+
+.react-select-container .react-select__option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.react-select-container .react-select__option--is-focused {
+    background-color: #f0f4f8;
+}
+
+.react-select-container .react-select__option--is-selected {
+    background-color: #bfdbfe;
+    color: #1e40af;
+    font-weight: 500;
+}
+
+.react-select-container .react-select__control--is-disabled {
+    background-color: #edf2f7;
+    cursor: not-allowed;
+}

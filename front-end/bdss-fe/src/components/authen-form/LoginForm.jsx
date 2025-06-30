@@ -100,7 +100,7 @@ function LoginForm() {
   return (
     <div className={styles.loginContainer}>
       <form onSubmit={handleSubmit} className={styles.loginForm}>
-        <h2>Login</h2>
+        <h2>Đăng Nhập</h2>
 
         <div className={styles.inputGroup}>
           <input
@@ -138,13 +138,13 @@ function LoginForm() {
           {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
         </div>
         <div className={styles.forgotPassword}>
-          <a href="#">Forgot Password?</a>
+          <a href="#">Quên mật khẩu?</a>
         </div>
         <button type="submit" className={styles.loginButton}>
-          Log In
+          Đăng Nhập
         </button>
         <div className={styles.signupPrompt}>
-          Don't have an account? <Link to="/register">Signup</Link>
+          Bạn không có tài khoản? <Link to="/register">Đăng ký</Link>
         </div>
       </form>
     </div>

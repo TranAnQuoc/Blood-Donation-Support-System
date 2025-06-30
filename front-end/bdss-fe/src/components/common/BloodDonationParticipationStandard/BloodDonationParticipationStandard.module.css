@@ -1,0 +1,126 @@
+.donationCriteriaSection {
+    background-color: #1C5291;
+    padding: 40px 20px;
+    color: #fff;
+    text-align: center;
+}
+
+.sectionTitle {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+    color: #ecf0f1;
+}
+
+.sectionTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #e74c3c;
+    border-radius: 2px;
+}
+
+.criteriaGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.criteriaCard {
+    background-color: #fff;
+    color: #333;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.criteriaCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.iconWrapper {
+    background-color: #386FD6;
+    border-radius: 20%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.criteriaIcon {
+    color: #fff;
+    font-size: 2em;
+}
+
+.cardTitle {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.cardDescription {
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .sectionTitle {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+
+    .criteriaGrid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .criteriaCard {
+        padding: 20px;
+    }
+
+    .iconWrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .criteriaIcon {
+        font-size: 1.8em;
+    }
+
+    .cardTitle {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .sectionTitle {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .criteriaGrid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .criteriaCard {
+        padding: 15px;
+    }
+}

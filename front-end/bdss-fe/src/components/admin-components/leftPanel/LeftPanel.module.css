@@ -16,3 +16,8 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+.navItem {
+    text-decoration: none;
+    color: inherit;
+}

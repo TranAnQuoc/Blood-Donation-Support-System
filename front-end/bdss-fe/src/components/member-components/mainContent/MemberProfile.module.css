@@ -1,8 +1,8 @@
 .profileContainer {
-    padding: 20px;
+    padding: 20px 40px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     margin: 20px auto;
 }
@@ -22,9 +22,11 @@
 .profileDetails strong {
     color: #333;
     display: inline-block;
-    width: 150px;
+    width: 160px;
+    vertical-align: top;
 }
 
+/* Styles for messages */
 .loadingMessage,
 .errorMessage,
 .noProfileMessage {
@@ -38,6 +40,7 @@
     color: #d9534f;
 }
 
+/* Styles for the "Edit Profile" button (in view mode) */
 .editButton {
     display: block;
     width: 100%;
@@ -49,8 +52,116 @@
     cursor: pointer;
     font-size: 1em;
     margin-top: 20px;
+    transition: background-color 0.2s ease;
 }
 
 .editButton:hover {
     background-color: #0056b3;
+}
+
+/* ========================================================================= */
+/* Styles cho Chế độ Chỉnh sửa (Edit Mode) */
+/* ========================================================================= */
+
+.editForm {
+    padding-top: 10px;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="number"],
+.formGroup input[type="date"],
+.formGroup select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup input[type="number"]:focus,
+.formGroup input[type="date"]:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.saveButton,
+.cancelButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+.saveButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.saveButton:hover {
+    background-color: #218838;
+}
+
+.cancelButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profileContainer {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .profileDetails strong {
+        width: 120px;
+    }
+
+    .formGroup input[type="text"],
+    .formGroup input[type="number"],
+    .formGroup input[type="date"],
+    .formGroup select {
+        width: 100%;
+    }
+
+    .formActions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .saveButton,
+    .cancelButton {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }
