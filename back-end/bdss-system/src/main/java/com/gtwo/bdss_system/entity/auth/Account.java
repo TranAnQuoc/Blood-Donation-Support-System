@@ -1,10 +1,7 @@
 package com.gtwo.bdss_system.entity.auth;
 
 import com.gtwo.bdss_system.entity.commons.BloodType;
-import com.gtwo.bdss_system.enums.Gender;
-import com.gtwo.bdss_system.enums.Role;
-import com.gtwo.bdss_system.enums.Status;
-import com.gtwo.bdss_system.enums.StatusDonation;
+import com.gtwo.bdss_system.enums.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Nationalized;
@@ -56,6 +53,10 @@ public class Account implements UserDetails {
     @Column(name = "Phone", unique = true)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Phone_Visibility")
+    private PhoneVisibility phoneVisibility;
+
     @Column(name = "Address")
     @Nationalized
     private String address;
@@ -75,7 +76,6 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "Status_Donation")
     private StatusDonation statusDonation;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

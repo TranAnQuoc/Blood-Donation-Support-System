@@ -49,7 +49,8 @@ public class Filter extends OncePerRequestFilter {
             "GET:/api/event",
             "GET:/api/event/by-date",
             "GET:/api/event/search",
-            "GET:/compatibility-rule/check-compatibility"
+            "GET:/compatibility-rule/check-compatibility",
+            "GET:/api/search-donor"
     );
 
     public boolean isPublicAPI(String uri, String method) {

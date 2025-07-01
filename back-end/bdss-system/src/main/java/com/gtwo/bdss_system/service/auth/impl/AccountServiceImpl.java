@@ -1,16 +1,13 @@
 package com.gtwo.bdss_system.service.auth.impl;
 
-import com.gtwo.bdss_system.dto.auth.AccountCreateDTO;
-import com.gtwo.bdss_system.dto.auth.AccountProfileDTO;
-import com.gtwo.bdss_system.dto.auth.AccountResponse;
-import com.gtwo.bdss_system.dto.auth.AccountUpdateDTO;
+import com.gtwo.bdss_system.dto.auth.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
-import com.gtwo.bdss_system.enums.Role;
-import com.gtwo.bdss_system.enums.Status;
-import com.gtwo.bdss_system.enums.StatusDonation;
+import com.gtwo.bdss_system.entity.donation.DonationHistory;
+import com.gtwo.bdss_system.enums.*;
 import com.gtwo.bdss_system.repository.auth.AccountRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
+import com.gtwo.bdss_system.repository.donation.DonationHistoryRepository;
 import com.gtwo.bdss_system.service.auth.AccountService;
 import com.gtwo.bdss_system.service.commons.EmailService;
 import org.modelmapper.ModelMapper;
@@ -18,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +38,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private DonationHistoryRepository donationHistoryRepository;
 
     @Override
     public void createByAdmin(AccountCreateDTO dto) {
@@ -174,6 +177,57 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountResponse mapToResponse(Account account) {
         return modelMapper.map(account, AccountResponse.class);
+    }
+
+    public void updateDonationStatus(Account account, StatusDonation newStatus, PhoneVisibility phoneVisibility) {
+        if (newStatus == StatusDonation.AVAILABLE) {
+            List<DonationHistory> completedHistories = donationHistoryRepository.findByDonorAndStatus(account, StatusProcess.COMPLETED);
+
+            if (completedHistories.isEmpty()) {
+                throw new IllegalArgumentException("Bạn chưa từng hiến máu trước đây, không thể chuyển trạng thái sang AVAILABLE.");
+            }
+            DonationHistory lastHistory = completedHistories.stream()
+                    .max(Comparator.comparing(DonationHistory::getDonationDate))
+                    .orElseThrow();
+            LocalDate lastDate = lastHistory.getDonationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate nextEligibleDate = lastDate.plusDays(84);
+            LocalDate today = LocalDate.now();
+            if (today.isBefore(nextEligibleDate)) {
+                throw new IllegalArgumentException("Bạn vẫn đang trong thời gian phục hồi, không thể chuyển trạng thái sang AVAILABLE trước " + nextEligibleDate + ".");
+            }
+        }
+        account.setStatusDonation(newStatus);
+        account.setPhoneVisibility(phoneVisibility);
+        accountRepo.save(account);
+    }
+
+    @Override
+    public List<DonorSearchResponse> searchAvailableDonors(String bloodType, String location, Account currentUser) {
+        List<Account> donors = accountRepo.searchAvailableDonors(
+                StatusDonation.AVAILABLE,
+                bloodType,
+                location
+        );
+        boolean isMember = (currentUser != null && currentUser.getRole() == Role.MEMBER);
+        return donors.stream().map(donor -> {
+            DonorSearchResponse dto = new DonorSearchResponse();
+            dto.setFullName(donor.getFullName());
+            dto.setLocation(donor.getAddress());
+            if (isMember) {
+                if (donor.getPhoneVisibility() == PhoneVisibility.PUBLIC) {
+                    dto.setPhone(donor.getPhone());
+                    dto.setNote("");
+                } else {
+                    dto.setPhone("0123456789 thông tin liên lạc của cơ sở y tế");
+                    dto.setNote("Hãy liên lạc với cơ sở y tế để được hỗ trợ kết nối với người hiến máu.");
+                }
+            } else {
+                dto.setNote("Hãy đăng nhập để xem thông tin liên lạc về member này.");
+            }
+            dto.setBloodType(donor.getBloodType() != null ? donor.getBloodType().getType() : null);
+            dto.setRhFactor(donor.getBloodType() != null ? donor.getBloodType().getRhFactor() : null);
+            return dto;
+        }).toList();
     }
 }
 
