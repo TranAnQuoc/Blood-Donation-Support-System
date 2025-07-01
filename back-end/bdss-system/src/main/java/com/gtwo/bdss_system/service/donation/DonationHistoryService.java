@@ -9,4 +9,5 @@ public interface DonationHistoryService {
     List<DonationHistoryResponseDTO> getAllHistories();
     DonationHistoryResponseDTO getHistoryById(Long id);
     List<DonationHistory> getAllHistoryByDonorId(Long donorId);
+    void scanAndSendReminderToAllEligible();
 }

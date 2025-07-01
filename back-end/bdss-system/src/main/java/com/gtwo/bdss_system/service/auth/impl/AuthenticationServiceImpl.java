@@ -81,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         EmailDetailForRegister emailDetailForRegister = new EmailDetailForRegister();
         emailDetailForRegister.setToEmail(dto.getEmail());
-        emailDetailForRegister.setSubject("Hello");
+        emailDetailForRegister.setSubject("Welcome to BDS System");
         emailService.sendRegisterSuccessEmail(emailDetailForRegister);
         return authenticationRepository.save(account);
     }
@@ -116,7 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             EmailDetailForForgotPassword emailDetailForForgotPassword = new EmailDetailForForgotPassword();
             emailDetailForForgotPassword.setAccount(account);
             emailDetailForForgotPassword.setSubject("Reset Password");
-            emailDetailForForgotPassword.setLink("https://bdss-system.herokuapp.com/reset-password?token=" + tokenService.generateToken(account));
+            emailDetailForForgotPassword.setLink("https://hocalhost:5173/reset-password?token=" + tokenService.generateToken(account));
             emailService.sendResetPasswordEmail(emailDetailForForgotPassword);
         }
     }

@@ -2,12 +2,19 @@ package com.gtwo.bdss_system.service.donation.impl;
 
 import com.gtwo.bdss_system.dto.donation.DonationHistoryResponseDTO;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
+import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.donation.DonationHistoryRepository;
+import com.gtwo.bdss_system.service.commons.EmailService;
 import com.gtwo.bdss_system.service.donation.DonationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,6 +22,9 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
 
     @Autowired
     private DonationHistoryRepository donationHistoryRepository;
+
+    @Autowired
+    private EmailService mailService;
 
     @Override
     public List<DonationHistoryResponseDTO> getAllHistories() {
@@ -52,5 +62,47 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
     @Override
     public List<DonationHistory> getAllHistoryByDonorId(Long donorId) {
         return donationHistoryRepository.findAllByDonor_IdOrderByDonationDateDesc(donorId);
+    }
+
+    @Override
+    public void scanAndSendReminderToAllEligible() {
+        List<DonationHistory> completedHistories = donationHistoryRepository.findByStatus(StatusProcess.COMPLETED);
+        Map<Long, DonationHistory> latestDonationMap = new HashMap<>();
+        for (DonationHistory history : completedHistories) {
+            Long donorId = history.getDonor().getId();
+            if (!latestDonationMap.containsKey(donorId)
+                    || history.getDonationDate().after(latestDonationMap.get(donorId).getDonationDate())) {
+                latestDonationMap.put(donorId, history);
+            }
+        }
+        for (DonationHistory lastHistory : latestDonationMap.values()) {
+            LocalDate nextEligibleDate = calculateNextEligibleDate(lastHistory);
+            LocalDate today = LocalDate.now();
+//            Test demo
+//            LocalDateTime nextEligibleDate = calculateNextEligibleDate(lastHistory);
+//            LocalDateTime now = LocalDateTime.now();
+//            if (!now.isBefore(nextEligibleDate)) {
+//                mailService.sendReminderEmail(lastHistory.getDonor(), nextEligibleDate.toLocalDate());
+//            }
+
+            if (!today.isBefore(nextEligibleDate)) {
+                mailService.sendReminderEmail(lastHistory.getDonor(), nextEligibleDate);
+            }
+        }
+    }
+
+    private LocalDate calculateNextEligibleDate(DonationHistory history) {
+        if (history == null || history.getDonationDate() == null) {
+            return LocalDate.now();
+        }
+        LocalDate lastDate = history.getDonationDate()
+                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return lastDate.plusDays(84);
+//        if (history == null || history.getDonationDate() == null) {
+//            return LocalDateTime.now();
+//        }
+//        LocalDateTime lastDateTime = history.getDonationDate()
+//                .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+//        return lastDateTime.plusSeconds(30);
     }
 }

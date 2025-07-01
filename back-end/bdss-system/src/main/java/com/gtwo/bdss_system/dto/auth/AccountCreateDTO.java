@@ -9,6 +9,12 @@ import java.sql.Date;
 
 @Data
 public class AccountCreateDTO {
+
+    private String subject;
+
+    @NotBlank(message = "Email owner is required")
+    private String emailOwner;
+
     @NotBlank(message = "Email is required")
     private String email;
 
