@@ -238,6 +238,17 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setGender(donor.getGender());
         history.setAddress(event.getAddress());
         history.setDateOfBirth(donor.getDateOfBirth());
+        history.setHealthCheck(process.getHealthCheck());
+        history.setHemoglobin(process.getHemoglobin());
+        history.setBloodPressure(process.getBloodPressure());
+        history.setTemperature(process.getTemperature());
+        history.setWeight(process.getWeight());
+        history.setHeight(process.getHeight());
+        history.setHeartRate(process.getHeartRate());
+        history.setScreeningNote(process.getScreeningNote());
+        history.setHasChronicDisease(process.getHasChronicDisease());
+        history.setHasRecentTattoo(process.getHasRecentTattoo());
+        history.setHasUsedDrugs(process.getHasUsedDrugs());
         BloodType bloodType = donor.getBloodType();
         if (bloodType != null) {
             history.setBloodType(bloodType.getType() + bloodType.getRhFactor());

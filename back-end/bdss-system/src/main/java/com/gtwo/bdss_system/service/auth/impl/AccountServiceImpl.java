@@ -12,6 +12,7 @@ import com.gtwo.bdss_system.enums.StatusDonation;
 import com.gtwo.bdss_system.repository.auth.AccountRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.service.auth.AccountService;
+import com.gtwo.bdss_system.service.commons.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +35,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public void createByAdmin(AccountCreateDTO dto) {
@@ -67,6 +71,7 @@ public class AccountServiceImpl implements AccountService {
         BloodType bloodType = bloodTypeRepo.findById(dto.getBloodTypeId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
         account.setBloodType(bloodType);
+        emailService.sendLoginStaffAccount(dto);
         accountRepo.save(account);
     }
 
