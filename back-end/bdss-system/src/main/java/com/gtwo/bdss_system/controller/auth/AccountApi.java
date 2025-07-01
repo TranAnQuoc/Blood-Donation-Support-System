@@ -1,9 +1,6 @@
 package com.gtwo.bdss_system.controller.auth;
 
-import com.gtwo.bdss_system.dto.auth.AccountCreateDTO;
-import com.gtwo.bdss_system.dto.auth.AccountProfileDTO;
-import com.gtwo.bdss_system.dto.auth.AccountResponse;
-import com.gtwo.bdss_system.dto.auth.AccountUpdateDTO;
+import com.gtwo.bdss_system.dto.auth.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;

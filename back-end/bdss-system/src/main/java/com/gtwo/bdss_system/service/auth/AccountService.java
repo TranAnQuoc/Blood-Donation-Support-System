@@ -1,9 +1,6 @@
 package com.gtwo.bdss_system.service.auth;
 
-import com.gtwo.bdss_system.dto.auth.AccountCreateDTO;
-import com.gtwo.bdss_system.dto.auth.AccountProfileDTO;
-import com.gtwo.bdss_system.dto.auth.AccountResponse;
-import com.gtwo.bdss_system.dto.auth.AccountUpdateDTO;
+import com.gtwo.bdss_system.dto.auth.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
@@ -20,4 +17,5 @@ public interface AccountService {
     void setSelfStatus(Long selfId, Status status);
     void staffSetStatus(Long staffId, Long targetId, Status status);
     void adminSetStatus(Long adminId, Long targetId, Status status);
+    List<DonorSearchResponse> searchAvailableDonors(String bloodType, String location, Account currentUser);
 }
