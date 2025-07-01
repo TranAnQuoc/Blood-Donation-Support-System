@@ -1,0 +1,180 @@
+.myDonationRequestsContainer {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+.pageTitle {
+    font-size: 2.2em;
+    color: #34495e;
+    margin-bottom: 30px;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.loadingMessage,
+.errorMessage,
+.noRequestsMessage {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.1em;
+    color: #777;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.detailSection {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.infoGroup {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #eee;
+}
+
+.infoGroup:last-child {
+    border-bottom: none;
+}
+
+.label {
+    flex: 0 0 180px;
+    margin-right: 15px;
+    color: #495057;
+    font-weight: 600;
+}
+
+.value {
+    flex-grow: 1;
+    color: #333;
+    word-break: break-word; 
+}
+
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+    display: inline-block;
+}
+
+.pending {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.approved {
+    background-color: #28a745;
+}
+
+.rejected {
+    background-color: #dc3545;
+}
+
+.cancelled {
+    background-color: #6c757d;
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    border-top: 1px solid #eee; 
+    padding-top: 20px;
+}
+
+.cancelButton {
+    background-color: #dc3545; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.cancelButton:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}
+
+.backButton {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.backButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .myDonationRequestsContainer {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .pageTitle {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .detailSection {
+        padding: 15px;
+    }
+
+    .infoGroup {
+        flex-direction: column; 
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .label {
+        flex: unset; 
+        margin-right: 0;
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cancelButton,
+    .backButton {
+        width: 100%; 
+    }
+}

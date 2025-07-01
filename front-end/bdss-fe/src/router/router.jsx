@@ -12,12 +12,15 @@ import LoginForm from "../components/authen-form/LoginForm.jsx";
 import RegisterForm from "../components/authen-form/RegisterForm.jsx";
 
 //GUEST
-import GuestDashboard from "../pages/GuestDashboard.jsx";
+import GuestDashboard from "../pages/Home/GuestDashboard.jsx";
+import GuestService from "../pages/Service/GuestService.jsx";
 
 //MEMBER
-import RegisterDonation from "../components/member-components/features/RegisterDonation/RegisterDonation.jsx";
-import MemberDashboard from "../pages/MemberDashboard.jsx";
+import MemberDashboard from "../pages/Home/MemberDashboard.jsx";
+import MemberService from "../pages/Service/MemberService.jsx";
 import MemberProfile from "../components/member-components/mainContent/MemberProfile";
+import RegisterDonation from "../components/member-components/features/RegisterDonation/RegisterDonation.jsx";
+import MyDonationRequest from "../components/member-components/features/MyDonationRequest/MyDonationRequest.jsx";
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
 
 //STAFF
@@ -59,6 +62,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <GuestDashboard /> },
+      //GUEST SERVICE
+      { path: "service", element: <GuestService /> },
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },
       
@@ -170,8 +175,10 @@ const router = createBrowserRouter([
 
       //MEMBER CUSTOME
       { path: "member-profile", element: <MemberProfile /> },
-
-      //NAVIGATE
+      //SERVICE
+      { path: "member-service", element: <MemberService /> },
+      { path: "my-donation-request", element: <MyDonationRequest/> },
+      //CONTENT
       { path: "register-donation", element: <RegisterDonation /> },
       { path: "request-transfusion", element: <TransfusionRequest /> },
     ],

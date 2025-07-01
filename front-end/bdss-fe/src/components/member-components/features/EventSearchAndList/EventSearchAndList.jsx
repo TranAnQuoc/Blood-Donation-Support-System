@@ -16,11 +16,9 @@ const EventSearchAndList = () => {
     const [loading, setLoading] = useState(true); // eslint-disable-line no-unused-vars
     const navigate = useNavigate();
 
-    //Xử lý lỗi NaN:NaN AM
     const formatTimeFromISO = (isoString) => {
         if (!isoString) return '';
         try {
-            // Kiểm tra xem chuỗi có phải là định dạng thời gian đơn giản không (HH:MM:SS)
             let dateToParse = isoString;
             if (isoString.match(/^\d{2}:\d{2}:\d{2}(.\d{3})?$/)) {
                 dateToParse = `2000-01-01T${isoString}`;
@@ -28,7 +26,6 @@ const EventSearchAndList = () => {
             
             const date = new Date(dateToParse);
 
-            //Kiểm tra nếu đối tượng Date không hợp lệ (Invalid Date)
             if (isNaN(date.getTime())) {
                 console.warn("Invalid date string for time formatting:", isoString);
                 return 'N/A';
@@ -70,7 +67,6 @@ const EventSearchAndList = () => {
                     setHasSearched(false);
                     return;
                 }
-                //Sử dụng dayjs để so sánh ngày tháng cho chính xác và nhất quán
                 if (searchParams.startDate && searchParams.endDate && dayjs(searchParams.startDate).isAfter(dayjs(searchParams.endDate))) {
                     setDateError('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
                     setEvents([]);
@@ -130,7 +126,6 @@ const EventSearchAndList = () => {
     };
 
     const handleRegisterClick = (eventId) => {
-        //Điều hướng đến trang đăng ký hiến máu với eventId
         navigate(`/member/register-donation?eventId=${eventId}`); 
     };
 

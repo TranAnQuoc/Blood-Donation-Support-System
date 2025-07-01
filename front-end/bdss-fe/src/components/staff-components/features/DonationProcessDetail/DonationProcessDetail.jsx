@@ -160,6 +160,7 @@ const DonationProcessDetail = () => {
             console.error('Lỗi khi tải chi tiết quy trình:', err);
             const errorMessage = err.response?.data?.message || 'Không thể tải chi tiết quy trình. Vui lòng thử lại.';
             setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -176,21 +177,7 @@ const DonationProcessDetail = () => {
             [name]: type === 'checkbox' ? checked : value
         }));
     };
-
-    const logProcessHistory = async (processId, actionType, details) => {
-        try {
-            await axiosInstance.post('/api/donation-history/log', {
-                processId,
-                actionType, 
-                details,    
-                timestamp: new Date().toISOString()
-            });
-            console.log(`Lịch sử quy trình ${actionType} đã được ghi lại.`);
-        } catch (historyError) {
-            console.error('Lỗi khi ghi lịch sử quy trình:', historyError);
-        }
-    };
-
+    
     const handleSave = async () => {
         setLoading(true);
         setError(null);
@@ -223,7 +210,7 @@ const DonationProcessDetail = () => {
             today.setHours(0, 0, 0, 0); 
 
             if (eventDate && eventDate > today) {
-                toast.warn(`Quy trình hiến máu cho sự kiện này (${formatDateTime(eventDateStr)}) chưa tới ngày. Không thể chỉnh sửa.`); // SỬA: alert thành toast.warn
+                toast.warn(`Quy trình hiến máu cho sự kiện này (${formatDateTime(eventDateStr)}) chưa tới ngày. Không thể chỉnh sửa.`);
                 setLoading(false); 
                 return;
             }
@@ -295,12 +282,13 @@ const DonationProcessDetail = () => {
             const response = await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
             console.log("Quy trình đã được cập nhật:", response.data);
             toast.success(`Cập nhật quy trình thành công${selectedStatus === 'COMPLETED' ? ' và hoàn thành!' : '.'}`);
-            
-            const actionType = selectedStatus === 'COMPLETED' ? 'COMPLETE' : (selectedStatus === 'FAILED' ? 'FAIL' : (selectedStatus === 'SCREENING_FAILED' ? 'SCREENING_FAIL' : 'SAVE'));
-            const details = `Trạng thái thay đổi thành ${getStatusName(selectedStatus)}`;
-            await logProcessHistory(id, actionType, details);
 
-            await fetchProcessDetail();
+            if (['COMPLETED'].includes(selectedStatus)) {
+                navigate('/staff-dashboard/donation-histories');
+            } else {
+                await fetchProcessDetail();
+            }
+
         } catch (err) {
             console.error('Lỗi khi cập nhật quy trình:', err);
             const errorMessage = err.message || err.response?.data?.message || 'Không thể cập nhật quy trình. Vui lòng thử lại.';

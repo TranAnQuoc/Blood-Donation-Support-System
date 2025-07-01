@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MemberDashboard.module.css';
-import EventSearchAndList from '../components/member-components/features/EventSearchAndList/EventSearchAndList';
-import BloodDonationParticipationStandard from '../components/common/BloodDonationParticipationStandard/BloodDonationParticipationStandard';
+import EventSearchAndList from '../../components/member-components/features/EventSearchAndList/EventSearchAndList';
+import BloodDonationParticipationStandard from '../../components/common/BloodDonationParticipationStandard/BloodDonationParticipationStandard';
 
 const MemberDashboard = () => {
     return (
@@ -14,7 +14,7 @@ const MemberDashboard = () => {
                 <EventSearchAndList />
             </div>
 
-            <div className={styles.featureGrid}>
+            {/* <div className={styles.featureGrid}>
                 <div className={styles.featureCard}>
                     <h3>Đăng ký Hiến máu</h3>
                     <p>Đăng ký lịch hiến máu sắp tới của bạn.</p>
@@ -26,7 +26,7 @@ const MemberDashboard = () => {
                     <p>Gửi yêu cầu nhận máu cho bản thân hoặc người thân.</p>
                     <Link to="/member/request-transfusion" className={styles.actionButton}>Yêu cầu nhận máu</Link>
                 </div>
-            </div>
+            </div> */}
 
             <div className={styles.standardSection}>
                 <BloodDonationParticipationStandard/>
