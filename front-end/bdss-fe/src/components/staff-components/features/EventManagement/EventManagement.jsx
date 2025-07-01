@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+
 import styles from './EventManagement.module.css';
 import DataTableContainer from '../../mainContent/DataTableContainer';
 import axiosInstance from '../../../../configs/axios';
+import { toast } from 'react-toastify';
 
 const EventManagement = () => {
-    
-    const user = useSelector(state => state.user); // eslint-disable-line no-unused-vars
 
     const [events, setEvents] = useState([]);
-    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [newEvent, setNewEvent] = useState({
         name: '',
         date: '',
@@ -18,74 +17,152 @@ const EventManagement = () => {
         address: '',
         maxSlot: '',
     });
+    const [editingEvent, setEditingEvent] = useState(null);
+
+    const formatTime = (timeString) => {
+        if (!timeString) return '';
+        try {
+            let dateObj;
+            if (timeString.includes('T')) {
+                dateObj = new Date(timeString);
+            } else { 
+                dateObj = new Date(`2000-01-01T${timeString}`);
+            }
+            
+            if (isNaN(dateObj.getTime())) {
+                return timeString.substring(0, 5); 
+            }
+
+            return dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+        } catch (error) {
+            console.error("Lỗi định dạng thời gian:", timeString, error);
+            return timeString.substring(0, 5);
+        }
+    };
+
+    const isEventOverdue = (eventDate, eventEndTime) => {
+        if (!eventDate || !eventEndTime) return false;
+
+        const now = new Date();
+        try {
+            const eventEndDateTime = new Date(`${eventDate}T${eventEndTime}`);
+            return eventEndDateTime < now; 
+        } catch (e) {
+            console.error("Lỗi khi kiểm tra thời gian quá hạn:", eventDate, eventEndTime, e);
+            return false;
+        }
+    };
 
     const fetchEvents = useCallback(async () => {
         try {
             const { data } = await axiosInstance.get('/event/staff-view');
             setEvents(data);
+            console.log('Danh sách sự kiện đã tải:', data);
         } catch (error) {
+            console.error('Lỗi khi tải danh sách sự kiện hiến máu:', error);
             if (error.response) {
-                console.error('Lỗi khi tải danh sách sự kiện hiến máu:', error.response.data);
-                alert(`Lỗi khi tải danh sách sự kiện hiến máu: ${error.response.data.message || error.response.status}`);
+                toast.error(`Lỗi khi tải danh sách sự kiện hiến máu: ${error.response.data.message || error.response.status}`);
             } else if (error.request) {
-                console.error('Không nhận được phản hồi từ server:', error.request);
-                alert('Không thể kết nối đến máy chủ để tải sự kiện hiến máu. Vui lòng thử lại.');
+                toast.error('Không thể kết nối đến máy chủ để tải sự kiện hiến máu. Vui lòng thử lại.');
             } else {
-                console.error('Lỗi khi thiết lập yêu cầu:', error.message);
-                alert('Có lỗi xảy ra khi tải sự kiện hiến máu. Vui lòng thử lại.');
-            }
+                toast.error('Có lỗi xảy ra khi tải sự kiện hiến máu. Vui lòng thử lại.');
+            }   
         }
-    }, [setEvents]);
+    }, []);
 
     useEffect(() => {
         fetchEvents();
     }, [fetchEvents]);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewEvent(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (editingEvent) {
+            setEditingEvent(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+        } else {
+            setNewEvent(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+        }
     };
 
-    const handleCreateEvent = async (event) => {
-        event.preventDefault();
+    const handleSubmitEvent = async (e) => {
+        e.preventDefault();
 
-        const startTimeToSend = `${newEvent.startTime}:00`;
-        const endTimeToSend = `${newEvent.endTime}:00`;
+        const dataToSubmit = editingEvent || newEvent;
+
+        const startTimeToSend = `${dataToSubmit.startTime}:00`;
+        const endTimeToSend = `${dataToSubmit.endTime}:00`;
         
         const eventDataToSend = {
-            ...newEvent,
+            ...dataToSubmit,
             startTime: startTimeToSend,
             endTime: endTimeToSend,
-            maxSlot: parseInt(newEvent.maxSlot, 10),
+            maxSlot: parseInt(dataToSubmit.maxSlot, 10),
             facilityId: 1
         };
 
         try {
-            await axiosInstance.post('/event', eventDataToSend);
-            alert('Sự kiện hiến máu đã được tạo thành công!');
+            if (editingEvent) {
+                await axiosInstance.put(`/event/${editingEvent.id}`, eventDataToSend);
+                toast.success('Sự kiện hiến máu đã được cập nhật thành công!');
+            } else {
+                await axiosInstance.post('/event', eventDataToSend);
+                toast.success('Sự kiện hiến máu đã được tạo thành công!');
+            }
             
             await fetchEvents();
             
-            setNewEvent({
-                name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: ''
-            });
-            setShowCreateForm(false);
+            setNewEvent({ name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: '' });
+            setEditingEvent(null);
+            setShowForm(false);
 
         } catch (error) {
+            console.error('Lỗi khi xử lý sự kiện hiến máu:', error);
             if (error.response) {
-                console.error('Lỗi khi tạo sự kiện hiến máu:', error.response.data);
-                alert(`Lỗi khi tạo sự kiện hiến máu: ${error.response.data.message || error.response.statusText}`);
+                toast.error(`Lỗi: ${error.response.data.message || error.response.statusText}`);
             } else if (error.request) {
-                console.error('Không nhận được phản hồi từ server:', error.request);
-                alert('Không nhận được phản hồi từ server khi tạo sự kiện hiến máu. Vui lòng thử lại.');
+                toast.error('Không nhận được phản hồi từ server. Vui lòng thử lại.');
             } else {
-                console.error('Lỗi khi gửi yêu cầu tạo sự kiện:', error.message);
-                alert('Có lỗi xảy ra khi tạo sự kiện hiến máu. Vui lòng thử lại.');
+                toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
             }
         }
+    };
+
+    const handleEditClick = (event) => {
+        setEditingEvent({
+            ...event,
+            startTime: event.startTime ? event.startTime.substring(0, 5) : '',
+            endTime: event.endTime ? event.endTime.substring(0, 5) : '',
+            date: event.date
+        });
+        setShowForm(true);
+    };
+
+    const handleDeleteClick = async (eventId) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa sự kiện này không?')) {
+            try {
+                await axiosInstance.delete(`/event/${eventId}`);
+                toast.success('Sự kiện đã được xóa thành công!');
+                fetchEvents();
+            } catch (error) {
+                console.error('Lỗi khi xóa sự kiện:', error);
+                if (error.response) {
+                    toast.error(`Lỗi khi xóa sự kiện: ${error.response.data.message || error.response.statusText}`);
+                } else {
+                    toast.error('Không thể xóa sự kiện. Vui lòng thử lại.');
+                }
+            }
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingEvent(null);
+        setNewEvent({ name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: '' });
+        setShowForm(false);
     };
 
     const eventColumns = [
@@ -96,18 +173,6 @@ const EventManagement = () => {
             header: 'Thời gian',
             accessor: 'timeRange',
             render: (row) => {
-                const formatTime = (timeString) => {
-                    if (!timeString) return '';
-                    try {
-                        const dateObj = new Date(`2000-01-01T${timeString}`);
-                        return dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: true });
-                    } catch (error) { // eslint-disable-line no-unused-vars
-                        if (typeof timeString === 'string' && timeString.length >= 5) {
-                            return timeString.substring(0, 5);
-                        }
-                        return timeString;
-                    }
-                };
                 const start = formatTime(row.startTime);
                 const end = formatTime(row.endTime);
                 return `${start} - ${end}`;
@@ -131,10 +196,37 @@ const EventManagement = () => {
                 const statusMap = {
                     'ACTIVE': 'Đang diễn ra',
                     'INACTIVE': 'Đã kết thúc',
-                    'UPCOMING': 'Sắp diễn ra',
-                    'CANCELLED': 'Đã hủy',
                 };
                 return statusMap[row.status] || row.status;
+            }
+        },
+        {
+            header: 'Hành động',
+            accessor: 'actions',
+            render: (row) => {
+                const isOverdue = isEventOverdue(row.date, row.endTime);
+                const canDelete = row.status === 'INACTIVE' || (row.status === 'ACTIVE' && isOverdue);
+
+                return (
+                    <div className={styles.actionButtons}>
+                        <button 
+                            className={styles.editButton} 
+                            onClick={() => handleEditClick(row)}
+                        >
+                            Chỉnh sửa
+                        </button>
+                        {canDelete ? (
+                            <button 
+                                className={styles.deleteButton} 
+                                onClick={() => handleDeleteClick(row.id)}
+                            >
+                                Xóa
+                            </button>
+                        ) : (
+                            <span className={styles.disabledAction}>Không thể xóa</span>
+                        )}
+                    </div>
+                );
             }
         },
     ];
@@ -143,21 +235,27 @@ const EventManagement = () => {
         <div className={styles.eventManagement}>
             <h2 className={styles.pageTitle}>Quản lý Sự kiện Hiến Máu</h2>
 
-            <button className={styles.createButton} onClick={() => setShowCreateForm(!showCreateForm)}>
-                {showCreateForm ? 'Ẩn Form Tạo Sự kiện' : 'Tạo Sự kiện Hiến Máu Mới'}
+            <button className={styles.toggleFormButton} onClick={() => {
+                setShowForm(!showForm);
+                if (showForm) {
+                    setEditingEvent(null);
+                    setNewEvent({ name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: '' });
+                }
+            }}>
+                {showForm ? 'Ẩn Form' : 'Tạo Sự kiện Hiến Máu Mới'}
             </button>
 
-            {showCreateForm && (
+            {showForm && (
                 <div className={styles.createForm}>
-                    <h3>Tạo Sự kiện Hiến Máu Mới</h3>
-                    <form onSubmit={handleCreateEvent}>
+                    <h3>{editingEvent ? 'Chỉnh sửa Sự kiện' : 'Tạo Sự kiện Hiến Máu Mới'}</h3>
+                    <form onSubmit={handleSubmitEvent}>
                         <div className={styles.formGroup}>
                             <label htmlFor="name">Tên sự kiện:</label>
                             <input
                                 type="text"
                                 id="name"
                                 name="name"
-                                value={newEvent.name}
+                                value={editingEvent ? editingEvent.name : newEvent.name}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -168,7 +266,7 @@ const EventManagement = () => {
                                 type="date"
                                 id="date"
                                 name="date"
-                                value={newEvent.date}
+                                value={editingEvent ? editingEvent.date : newEvent.date}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -179,7 +277,7 @@ const EventManagement = () => {
                                 type="time"
                                 id="startTime"
                                 name="startTime"
-                                value={newEvent.startTime}
+                                value={editingEvent ? editingEvent.startTime : newEvent.startTime}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -190,7 +288,7 @@ const EventManagement = () => {
                                 type="time"
                                 id="endTime"
                                 name="endTime"
-                                value={newEvent.endTime}
+                                value={editingEvent ? editingEvent.endTime : newEvent.endTime}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -201,7 +299,7 @@ const EventManagement = () => {
                                 type="text"
                                 id="address"
                                 name="address"
-                                value={newEvent.address}
+                                value={editingEvent ? editingEvent.address : newEvent.address}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -212,13 +310,22 @@ const EventManagement = () => {
                                 type="number"
                                 id="maxSlot"
                                 name="maxSlot"
-                                value={newEvent.maxSlot}
+                                value={editingEvent ? editingEvent.maxSlot : newEvent.maxSlot}
                                 onChange={handleInputChange}
                                 min="1"
                                 required
                             />
                         </div>
-                        <button type="submit" className={styles.submitButton}>Tạo Sự kiện</button>
+                        <div className={styles.formActions}>
+                            <button type="submit" className={styles.submitButton}>
+                                {editingEvent ? 'Cập nhật Sự kiện' : 'Tạo Sự kiện'}
+                            </button>
+                            {editingEvent && (
+                                <button type="button" className={styles.cancelButton} onClick={handleCancelEdit}>
+                                    Hủy
+                                </button>
+                            )}
+                        </div>
                     </form>
                 </div>
             )}
@@ -237,14 +344,14 @@ const EventManagement = () => {
                             </thead>
                             <tbody>
                                 {events.map((row, rowIndex) => (
-                                        <tr key={row.id || rowIndex}>
-                                            {eventColumns.map((col, colIndex) => (
-                                                <td key={colIndex}>
-                                                    {col.render ? col.render(row) : row[col.accessor]}
-                                                </td>
-                                            ))}
-                                        </tr>
-                                    ))}
+                                    <tr key={row.id || rowIndex}>
+                                        {eventColumns.map((col, colIndex) => (
+                                            <td key={colIndex}>
+                                                {col.render ? col.render(row) : row[col.accessor]}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </DataTableContainer>

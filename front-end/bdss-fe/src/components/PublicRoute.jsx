@@ -10,7 +10,7 @@ const PublicRoute = ({ redirectPath = '/staff-dashboard', children }) => {
         const userRole = user?.role;
         let actualRedirectPath = redirectPath;
         if (userRole === 'MEMBER') {
-            actualRedirectPath = '/member-dashboard';
+            actualRedirectPath = '/member';
         } else if (userRole === 'STAFF') {
             actualRedirectPath = '/staff-dashboard';
         } else if (userRole === 'ADMIN') {

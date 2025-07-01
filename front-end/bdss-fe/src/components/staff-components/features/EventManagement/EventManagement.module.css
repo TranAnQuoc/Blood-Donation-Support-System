@@ -1,117 +1,308 @@
 .eventManagement {
-    padding: 20px;
+    padding: 30px;
+    background-color: #f8f9fa; 
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 1200px; 
+    margin: 30px auto; 
 }
 
 .pageTitle {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
+    font-size: 2.2em;
+    color: #34495e;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 15px;
 }
 
-.createButton {
+.pageTitle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #e74c3c;
+    border-radius: 2px;
+}
+
+.toggleFormButton {
     background-color: #007bff;
     color: white;
-    padding: 10px 15px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 20px;
+    font-size: 1.05em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.createButton:hover {
+.toggleFormButton:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 .createForm {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
+    padding: 30px;
+    margin-bottom: 40px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
 }
 
 .createForm h3 {
     margin-top: 0;
-    color: #333;
+    font-size: 1.8em;
+    color: #34495e;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
 }
 
 .formGroup {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .formGroup label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 8px; 
+    font-weight: 600;
     color: #555;
+    font-size: 1em;
 }
 
 .formGroup input[type="text"],
 .formGroup input[type="date"],
 .formGroup input[type="time"],
 .formGroup input[type="number"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup input[type="date"]:focus,
+.formGroup input[type="time"]:focus,
+.formGroup input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #e0e0e0; 
 }
 
 .submitButton {
     background-color: #28a745;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .submitButton:hover {
     background-color: #218838;
+    transform: translateY(-2px);
 }
+
+.cancelButton {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.05em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
 
 .eventList {
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 20px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .eventList h3 {
     margin-top: 0;
-    color: #333;
-    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #34495e;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
 }
-
 
 .dataTable {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    font-size: 0.95em;
 }
 
 .dataTable th,
 .dataTable td {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #dee2e6;
     padding: 12px 15px;
     text-align: left;
 }
 
 .dataTable th {
-    background-color: #f8f8f8;
+    background-color: #e9ecef;
     font-weight: bold;
-    color: #333;
+    color: #495057;
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 0.9em;
 }
 
 .dataTable tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f6f6f6;
 }
 
 .dataTable tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #eef7ff;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.editButton {
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.editButton:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+.deleteButton {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.deleteButton:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}
+
+.disabledAction {
+    color: #888;
+    font-style: italic;
+    font-size: 0.85em;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .eventManagement {
+        padding: 15px;
+        margin: 15px;
+    }
+
+    .pageTitle {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .toggleFormButton {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 0.95em;
+        margin-bottom: 20px;
+    }
+
+    .createForm,
+    .eventList {
+        padding: 20px;
+    }
+
+    .createForm h3,
+    .eventList h3 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .formGroup input,
+    .formGroup select,
+    .formGroup textarea {
+        padding: 10px;
+        font-size: 0.95em;
+    }
+
+    .formActions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .submitButton,
+    .cancelButton {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+
+    .dataTable th,
+    .dataTable td {
+        padding: 8px 10px;
+        font-size: 0.85em;
+    }
+
+    .eventList {
+        overflow-x: auto;
+    }
+    .dataTable {
+        min-width: 700px;
+    }
 }

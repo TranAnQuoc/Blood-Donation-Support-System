@@ -43,7 +43,11 @@ const closeMenu = () => {
                         ) : (
                             <li><Link to="/" onClick={closeMenu}>HOME</Link></li>
                         )}
-                        <li><Link to="/service" onClick={closeMenu}>SERVICE</Link></li>
+                        {isAuthenticated && user?.role === "MEMBER" ? (
+                            <li><Link to="/member/member-service" onClick={closeMenu}>SERVICE</Link></li>
+                        ) : (
+                            <li><Link to="/service" onClick={closeMenu}>SERVICE</Link></li>
+                        )}
                         <li><Link to="/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
                         <li><Link to="/community" onClick={closeMenu}>COMMUNITY</Link></li>
                         <li><Link to="/about-us" onClick={closeMenu}>ABOUT US</Link></li>
