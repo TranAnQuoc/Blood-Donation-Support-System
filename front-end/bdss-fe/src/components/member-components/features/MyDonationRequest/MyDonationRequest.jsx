@@ -125,7 +125,7 @@ const MyDonationRequests = () => {
                             {myRequest.statusRequest === 'PENDING' ? 'Đang chờ' :
                              myRequest.statusRequest === 'APPROVED' ? 'Đã duyệt' :
                              myRequest.statusRequest === 'REJECTED' ? 'Đã từ chối' :
-                             myRequest.statusRequest === 'CANCELLED' ? 'Đã hủy' :
+                             myRequest.statusRequest === 'CANCELED' ? 'Đã hủy' :
                              myRequest.statusRequest || 'N/A'}
                         </span>
                     </div>

@@ -1,0 +1,79 @@
+.dashboardContainer {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.featureGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 3rem;
+}
+
+.featureCard {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.featureCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.featureCard h3 {
+    font-size: 1.8rem;
+    color: #b91c1c;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.featureCard p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.actionButton {
+    display: inline-block;
+    background-color: #ef4444;
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.actionButton:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .dashboardContainer {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+
+    .dashboardContainer h1 {
+        font-size: 2rem;
+    }
+
+    .featureGrid {
+        grid-template-columns: 1fr;
+    }
+}
