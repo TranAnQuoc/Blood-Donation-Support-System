@@ -55,24 +55,27 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         List<DonationRequest> previousRequests = repository.findAllByUserIdOrderByRequestTimeDesc(currentUser.getId());
         if (!previousRequests.isEmpty()) {
             DonationRequest lastRequest = previousRequests.get(0);
-            DonationProcess process = lastRequest.getProcess();
-            if (process != null) {
-                switch (process.getProcess()) {
-                    case COMPLETED -> {
-                        LocalDate completedDate = process.getEndTime().toLocalDate();
-                        if (ChronoUnit.WEEKS.between(completedDate, LocalDate.now()) < 12) {
-                            throw new IllegalArgumentException("Bạn cần chờ ít nhất 12 tuần sau khi hiến máu để đăng ký lại.");
+            if (lastRequest.getStatusRequest() != StatusRequest.CANCELED &&
+                    lastRequest.getStatusRequest() != StatusRequest.REJECTED) {
+                DonationProcess process = lastRequest.getProcess();
+                if (process != null) {
+                    switch (process.getProcess()) {
+                        case COMPLETED -> {
+                            LocalDate completedDate = process.getEndTime().toLocalDate();
+                            if (ChronoUnit.WEEKS.between(completedDate, LocalDate.now()) < 12) {
+                                throw new IllegalArgumentException("Bạn cần chờ ít nhất 12 tuần sau khi hiến máu để đăng ký lại.");
+                            }
+                        }
+                        case IN_PROCESS -> {
+                            throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
+                        }
+                        default -> {
+                            throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
                         }
                     }
-                    case IN_PROCESS -> {
-                        throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
-                    }
-                    case FAILED -> {
-                        throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
-                    }
+                } else {
+                    throw new IllegalArgumentException("Bạn đã đăng ký hiến máu và đang chờ xử lý.");
                 }
-            } else {
-                throw new IllegalArgumentException("Bạn đã đăng ký hiến máu và đang chờ xử lý.");
             }
         }
         DonationEvent event = scheduleRepository.findById(scheduleId)
@@ -119,7 +122,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         if (request.getStatusRequest() != StatusRequest.PENDING) {
             throw new IllegalArgumentException("Chỉ có thể hủy đơn khi đang ở trạng thái PENDING.");
         }
-        request.setStatusRequest(StatusRequest.CANCELLED);
+        request.setStatusRequest(StatusRequest.CANCELED);
         request.setNote(note);
         return repository.save(request);
     }
