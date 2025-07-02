@@ -17,9 +17,16 @@ import com.gtwo.bdss_system.service.emergency.EmergencyRequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,9 +45,10 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
     private EmergencyProcessService emergencyProcessService;
 
     @Override
-    public void createEmergencyRequest(EmergencyRequestDTO dto, Account account) {
+    public void createEmergencyRequest(EmergencyRequestDTO dto, MultipartFile proofImage, Account account) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime limitTime = now.minusHours(24); // chống spam trong 24h
+        String imageUrl = null;
         if (emergencyRequestRepository.existsByPhoneAndSubmittedAtAfter(dto.getPhone(), limitTime)) {
             throw new RuntimeException("Số điện thoại đã gửi yêu cầu trong vòng 24 giờ.");
         }
@@ -53,6 +61,18 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         if (emergencyRequestRepository.existsByCccd(dto.getCccd())) {
             throw new RuntimeException("CCCD đã tồn tại.");
         }
+        if (proofImage != null && !proofImage.isEmpty()) {
+            try {
+                // Giả sử  lưu tạm ảnh ở local path, hoặc upload lên Cloudinary/S3
+                String filename = UUID.randomUUID() + "_" + proofImage.getOriginalFilename();
+                Path path = Paths.get("uploads/emergency_proofs/" + filename);
+                Files.copy(proofImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                imageUrl = "/uploads/emergency_proofs/" + filename;
+            } catch (IOException e) {
+                throw new RuntimeException("Lỗi khi lưu ảnh minh chứng: " + e.getMessage());
+            }
+        }
+
         BloodType bloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid blood type ID"));
         BloodComponent bloodComponent = bloodComponentRepository.findById(dto.getBloodComponentId())
@@ -71,6 +91,7 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         request.setVerifiedBy(null);
         request.setVerifiedAt(null);
         request.setStatus(Status.ACTIVE);
+        request.setEmergencyProof(imageUrl);
 
         emergencyRequestRepository.save(request);
     }

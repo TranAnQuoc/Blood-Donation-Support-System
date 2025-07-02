@@ -50,7 +50,8 @@ public class Filter extends OncePerRequestFilter {
             "GET:/api/event/by-date",
             "GET:/api/event/search",
             "GET:/compatibility-rule/check-compatibility",
-            "GET:/api/search-donor"
+            "GET:/api/search-donor",
+            "POST:/api/forgot-password-request"
     );
 
     public boolean isPublicAPI(String uri, String method) {
