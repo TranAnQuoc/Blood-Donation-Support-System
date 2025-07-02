@@ -182,7 +182,7 @@ const DonationRequestList = () => {
                         ? "Đã duyệt"
                         : request.statusRequest === "REJECTED"
                         ? "Đã từ chối"
-                        : request.statusRequest === "CANCELLED"
+                        : request.statusRequest === "CANCELED"
                         ? "Đã hủy"
                         : request.statusRequest}
                     </span>

@@ -30,7 +30,7 @@ const MemberService = () => {
                 <div className={styles.featureCard}>
                     <h3>Lịch Sử Hiến Máu</h3>
                     <p>Xem lại lịch sử các lần hiến máu đã hoàn thành của bạn.</p>
-                    <Link to="/member/donation-history" className={styles.actionButton}>Xem lịch sử</Link>
+                    <Link to="/member/my-donation-history" className={styles.actionButton}>Xem lịch sử</Link>
                 </div>
             </div>
         </div>

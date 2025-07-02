@@ -21,6 +21,7 @@ import MemberService from "../pages/Service/MemberService.jsx";
 import MemberProfile from "../components/member-components/mainContent/MemberProfile";
 import RegisterDonation from "../components/member-components/features/RegisterDonation/RegisterDonation.jsx";
 import MyDonationRequest from "../components/member-components/features/MyDonationRequest/MyDonationRequest.jsx";
+import MyDonationHistory from "../components/member-components/features/MyDonationHistory/MyDonationHistory.jsx";
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
 
 //STAFF
@@ -178,6 +179,7 @@ const router = createBrowserRouter([
       //SERVICE
       { path: "member-service", element: <MemberService /> },
       { path: "my-donation-request", element: <MyDonationRequest/> },
+      { path: "my-donation-history", element: <MyDonationHistory/> },
       //CONTENT
       { path: "register-donation", element: <RegisterDonation /> },
       { path: "request-transfusion", element: <TransfusionRequest /> },
