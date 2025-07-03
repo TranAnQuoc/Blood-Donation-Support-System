@@ -1,11 +1,10 @@
 package com.gtwo.bdss_system.service.emergency.impl;
 
 import com.gtwo.bdss_system.dto.emergency.EmergencyRequestDTO;
+import com.gtwo.bdss_system.dto.emergency.EmergencyRequestResponseDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
-import com.gtwo.bdss_system.entity.donation.DonationEvent;
-import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
@@ -20,13 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +40,7 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
     private EmergencyProcessService emergencyProcessService;
 
     @Override
-    public void createEmergencyRequest(EmergencyRequestDTO dto, MultipartFile proofImage, Account account) {
+    public void createEmergencyRequest(EmergencyRequestDTO dto, MultipartFile proofImage,Account account) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime limitTime = now.minusHours(24); // chống spam trong 24h
         String imageUrl = null;
@@ -60,17 +55,6 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         }
         if (emergencyRequestRepository.existsByCccd(dto.getCccd())) {
             throw new RuntimeException("CCCD đã tồn tại.");
-        }
-        if (proofImage != null && !proofImage.isEmpty()) {
-            try {
-                // Giả sử  lưu tạm ảnh ở local path, hoặc upload lên Cloudinary/S3
-                String filename = UUID.randomUUID() + "_" + proofImage.getOriginalFilename();
-                Path path = Paths.get("uploads/emergency_proofs/" + filename);
-                Files.copy(proofImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                imageUrl = "/uploads/emergency_proofs/" + filename;
-            } catch (IOException e) {
-                throw new RuntimeException("Lỗi khi lưu ảnh minh chứng: " + e.getMessage());
-            }
         }
 
         BloodType bloodType = bloodTypeRepository.findById(dto.getBloodTypeId())
@@ -91,7 +75,18 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         request.setVerifiedBy(null);
         request.setVerifiedAt(null);
         request.setStatus(Status.ACTIVE);
-        request.setEmergencyProof(imageUrl);
+        if (proofImage != null && !proofImage.isEmpty()) {
+            try {
+                byte[] imageBytes = proofImage.getBytes();
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                request.setEmergencyProof(base64Image);
+            } catch (IOException e) {
+                throw new RuntimeException("Không thể xử lý ảnh", e);
+            }
+        } else {
+            request.setEmergencyProof(dto.getEmergencyProof()); // fallback
+        }
+
 
         emergencyRequestRepository.save(request);
     }
@@ -104,6 +99,13 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+@Override
+public List<EmergencyRequestResponseDTO> getAllResponseRequests() {
+    return emergencyRequestRepository.findByStatus(Status.ACTIVE).stream()
+            .map(this::convertToResponseDTO)
+            .collect(Collectors.toList());
+}
+
 
     @Override
     public EmergencyRequestDTO getRequestById(Long id) {
@@ -161,4 +163,25 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         dto.setStatusRequest(request.getStatusRequest());
         return dto;
     }
+    private EmergencyRequestResponseDTO convertToResponseDTO(EmergencyRequest request) {
+        EmergencyRequestResponseDTO dto = new EmergencyRequestResponseDTO();
+        dto.setId(request.getId());
+        dto.setFullName(request.getFullName());
+        dto.setPhone(request.getPhone());
+        dto.setCccd(request.getCccd());
+        dto.setBloodTypeId(request.getBloodType().getId());
+        dto.setBloodComponentId(request.getBloodComponent().getId());
+        dto.setQuantity(request.getQuantity());
+        dto.setLocation(request.getLocation());
+        dto.setStatusRequest(request.getStatusRequest());
+
+        String proof = request.getEmergencyProof();
+        if (proof != null && proof.length() > 100) {
+            dto.setEmergencyProofPreview(proof.substring(0, 100) + "...");
+        } else {
+            dto.setEmergencyProofPreview(proof);
+        }
+        return dto;
+    }
+
 }

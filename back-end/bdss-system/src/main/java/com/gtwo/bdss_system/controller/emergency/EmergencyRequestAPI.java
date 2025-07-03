@@ -1,19 +1,17 @@
 package com.gtwo.bdss_system.controller.emergency;
 import com.gtwo.bdss_system.dto.emergency.EmergencyRequestDTO;
+import com.gtwo.bdss_system.dto.emergency.EmergencyRequestFormDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
-import com.gtwo.bdss_system.entity.donation.DonationRequest;
-import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.service.emergency.EmergencyRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
 
@@ -26,13 +24,24 @@ public class EmergencyRequestAPI {
     private EmergencyRequestService service;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Tạo yêu cầu khẩn cấp kèm ảnh")
     public ResponseEntity<?> createEmergencyRequest(
-            @RequestPart("request") @Valid EmergencyRequestDTO dto,
-            @RequestPart("proofImage") MultipartFile proofImage,
+            @ModelAttribute EmergencyRequestFormDTO form,
             @AuthenticationPrincipal Account account) {
 
-        service.createEmergencyRequest(dto, proofImage, account);
-        return ResponseEntity.ok("Emergency request submitted successfully.");
+        EmergencyRequestDTO dto = new EmergencyRequestDTO();
+        dto.setFullName(form.getFullName());
+        dto.setPhone(form.getPhone());
+        dto.setCccd(form.getCccd());
+        dto.setBloodTypeId(form.getBloodTypeId());
+        dto.setBloodComponentId(form.getBloodComponentId());
+        dto.setQuantity(form.getQuantity());
+        dto.setLocation(form.getLocation());
+        dto.setEmergencyProof(form.getEmergencyProof());
+        dto.setStatusRequest(StatusRequest.PENDING);
+
+        service.createEmergencyRequest(dto, form.getProofImage(), account);
+        return ResponseEntity.ok("Yêu cầu khẩn cấp đã được gửi.");
     }
     @GetMapping
     @PreAuthorize("hasRole('STAFF')")
