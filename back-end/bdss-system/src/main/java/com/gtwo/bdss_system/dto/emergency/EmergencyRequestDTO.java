@@ -38,6 +38,7 @@ public class EmergencyRequestDTO {
 
     @NotBlank(message = "Lý do khẩn cấp không được để trống")
     private String emergencyProof;
+
 }
 
 

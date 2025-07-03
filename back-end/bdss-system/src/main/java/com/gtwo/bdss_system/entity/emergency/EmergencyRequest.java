@@ -67,6 +67,7 @@ public class EmergencyRequest {
     @Column(name ="emergency_proof")
     @Nationalized
     private String emergencyProof;
+
     @PrePersist
     public void onCreate() {
         this.submittedAt = LocalDateTime.now();
