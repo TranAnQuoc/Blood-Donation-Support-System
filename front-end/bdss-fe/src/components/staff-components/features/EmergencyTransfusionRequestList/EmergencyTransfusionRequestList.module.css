@@ -1,255 +1,78 @@
-.listContainer {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #333;
+/* src/components/staff-components/mainContent/EmergencyTransfusionRequestList.module.css */
+/* Các style tương tự EmergencyDonationRequestList */
+.tableContainer {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.listTitle {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 35px;
-  font-size: 2.2em;
-  font-weight: 700;
+.tableContainer h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #d9534f; /* Màu đỏ cho khẩn cấp */
 }
 
-.loading, .error, .noRequests {
-  text-align: center;
-  font-size: 1.1em;
-  color: #555;
-  padding: 20px;
+.tableContainer p {
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
 }
 
-.error {
-  color: #dc3545;
-  font-weight: bold;
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
 
-.requestTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.tableHeader {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
 }
 
-.requestTable th,
-.requestTable td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
+.tableCell {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
 }
 
-.requestTable th {
-  background-color: #f2f2f2;
-  font-weight: 600;
-  color: #34495e;
-}
-
-.requestTable tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.requestTable tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Nền mờ */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Đảm bảo modal nằm trên cùng */
-}
-
-.modalContent {
-  background: white;
-  padding: 25px;
-  border-radius: 8px;
-  max-width: 90%;
-  max-height: 90%;
-  overflow-y: auto; /* Cho phép cuộn nếu ảnh quá lớn */
-  position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.modalHeader {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.modalHeader h3 {
-    margin-top: 0;
-    color: #2c3e50;
-    font-size: 1.5em;
-}
-
-.modalHeader p {
+.tableHeader .tableCell {
+    font-weight: bold;
     color: #555;
-    font-size: 0.9em;
+    background-color: #ffe0e0; /* Nền header đỏ nhạt hơn */
 }
 
-.closeModalButton {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 2em;
-  cursor: pointer;
-  color: #888;
-  transition: color 0.2s ease;
+.tableRow:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-.closeModalButton:hover {
-  color: #333;
-}
-
-.modalImage {
-  max-width: 100%;
-  max-height: 70vh; /* Giới hạn chiều cao của ảnh trong modal */
-  display: block; /* Loại bỏ khoảng trống dưới ảnh */
-  margin: 0 auto; /* Căn giữa ảnh */
-  border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.viewProofButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.2s ease;
-}
-
-.viewProofButton:hover {
-  background-color: #0056b3;
-}
-
-/* ... (Giữ nguyên các styles cũ cho bảng và modal ảnh) ... */
-
-/* Thêm cột hành động vào bảng */
-.requestTable th:last-child,
-.requestTable td:last-child {
-  width: 150px; /* Điều chỉnh độ rộng cho cột hành động */
-  text-align: center;
+.tableRow:hover {
+    background-color: #f0f0f0;
 }
 
 .actionButton {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.85em;
-  font-weight: 500;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  margin: 0 5px 5px 0; /* Khoảng cách giữa các nút */
-  display: inline-block; /* Đảm bảo nút nằm cùng dòng */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s ease;
+    margin-right: 5px;
 }
 
-.approveButton {
-  background-color: #28a745; /* Màu xanh lá cây */
-  color: white;
+.actionButton:hover {
+    background-color: #0056b3;
 }
 
-.approveButton:hover {
-  background-color: #218838;
-  transform: translateY(-1px);
+.dangerButton {
+    background-color: #d9534f;
 }
 
-.rejectButton {
-  background-color: #dc3545; /* Màu đỏ */
-  color: white;
-}
-
-.rejectButton:hover {
-  background-color: #c82333;
-  transform: translateY(-1px);
-}
-
-.statusText {
-    font-weight: bold;
-    color: #555; /* Màu trung tính cho trạng thái đã xử lý */
-}
-
-/* Modal Duyệt/Từ chối Styles */
-/* Sử dụng lại .modalOverlay và .modalContent, nhưng có thể tinh chỉnh nếu cần */
-.modalActions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  width: 100%;
-}
-
-.confirmButton {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  font-size: 1em;
-}
-
-.confirmButton:hover {
-  background-color: #0056b3;
-}
-
-.cancelButton {
-  background-color: #6c757d;
-  color: white;
-  padding: 10px 20px;
-  font-size: 1em;
-}
-
-.cancelButton:hover {
-  background-color: #5a6268;
-}
-
-/* Style cho textarea và label trong modal (sử dụng lại từ form chính) */
-.modalContent .formGroup {
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-.modalContent .label {
-    text-align: left;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #34495e;
-    font-size: 1em;
-}
-
-.modalContent .textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #dcdcdc;
-    border-radius: 4px;
-    font-size: 0.95em;
-    box-sizing: border-box;
-}
-
-.modalContent .textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-    outline: none;
-}
-
-/* Lỗi trong modal */
-.modalContent .errorText {
-    color: #dc3545;
-    font-size: 0.85em;
-    margin-top: 5px;
-    display: block;
+.dangerButton:hover {
+    background-color: #c9302c;
 }

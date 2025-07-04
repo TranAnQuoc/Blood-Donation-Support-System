@@ -1,238 +1,252 @@
-.listContainer {
-  max-width: 1200px; /* Tăng độ rộng để chứa nhiều cột hơn */
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #333;
+/* src/components/staff-components/mainContent/EmergencyTransfusionProcess.module.css */
+.container {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 900px;
+    margin: 20px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
 }
 
-.listTitle {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 35px;
-  font-size: 2.2em;
-  font-weight: 700;
+.title {
+    color: #b30000; /* Màu đỏ cho khẩn cấp */
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    font-weight: 700;
 }
 
-.loading, .error, .noProcesses {
-  text-align: center;
-  font-size: 1.1em;
-  color: #555;
-  padding: 20px;
+.introText {
+    font-size: 1.1em;
+    color: #555;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    font-weight: 500;
 }
 
-.error {
-  color: #dc3545;
-  font-weight: bold;
+.processInfo {
+    font-size: 1.1em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+    background-color: #fff0f0; /* Nền màu nhạt cho phần khẩn cấp */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ffccc7; /* Viền màu đỏ nhạt */
 }
 
-.tableWrapper {
-  overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
-  -webkit-overflow-scrolling: touch; /* Hỗ trợ cuộn mượt mà trên di động */
-  border: 1px solid #ddd; /* Viền bao quanh bảng */
-  border-radius: 8px; /* Bo góc cho wrapper */
+.processTracker {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+    padding: 10px 0;
 }
 
-.processTable {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1000px; /* Đảm bảo bảng không bị quá nhỏ trên màn hình hẹp */
+.processTracker::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #fcaeae; /* Màu đỏ nhạt hơn cho đường line */
+    z-index: 1;
+    transform: translateY(-50%);
 }
 
-.processTable th,
-.processTable td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-  vertical-align: top; /* Căn trên cho nội dung cell */
+.stepIndicator {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
 }
 
-.processTable th {
-  background-color: #f2f2f2;
-  font-weight: 600;
-  color: #34495e;
-  white-space: nowrap; /* Ngăn không cho tiêu đề cột xuống dòng */
+.stepIndicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    border: 2px solid #e0e0e0;
 }
 
-.processTable tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+.stepIndicator.activeStep .stepNumber,
+.stepIndicator.activeStep .stepName {
+    color: #cf1322; /* Màu đỏ đậm */
+    font-weight: bold;
 }
 
-.processTable tbody tr:hover {
-  background-color: #f1f1f1;
+.stepIndicator.activeStep::before {
+    background-color: #cf1322;
+    border-color: #cf1322;
 }
 
-/* Điều chỉnh độ rộng cột nếu cần */
-.processTable td:nth-child(1) { width: 5%; } /* Mã YC */
-.processTable td:nth-child(2) { width: 15%; } /* Hồ sơ SK */
-.processTable td:nth-child(3) { width: 8%; } /* Xác nhận */
-.processTable td:nth-child(4) { width: 8%; } /* Trạng thái */
-/* Các cột còn lại sẽ chia đều hoặc bạn có thể định nghĩa cụ thể */
-
-/* ... (Giữ nguyên các styles cũ của bảng) ... */
-
-/* Thêm cột hành động vào bảng */
-.processTable th:last-child,
-.processTable td:last-child {
-  width: 100px; /* Điều chỉnh độ rộng cho cột hành động */
-  text-align: center;
+.stepIndicator.completedStep .stepNumber,
+.stepIndicator.completedStep .stepName {
+    color: #008000; /* Màu xanh lá cây cho bước hoàn thành */
 }
 
-.editButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.2s ease;
+.stepIndicator.completedStep::before {
+    background-color: #008000;
+    border-color: #008000;
 }
 
-.editButton:hover {
-  background-color: #0056b3;
+
+.stepNumber {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #888;
 }
 
-/* Modal Styles (sử dụng lại từ EmergencyRequestList, có thể tùy chỉnh) */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+.stepName {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
 }
 
-.modalContent {
-  background: white;
-  padding: 25px;
-  border-radius: 8px;
-  max-width: 700px; /* Tăng độ rộng modal cho form */
-  max-height: 90%;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+.currentStepContent {
+    background-color: #fffafa; /* Nền trắng nhạt hơn cho nội dung */
+    border: 1px solid #ffccc7;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 30px;
 }
 
-.closeModalButton {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 2em;
-  cursor: pointer;
-  color: #888;
-  transition: color 0.2s ease;
+.currentStepTitle {
+    color: #cf1322; /* Màu đỏ đậm */
+    font-size: 1.6em;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid #cf1322;
+    padding-bottom: 10px;
 }
 
-.closeModalButton:hover {
-  color: #333;
+.currentStepContent ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-bottom: 20px;
 }
 
-.editForm {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Chia form thành 2 cột */
-  gap: 15px 25px; /* Khoảng cách giữa các phần tử */
-  margin-top: 20px;
+.currentStepContent li {
+    margin-bottom: 8px;
+    color: #444;
 }
 
 .formGroup {
-  display: flex;
-  flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .formGroup label {
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #34495e;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
 }
 
-.formGroup input[type="text"],
-.formGroup input[type="number"],
-.formGroup textarea,
-.formGroup select {
-  padding: 10px;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  font-size: 0.95em;
-  width: 100%; /* Đảm bảo các input chiếm toàn bộ chiều rộng cột */
-  box-sizing: border-box; /* Bao gồm padding và border trong width */
-}
-
-.formGroup input[type="checkbox"] {
-  width: auto; /* Cho checkbox không chiếm hết chiều rộng */
-  align-self: flex-start; /* Căn lề trái cho checkbox */
-  margin-top: 10px; /* Khoảng cách với label */
-}
-
-.formGroup textarea {
-  resize: vertical; /* Cho phép thay đổi kích thước theo chiều dọc */
-  min-height: 60px;
-}
-
-.formGroup input:focus,
-.formGroup textarea:focus,
-.formGroup select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-  outline: none;
-}
-
-/* Styles cho nút trong modal (sử dụng lại từ EmergencyRequestList) */
-.modalActions {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  width: 100%;
-}
-
-.actionButton { /* Base style from previous component */
-    border: none;
-    padding: 10px 20px;
+.notesTextarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    cursor: pointer;
+    min-height: 80px;
     font-size: 1em;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-sizing: border-box;
 }
 
-.confirmButton { /* Use for Update button */
-    background-color: #28a745;
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.nextButton,
+.prevButton {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nextButton {
+    background-color: #dc3545; /* Màu đỏ của Bootstrap */
     color: white;
 }
 
-.confirmButton:hover {
-    background-color: #218838;
+.nextButton:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: translateY(-2px);
 }
 
-.cancelButton {
+.prevButton {
     background-color: #6c757d;
     color: white;
 }
 
-.cancelButton:hover {
+.prevButton:hover:not(:disabled) {
     background-color: #5a6268;
+    transform: translateY(-2px);
 }
 
-.errorText { /* For validation errors */
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 5px;
+.nextButton:disabled,
+.prevButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .editForm {
-    grid-template-columns: 1fr; /* Một cột trên màn hình nhỏ hơn */
-  }
+.footerText {
+    font-size: 1.1em;
+    color: #b30000;
+    text-align: center;
+    margin-top: 40px;
+    font-weight: 600;
 }
 
+/* Common messages */
+.loadingMessage,
+.errorMessage,
+.noDataMessage {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.loadingMessage {
+    background-color: #ffe6e6; /* Đỏ nhạt hơn */
+    color: #cf1322;
+    border: 1px solid #ffa39e;
+}
+
+.errorMessage {
+    background-color: #fff0f0;
+    color: #cf1322;
+    border: 1px solid #ffa39e;
+}
+
+.noDataMessage {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #ddd;
+}
