@@ -4,9 +4,9 @@ import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.commons.CompatibilityRule;
-import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.Role;
-import com.gtwo.bdss_system.repository.auth.AccountRepository;
+import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusDonation;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
@@ -16,7 +16,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +32,37 @@ public class DataInitializr implements CommandLineRunner {
     @Autowired
     private CompatibilityRuleRepository compatibilityRuleRepository;
 
+    @Autowired
+    private AuthenticationRepository authenticationRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void run(String... args) {
         initBloodTypes();
         initBloodComponents();
         initCompatibilityRules();
+        initAdminAccount();
+    }
+
+    private void initAdminAccount() {
+        if (!authenticationRepository.existsByRole(Role.ADMIN)) {
+            Account admin = new Account();
+            admin.setEmail("admin@system.com");
+            admin.setPassword(passwordEncoder.encode("123456"));
+            admin.setRole(Role.ADMIN);
+            admin.setFullName("Admin System");
+            admin.setStatus(Status.ACTIVE);
+            admin.setStatusDonation(StatusDonation.INACTIVE);
+            admin.setPhone("0000000000");
+            admin.setCCCD("000000000000");
+            admin.setAddress("System Default Address");
+            admin.setCreateAt(LocalDateTime.now());
+            admin.setBloodType(bloodTypeRepository.findById(1L).orElseThrow());
+            authenticationRepository.save(admin);
+            System.out.println("✅ Default admin account created: admin@system.com / 123456");
+        }
     }
 
     private void initBloodTypes() {
