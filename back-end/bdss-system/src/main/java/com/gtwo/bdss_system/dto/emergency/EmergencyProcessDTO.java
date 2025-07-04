@@ -8,6 +8,10 @@ import jakarta.validation.constraints.*;
 @Data
 public class EmergencyProcessDTO {
 
+    private Long id;
+
+    private Long idRequest;
+
     @Size(max = 1000, message = "Health check summary must be less than 1000 characters.")
     private String healthCheckSummary;
 

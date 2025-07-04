@@ -15,6 +15,5 @@ public class EmergencyRequestResponseDTO {
     private Integer quantity;
     private String location;
     private StatusRequest statusRequest;
-
     private String emergencyProofPreview; // Cắt base64 cho ngắn (VD: 100 ký tự đầu)
 }
