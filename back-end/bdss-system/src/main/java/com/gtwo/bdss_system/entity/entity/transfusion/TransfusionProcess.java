@@ -1,16 +1,20 @@
 package com.gtwo.bdss_system.entity.transfusion;
 
+import com.gtwo.bdss_system.enums.RhFactor;
 import jakarta.persistence.*;
-import org.springframework.data.domain.Persistable;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import com.gtwo.bdss_system.enums.StatusProcess;
 import lombok.Data;
+import org.hibernate.annotations.Nationalized;
 
 @Data
 @Entity
 @Table(name = "transfusion_process")
-public class TransfusionProcess implements Persistable<Long>{
+public class TransfusionProcess {
 
     @Id
     @Column(name = "transfusion_request_id")
@@ -52,13 +56,21 @@ public class TransfusionProcess implements Persistable<Long>{
     @Column(name = "allergy_notes", columnDefinition = "TEXT")
     private String allergyNotes;
 
-    @Transient
-    private boolean isNew = false;
+    @Nationalized
+    @Column(name = "full_name_snapshot")
+    private String fullNameSnapshot;
 
-    public void markAsNew() { this.isNew = true; }
+    @Column(name = "birthdate_snapshot")
+    private LocalDate birthdateSnapshot;
 
-    @Override public Long getId() { return id; }
-    @Override public boolean isNew() { return isNew; }
+    @Column(name = "blood_type_snapshot")
+    private String bloodTypeSnapshot;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "rh_factor_snapshot")
+    private RhFactor rhFactorSnapshot;
+
+    @Column(name = "facility_name")
+    private String facilityName;
 
 }

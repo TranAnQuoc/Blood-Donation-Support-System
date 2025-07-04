@@ -60,4 +60,16 @@ public class TransfusionProcessAPI {
     public void delete(@PathVariable Long requestId) {
         service.delete(requestId);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PutMapping("/update/{id}")
+    public ResponseEntity<TransfusionProcessResponseDTO> updateProcessById(
+            @PathVariable Long id,
+            @Validated @RequestBody TransfusionProcessDTO dto) {
+
+        TransfusionProcess proc = service.updateById(id, dto);
+        TransfusionProcessResponseDTO resp = mapper.map(proc, TransfusionProcessResponseDTO.class);
+        return ResponseEntity.ok(resp);
+    }
+
 }

@@ -1,21 +1,20 @@
 package com.gtwo.bdss_system.dto.transfusion;
 
+import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusRequest;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data
 public class TransfusionRequestResponseDTO {
-
     private Long id;
     private Long recipientId;
-    private LocalDateTime requestedAt;
-    private String status;
-    private Long approvedById;
-    private LocalDateTime approvedAt;
-    private Long facilityId;
     private String bloodComponentNeeded;
-    private Integer quantityNeeded;
+    private int quantityNeeded;
     private String doctorDiagnosis;
     private String preCheckNotes;
-
+    private StatusRequest statusRequest;
+    private LocalDateTime requestedAt;
+    private Status status;
 }
