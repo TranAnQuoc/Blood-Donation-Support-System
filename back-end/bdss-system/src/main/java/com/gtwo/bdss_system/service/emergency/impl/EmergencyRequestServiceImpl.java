@@ -155,6 +155,7 @@ public List<EmergencyRequestResponseDTO> getAllResponseRequests() {
 
     private EmergencyRequestDTO convertToDTO(EmergencyRequest request) {
         EmergencyRequestDTO dto = new EmergencyRequestDTO();
+        dto.setId(request.getId());
         dto.setEmergencyProof(request.getEmergencyProof());
         dto.setFullName(request.getFullName());
         dto.setPhone(request.getPhone());

@@ -38,7 +38,7 @@ import TransfusionRequestDetail from "../components/staff-components/features/Tr
 import TransfusionProcess from "../components/staff-components/features/TransfusionProcess/TransfusionProcess.jsx";
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
 import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
-// import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
+import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
 import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
 
 //ADMIN
@@ -151,7 +151,7 @@ const router = createBrowserRouter([
 
       //Emergency Transfusion
       { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
-      // { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
+      { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
 
       //OTHER

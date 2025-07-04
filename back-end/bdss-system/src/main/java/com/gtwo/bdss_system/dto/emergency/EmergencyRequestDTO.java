@@ -8,6 +8,8 @@ import java.util.Date;
 @Data
 public class EmergencyRequestDTO {
 
+    private Long id;
+
     @NotBlank(message = "Họ tên không được để trống")
     private String fullName;
 

@@ -102,6 +102,8 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
 
     private EmergencyProcessDTO toDTO(EmergencyProcess entity) {
         EmergencyProcessDTO dto = new EmergencyProcessDTO();
+        dto.setId(entity.getId());
+        dto.setIdRequest(entity.getEmergencyRequest().getId());
         dto.setHealthCheckSummary(entity.getHealthCheckSummary());
         dto.setConfirmed(entity.getConfirmed());
         dto.setSymptoms(entity.getSymptoms());

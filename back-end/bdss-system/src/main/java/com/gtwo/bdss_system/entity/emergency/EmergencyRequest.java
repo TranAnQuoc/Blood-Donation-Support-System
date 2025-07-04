@@ -64,7 +64,7 @@ public class EmergencyRequest {
     @Column(name = "verified_at")
     private LocalDateTime verifiedAt;
 
-    @Column(name ="emergency_proof")
+    @Column(name ="emergency_proof", columnDefinition = "NVARCHAR(MAX)")
     @Nationalized
     private String emergencyProof;
 
