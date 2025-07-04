@@ -1,5 +1,5 @@
 import React from 'react';
-import './DataTable.css'; // Import file CSS cho bảng này
+import './DataTable.module.css';
 
 /**
  * Component DataTable để hiển thị dữ liệu dạng bảng.
@@ -15,7 +15,6 @@ import './DataTable.css'; // Import file CSS cho bảng này
  * Nhận vào toàn bộ object hàng (row) làm đối số.
  */
 const DataTable = ({ data, columns }) => {
-  // Kiểm tra nếu không có dữ liệu hoặc dữ liệu rỗng
   if (!data || data.length === 0) {
     return (
       <div className="data-table-empty">
@@ -24,7 +23,6 @@ const DataTable = ({ data, columns }) => {
     );
   }
 
-  // Kiểm tra nếu không có định nghĩa cột
   if (!columns || columns.length === 0) {
     console.warn("DataTable: Không có định nghĩa cột (columns) được cung cấp.");
     return (
@@ -35,27 +33,20 @@ const DataTable = ({ data, columns }) => {
   }
 
   return (
-    <div className="data-table-container"> {/* Thêm container để dễ quản lý overflow */}
+    <div className="data-table-container">
       <table className="data-table">
         <thead>
           <tr>
             {columns.map((col, index) => (
-              // Sử dụng col.accessor làm key nếu nó duy nhất, nếu không dùng index
-              // col.header là văn bản hiển thị cho tiêu đề cột
               <th key={col.accessor || index}>{col.header}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            // Sử dụng row.id làm key nếu có ID duy nhất, nếu không dùng rowIndex
             <tr key={row.id || rowIndex}>
               {columns.map((col, colIndex) => (
                 <td key={col.accessor ? `${row.id}-${col.accessor}` : colIndex}>
-                  {/* Kiểm tra nếu cột có hàm render tùy chỉnh (col.render)
-                      Nếu có, gọi hàm render với toàn bộ đối tượng hàng (row)
-                      Nếu không, truy cập giá trị trực tiếp bằng col.accessor (ví dụ: row.name)
-                  */}
                   {col.render ? col.render(row) : row[col.accessor]}
                 </td>
               ))}

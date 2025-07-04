@@ -7,15 +7,16 @@ import { useSelector } from "react-redux";
 import MemberDropdown from "../member-components/sidebar/MemberDropdown";
 
 const Header = () => {
-const [menuOpen, setMenuOpen] = useState(false);
-const user = useSelector((state) => state.user);
-const isAuthenticated = !!user;
+    const [menuOpen, setMenuOpen] = useState(false);
+    const user = useSelector((state) => state.user);
+    const isAuthenticated = !!user;
 
 
-const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-};
-const closeMenu = () => {
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
+
+    const closeMenu = () => {
         setMenuOpen(false);
     };
 
@@ -48,10 +49,21 @@ const closeMenu = () => {
                         ) : (
                             <li><Link to="/service" onClick={closeMenu}>SERVICE</Link></li>
                         )}
-                        <li><Link to="/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
-                        <li><Link to="/community" onClick={closeMenu}>COMMUNITY</Link></li>
-                        <li><Link to="/about-us" onClick={closeMenu}>ABOUT US</Link></li>
-                        <li><Link to="/blog" onClick={closeMenu}>BLOG</Link></li>
+                        {isAuthenticated && user?.role === "MEMBER" ? (
+                            <li><Link to="/member/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
+                        ) : (
+                            <li><Link to="/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
+                        )}
+                        {isAuthenticated && user?.role === "MEMBER" ? (
+                            <li><Link to="/member/community" onClick={closeMenu}>COMMUNITY</Link></li>
+                        ) : (
+                            <li><Link to="/community" onClick={closeMenu}>COMMUNITY</Link></li>
+                        )}
+                        {isAuthenticated && user?.role === "MEMBER" ? (
+                            <li><Link to="/member/about-us" onClick={closeMenu}>ABOUT US</Link></li>
+                        ) : (
+                            <li><Link to="/about-us" onClick={closeMenu}>ABOUT US</Link></li>
+                        )}
                         {isAuthenticated && user?.role === "MEMBER" ? (
                             <div className={styles.dropdownWrapper}>
                                 <MemberDropdown />

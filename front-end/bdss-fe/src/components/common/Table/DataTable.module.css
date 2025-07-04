@@ -14,7 +14,6 @@
     min-width: 600px;
 }
 
-/* Kiểu cho tiêu đề bảng (th) và ô dữ liệu (td) */
 .data-table th,
 .data-table td {
     border: 1px solid #e0e0e0;
@@ -23,7 +22,6 @@
     vertical-align: middle;
 }
 
-/* Kiểu cho tiêu đề bảng */
 .data-table th {
     background-color: #f5f5f5;
     color: #333;
@@ -32,23 +30,19 @@
     letter-spacing: 0.03em;
 }
 
-/* Kiểu cho hàng chẵn */
 .data-table tr:nth-child(even) {
     background-color: #fcfcfc;
 }
 
-/* Hiệu ứng khi di chuột qua hàng */
 .data-table tr:hover {
     background-color: #eaf6ff;
     transition: background-color 0.2s ease;
 }
 
-/* Kiểu cho ô dữ liệu */
 .data-table td {
     color: #666;
 }
 
-/* Kiểu khi không có dữ liệu */
 .data-table-empty {
     text-align: center;
     padding: 20px;
@@ -60,7 +54,6 @@
     margin-top: 20px;
 }
 
-/* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .data-table {
         min-width: unset;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import styles from "./index.module.css";
+import styles from "./EmergencyRequestForm.module.css";
 
 const EmergencyRequestForm = () => {
   const FIXED_BLOOD_TYPES = [

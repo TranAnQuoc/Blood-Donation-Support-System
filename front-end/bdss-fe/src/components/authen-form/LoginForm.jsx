@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/features/userSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // faEye for "show", faEyeSlash for "hide"
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -20,20 +20,20 @@ function LoginForm() {
 
   const validateEmail = (email) => {
     if (!email) {
-      return 'Email is required.';
+      return 'Bạn cần phải nhập email.';
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return 'Invalid email format.';
+      return 'Định dạng email không hợp lệ.';
     }
-    return ''; // No error
+    return '';
   };
 
   const validatePassword = (password) => {
     if (!password) {
-      return 'Password is required.';
+      return 'Bạn cần phải nhập mật khẩu.';
     }
-    return ''; // No error
+    return '';
   };
 
   const handleEmailChange = (event) => {
@@ -62,7 +62,7 @@ function LoginForm() {
     setPasswordError(passwordValidationMessage);
 
     if (emailValidationMessage || passwordValidationMessage) {
-      toast.error('Please correct the errors in the form.');
+      toast.error('Vui lòng sửa lỗi trong biểu mẫu.');
       return;
     }
 
@@ -74,7 +74,7 @@ function LoginForm() {
 
       const userData = response.data;
       if (!userData?.token) {
-        toast.error('Invalid login response from server');
+        toast.error('Phản hồi đăng nhập không hợp lệ từ máy chủ.');
         return;
       }
       localStorage.setItem('token', userData.token);
@@ -93,7 +93,7 @@ function LoginForm() {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || 'Login failed! Please check your credentials.');
+      toast.error(error.response?.data?.message || 'Đăng nhập không thành công! Vui lòng kiểm tra thông tin đăng nhập của bạn.');
     }
   };
 
@@ -138,7 +138,7 @@ function LoginForm() {
           {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
         </div>
         <div className={styles.forgotPassword}>
-          <a href="#">Quên mật khẩu?</a>
+          <Link to="/forgot-password">Quên mật khẩu?</Link>
         </div>
         <button type="submit" className={styles.loginButton}>
           Đăng Nhập

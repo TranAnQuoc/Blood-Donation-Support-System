@@ -2,9 +2,6 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute.jsx";
 
-//PUPLIC
-import EmergencyRequestForm from '../components/common/emergency-request/index.jsx';
-
 //LAYOUT
 import Layout from "../layouts/Layout.jsx";
 import LayoutAdmin from "../layouts/LayoutAdmin.jsx";
@@ -13,12 +10,15 @@ import LayoutStaff from "../layouts/LayoutStaff.jsx";
 //AUTH
 import LoginForm from "../components/authen-form/LoginForm.jsx";
 import RegisterForm from "../components/authen-form/RegisterForm.jsx";
+import ForgotPassword from "../components/authen-form/ForgotPassword/ForgotPassword.jsx";
+import ResetPassword from "../components/authen-form/ResetPassword/ResetPassword.jsx";
 
 //GUEST
 import GuestDashboard from "../pages/Home/GuestDashboard.jsx";
 import GuestService from "../pages/Service/GuestService.jsx";
 
 //MEMBER
+// import AboutUs from "../components/member-components/mainContent/AboutUs.jsx"; //ALSO GUEST
 import MemberDashboard from "../pages/Home/MemberDashboard.jsx";
 import MemberService from "../pages/Service/MemberService.jsx";
 import MemberProfile from "../components/member-components/mainContent/MemberProfile";
@@ -26,6 +26,7 @@ import RegisterDonation from "../components/member-components/features/RegisterD
 import MyDonationRequest from "../components/member-components/features/MyDonationRequest/MyDonationRequest.jsx";
 import MyDonationHistory from "../components/member-components/features/MyDonationHistory/MyDonationHistory.jsx";
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
+import EmergencyRequestForm from '../components/common/EmergencyRequestForm/EmergencyRequestForm.jsx';
 
 //STAFF
 import MemberList from "../components/staff-components/features/MemberList/MemberList.jsx";
@@ -37,8 +38,8 @@ import TransfusionRequestList from "../components/staff-components/features/Tran
 import TransfusionRequestDetail from "../components/staff-components/features/TransfusionRequestDetail/TransfusionRequestDetail.jsx";
 import TransfusionProcess from "../components/staff-components/features/TransfusionProcess/TransfusionProcess.jsx";
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
-import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
-import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
+// import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
+// import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
 import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
 
 //ADMIN
@@ -52,7 +53,6 @@ import EventManagement from "../components/staff-components/features/EventManage
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -62,16 +62,17 @@ const router = createBrowserRouter([
           <Outlet />
         </Layout>
       </PublicRoute>
-      
     ),
     children: [
       { index: true, element: <GuestDashboard /> },
-      //GUEST SERVICE
-      { path: "service", element: <GuestService /> },
+      //AUTH
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
+      { path: "reset-password", element: <ResetPassword /> },
+      //GUEST SERVICE
+      { path: "service", element: <GuestService /> },
       { path: "emergency", element: <EmergencyRequestForm /> },
-      
     ],
   },
 
@@ -79,7 +80,7 @@ const router = createBrowserRouter([
     path: "/admin-dashboard",
     element: (
       <ProtectedRoute allowedRoles={["ADMIN"]}>
-        <LayoutAdmin/>
+        <LayoutAdmin />
       </ProtectedRoute>
     ),
     children: [
@@ -87,7 +88,7 @@ const router = createBrowserRouter([
       { index: true, element: <div>Trang chủ Bảng điều khiển Admin</div> },
 
       //ADMIN CUSTOME
-      { path: "profile", element: <div>Admin Profile Page</div>},
+      { path: "profile", element: <div>Admin Profile Page</div> },
       { path: "settings", element: <div>Admin Settings Page</div> },
 
       //NAVIGATE
@@ -101,7 +102,7 @@ const router = createBrowserRouter([
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
       { path: "transfusion-requests-management", element: <TransfusionRequestList /> },
-      { path: "transfusion-requests-management/:id", element: <TransfusionRequestDetail /> },
+      { path: "transfusion-requests-management/:id",element: <TransfusionRequestDetail /> },
       { path: "transfusion-processes", element: <TransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
@@ -111,13 +112,12 @@ const router = createBrowserRouter([
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
 
       //OTHER
-      { path: "event-management", element: <EventManagement/>},
+      { path: "event-management", element: <EventManagement /> },
       // { path: "blood-bank", element: <BloodBank/> },
       // { path: "recovery-reminders", element: <RecoveryReminder/> },
       // { path: "community-posts", element: <CommunityPost/> },
       // { path: "reports", element: <Report/> },
       // { path: "support-center", element: <SupportCenter/> },
-
     ],
   },
 
@@ -125,7 +125,7 @@ const router = createBrowserRouter([
     path: "/staff-dashboard",
     element: (
       <ProtectedRoute allowedRoles={["STAFF"]}>
-        <LayoutStaff/>
+        <LayoutStaff />
       </ProtectedRoute>
     ),
     children: [
@@ -137,11 +137,11 @@ const router = createBrowserRouter([
       // { path: "staff-setting", element: <StaffSetting/> },
 
       //NAVIGATE
-      
+
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },
       { path: "donation-processes", element: <DonationProcess /> },
-      { path: "donation-process/:id", element: <DonationProcessDetail />},
+      { path: "donation-process/:id", element: <DonationProcessDetail /> },
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
       { path: "transfusion-requests-management", element: <TransfusionRequestList /> },
@@ -150,19 +150,18 @@ const router = createBrowserRouter([
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
       //Emergency Transfusion
-      { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
-      { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
+      // { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
+      // { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
 
       //OTHER
       { path: "member-list", element: <MemberList /> },
-      { path: "event-management", element: <EventManagement/>},
+      { path: "event-management", element: <EventManagement /> },
       // { path: "blood-bank", element: <BloodBank/> },
       // { path: "recovery-reminders", element: <RecoveryReminder/> },
       // { path: "community-posts", element: <CommunityPost/> },
       // { path: "reports", element: <Report/> },
       // { path: "support-center", element: <SupportCenter/> },
-
     ],
   },
 
@@ -177,14 +176,15 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <MemberDashboard /> },
-
       //MEMBER CUSTOME
       { path: "member-profile", element: <MemberProfile /> },
       //SERVICE
       { path: "member-service", element: <MemberService /> },
-      { path: "my-donation-request", element: <MyDonationRequest/> },
-      { path: "my-donation-history", element: <MyDonationHistory/> },
+      { path: "my-donation-request", element: <MyDonationRequest /> },
+      { path: "my-donation-history", element: <MyDonationHistory /> },
+      { path: "emergency", element: <EmergencyRequestForm /> },
       //CONTENT
+      // { path: "about-us", element: <About Us /> },
       { path: "register-donation", element: <RegisterDonation /> },
       { path: "request-transfusion", element: <TransfusionRequest /> },
     ],

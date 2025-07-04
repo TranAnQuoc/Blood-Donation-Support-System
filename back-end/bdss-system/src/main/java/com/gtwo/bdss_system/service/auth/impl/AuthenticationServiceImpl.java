@@ -116,7 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             EmailDetailForForgotPassword emailDetailForForgotPassword = new EmailDetailForForgotPassword();
             emailDetailForForgotPassword.setAccount(account);
             emailDetailForForgotPassword.setSubject("Reset Password");
-            emailDetailForForgotPassword.setLink("https://hocalhost:5173/reset-password?token=" + tokenService.generateToken(account));
+            emailDetailForForgotPassword.setLink("http://localhost:5173/reset-password?token=" + tokenService.generateToken(account));
             emailService.sendResetPasswordEmail(emailDetailForForgotPassword);
         }
     }
