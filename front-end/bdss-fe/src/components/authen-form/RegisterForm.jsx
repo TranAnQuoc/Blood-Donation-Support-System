@@ -27,15 +27,15 @@ function RegisterForm() {
     const navigate = useNavigate();
 
     const staticBloodTypes = [
-        { id: 1, label: 'Unknown' },
-        { id: 2, label: 'A+' },
-        { id: 3, label: 'A-' },
-        { id: 4, label: 'B+' },
-        { id: 5, label: 'B-' },
-        { id: 6, label: 'AB+' },
-        { id: 7, label: 'AB-' },
-        { id: 8, label: 'O+' },
-        { id: 9, label: 'O-' }
+        { id: 1, bloodName: 'Unknown', type: 'Unknown', rhFactor: '' },
+        { id: 2, bloodName: 'A+', type: 'A', rhFactor: '+' },
+        { id: 3, bloodName: 'A-', type: 'A', rhFactor: '-' },
+        { id: 4, bloodName: 'B+', type: 'B', rhFactor: '+' },
+        { id: 5, bloodName: 'B-', type: 'B', rhFactor: '-' },
+        { id: 6, bloodName: 'AB+', type: 'AB', rhFactor: '+' },
+        { id: 7, bloodName: 'AB-', type: 'AB', rhFactor: '-' },
+        { id: 8, bloodName: 'O+', type: 'O', rhFactor: '+' },
+        { id: 9, bloodName: 'O-', type: 'O', rhFactor: '-' }
     ];
 
     const genders = ['MALE', 'FEMALE', 'OTHER'];
@@ -99,6 +99,10 @@ function RegisterForm() {
 
     const validateAddress = (address) => {
         if (!address) return 'Địa chỉ là bắt buộc.';
+        const lowerCaseAddress = address.toLowerCase();
+        if (!lowerCaseAddress.includes('hồ chí minh') && !lowerCaseAddress.includes('hcm')) {
+            return 'Địa chỉ phải thuộc Thành phố Hồ Chí Minh.';
+        }
         return '';
     };
 
@@ -325,7 +329,7 @@ function RegisterForm() {
                     >
                         <option value="">Chọn nhóm máu</option>
                         {staticBloodTypes.map(bt => (
-                            <option key={bt.id} value={bt.id}>{bt.label}</option>
+                            <option key={bt.id} value={bt.id}>{bt.bloodName}</option>
                         ))}
                     </select>
                     {errors.bloodTypeId && <p className={styles.errorMessage}>{errors.bloodTypeId}</p>}
