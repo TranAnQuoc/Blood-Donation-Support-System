@@ -11,6 +11,7 @@ import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
+import com.gtwo.bdss_system.service.emergency.EmergencyNotificationService;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
 import com.gtwo.bdss_system.service.emergency.EmergencyRequestService;
 
@@ -38,6 +39,9 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
 
     @Autowired
     private EmergencyProcessService emergencyProcessService;
+
+    @Autowired
+    private EmergencyNotificationService emergencyNotificationService;
 
     @Override
     public void createEmergencyRequest(EmergencyRequestDTO dto, MultipartFile proofImage,Account account) {
@@ -86,9 +90,8 @@ public class EmergencyRequestServiceImpl implements EmergencyRequestService {
         } else {
             request.setEmergencyProof(dto.getEmergencyProof()); // fallback
         }
-
-
         emergencyRequestRepository.save(request);
+        emergencyNotificationService.sendEmergencyNotification("Có yêu cầu khẩn cấp mới từ: " + dto.getFullName());
     }
 
 
