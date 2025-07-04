@@ -78,13 +78,6 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
         for (DonationHistory lastHistory : latestDonationMap.values()) {
             LocalDate nextEligibleDate = calculateNextEligibleDate(lastHistory);
             LocalDate today = LocalDate.now();
-//            Test demo
-//            LocalDateTime nextEligibleDate = calculateNextEligibleDate(lastHistory);
-//            LocalDateTime now = LocalDateTime.now();
-//            if (!now.isBefore(nextEligibleDate)) {
-//                mailService.sendReminderEmail(lastHistory.getDonor(), nextEligibleDate.toLocalDate());
-//            }
-
             if (!today.isBefore(nextEligibleDate)) {
                 mailService.sendReminderEmail(lastHistory.getDonor(), nextEligibleDate);
             }
@@ -98,11 +91,5 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
         LocalDate lastDate = history.getDonationDate()
                 .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return lastDate.plusDays(84);
-//        if (history == null || history.getDonationDate() == null) {
-//            return LocalDateTime.now();
-//        }
-//        LocalDateTime lastDateTime = history.getDonationDate()
-//                .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-//        return lastDateTime.plusSeconds(30);
     }
 }

@@ -76,11 +76,4 @@ public class DonationProcessAPI {
         DonationProcessDTO dto = service.getMyLatestProcess(userId);
         return ResponseEntity.ok(dto);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/auto-setup")
-    public ResponseEntity<String> autoSetup() {
-        service.autoSetupExpiredProcesses();
-        return ResponseEntity.ok("Đã cập nhật các đơn quá hạn.");
-    }
 }

@@ -16,6 +16,7 @@ public class SchedulingServiceImpl {
     @Autowired
     private DonationProcessService donationProcessService;
 
+    //second minute hour day month dayOfWeek
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void autoScanAndSendReminder() {
