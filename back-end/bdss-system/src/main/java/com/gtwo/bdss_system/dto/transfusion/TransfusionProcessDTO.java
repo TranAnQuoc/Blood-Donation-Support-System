@@ -11,17 +11,11 @@ public class TransfusionProcessDTO {
     private LocalDateTime transfusionStartedAt;
     private LocalDateTime transfusionCompletedAt;
     private String status;
-
-    @Size(max = 65535)
     private String staffNotes;
-
-    private Long usedBloodUnitId;
     private Boolean healthCheckPassed;
     private String bloodPressure;
     private Integer heartRate;
     private BigDecimal temperature;
-
-    @Size(max = 65535)
     private String allergyNotes;
 
 }

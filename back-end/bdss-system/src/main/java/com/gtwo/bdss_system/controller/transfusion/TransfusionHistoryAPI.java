@@ -1,41 +1,70 @@
 package com.gtwo.bdss_system.controller.transfusion;
 
 import com.gtwo.bdss_system.dto.transfusion.TransfusionHistoryResponseDTO;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.transfusion.TransfusionHistory;
+import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
+import com.gtwo.bdss_system.repository.transfusion.TransfusionHistoryRepository;
 import com.gtwo.bdss_system.service.transfusion.TransfusionHistoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SecurityRequirement(name = "api")
 @RestController
-@RequestMapping("/api/transfusions/history")
+@RequestMapping("/api/transfusion-history")
+@RequiredArgsConstructor
 public class TransfusionHistoryAPI {
 
-    private final TransfusionHistoryService service;
-    private final ModelMapper mapper;
+    private final TransfusionHistoryService historyService;
+    private final ModelMapper modelMapper;
+    private final AuthenticationRepository authenticationRepository;
+    private final TransfusionHistoryRepository historyRepository;
 
-    public TransfusionHistoryAPI(TransfusionHistoryService service, ModelMapper mapper) {
-        this.service = service;
-        this.mapper = mapper;
+    private Long getCurrentUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        Account account = authenticationRepository.findAccountByEmail(email);
+        if (account == null) throw new RuntimeException("User not found");
+        return account.getId();
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     @GetMapping
-    public List<TransfusionHistoryResponseDTO> getAll() {
-        return service.findAll().stream()
-                .map(h -> mapper.map(h, TransfusionHistoryResponseDTO.class))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<TransfusionHistoryResponseDTO>> getAll() {
+        return ResponseEntity.ok(historyService.getAllHistory());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    @GetMapping("/{id}")
-    public TransfusionHistoryResponseDTO getById(@PathVariable Long id) {
-        TransfusionHistory h = service.findById(id);
-        return mapper.map(h, TransfusionHistoryResponseDTO.class);
+    @GetMapping("/search/{id}")
+    public ResponseEntity<TransfusionHistoryResponseDTO> getById(@PathVariable Long id) {
+        TransfusionHistory history = historyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transfusion history not found with ID: " + id));
+
+        TransfusionHistoryResponseDTO dto = modelMapper.map(history, TransfusionHistoryResponseDTO.class);
+        return ResponseEntity.ok(dto);
     }
+
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping("/my-history")
+    public ResponseEntity<List<TransfusionHistoryResponseDTO>> getMyHistory() {
+        Long userId = getCurrentUserId();
+
+        List<TransfusionHistory> histories = historyRepository.findByRecipientId(userId);
+
+        List<TransfusionHistoryResponseDTO> result = histories.stream()
+                .map(history -> modelMapper.map(history, TransfusionHistoryResponseDTO.class))
+                .toList();
+
+        return ResponseEntity.ok(result);
+    }
+
 }
+
+
