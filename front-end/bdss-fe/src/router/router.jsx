@@ -2,6 +2,9 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute.jsx";
 
+//PUPLIC
+import EmergencyRequestForm from '../components/common/emergency-request/index.jsx';
+
 //LAYOUT
 import Layout from "../layouts/Layout.jsx";
 import LayoutAdmin from "../layouts/LayoutAdmin.jsx";
@@ -34,7 +37,7 @@ import TransfusionRequestList from "../components/staff-components/features/Tran
 import TransfusionRequestDetail from "../components/staff-components/features/TransfusionRequestDetail/TransfusionRequestDetail.jsx";
 import TransfusionProcess from "../components/staff-components/features/TransfusionProcess/TransfusionProcess.jsx";
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
-// import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
+import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
 // import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
 import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
 
@@ -67,6 +70,7 @@ const router = createBrowserRouter([
       { path: "service", element: <GuestService /> },
       { path: "login", element: <LoginForm /> },
       { path: "register", element: <RegisterForm /> },
+      { path: "emergency", element: <EmergencyRequestForm /> },
       
     ],
   },
@@ -146,7 +150,7 @@ const router = createBrowserRouter([
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
       //Emergency Transfusion
-      // { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
+      { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
       // { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
 
