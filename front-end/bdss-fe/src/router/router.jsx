@@ -18,7 +18,8 @@ import GuestDashboard from "../pages/Home/GuestDashboard.jsx";
 import GuestService from "../pages/Service/GuestService.jsx";
 
 //MEMBER
-// import AboutUs from "../components/member-components/mainContent/AboutUs.jsx"; //ALSO GUEST
+import Community from "../pages/Community/CommonCommunity.jsx"; //ALSO GUEST
+import AboutUs from "../pages/AboutUs/CommonAboutUs.jsx"; //ALSO GUEST
 import MemberDashboard from "../pages/Home/MemberDashboard.jsx";
 import MemberService from "../pages/Service/MemberService.jsx";
 import MemberProfile from "../components/member-components/mainContent/MemberProfile";
@@ -38,8 +39,8 @@ import TransfusionRequestList from "../components/staff-components/features/Tran
 import TransfusionRequestDetail from "../components/staff-components/features/TransfusionRequestDetail/TransfusionRequestDetail.jsx";
 import TransfusionProcess from "../components/staff-components/features/TransfusionProcess/TransfusionProcess.jsx";
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
-// import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
-// import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
+import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
+import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
 import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
 
 //ADMIN
@@ -73,6 +74,8 @@ const router = createBrowserRouter([
       //GUEST SERVICE
       { path: "service", element: <GuestService /> },
       { path: "emergency", element: <EmergencyRequestForm /> },
+      { path: "community", element: <Community /> },
+      { path: "about-us", element: <AboutUs /> },
     ],
   },
 
@@ -150,8 +153,8 @@ const router = createBrowserRouter([
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
       //Emergency Transfusion
-      // { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
-      // { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
+      { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
+      { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
 
       //OTHER
@@ -178,6 +181,8 @@ const router = createBrowserRouter([
       { index: true, element: <MemberDashboard /> },
       //MEMBER CUSTOME
       { path: "member-profile", element: <MemberProfile /> },
+      { path: "community", element: <Community /> },
+      { path: "about-us", element: <AboutUs /> },
       //SERVICE
       { path: "member-service", element: <MemberService /> },
       { path: "my-donation-request", element: <MyDonationRequest /> },
