@@ -1,0 +1,106 @@
+/* Container chính của toàn bộ component */
+.emergencyHistoryContainer {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+}
+
+/* Tiêu đề bảng */
+.listTitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+/* Wrapper cho bảng để xử lý cuộn ngang */
+.tableWrapper {
+    overflow-x: auto;
+    width: 100%;
+    padding: 0; /* Bỏ padding ở đây để bảng sát viền hơn */
+    border: none; /* Bỏ viền ở đây để bảng có viền riêng */
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Bảng */
+.emergencyHistoryTable {
+    width: 100%;
+    border-collapse: collapse; /* QUAN TRỌNG: Gộp các đường viền */
+    /* BỎ border-spacing */
+    margin-top: 0;
+    font-size: 0.95em;
+    border: 1px solid #e0e0e0; /* Thêm viền cho toàn bộ bảng */
+    border-radius: 8px; /* Làm tròn góc cho cả bảng */
+    overflow: hidden; /* Quan trọng để border-radius hoạt động với border-collapse */
+}
+
+/* Tiêu đề cột */
+.emergencyHistoryTable thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 15px;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #0056b3; /* Viền riêng cho từng ô tiêu đề */
+    /* Bỏ border-radius ở đây vì đã có ở table */
+}
+
+/* Các ô dữ liệu */
+.emergencyHistoryTable tbody td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: normal;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0; /* Viền riêng cho từng ô dữ liệu */
+    /* Bỏ border-radius ở đây vì đã có ở table */
+}
+
+/* Hiệu ứng xen kẽ hàng */
+.emergencyHistoryTable tbody tr:nth-child(even) td {
+    background-color: #f8f8f8;
+}
+
+/* Hiệu ứng khi hover qua hàng */
+.emergencyHistoryTable tbody tr:hover td {
+    background-color: #e6f7ff;
+    cursor: pointer;
+}
+
+/* Kiểu chữ khi không có dữ liệu */
+.noDataMessage {
+    text-align: center;
+    padding: 25px;
+    color: #555;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+/* Kiểu cho thông báo lỗi */
+.errorMessage {
+    color: #d9534f;
+    font-weight: bold;
+    border: 1px solid #d9534f;
+    background-color: #fdedee;
+    padding: 18px;
+    border-radius: 6px;
+    margin: 25px auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* Kiểu cho thông báo tải */
+.loadingMessage {
+    text-align: center;
+    padding: 25px;
+    color: #007bff;
+    font-size: 1.2em;
+    font-weight: 500;
+}
