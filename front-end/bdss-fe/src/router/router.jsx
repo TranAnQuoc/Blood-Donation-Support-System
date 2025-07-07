@@ -30,6 +30,7 @@ import TransfusionRequest from "../components/member-components/features/Transfu
 import EmergencyRequestForm from '../components/common/EmergencyRequestForm/EmergencyRequestForm.jsx';
 
 //STAFF
+import StaffProfile from "../components/staff-components/mainContent/StaffProfile/StaffProfile.jsx";
 import MemberList from "../components/staff-components/features/MemberList/MemberList.jsx";
 import DonationRequestList from "../components/staff-components/features/DonationRequestList/DonationRequestList.jsx";
 import DonationProcess from "../components/staff-components/features/DonationProcess/DonationProcess.jsx";
@@ -41,9 +42,15 @@ import TransfusionProcess from "../components/staff-components/features/Transfus
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
 import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
 import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
-import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
 import EmergencyTransfusionHistory from "../components/staff-components/features/EmergencyTransfusionHistory/EmergencyTransfusionHistory.jsx"
+import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
+
 //ADMIN
+import AdminProfile from "../components/admin-components/mainContent/AdminProfile/AdminProfile.jsx";
+import AdminList from "../components/admin-components/features/UserManagement/AdminList.jsx";
+import StaffList from "../components/admin-components/features/UserManagement/StaffList.jsx";
+import MemberListForAdmin from "../components/admin-components/features/UserManagement/MemberListForAdmin.jsx";
+import CreateAccountForm from "../components/admin-components/features/UserManagement/CreateAccountForm.jsx";
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationProcess from "../components/admin-components/features/DonationProcess/..."
 // import DonationHistory from "../components/admin-components/features/DonationHistory/..."
@@ -91,14 +98,16 @@ const router = createBrowserRouter([
       { index: true, element: <div>Trang chủ Bảng điều khiển Admin</div> },
 
       //ADMIN CUSTOME
-      { path: "profile", element: <div>Admin Profile Page</div> },
+      { path: "admin-profile", element: <AdminProfile /> },
       { path: "settings", element: <div>Admin Settings Page</div> },
 
       //NAVIGATE
       //NAVIGATE
       //User Management
-      // { path: "user-management/staff-list", element: <StaffList /> },
-      { path: "user-management/member-list", element: <MemberList /> },
+      { path: "user-management/create-account", element: <CreateAccountForm /> },
+      { path: "user-management/admin-list", element: <AdminList /> },
+      { path: "user-management/staff-list", element: <StaffList /> },
+      { path: "user-management/member-list", element: <MemberListForAdmin /> },
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },
       { path: "donation-processes", element: <DonationProcess /> },
@@ -136,7 +145,7 @@ const router = createBrowserRouter([
       { index: true, element: <div>Trang chủ Bảng điều khiển Staff</div> },
 
       //STAFF CUSTOME
-      // { path: "staff-profile", element: <StaffProfile/> },
+      { path: "staff-profile", element: <StaffProfile/> },
       // { path: "staff-setting", element: <StaffSetting/> },
 
       //NAVIGATE

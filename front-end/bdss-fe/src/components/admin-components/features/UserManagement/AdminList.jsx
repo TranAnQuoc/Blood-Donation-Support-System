@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
-import styles from './StaffList.module.css'; 
+import styles from './AdminList.module.css';
 
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';
@@ -29,51 +29,65 @@ const formatDateTime = (isoString) => {
     }
 };
 
-const StaffList = () => {
-    const [staffs, setStaffs] = useState([]);
+const getRoleName = (role) => { //eslint-disable-line no-unused-vars
+    switch (role) {
+        case 'ADMIN': return 'Quản trị viên';
+        case 'STAFF': return 'Nhân viên';
+        case 'MEMBER': return 'Thành viên';
+        default: return 'Không xác định';
+    }
+};
+
+const getAccountStatusName = (status) => {
+    switch (status) {
+        case 'ACTIVE': return 'Hoạt động';
+        case 'INACTIVE': return 'Không hoạt động';
+        default: return 'Không xác định';
+    }
+};
+
+const AdminList = () => {
+    const [accounts, setAccounts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const fetchStaffs = useCallback(async () => {
+    const fetchAdminAccounts = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axiosInstance.get('/account/list-account/STAFF');
-            setStaffs(response.data);
-            console.log("Đã tải danh sách nhân viên:", response.data);
+            const response = await axiosInstance.get(`/account/list-account/ADMIN`);
+            setAccounts(response.data);
+            console.log('Đã tải danh sách tài khoản ADMIN:', response.data);
         } catch (err) {
-            console.error("Lỗi khi tải danh sách nhân viên:", err);
-            setError('Không thể tải danh sách nhân viên. Vui lòng thử lại.');
-            toast.error('Lỗi: Không thể tải danh sách nhân viên.');
+            console.error('Lỗi khi tải danh sách tài khoản ADMIN:', err);
+            const errorMessage = err.response?.data?.message || 'Không thể tải danh sách tài khoản Quản trị viên. Vui lòng thử lại.';
+            setError(errorMessage);
+            toast.error(`Lỗi: ${errorMessage}`);
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        fetchStaffs();
-    }, [fetchStaffs]);
+        fetchAdminAccounts();
+    }, [fetchAdminAccounts]);
 
-    // const handleViewDetails = (staffId) => {
-    //     navigate(`/admin-dashboard/staff-details/${staffId}`);
-    // };
-
-    const handleToggleAccountStatus = async (staffId, currentStatus) => {
+    const handleToggleAccountStatus = async (accountId, currentStatus) => {
         const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
         const confirmMessage = newStatus === 'INACTIVE'
-            ? `Bạn có chắc chắn muốn vô hiệu hóa tài khoản này (ID: ${staffId}) không?`
-            : `Bạn có chắc chắn muốn kích hoạt lại tài khoản này (ID: ${staffId}) không?`;
+            ? `Bạn có chắc chắn muốn vô hiệu hóa tài khoản này (ID: ${accountId}) không?`
+            : `Bạn có chắc chắn muốn kích hoạt lại tài khoản này (ID: ${accountId}) không?`;
 
         if (window.confirm(confirmMessage)) {
             try {
-                await axiosInstance.put(`/account/admin/delete/${staffId}/${newStatus}`);
+                await axiosInstance.put(`/account/admin/delete/${accountId}/${newStatus}`);
                 
                 const successMessage = newStatus === 'INACTIVE'
                     ? 'Tài khoản đã được vô hiệu hóa thành công!'
                     : 'Tài khoản đã được kích hoạt lại thành công!';
                 toast.success(successMessage);
-                fetchStaffs(); 
+                fetchAdminAccounts();
             } catch (err) {
                 console.error('Lỗi khi cập nhật trạng thái tài khoản:', err);
                 const errorMessage = err.response?.data?.message || 'Không thể cập nhật trạng thái tài khoản. Vui lòng thử lại.';
@@ -88,7 +102,7 @@ const StaffList = () => {
     };
 
     if (loading) {
-        return <div className={styles.loadingMessage}>Đang tải danh sách nhân viên...</div>;
+        return <div className={styles.loadingMessage}>Đang tải danh sách tài khoản Quản trị viên...</div>;
     }
 
     if (error) {
@@ -96,8 +110,8 @@ const StaffList = () => {
     }
 
     return (
-        <div className={styles.staffListContainer}>
-            <h2 className={styles.pageTitle}>Quản Lý Tài Khoản Nhân viên</h2>
+        <div className={styles.adminListContainer}>
+            <h2 className={styles.pageTitle}>Quản Lý Tài Khoản Quản trị viên</h2>
 
             <div className={styles.controls}>
                 <button 
@@ -109,10 +123,10 @@ const StaffList = () => {
             </div>
 
             <div className={styles.tableWrapper}>
-                {staffs.length === 0 ? (
-                    <p className={styles.noStaffsMessage}>Không có nhân viên nào trong hệ thống.</p>
+                {accounts.length === 0 ? (
+                    <p className={styles.noAccountsMessage}>Không có tài khoản Quản trị viên nào trong hệ thống.</p>
                 ) : (
-                    <table className={styles.staffTable}>
+                    <table className={styles.adminTable}>
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -129,38 +143,32 @@ const StaffList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {staffs.map((staff) => (
-                                <tr key={staff.id}>
-                                    <td>{staff.id}</td>
-                                    <td>{staff.fullName || 'N/A'}</td>
-                                    <td>{staff.email || 'N/A'}</td>
-                                    <td>{staff.phone || 'N/A'}</td>
-                                    <td>{staff.gender === 'MALE' ? 'Nam' : (staff.gender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
-                                    <td>{formatDateTime(staff.dateOfBirth) || 'N/A'}</td>
+                            {accounts.map((account) => (
+                                <tr key={account.id}>
+                                    <td>{account.id}</td>
+                                    <td>{account.fullName || 'N/A'}</td>
+                                    <td>{account.email || 'N/A'}</td>
+                                    <td>{account.phone || 'N/A'}</td>
+                                    <td>{account.gender === 'MALE' ? 'Nam' : (account.gender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
+                                    <td>{formatDateTime(account.dateOfBirth) || 'N/A'}</td>
                                     <td>
-                                        {staff.bloodType
-                                            ? `${staff.bloodType.type}${staff.bloodType.rhFactor}`
+                                        {account.bloodType
+                                            ? `${account.bloodType.type}${account.bloodType.rhFactor}`
                                             : 'N/A'}
                                     </td>
-                                    <td>{staff.address || 'N/A'}</td>
-                                    <td>{formatDateTime(staff.createAt) || 'N/A'}</td>
+                                    <td>{account.address || 'N/A'}</td>
+                                    <td>{formatDateTime(account.createAt) || 'N/A'}</td>
                                     <td>
-                                        <span className={`${styles.statusBadge} ${styles[staff.status ? staff.status.toLowerCase() : '']}`}>
-                                            {staff.status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+                                        <span className={`${styles.statusBadge} ${styles[account.status ? account.status.toLowerCase() : '']}`}>
+                                            {getAccountStatusName(account.status)}
                                         </span>
                                     </td>
                                     <td className={styles.actions}>
-                                        {/* <button
-                                            className={`${styles.button} ${styles.viewButton}`}
-                                            onClick={() => handleViewDetails(staff.id)}
-                                        >
-                                            Xem chi tiết
-                                        </button> */}
                                         <button
-                                            className={`${styles.button} ${staff.status === 'ACTIVE' ? styles.deleteButton : styles.activateButton}`}
-                                            onClick={() => handleToggleAccountStatus(staff.id, staff.status)}
+                                            className={`${styles.button} ${account.status === 'ACTIVE' ? styles.deleteButton : styles.activateButton}`}
+                                            onClick={() => handleToggleAccountStatus(account.id, account.status)}
                                         >
-                                            {staff.status === 'ACTIVE' ? 'Vô hiệu hóa' : 'Kích hoạt lại'}
+                                            {account.status === 'ACTIVE' ? 'Vô hiệu hóa' : 'Kích hoạt lại'}
                                         </button>
                                     </td>
                                 </tr>
@@ -173,4 +181,4 @@ const StaffList = () => {
     );
 };
 
-export default StaffList;
+export default AdminList;

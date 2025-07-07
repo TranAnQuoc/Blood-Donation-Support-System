@@ -23,16 +23,6 @@ const StaffDropdown = () => {
         navigate("/login");
     };
 
-    const handleProfileClick = () => {
-        setIsOpen(false);
-        navigate("/staff-dashboard/profile");
-    };
-
-    const handleSettingsClick = () => {
-        setIsOpen(false);
-        navigate("/staff-dashboard/settings");
-    };
-
     return (
         <div className={styles.StaffDropdown}>
             <div className={styles.dropdownToggle} onClick={toggleDropdown}>
@@ -42,8 +32,7 @@ const StaffDropdown = () => {
             </div>
             {isOpen && (
                 <ul className={styles.dropdownMenu}>
-                    <li className={styles.dropdownMenuItem} onClick={handleProfileClick}>Profile</li>
-                    <li className={styles.dropdownMenuItem} onClick={handleSettingsClick}>Settings</li>
+                    <li className={styles.dropdownMenuItem} onClick={() => navigate("/staff-dashboard/staff-profile")}>Profile</li>
                     <li className={styles.dropdownMenuItem} onClick={handleLogout}>Logout</li>
                 </ul>
             )}

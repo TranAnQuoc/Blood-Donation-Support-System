@@ -57,7 +57,6 @@ h2 {
     margin-right: 10px;
 }
 
-/* Edit Form Styles */
 .formGroup {
     margin-bottom: 18px;
 }
@@ -90,7 +89,6 @@ h2 {
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* Style cho input bị disabled */
 .disabledInput {
     background-color: #e9ecef;
     cursor: not-allowed;
@@ -124,8 +122,7 @@ h2 {
 
 .editButton,
 .saveButton,
-.cancelButton,
-.deactivateButton {
+.cancelButton {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -138,7 +135,6 @@ h2 {
 .editButton {
     background-color: #007bff;
     color: white;
-    margin: 20px;
 }
 
 .editButton:hover {
@@ -159,22 +155,10 @@ h2 {
 .cancelButton {
     background-color: #6c757d;
     color: white;
-    margin: 20px
 }
 
 .cancelButton:hover {
     background-color: #5a6268;
-    transform: translateY(-1px);
-}
-
-.deactivateButton {
-    background-color: #dc3545;
-    color: white;
-    margin-right: auto;
-}
-
-.deactivateButton:hover {
-    background-color: #c82333;
     transform: translateY(-1px);
 }
 
@@ -211,6 +195,7 @@ h2 {
         margin-bottom: 5px;
     }
 
+    .actionButtonsViewMode,
     .formActions {
         flex-direction: column;
         gap: 10px;

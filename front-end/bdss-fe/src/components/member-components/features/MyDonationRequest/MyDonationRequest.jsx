@@ -138,7 +138,7 @@ const MyDonationRequests = () => {
                         <span className={styles.value}>{formatDateTime(myRequest.approvedTime)}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <span className={styles.label}>Ghi chú:</span>
+                        <span className={styles.label}>Ghi chú của người duyệt:</span>
                         <span className={styles.value}>{myRequest.note || 'Không có'}</span>
                     </div>
 
