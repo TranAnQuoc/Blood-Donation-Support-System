@@ -1,4 +1,4 @@
-.staffListContainer {
+.adminListContainer {
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
@@ -40,7 +40,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; 
     gap: 15px; 
 }
 
@@ -71,29 +71,29 @@
 }
 
 .tableWrapper {
-    overflow-x: auto; 
+    overflow-x: auto;
     width: 100%;
 }
 
-.staffTable {
+.adminTable {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
     background-color: #fff;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: hidden; 
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
 }
 
-.staffTable th,
-.staffTable td {
+.adminTable th,
+.adminTable td {
     padding: 12px 15px;
     border: 1px solid #dee2e6;
     text-align: left;
     white-space: nowrap;
 }
 
-.staffTable th {
+.adminTable th {
     background-color: #e9ecef;
     color: #495057;
     font-weight: bold;
@@ -101,11 +101,11 @@
     font-size: 0.9em;
 }
 
-.staffTable tbody tr:nth-child(even) {
+.adminTable tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-.staffTable tbody tr:hover {
+.adminTable tbody tr:hover {
     background-color: #e2e6ea;
     cursor: default;
 }
@@ -177,7 +177,7 @@
 }
 
 .active {
-    background-color: #28a745; 
+    background-color: #28a745;
 }
 
 .inactive {

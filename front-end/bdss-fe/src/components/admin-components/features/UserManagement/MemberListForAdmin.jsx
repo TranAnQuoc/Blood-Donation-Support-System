@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
-import styles from './MemberList.module.css';
+import styles from './MemberListForAdmin.module.css';
 
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';
@@ -23,20 +23,12 @@ const formatDateTime = (isoString) => {
             return `${day}/${month}/${year}`;
         }
     } catch (e) {
-        console.error("Chuỗi ngày/giờ không hợp lệ:", isoString, e);
-        return 'Ngày/giờ không hợp lệ';
+        console.error("Invalid date/time string:", isoString, e);
+        return 'Invalid date/time';
     }
 };
 
-const getDonationStatusName = (statusDonation) => {
-    switch (statusDonation) {
-        case 'AVAILABLE': return 'Sẵn sàng hiến';
-        case 'INACTIVE': return 'Không sẵn sàng';
-        default: return 'Không xác định';
-    }
-};
-
-const MemberList = () => {
+const MemberListForAdmin = () => { 
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -45,13 +37,13 @@ const MemberList = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axiosInstance.get('/account/list-account/member');
+            const response = await axiosInstance.get('/account/list-account/MEMBER');
             setMembers(response.data);
-            console.log("Đã tải danh sách thành viên:", response.data);
+            console.log("Loaded member list for Admin:", response.data);
         } catch (err) {
-            console.error("Lỗi khi tải danh sách thành viên:", err);
-            setError('Không thể tải danh sách thành viên. Vui lòng thử lại.');
-            toast.error('Lỗi: Không thể tải danh sách thành viên.');
+            console.error("Error loading member list for Admin:", err);
+            setError('Could not load member list. Please try again.');
+            toast.error('Error: Could not load member list.');
         } finally {
             setLoading(false);
         }
@@ -60,24 +52,6 @@ const MemberList = () => {
     useEffect(() => {
         fetchMembers();
     }, [fetchMembers]);
-
-    const handleToggleStatus = async (memberId, currentStatus) => {
-        const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-        const actionText = newStatus === 'ACTIVE' ? 'kích hoạt' : 'vô hiệu hóa';
-        
-        if (window.confirm(`Bạn có chắc chắn muốn ${actionText} thành viên này không?`)) {
-            try {
-                await axiosInstance.put(`/account/staff/delete/${memberId}/${newStatus}`);
-                toast.success(`Thành viên đã được ${actionText} thành công!`);
-                fetchMembers();
-            } catch (err) {
-                console.error(`Lỗi khi ${actionText} thành viên:`, err);
-                const errorMessage = err.response?.data?.message || `Không thể ${actionText} thành viên. Vui lòng thử lại.`;
-                setError(errorMessage);
-                toast.error(`Lỗi: ${errorMessage}`);
-            }
-        }
-    };
 
     if (loading) {
         return <div className={styles.loadingMessage}>Đang tải danh sách thành viên...</div>;
@@ -109,7 +83,6 @@ const MemberList = () => {
                                 <th>Ngày đăng ký</th>
                                 <th>Trạng thái TK</th>
                                 <th>Trạng thái HM</th>
-                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,25 +109,8 @@ const MemberList = () => {
                                     </td>
                                     <td>
                                         <span className={`${styles.statusBadge} ${styles[member.statusDonation ? member.statusDonation.toLowerCase() : '']}`}>
-                                            {getDonationStatusName(member.statusDonation)}
+                                            {member.statusDonation === 'ACTIVE' ? 'Hoạt động hiến máu' : 'Không hoạt động hiến máu'}
                                         </span>
-                                    </td>
-                                    <td className={styles.actions}>
-                                        {member.status === 'ACTIVE' ? (
-                                            <button
-                                                className={`${styles.button} ${styles.deactivateButton}`}
-                                                onClick={() => handleToggleStatus(member.id, 'ACTIVE')}
-                                            >
-                                                Vô hiệu hóa
-                                            </button>
-                                        ) : (
-                                            <button
-                                                className={`${styles.button} ${styles.activateButton}`}
-                                                onClick={() => handleToggleStatus(member.id, 'INACTIVE')}
-                                            >
-                                                Kích hoạt
-                                            </button>
-                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -166,4 +122,4 @@ const MemberList = () => {
     );
 };
 
-export default MemberList;
+export default MemberListForAdmin;

@@ -3,6 +3,7 @@ package com.gtwo.bdss_system.dto.auth;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import jakarta.validation.constraints.*;
 import com.gtwo.bdss_system.enums.Gender;
+import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusDonation;
 import lombok.Data;
 
@@ -33,6 +34,8 @@ public class AccountProfileDTO {
     private String address;
 
     private BloodType bloodType;
+
+    private Status status;
 
     @NotNull(message = "Status donation is required")
     private StatusDonation statusDonation;

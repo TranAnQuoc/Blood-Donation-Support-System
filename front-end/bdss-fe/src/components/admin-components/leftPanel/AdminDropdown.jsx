@@ -1,7 +1,7 @@
 // src/components/LeftPanel/AdminDropdown.jsx
 import React, { useState } from 'react';
 import styles from './AdminDropdown.module.css';
-import { FaUserCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa'; // Ví dụ dùng react-icons
+import { FaUserCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/features/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -33,8 +33,7 @@ const AdminDropdown = () => {
       </div>
       {isOpen && (
         <ul className={styles.dropdownMenu}>
-          <li className={styles.dropdownMenuItem} onClick={() => { /* Logic cho Profile */ }}>Profile</li>
-          <li className={styles.dropdownMenuItem} onClick={() => { /* Logic cho Settings */ }}>Settings</li>
+          <li className={styles.dropdownMenuItem} onClick={() => navigate("/admin-dashboard/admin-profile")}>Profile</li>
           <li className={styles.dropdownMenuItem} onClick={handleLogout}>Logout</li>
         </ul>
       )}

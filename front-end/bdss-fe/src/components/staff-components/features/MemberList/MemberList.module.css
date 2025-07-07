@@ -115,6 +115,46 @@
     transform: translateY(-1px);
 }
 
+.deactivateButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.deactivateButton:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.activateButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.activateButton:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.active {
+    background-color: #28a745;
+}
+
+.available {
+    background-color: #17a2b8;
+}
+
+.inactive {
+    background-color: #6c757d;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .memberListContainer {

@@ -147,7 +147,7 @@ const DonationRequestList = () => {
                 <th>Trạng thái</th>
                 <th>Người duyệt</th>
                 <th>Thời gian duyệt</th>
-                <th>Ghi chú</th>
+                <th>Ghi chú của người duyệt</th>
                 <th>Hành động</th>
               </tr>
             </thead>

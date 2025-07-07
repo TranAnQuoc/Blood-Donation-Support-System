@@ -10,8 +10,9 @@ const UserManagementDropdown = () => {
     };
 
     const subItems = [
-        { id: 'staff-list', label: 'Danh Sách Nhân Viên', path: 'user-management/admin-list' },
-        { id: 'member-list', label: 'Danh Sách Thành Viên', path: 'user-management/admin-list' },
+        { id: 'admin-list', label: 'Danh Sách Quản Trị Viên', path: 'user-management/admin-list' },
+        { id: 'staff-list', label: 'Danh Sách Nhân Viên', path: 'user-management/staff-list' },
+        { id: 'member-list', label: 'Danh Sách Thành Viên', path: 'user-management/member-list' },
     ];
 
     return (
