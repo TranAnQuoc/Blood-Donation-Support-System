@@ -1,23 +1,221 @@
+/* Container chính của trang */
 .dashboardContainer {
-    padding: 30px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
-    margin: 30px auto;
-    text-align: center;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
 }
 
+/* Tiêu đề trang */
 .pageTitle {
-    font-size: 2.2em;
-    color: #34495e;
+    color: #333;
+    text-align: center;
     margin-bottom: 20px;
-    font-weight: 700;
+    font-size: 2em;
+    font-weight: 600;
 }
 
+/* Đoạn văn giới thiệu */
 .introText {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
     font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* Form tìm kiếm */
+.searchForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Khoảng cách giữa các item trong flex container */
+    margin-bottom: 30px;
+    justify-content: center;
+    align-items: flex-end; /* Căn chỉnh các item theo đáy */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Nhóm form (label + input) */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Cho phép các nhóm form co giãn */
+    min-width: 220px; /* Đảm bảo chiều rộng tối thiểu cho input */
+}
+
+.formGroup label {
+    margin-bottom: 8px;
+    font-weight: bold;
     color: #555;
-    margin-bottom: 40px;
-    line-height: 1.6;
+    font-size: 0.95em;
+}
+
+.inputField {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box; /* Bao gồm padding và border vào tổng kích thước */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputField:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+/* Nút tìm kiếm */
+.searchButton {
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: flex-end; /* Căn nút ở cuối hàng */
+}
+
+.searchButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.searchButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
+/* Thông báo lỗi */
+.errorMessage {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.1em;
+    background-color: #ffebe8;
+    border: 1px solid #dc3545;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Thông báo tải dữ liệu */
+p {
+    text-align: center;
+    color: #555;
+    margin-top: 15px;
+    font-size: 1em;
+}
+
+/* Danh sách người hiến máu */
+.donorList {
+    margin-top: 30px;
+}
+
+.donorList h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+/* Thẻ thông tin người hiến máu */
+.donorCard {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.donorCard:hover {
+    transform: translateY(-3px);
+}
+
+.donorCard h4 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.donorCard p {
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 1em;
+    text-align: left; /* Đảm bảo text căn trái trong card */
+}
+
+.donorCard p strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.noteText {
+    font-style: italic;
+    color: #6a6a6a;
+    margin-top: 15px;
+    border-top: 1px dashed #eee;
+    padding-top: 15px;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .searchForm {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .formGroup {
+        min-width: unset;
+        width: 100%;
+    }
+    .searchButton {
+        width: 100%;
+    }
+    .pageTitle {
+        font-size: 1.8em;
+    }
+    .introText {
+        font-size: 1em;
+    }
+    .donorList h3 {
+        font-size: 1.6em;
+    }
+    .donorCard h4 {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboardContainer {
+        padding: 15px;
+    }
+    .searchButton {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
+    .inputField {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
 }

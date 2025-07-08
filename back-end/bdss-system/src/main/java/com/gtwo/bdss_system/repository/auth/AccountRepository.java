@@ -17,16 +17,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);
     boolean existsByCCCD(String cccd);
-    @Query("""
-                SELECT a 
-                FROM Account a 
-                WHERE a.statusDonation = :statusDonation
-                  AND a.bloodType.type = :bloodTypeName
-                  AND LOWER(a.address) LIKE LOWER(CONCAT('%', :location, '%'))
-            """)
-    List<Account> searchAvailableDonors(
-            @Param("statusDonation") StatusDonation statusDonation,
-            @Param("bloodTypeName") String bloodTypeName,
-            @Param("location") String location
-    );
+    @Query("SELECT a FROM Account a WHERE a.statusDonation = :status AND a.bloodType.type = :type AND a.bloodType.rhFactor = :rh AND a.address LIKE %:location%")
+    List<Account> searchAvailableDonorsByTypeAndRh(@Param("status") StatusDonation status, @Param("type") String type, @Param("rh") String rhFactor, @Param("location") String location);
+    @Query("SELECT a FROM Account a WHERE a.statusDonation = :status AND a.bloodType.type = :type AND a.address LIKE %:location%")
+    List<Account> searchAvailableDonorsByType(@Param("status") StatusDonation status, @Param("type") String type, @Param("location") String location);
 }

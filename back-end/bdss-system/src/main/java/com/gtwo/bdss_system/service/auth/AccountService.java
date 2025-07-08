@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.service.auth;
 
 import com.gtwo.bdss_system.dto.auth.*;
+import com.gtwo.bdss_system.dto.commons.UpdateDonationSettingRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
@@ -18,4 +19,5 @@ public interface AccountService {
     void staffSetStatus(Long staffId, Long targetId, Status status);
     void adminSetStatus(Long adminId, Long targetId, Status status);
     List<DonorSearchResponse> searchAvailableDonors(String bloodType, String location, Account currentUser);
+    void updateDonationSettings(Long accountId, UpdateDonationSettingRequest request);
 }

@@ -1,0 +1,153 @@
+/* Container chính của component */
+.settingsContainer {
+    padding: 25px;
+    max-width: 600px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Tiêu đề trang */
+.pageTitle {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    font-weight: 700;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+}
+
+/* Đoạn giới thiệu */
+.introText {
+    text-align: center;
+    color: #666;
+    margin-bottom: 35px;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+/* Form cài đặt */
+.settingsForm {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Khoảng cách giữa các nhóm form */
+}
+
+/* Nhóm form (label + select) */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
+    font-size: 1em;
+}
+
+.selectField {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    width: 100%;
+    box-sizing: border-box; /* Bao gồm padding và border vào tổng kích thước */
+    background-color: #f8f8f8;
+    appearance: none; /* Loại bỏ style mặc định của select box */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.7L146.2%20224.2%2018.9%2075.1a17.6%2017.6%200%200%200-22.7%2022.7l136.9%20136.9c6.7%206.7%2017.7%206.7%2024.4%200l136.9-136.9a17.6%2017.6%200%200%200-5.7-22.7z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selectField:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+.selectField:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Nút lưu cài đặt */
+.saveButton {
+    padding: 15px 30px;
+    background-color: #28a745; /* Màu xanh lá cây cho hành động lưu */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.saveButton:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.saveButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
+/* Thông báo lỗi */
+.errorMessage {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1em;
+    background-color: #ffebe8;
+    border: 1px solid #dc3545;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .settingsContainer {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .pageTitle {
+        font-size: 1.8em;
+    }
+    .introText {
+        font-size: 1em;
+    }
+    .selectField, .saveButton {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settingsContainer {
+        margin: 15px;
+        padding: 15px;
+    }
+    .pageTitle {
+        font-size: 1.6em;
+    }
+    .selectField {
+        background-position: right 10px center;
+        background-size: 10px;
+    }
+}

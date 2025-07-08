@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.controller.auth;
 
 import com.gtwo.bdss_system.dto.auth.*;
+import com.gtwo.bdss_system.dto.commons.UpdateDonationSettingRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
@@ -79,6 +80,16 @@ public class AccountApi {
                                                               @PathVariable Status status) {
         accountService.adminSetStatus(currentUser.getId(), id, status);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update-donation-status")
+    @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<String> updateDonationSettings(
+            @RequestBody UpdateDonationSettingRequest request,
+            @AuthenticationPrincipal Account currentUser
+    ) {
+        accountService.updateDonationSettings(currentUser.getId(), request);
+        return ResponseEntity.ok("Cập nhật thành công");
     }
 
     @GetMapping("/view-profile")
