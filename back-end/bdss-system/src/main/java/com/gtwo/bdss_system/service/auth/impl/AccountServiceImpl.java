@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.service.auth.impl;
 
 import com.gtwo.bdss_system.dto.auth.*;
+import com.gtwo.bdss_system.dto.commons.UpdateDonationSettingRequest;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.donation.DonationHistory;
@@ -92,6 +93,25 @@ public class AccountServiceImpl implements AccountService {
         currentUser.setAddress(dto.getAddress());
         currentUser.setStatusDonation(dto.getStatusDonation());
         accountRepo.save(currentUser);
+    }
+
+    @Override
+    public void updateDonationSettings(Long accountId, UpdateDonationSettingRequest request) {
+        Account account = accountRepo.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        if (request.getStatusDonation() != null) {
+            if (request.getStatusDonation() == StatusDonation.AVAILABLE) {
+                Long count = donationHistoryRepository.countCompletedByAccount(accountId, StatusProcess.COMPLETED);
+                if (count == 0) {
+                    throw new IllegalArgumentException("Bạn chưa từng hiến máu thành công tại BDSC, không thể sử dụng dịch vụ sẵn sàng hiến máu.");
+                }
+            }
+            account.setStatusDonation(request.getStatusDonation());
+        }
+        if (request.getPhoneVisibility() != null) {
+            account.setPhoneVisibility(request.getPhoneVisibility());
+        }
+        accountRepo.save(account);
     }
 
     @Override
@@ -203,11 +223,27 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<DonorSearchResponse> searchAvailableDonors(String bloodType, String location, Account currentUser) {
-        List<Account> donors = accountRepo.searchAvailableDonors(
-                StatusDonation.AVAILABLE,
-                bloodType,
-                location
-        );
+        String type = null;
+        String rhFactor = null;
+        if (bloodType.endsWith("+") || bloodType.endsWith("-")) {
+            type = bloodType.substring(0, bloodType.length() - 1).toUpperCase();
+            rhFactor = bloodType.substring(bloodType.length() - 1); // + hoặc -
+        } else {
+            type = bloodType.toUpperCase();
+            rhFactor = null; // không giới hạn Rh
+        }
+        List<Account> donors;
+        if (rhFactor != null) {
+            // Tìm chính xác cả type và Rh
+            donors = accountRepo.searchAvailableDonorsByTypeAndRh(
+                    StatusDonation.AVAILABLE, type, rhFactor, location
+            );
+        } else {
+            // Tìm theo type, không quan tâm Rh
+            donors = accountRepo.searchAvailableDonorsByType(
+                    StatusDonation.AVAILABLE, type, location
+            );
+        }
         boolean isMember = (currentUser != null && currentUser.getRole() == Role.MEMBER);
         return donors.stream().map(donor -> {
             DonorSearchResponse dto = new DonorSearchResponse();
