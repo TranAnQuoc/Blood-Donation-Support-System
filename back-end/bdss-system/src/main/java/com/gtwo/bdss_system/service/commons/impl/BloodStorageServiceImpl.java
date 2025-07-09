@@ -1,8 +1,6 @@
 package com.gtwo.bdss_system.service.commons.impl;
 
-import com.gtwo.bdss_system.dto.commons.BloodStorageDTO;
-import com.gtwo.bdss_system.dto.commons.BloodStorageUseDTO;
-import com.gtwo.bdss_system.dto.commons.VerifiedNote;
+import com.gtwo.bdss_system.dto.commons.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BloodStorageServiceImpl implements BloodStorageService {
@@ -51,11 +50,17 @@ public class BloodStorageServiceImpl implements BloodStorageService {
     }
 
     @Override
-    public BloodStorage approve(Long id, Account approver) {
+    public BloodStorage approve(Long id, ApproveRequestDTO dto, Account approver) {
+        if (dto.getStatus() != StatusBloodStorage.STORED && dto.getStatus() != StatusBloodStorage.REJECTED) {
+            throw new IllegalArgumentException("Chỉ được chọn STORED hoặc REJECTED.");
+        }
         BloodStorage storage = repository.findById(id).orElseThrow();
-        storage.setBloodStatus(StatusBloodStorage.STORED);
+        storage.setBloodStatus(dto.getStatus());
         storage.setApprovedAt(LocalDateTime.now());
         storage.setApprovedBy(approver);
+        if (dto.getStatus() == StatusBloodStorage.REJECTED) {
+            storage.setVerifiedNote(dto.getNote());
+        }
         return repository.save(storage);
     }
 
@@ -90,12 +95,92 @@ public class BloodStorageServiceImpl implements BloodStorageService {
     }
 
     @Override
-    public List<BloodStorage> getAll() {
-        return repository.findAll();
+    public List<BloodStorageResponseDTO> getAll() {
+        List<BloodStorage> storages = repository.findAll();
+        return storages.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<BloodStorage> getByStatus(StatusBloodStorage status) {
-        return repository.findByBloodStatus(status);
+    public List<BloodStorageResponseDTO> getByStatus(StatusBloodStorage status) {
+        List<BloodStorage> storages = repository.findByBloodStatus(status);
+        return storages.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BloodStorageResponseDTO> searchByTypeRhComponent(Long bloodTypeId, Long bloodComponentId) {
+        List<BloodStorage> results = repository.searchByTypeAndComponent(bloodTypeId, bloodComponentId);
+        return results.stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    private BloodStorageResponseDTO mapToDto(BloodStorage entity) {
+        BloodStorageResponseDTO dto = new BloodStorageResponseDTO();
+        dto.setId(entity.getId());
+
+        // Donor
+        if (entity.getDonor() != null) {
+            dto.setDonorId(entity.getDonor().getId());
+            dto.setDonorName(entity.getDonor().getFullName());
+            dto.setDonorPhone(entity.getDonor().getPhone());
+            dto.setDonorRole(entity.getDonor().getRole().name());
+        }
+
+        // BloodType, BloodComponent
+        if (entity.getBloodType() != null) {
+            dto.setBloodTypeId(entity.getBloodType().getId());
+            dto.setBloodTypeName(entity.getBloodType().getType());
+            dto.setBloodTypeRh(entity.getBloodType().getRhFactor());
+        }
+
+        // Blood component
+        if (entity.getBloodComponent() != null) {
+            dto.setBloodComponentId(entity.getBloodComponent().getId());
+            dto.setBloodComponentName(entity.getBloodComponent().getName());
+        }
+        dto.setQuantity(entity.getQuantity());
+        dto.setBloodStatus(entity.getBloodStatus());
+        dto.setCreateAt(entity.getCreateAt());
+
+        // CreatedBy
+        if (entity.getCreatedBy() != null) {
+            dto.setCreatedById(entity.getCreatedBy().getId());
+            dto.setCreatedByName(entity.getCreatedBy().getFullName());
+            dto.setCreatedByPhone(entity.getCreatedBy().getPhone());
+            dto.setCreatedByRole(entity.getCreatedBy().getRole().name());
+        }
+
+        dto.setApprovedAt(entity.getApprovedAt());
+        if (entity.getApprovedBy() != null) {
+            dto.setApprovedById(entity.getApprovedBy().getId());
+            dto.setApprovedByName(entity.getApprovedBy().getFullName());
+            dto.setApprovedByPhone(entity.getApprovedBy().getPhone());
+            dto.setApprovedByRole(entity.getApprovedBy().getRole().name());
+        }
+
+        dto.setUsageReason(entity.getUsageReason());
+        dto.setTakeAt(entity.getTakeAt());
+        if (entity.getTakeBy() != null) {
+            dto.setTakeById(entity.getTakeBy().getId());
+            dto.setTakeByName(entity.getTakeBy().getFullName());
+            dto.setTakeByPhone(entity.getTakeBy().getPhone());
+            dto.setTakeByRole(entity.getTakeBy().getRole().name());
+        }
+
+        dto.setVerifiedAt(entity.getVerifiedAt());
+        if (entity.getVerifiedBy() != null) {
+            dto.setVerifiedById(entity.getVerifiedBy().getId());
+            dto.setVerifiedByName(entity.getVerifiedBy().getFullName());
+            dto.setVerifiedByPhone(entity.getVerifiedBy().getPhone());
+            dto.setVerifiedByRole(entity.getVerifiedBy().getRole().name());
+        }
+
+        dto.setVerifiedStatus(entity.getVerifiedStatus());
+        dto.setVerifiedNote(entity.getVerifiedNote());
+        return dto;
     }
 }

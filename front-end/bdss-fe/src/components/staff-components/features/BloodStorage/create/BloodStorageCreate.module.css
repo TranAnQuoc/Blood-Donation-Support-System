@@ -1,0 +1,126 @@
+/* ... (Giữ nguyên các style đã có cho BloodStorageList, Modal, v.v.) ... */
+
+/* Styles cho BloodStorageCreateForm */
+.formContainer {
+    padding: 30px;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.formTitle {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2.5em;
+    font-weight: 700;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 18px;
+}
+
+.formIntro {
+    text-align: center;
+    color: #555;
+    margin-bottom: 40px;
+    font-size: 1.15em;
+    line-height: 1.6;
+}
+
+.bloodStorageForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Các formGroup, label, inputField, selectField đã được định nghĩa ở trên,
+   chỉ cần đảm bảo chúng có các style tương tự hoặc dùng chung. */
+/* Ví dụ: */
+/* .formGroup { ... } */
+/* .label { ... } */
+/* .inputField { ... } */
+/* .selectField { ... } */
+
+.inputError {
+    border-color: #e74c3c !important; /* Màu đỏ cho viền khi có lỗi */
+    box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25) !important;
+}
+
+.errorText {
+    color: #e74c3c;
+    font-size: 0.85em;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.submitButton {
+    padding: 15px 30px;
+    background-color: #28a745; /* Màu xanh lá cây cho nút submit */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 25px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.submitButton:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+}
+
+.submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+}
+
+.apiErrorMessage {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1em;
+    background-color: #ffebe8;
+    border: 1px solid #dc3545;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Responsive adjustments (có thể dùng chung với BloodStorageList) */
+@media (max-width: 768px) {
+    .formContainer {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .formTitle {
+        font-size: 2em;
+    }
+    .formIntro {
+        font-size: 1em;
+    }
+    .inputField, .selectField, .submitButton {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .formContainer {
+        margin: 15px;
+        padding: 15px;
+    }
+    .formTitle {
+        font-size: 1.8em;
+    }
+}

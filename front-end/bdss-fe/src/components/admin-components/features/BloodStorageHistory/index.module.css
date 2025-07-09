@@ -1,0 +1,247 @@
+/* BloodStorageHistory.module.css */
+
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pageTitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.topControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 15px; /* Spacing between elements */
+}
+
+.filterSection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.label {
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+.selectField {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    min-width: 180px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease-in-out;
+}
+
+.selectField:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.loadingMessage,
+.errorMessage,
+.noDataMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.errorMessage {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.historyCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.historyCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.historyCard p {
+    margin: 5px 0;
+    color: #333;
+    font-size: 0.95em;
+}
+
+.historyCard strong {
+    color: #000;
+}
+
+.cardId {
+    font-weight: bold;
+    color: #0056b3;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+/* Status specific colors for BloodStorageHistory */
+.in_used { background-color: #6f42c1; } /* Purple */
+.transferred { background-color: #17a2b8; } /* Teal */
+/* Add other status colors if you display them (e.g., from original blood storage) */
+.stored { background-color: #28a745; } /* Green */
+.pending { background-color: #ffc107; } /* Yellow */
+.expired { background-color: #6c757d; } /* Gray */
+.rejected { background-color: #dc3545; } /* Red */
+
+
+/* For verified status if needed (e.g., in modal) */
+.success { background-color: #28a745; }
+.failed { background-color: #dc3545; }
+
+
+.cardCreated, .cardArchived {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 5px;
+}
+
+/* Modal specific styles */
+/* Modal Overlay - (if you use the basic Modal component structure) */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 20px auto;
+    overflow-y: auto; /* Enable scrolling for long content */
+    max-height: 90vh; /* Limit height to viewport height */
+    position: relative; /* For positioning close button if needed */
+}
+
+.modalContent h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.modalContent h4 {
+    color: #0056b3;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.detailRow:last-of-type {
+    border-bottom: none;
+}
+
+.detailRow p {
+    margin: 0;
+    font-size: 1em;
+    color: #444;
+}
+
+.detailRow strong {
+    min-width: 120px; /* Align labels */
+    color: #222;
+}
+
+.closeModalButton {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 25px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.closeModalButton:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cardGrid {
+        grid-template-columns: 1fr; /* Stack cards on small screens */
+    }
+    .topControls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .filterSection {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .selectField {
+        width: 100%;
+    }
+}

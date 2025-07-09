@@ -83,7 +83,7 @@ const LeftPanel = () => {
         { id: 'history', icon: faHistory, label: 'Lịch Sử', hasDropdown: true },
         { id: 'registrationList', icon: faFileAlt, label: 'Đơn Đăng Ký', fullPath: '/staff-dashboard/registration-list' },
         { id: 'eventManagement', icon: faCalendarAlt, label: 'Quản Lý Sự Kiện Hiến Máu', fullPath: '/staff-dashboard/event-management' },
-        { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-stock' },
+        { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-storage' },
         { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/staff-dashboard/recovery-reminders' },
         { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/staff-dashboard/community-posts' },
         { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/staff-dashboard/reports' },

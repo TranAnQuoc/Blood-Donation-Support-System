@@ -1,0 +1,88 @@
+
+.verifyContainer {
+    background-color: #f0f8ff; /* Light blue background */
+    border: 1px solid #b0e0e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.verifyContainer h4 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 10px;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #34495e;
+}
+
+.selectField,
+.textareaField {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box; /* Ensures padding doesn't increase width */
+}
+
+.selectField:focus,
+.textareaField:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.textareaField {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+.submitButton {
+    background-color: #28a745; /* Green for success/submit */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.verifiedInfo {
+    background-color: #e9f7ef;
+    border: 1px solid #d4edda;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.verifiedInfo p {
+    margin-bottom: 8px;
+    color: #155724;
+}
+
+.verifiedMessage {
+    font-style: italic;
+    color: #6c757d;
+}

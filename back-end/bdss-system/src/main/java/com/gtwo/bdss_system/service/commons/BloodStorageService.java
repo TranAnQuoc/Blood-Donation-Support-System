@@ -1,8 +1,6 @@
 package com.gtwo.bdss_system.service.commons;
 
-import com.gtwo.bdss_system.dto.commons.BloodStorageDTO;
-import com.gtwo.bdss_system.dto.commons.BloodStorageUseDTO;
-import com.gtwo.bdss_system.dto.commons.VerifiedNote;
+import com.gtwo.bdss_system.dto.commons.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
@@ -12,13 +10,15 @@ import java.util.List;
 public interface BloodStorageService {
     BloodStorage create(BloodStorageDTO dto, Account creater);
 
-    BloodStorage approve(Long id, Account approver);
+    BloodStorage approve(Long id, ApproveRequestDTO dto, Account approver);
 
     BloodStorage use(Long id, BloodStorageUseDTO useDto, Account user);
 
     BloodStorage verify(Long id, VerifiedNote verifiedNote,Account verifier);
 
-    List<BloodStorage> getAll();
+    List<BloodStorageResponseDTO> getAll();
 
-    List<BloodStorage> getByStatus(StatusBloodStorage status);
+    List<BloodStorageResponseDTO> getByStatus(StatusBloodStorage status);
+
+    List<BloodStorageResponseDTO> searchByTypeRhComponent(Long bloodTypeId, Long bloodComponentId);
 }
