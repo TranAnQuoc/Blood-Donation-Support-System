@@ -1,0 +1,93 @@
+
+.bloodStorageUseActionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reasonSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reasonSection label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.reasonInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    min-height: 80px;
+    resize: vertical;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.reasonInput:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.useButton,
+.transferButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    flex-grow: 1;
+    max-width: 200px;
+}
+
+.useButton {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+.useButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.useButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
+.transferButton {
+    background-color: #ffc107; /* Yellow/Orange */
+    color: #333; /* Darker text for contrast */
+}
+
+.transferButton:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+.transferButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}

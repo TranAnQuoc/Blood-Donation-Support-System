@@ -1,0 +1,230 @@
+/* Container chính của component */
+.container {
+    padding: 30px;
+    max-width: 700px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tiêu đề trang */
+.pageTitle {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2.5em;
+    font-weight: 700;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 18px;
+}
+
+/* Đoạn giới thiệu */
+.introText {
+    text-align: center;
+    color: #555;
+    margin-bottom: 40px;
+    font-size: 1.15em;
+    line-height: 1.6;
+}
+
+/* Form */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Khoảng cách giữa các nhóm form */
+}
+
+/* Nhóm form (label + select) */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #444;
+    font-size: 1em;
+}
+
+.selectField {
+    padding: 12px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fcfcfc;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%233498db%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.7L146.2%20224.2%2018.9%2075.1a17.6%2017.6%200%200%200-22.7%2022.7l136.9%20136.9c6.7%206.7%2017.7%206.7%2024.4%200l136.9-136.9a17.6%2017.6%200%200%200-5.7-22.7z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.selectField:hover {
+    border-color: #a9a9a9;
+}
+
+.selectField:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52,152,219,.25);
+    outline: none;
+}
+
+.selectField:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* Nút kiểm tra */
+.checkButton {
+    padding: 15px 30px;
+    background-color: #3498db; /* Màu xanh dương */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-top: 25px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(52,152,219,0.3);
+}
+
+.checkButton:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(52,152,219,0.4);
+}
+
+.checkButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Thông báo lỗi */
+.errorMessage {
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 25px;
+    font-weight: bold;
+    font-size: 1em;
+    background-color: #ffe8e8;
+    border: 1px solid #e74c3c;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+/* Khung hiển thị kết quả */
+.resultCard {
+    margin-top: 35px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.resultCard h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.resultCard p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    line-height: 1.5;
+    text-align: left; /* Đảm bảo text căn trái trong card */
+    color: #444;
+}
+
+.resultCard strong {
+    color: #222;
+}
+
+/* Style riêng cho kết quả tương thích/không tương thích */
+.compatible {
+    border: 2px solid #27ae60; /* Màu xanh lá */
+    background-color: #e8f9ed;
+}
+
+.incompatible {
+    border: 2px solid #e74c3c; /* Màu đỏ */
+    background-color: #ffe8e8;
+}
+
+.compatibleText {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.incompatibleText {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .pageTitle {
+        font-size: 2em;
+    }
+    .introText {
+        font-size: 1em;
+    }
+    .selectField, .checkButton {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin: 15px;
+        padding: 15px;
+    }
+    .pageTitle {
+        font-size: 1.8em;
+    }
+    .selectField {
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+    .resultCard {
+        padding: 18px;
+    }
+    .resultCard h3 {
+        font-size: 1.5em;
+    }
+    .resultCard p {
+        font-size: 0.95em;
+    }
+}

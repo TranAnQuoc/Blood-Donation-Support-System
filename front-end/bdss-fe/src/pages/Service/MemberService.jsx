@@ -32,6 +32,12 @@ const MemberService = () => {
                     <p>Xem lại lịch sử các lần hiến máu đã hoàn thành của bạn.</p>
                     <Link to="/member/my-donation-history" className={styles.actionButton}>Xem lịch sử</Link>
                 </div>
+
+                <div className={styles.featureCard}>
+                    <h3>Tra Cứu Nhóm Máu</h3>
+                    <p>Tra cứu thông tin phù hợp giữa các nhóm máu của người nhận và người hiến.</p>
+                    <Link to="/member/SearchMatchBlood" className={styles.actionButton}>Tra Cứu</Link>
+                </div>
             </div>
         </div>
         

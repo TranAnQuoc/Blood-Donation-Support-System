@@ -1,0 +1,80 @@
+.approvalActionContainer {
+  margin-top: 16px;
+  border-top: 1px dashed #ddd;
+  padding-top: 16px;
+}
+
+.noteSection {
+  margin-bottom: 12px;
+}
+
+.noteSection label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.noteInput {
+  width: 100%;
+  min-height: 70px;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.noteInput:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.approveButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.approveButton:hover {
+  background-color: #43a047;
+  transform: translateY(-1px);
+}
+
+.rejectButton {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.rejectButton:hover {
+  background-color: #e53935;
+  transform: translateY(-1px);
+}
+
+.approveButton:disabled,
+.rejectButton:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+  transform: none;
+}
+

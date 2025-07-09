@@ -16,6 +16,7 @@ import ResetPassword from "../components/authen-form/ResetPassword/ResetPassword
 //GUEST
 import GuestDashboard from "../pages/Home/GuestDashboard.jsx";
 import GuestService from "../pages/Service/GuestService.jsx";
+import SearchMatchBlood from "../components/common/SearchMatchBlood/index.jsx";
 
 //MEMBER
 import Community from "../pages/Community/CommonCommunity.jsx"; //ALSO GUEST
@@ -27,8 +28,8 @@ import RegisterDonation from "../components/member-components/features/RegisterD
 import MyDonationRequest from "../components/member-components/features/MyDonationRequest/MyDonationRequest.jsx";
 import MyDonationHistory from "../components/member-components/features/MyDonationHistory/MyDonationHistory.jsx";
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
-import EmergencyRequestForm from '../components/common/EmergencyRequestForm/EmergencyRequestForm.jsx';
-import StatusDonationSetup from '../pages/Community/StatusDonationSetting.jsx'
+import EmergencyRequestForm from "../components/common/EmergencyRequestForm/EmergencyRequestForm.jsx";
+import StatusDonationSetup from "../pages/Community/StatusDonationSetting.jsx";
 
 //STAFF
 import StaffProfile from "../components/staff-components/mainContent/StaffProfile/StaffProfile.jsx";
@@ -43,8 +44,10 @@ import TransfusionProcess from "../components/staff-components/features/Transfus
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
 import EmergencyTransfusionRequestList from "../components/staff-components/features/EmergencyTransfusionRequestList/EmergencyTransfusionRequestList.jsx";
 import EmergencyTransfusionProcess from "../components/staff-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx";
-import EmergencyTransfusionHistory from "../components/staff-components/features/EmergencyTransfusionHistory/EmergencyTransfusionHistory.jsx"
+import EmergencyTransfusionHistory from "../components/staff-components/features/EmergencyTransfusionHistory/EmergencyTransfusionHistory.jsx";
 import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
+import BloodStorageStaff from "../components/staff-components/features/BloodStorage/view/BloodStorage.jsx";
+import BloodStorageCreateForm from "../components/staff-components/features/BloodStorage/create/BloodStorageCreate.jsx"
 
 //ADMIN
 import AdminProfile from "../components/admin-components/mainContent/AdminProfile/AdminProfile.jsx";
@@ -61,6 +64,7 @@ import CreateAccountForm from "../components/admin-components/features/UserManag
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
+import BloodStorageAdmin from "../components/admin-components/features/BloodStorage/view/BloodStorage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +88,7 @@ const router = createBrowserRouter([
       { path: "emergency", element: <EmergencyRequestForm /> },
       { path: "community", element: <Community /> },
       { path: "about-us", element: <AboutUs /> },
+      { path: "SearchMatchBlood", element: <SearchMatchBlood /> },
     ],
   },
 
@@ -105,7 +110,10 @@ const router = createBrowserRouter([
       //NAVIGATE
       //NAVIGATE
       //User Management
-      { path: "user-management/create-account", element: <CreateAccountForm /> },
+      {
+        path: "user-management/create-account",
+        element: <CreateAccountForm />,
+      },
       { path: "user-management/admin-list", element: <AdminList /> },
       { path: "user-management/staff-list", element: <StaffList /> },
       { path: "user-management/member-list", element: <MemberListForAdmin /> },
@@ -114,8 +122,14 @@ const router = createBrowserRouter([
       { path: "donation-processes", element: <DonationProcess /> },
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
-      { path: "transfusion-requests-management", element: <TransfusionRequestList /> },
-      { path: "transfusion-requests-management/:id",element: <TransfusionRequestDetail /> },
+      {
+        path: "transfusion-requests-management",
+        element: <TransfusionRequestList />,
+      },
+      {
+        path: "transfusion-requests-management/:id",
+        element: <TransfusionRequestDetail />,
+      },
       { path: "transfusion-processes", element: <TransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
@@ -123,6 +137,9 @@ const router = createBrowserRouter([
       // { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
       // { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
+
+      //BloodStorage
+      { path: "blood-storage", element: <BloodStorageAdmin /> },
 
       //OTHER
       { path: "event-management", element: <EventManagement /> },
@@ -146,7 +163,7 @@ const router = createBrowserRouter([
       { index: true, element: <div>Trang chủ Bảng điều khiển Staff</div> },
 
       //STAFF CUSTOME
-      { path: "staff-profile", element: <StaffProfile/> },
+      { path: "staff-profile", element: <StaffProfile /> },
       // { path: "staff-setting", element: <StaffSetting/> },
 
       //NAVIGATE
@@ -157,15 +174,31 @@ const router = createBrowserRouter([
       { path: "donation-process/:id", element: <DonationProcessDetail /> },
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
-      { path: "transfusion-requests-management", element: <TransfusionRequestList /> },
-      { path: "transfusion-requests-management/:id", element: <TransfusionRequestDetail /> },
+      {
+        path: "transfusion-requests-management",
+        element: <TransfusionRequestList />,
+      },
+      {
+        path: "transfusion-requests-management/:id",
+        element: <TransfusionRequestDetail />,
+      },
       { path: "transfusion-processes", element: <TransfusionProcess /> },
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
       //Emergency Transfusion
-      { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
-      { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
+      {
+        path: "emergency-transfusion-requests",
+        element: <EmergencyTransfusionRequestList />,
+      },
+      {
+        path: "emergency-transfusion-processes",
+        element: <EmergencyTransfusionProcess />,
+      },
       { path: "emergency-histories", element: <EmergencyTransfusionHistory /> },
+
+      //BloodStorage
+      { path: "blood-storage", element: <BloodStorageStaff /> },
+      { path: "blood-storage/create", element: <BloodStorageCreateForm /> },
 
       //OTHER
       { path: "member-list", element: <MemberList /> },
@@ -191,12 +224,15 @@ const router = createBrowserRouter([
       { index: true, element: <MemberDashboard /> },
       //MEMBER CUSTOME
       { path: "member-profile", element: <MemberProfile /> },
-      { path: "community", element: (
-        <>
-          <StatusDonationSetup />
-          <Community />
-        </>
-      ), },
+      {
+        path: "community",
+        element: (
+          <>
+            <StatusDonationSetup />
+            <Community />
+          </>
+        ),
+      },
       { path: "about-us", element: <AboutUs /> },
       //SERVICE
       { path: "member-service", element: <MemberService /> },
@@ -207,6 +243,7 @@ const router = createBrowserRouter([
       // { path: "about-us", element: <About Us /> },
       { path: "register-donation", element: <RegisterDonation /> },
       { path: "request-transfusion", element: <TransfusionRequest /> },
+      { path: "SearchMatchBlood", element: <SearchMatchBlood /> },
     ],
   },
 ]);

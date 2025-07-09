@@ -1,8 +1,6 @@
 package com.gtwo.bdss_system.controller.commons;
 
-import com.gtwo.bdss_system.dto.commons.BloodStorageDTO;
-import com.gtwo.bdss_system.dto.commons.BloodStorageUseDTO;
-import com.gtwo.bdss_system.dto.commons.VerifiedNote;
+import com.gtwo.bdss_system.dto.commons.*;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
@@ -33,8 +31,8 @@ public class BloodStorageAPI {
 
     @PutMapping("/approve/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> approve(@PathVariable Long id, @AuthenticationPrincipal Account approver) {
-        return ResponseEntity.ok(service.approve(id, approver));
+    public ResponseEntity<?> approve(@PathVariable Long id, @RequestBody ApproveRequestDTO dto, @AuthenticationPrincipal Account approver) {
+        return ResponseEntity.ok(service.approve(id, dto, approver));
     }
 
     @PutMapping("/use/{id}")
@@ -58,7 +56,15 @@ public class BloodStorageAPI {
     @GetMapping("/status")
     @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     public ResponseEntity<?> getByStatus(@RequestParam("status") StatusBloodStorage status) {
-        List<BloodStorage> result = service.getByStatus(status);
+        List<BloodStorageResponseDTO> result = service.getByStatus(status);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
+    public ResponseEntity<List<BloodStorageResponseDTO>> searchByTypeRhComponent(
+            @RequestParam(required = false) Long bloodTypeId,
+            @RequestParam(required = false) Long bloodComponentId) {
+        return ResponseEntity.ok(service.searchByTypeRhComponent(bloodTypeId, bloodComponentId));
     }
 }
