@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 dayjs.extend(isSameOrAfter);
 import styles from './RegisterDonation.module.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const RegisterDonation = () => {
     const [donationEvents, setDonationEvents] = useState([]);
@@ -17,6 +19,8 @@ const RegisterDonation = () => {
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [hasRegisteredBefore, setHasRegisteredBefore] = useState(false);
+    const navigate = useNavigate();
+
 
     const staticBloodTypes = [
         { id: 1, bloodName: 'Unknown', type: 'Unknown', rhFactor: '' },
@@ -237,6 +241,14 @@ const RegisterDonation = () => {
                     disabled={isSubmitting || eventOptions.length === 0 || !userBloodType} 
                 >
                     {isSubmitting ? 'Đang gửi...' : 'Gửi Yêu Cầu Đăng Ký'}
+                </button>
+
+                <button
+                    type="button"
+                    className={styles.backButton}
+                    onClick={() => navigate(-1)}
+                >
+                    Quay lại
                 </button>
             </form>
         </div>

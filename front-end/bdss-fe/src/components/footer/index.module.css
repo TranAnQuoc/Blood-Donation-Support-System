@@ -48,7 +48,7 @@
 .logoText {
     font-size: 2em;
     font-weight: bold;
-    color: #E12454;
+    color: #C12759;
     margin: 0;
     border-bottom: none;
     padding-top: 15px;
@@ -102,7 +102,7 @@
 }
 
 .socialLink:hover {
-    background-color: #E12454;
+    background-color: #C12759;
     color: #fff;
 }
 
@@ -115,7 +115,7 @@
 .quickLinkSection h3 {
     font-size: 1.3em;
     margin-bottom: 30px;
-    color: #F7C41C;
+    color: #fff;
     position: relative;
     font-weight: bold;
     text-transform: uppercase;
@@ -162,7 +162,7 @@
 
 
 .footerLink:hover {
-    color: #E12454;
+    color: #C12759;
     text-decoration: none;
 }
 

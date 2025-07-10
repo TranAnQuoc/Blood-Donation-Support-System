@@ -1,5 +1,5 @@
 .recommendationContainer {
-    background-color: #003364;
+    background-color: #364956;
     padding: 40px 20px;
     color: #fff;
     font-family: 'Arial', sans-serif;
@@ -9,7 +9,7 @@
 .pageTitle {
     font-size: 2.5em;
     margin-bottom: 40px;
-    color: #F7C41C;
+    color: #fff;
     /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
     border-bottom: none;
 }
