@@ -102,6 +102,8 @@
     color: #555;
     font-size: 0.95em;
     line-height: 1.5;
+    text-align: left;
+    padding-left: 50px;
 }
 
 .detailGrid p strong {
@@ -141,6 +143,30 @@
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
+.backSection {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.backButton {
+    background-color: #ffffff;
+    border: 1px solid #031B4E;
+    color: #031B4E;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-bottom: 16px;
+}
+
+.backButton:hover {
+    background-color: #031B4E;
+    color: #ffffff;
+}
+
 
 
 /* Responsive adjustments */

@@ -1,18 +1,9 @@
 .dashboardContainer {
-    padding: 30px;
     background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
-    margin: 30px auto;
+    max-width: 100%;
     text-align: center;
-}
-
-.pageTitle {
-    font-size: 2.2em;
-    color: #34495e;
-    margin-bottom: 20px;
-    font-weight: 700;
 }
 
 .introText {
@@ -20,4 +11,211 @@
     color: #555;
     margin-bottom: 40px;
     line-height: 1.6;
+}
+
+.aboutUsWrapper {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.aboutUsHeader {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #E12454;
+    padding: 0 1rem;
+    background-image: url('https://images.pexels.com/photos/6823567/pexels-photo-6823567.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+.headerOverlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.headerContent {
+    position: relative;
+    z-index: 20;
+    margin-bottom: 1.25rem;
+}
+
+.headerSubtitle {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    opacity: 0.8;
+    color: #223645;
+}
+
+.headerTitle {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+@media (min-width: 768px) {
+    .headerTitle {
+        font-size: 3.75rem;
+    }
+}
+
+.currentPage {
+    font-weight: 600;
+    color: white;
+}
+
+.aboutUsMainContent {
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.contentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 80rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+}
+
+@media (min-width: 768px) {
+    .contentContainer {
+        padding: 3rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .contentContainer {
+        flex-wrap: nowrap;
+    }
+}
+
+.imageColumn {
+    width: 100%;
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@media (min-width: 1024px) {
+    .imageColumn {
+        width: 50%;
+    }
+}
+
+.mainImage {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.75rem;
+}
+
+.textColumn {
+    width: 100%;
+    padding-left: 0;
+}
+
+@media (min-width: 1024px) {
+    .textColumn {
+        width: 50%;
+        padding-left: 1rem;
+    }
+}
+
+.sectionCategory {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #E12454;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.sectionHeading {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #223645;
+    margin-bottom: 1rem;
+    line-height: 1.25;
+}
+
+@media (min-width: 768px) {
+    .sectionHeading {
+        font-size: 2.25rem;
+    }
+}
+
+.sectionDescription {
+    color: #223645;
+    line-height: 1.625;
+    margin-bottom: 2rem;
+    text-align: justify;
+    font-weight: bold;
+}
+
+.missionVisionItem {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.iconWrapper {
+    background-color: #ffffff;
+    border: 0.5px solid #E12454;
+    border-radius: 9999px;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.iconMission, .iconVision {
+    font-size: 1.5rem;
+    color: #E12454;
+}
+
+.textWrapper {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.itemTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #223645;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.itemDescription {
+    color: #223645;
+    line-height: 1.625;
+    text-align: left;
+    font-weight: 500;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
 }
