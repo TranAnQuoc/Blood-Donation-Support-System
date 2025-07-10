@@ -28,7 +28,6 @@ public class TransfusionRequestAPI {
         return ResponseEntity.ok(resp);
     }
 
-
     @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> softDelete(@PathVariable Integer id) {
@@ -36,13 +35,12 @@ public class TransfusionRequestAPI {
         return ResponseEntity.noContent().build();
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
     @GetMapping("/{id}")
     public ResponseEntity<TransfusionRequestResponseDTO> getById(@PathVariable Long id) {
         TransfusionRequest entity = requestService.getById(id);
         TransfusionRequestResponseDTO dto = new TransfusionRequestResponseDTO();
-        dto.setId(Long.valueOf(entity.getId())); // nếu getId() trả về Integer
+        dto.setId(Long.valueOf(entity.getId()));
         dto.setRecipientId(entity.getRecipientId());
         dto.setBloodComponentNeeded(entity.getBloodComponentNeeded());
         dto.setQuantityNeeded(entity.getQuantityNeeded());
@@ -54,5 +52,24 @@ public class TransfusionRequestAPI {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasRole('MEMBER')")
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<?> cancelRequest(@PathVariable Long id) {
+        requestService.cancelRequest(id);
+        return ResponseEntity.ok("Request cancelled successfully");
+    }
 
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> rejectRequest(@PathVariable Long id) {
+        requestService.rejectRequest(id);
+        return ResponseEntity.ok("Request rejected successfully");
+    }
+
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<?> approveRequest(@PathVariable Long id) {
+        requestService.approveRequest(id);
+        return ResponseEntity.ok("Request approved successfully");
+    }
 }

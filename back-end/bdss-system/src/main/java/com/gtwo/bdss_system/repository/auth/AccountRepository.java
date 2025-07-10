@@ -21,4 +21,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> searchAvailableDonorsByTypeAndRh(@Param("status") StatusDonation status, @Param("type") String type, @Param("rh") String rhFactor, @Param("location") String location);
     @Query("SELECT a FROM Account a WHERE a.statusDonation = :status AND a.bloodType.type = :type AND a.address LIKE %:location%")
     List<Account> searchAvailableDonorsByType(@Param("status") StatusDonation status, @Param("type") String type, @Param("location") String location);
+    Optional<Account> findByEmail(String email);
 }

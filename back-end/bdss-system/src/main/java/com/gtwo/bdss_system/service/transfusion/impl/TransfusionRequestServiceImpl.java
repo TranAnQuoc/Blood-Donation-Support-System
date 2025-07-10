@@ -36,7 +36,6 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
                 .preCheckNotes(dto.getPreCheckNotes())
                 .requestedAt(LocalDateTime.now())
                 .statusRequest(StatusRequest.PENDING)
-
                 .status(Status.ACTIVE)
                 .build();
 
@@ -67,5 +66,59 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
         }
         return account.getId();
     }
+
+    @Override
+    public void cancelRequest(Long requestId) {
+        Long currentUserId = getCurrentUserId();
+
+        TransfusionRequest request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found"));
+
+        if (!request.getRecipientId().equals(currentUserId)) {
+            throw new RuntimeException("You do not have permission to cancel this request");
+        }
+
+        if (request.getStatusRequest() != StatusRequest.PENDING) {
+            throw new RuntimeException("Only PENDING requests can be cancelled");
+        }
+
+        request.setStatusRequest(StatusRequest.CANCELED);
+        requestRepository.save(request);
+    }
+
+    @Override
+    public void rejectRequest(Long requestId) {
+        TransfusionRequest request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found"));
+
+        if (request.getStatusRequest() != StatusRequest.PENDING) {
+            throw new RuntimeException("Only PENDING requests can be rejected");
+        }
+
+        Long staffId = getCurrentUserId();
+        request.setStatusRequest(StatusRequest.REJECTED);
+        request.setApprovedBy(staffId.intValue());
+        request.setApprovedAt(LocalDateTime.now());
+
+        requestRepository.save(request);
+    }
+
+    @Override
+    public void approveRequest(Long requestId) {
+        TransfusionRequest request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Transfusion request not found"));
+
+        if (request.getStatusRequest() != StatusRequest.PENDING) {
+            throw new RuntimeException("Only PENDING requests can be approved");
+        }
+
+        Long staffId = getCurrentUserId();
+        request.setStatusRequest(StatusRequest.APPROVED);
+        request.setApprovedBy(staffId.intValue());
+        request.setApprovedAt(LocalDateTime.now());
+
+        requestRepository.save(request);
+    }
+
 
 }

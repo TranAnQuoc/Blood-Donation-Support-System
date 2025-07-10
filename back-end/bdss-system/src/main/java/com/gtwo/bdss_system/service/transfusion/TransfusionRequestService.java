@@ -9,4 +9,8 @@ public interface TransfusionRequestService {
     TransfusionRequest createRequest(TransfusionRequestDTO dto);
     void softDelete(Integer requestId);
     TransfusionRequest getById(Long id);
+    void cancelRequest(Long requestId);
+    void rejectRequest(Long requestId);
+    void approveRequest(Long requestId);
+
 }
