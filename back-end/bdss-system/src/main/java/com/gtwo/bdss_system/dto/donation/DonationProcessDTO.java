@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class DonationProcessDTO {
+    private Long id;
     private Long bloodTypeId;
     private LocalDate date;
     private boolean healthCheck;

@@ -1,0 +1,162 @@
+/* index.module.css */
+
+.container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pageTitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.loadingMessage,
+.errorMessage,
+.noDataMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.errorMessage {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.processCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.cardHeader h3 {
+    margin: 0;
+    color: #0056b3;
+    font-size: 1.6em;
+}
+
+.statusBadge {
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+/* Status specific colors (based on backend StatusProcess enum) */
+.pending { background-color: #ffc107; color: #333; } /* Yellow */
+.approved { background-color: #28a745; } /* Green */
+.rejected { background-color: #dc3545; } /* Red */
+.completed { background-color: #007bff; } /* Blue */
+.canceled { background-color: #6c757d; } /* Gray */
+.in_progress { background-color: #17a2b8; } /* Teal */
+
+
+.section {
+    margin-bottom: 30px;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
+}
+
+.section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.section h4 {
+    color: #333;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    border-left: 4px solid #007bff;
+    padding-left: 10px;
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px 25px;
+}
+
+.detailGrid p {
+    margin: 0;
+    color: #555;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.detailGrid p strong {
+    color: #333;
+    min-width: 120px; /* Helps align values for multi-line details */
+    display: inline-block;
+}
+
+.fullWidth {
+    grid-column: 1 / -1; /* Makes this paragraph span all columns */
+}
+
+/* New styles for the button */
+.actionSection {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Separator for action button */
+}
+
+.confirmButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirmButton:hover {
+    background-color: #0056b3;
+}
+
+.confirmButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .detailGrid {
+        grid-template-columns: 1fr; /* Stack items on small screens */
+    }
+    .cardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .cardHeader h3 {
+        font-size: 1.4em;
+    }
+    .statusBadge {
+        width: fit-content;
+    }
+}

@@ -17,7 +17,7 @@ public class SchedulingServiceImpl {
     private DonationProcessService donationProcessService;
 
     //second minute hour day month dayOfWeek
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 13 10 * * ?")
     @Transactional
     public void autoScanAndSendReminder() {
         donationHistoryService.scanAndSendReminderToAllEligible();
