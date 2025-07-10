@@ -4,7 +4,6 @@
   align-items: center;
   padding: 20px;
   width: 100%;
-  /* Để container chiếm hết chiều ngang */
 }
 
 .loginForm {
@@ -69,7 +68,7 @@
 }
 
 .forgotPassword a {
-  color: #C02044;
+  color: #000000;
   text-decoration: none;
   font-size: 14px;
 }

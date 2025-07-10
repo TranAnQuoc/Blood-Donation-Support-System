@@ -11,12 +11,12 @@ const ContentHeader = () => {
   return (
     <div className={styles.contentHeader}>
       <div className={styles.logoContainer}>
-        <Logo text="SAVE A LIFE DONATE BLOOD" imageUrl={logoImage} />
+        <Logo text="SAVE A LIFE - DONATE BLOOD" imageUrl={logoImage} />
       </div>
       <div className={styles.rightSection}>
-        <SearchBar />
-        <FaBars className={styles.menuIcon} />
-        <NotificationIcon count={5} />
+        {/* <SearchBar /> */}
+        {/* <FaBars className={styles.menuIcon} /> */}
+        {/* <NotificationIcon count={5} /> */}
       </div>
     </div>
   );

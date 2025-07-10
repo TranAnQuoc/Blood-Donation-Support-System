@@ -14,9 +14,9 @@ const ContentHeader = () => {
         <Logo text="SAVE A LIFE DONATE BLOOD" imageUrl={logoImage} />
       </div>
       <div className={styles.rightSection}>
-        <SearchBar />
+        {/* <SearchBar />
         <FaBars className={styles.menuIcon} />
-        <NotificationIcon count={5} />
+        <NotificationIcon count={5} /> */}
       </div>
     </div>
   );

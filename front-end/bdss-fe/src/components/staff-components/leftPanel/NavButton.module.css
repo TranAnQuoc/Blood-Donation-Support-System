@@ -5,18 +5,20 @@
   padding: 12px 20px;
   background-color: transparent;
   border: none;
-  color: rgb(0, 0, 0);
+  color: #7e7b7b;
   text-align: left;
-  font-size: 16px;
+  font-size: 17px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-weight: 550;
 }
 
 .navButton:hover,
 .navButton.active {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-left: 5px solid #f9bfbf;
+  background-color: rgba(233, 233, 233, 0.363);
+  border-left: 5px solid #007A64;
   padding-left: 15px;
+  color: #007A64;
 }
 
 .icon {
@@ -26,4 +28,5 @@
 
 .label {
   flex-grow: 1;
+  margin-left: 10px;
 }

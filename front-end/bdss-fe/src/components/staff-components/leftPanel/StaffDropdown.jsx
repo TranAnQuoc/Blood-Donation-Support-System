@@ -26,7 +26,7 @@ const StaffDropdown = () => {
     return (
         <div className={styles.StaffDropdown}>
             <div className={styles.dropdownToggle} onClick={toggleDropdown}>
-                <FaUserCircle className={styles.userIcon} />
+                {/* <FaUserCircle className={styles.userIcon} /> */}
                 <span className={styles.StaffName}>Staff: {user?.fullName || "Staff"}</span>
                 {isOpen ? <FaChevronUp className={styles.arrowIcon} /> : <FaChevronDown className={styles.arrowIcon} />}
             </div>

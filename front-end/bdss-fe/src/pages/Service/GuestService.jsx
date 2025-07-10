@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './GuestService.module.css';
+import BloodDonationParticipationStandard from '../../components/common/BloodDonationParticipationStandard/BloodDonationParticipationStandard';
+import BloodDonationRecommendation from '../../components/common/BloodDonationRecommendation/BloodDonationRecommendation';
 
 const GuestService = () => {
     return (
@@ -38,6 +40,14 @@ const GuestService = () => {
                     <p>Tra cứu thông tin phù hợp giữa các nhóm máu của người nhận và người hiến.</p>
                     <Link to="/SearchMatchBlood" className={styles.actionButton}>Tra Cứu</Link>
                 </div>
+            </div>
+
+            <div className={styles.standardSection}>
+                <BloodDonationParticipationStandard/>
+            </div>
+
+            <div className={styles.recommendSection}>
+                <BloodDonationRecommendation/>
             </div>
         </div>
         

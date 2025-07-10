@@ -3,10 +3,16 @@ import { Link } from 'react-router-dom';
 import styles from './MemberDashboard.module.css';
 import EventSearchAndList from '../../components/member-components/features/EventSearchAndList/EventSearchAndList';
 import BloodDonationParticipationStandard from '../../components/common/BloodDonationParticipationStandard/BloodDonationParticipationStandard';
+import BloodDonationRecommendation from '../../components/common/BloodDonationRecommendation/BloodDonationRecommendation';
+// import Banner from '../../components/common/Banner/Banner';
 
 const MemberDashboard = () => {
     return (
         <div className={styles.dashboardContainer}>
+            {/* <div className={styles.bannerSection}>
+                <Banner />
+            </div> */}
+
             <h1>Chào mừng, Thành viên!</h1>
             <p>Tại đây bạn có thể đăng ký hiến máu, yêu cầu nhận máu và theo dõi lịch sử của mình.</p>
 
@@ -30,6 +36,10 @@ const MemberDashboard = () => {
 
             <div className={styles.standardSection}>
                 <BloodDonationParticipationStandard/>
+            </div>
+
+            <div className={styles.recommendSection}>
+                <BloodDonationRecommendation/>
             </div>
         </div>
         

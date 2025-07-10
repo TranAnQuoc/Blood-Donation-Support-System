@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "./index.module.css"; // Đảm bảo file CSS của bạn có tên là index.module.css
+import styles from "./SearchMatchBlood.module.css"; // Đảm bảo file CSS của bạn có tên là index.module.css
 
 const CompatibilityChecker = () => {
   // ==========================================================

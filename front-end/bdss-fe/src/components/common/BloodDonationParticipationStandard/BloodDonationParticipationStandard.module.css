@@ -1,5 +1,5 @@
 .donationCriteriaSection {
-    background-color: #1C5291;
+    background-color: #F4F9FC;
     padding: 40px 20px;
     color: #fff;
     text-align: center;
@@ -10,7 +10,9 @@
     margin-bottom: 40px;
     position: relative;
     display: inline-block;
-    color: #ecf0f1;
+    color: #223645;
+    border-bottom: none;
+    padding-bottom: 10px;
 }
 
 .sectionTitle::after {
@@ -21,16 +23,17 @@
     transform: translateX(-50%);
     width: 80px;
     height: 4px;
-    background-color: #e74c3c;
+    background-color: #E12454;
     border-radius: 2px;
 }
 
 .criteriaGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
     max-width: 1200px;
     margin: 0 auto;
+    justify-content: center;
 }
 
 .criteriaCard {
@@ -38,7 +41,7 @@
     color: #333;
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,11 +51,11 @@
 
 .criteriaCard:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(145, 248, 255, 0.3);
 }
 
 .iconWrapper {
-    background-color: #386FD6;
+    background-color: #C12759;
     border-radius: 20%;
     width: 60px;
     height: 60px;
@@ -80,6 +83,21 @@
     color: #555;
 }
 
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .sectionTitle {
+        font-size: 2.2em;
+        margin-bottom: 35px;
+    }
+    .criteriaGrid {
+        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .criteriaCard {
+        padding: 22px;
+    }
+}
+
 @media (max-width: 768px) {
     .sectionTitle {
         font-size: 2em;
@@ -87,7 +105,7 @@
     }
 
     .criteriaGrid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(2, minmax(250px, 1fr));
         gap: 20px;
     }
 

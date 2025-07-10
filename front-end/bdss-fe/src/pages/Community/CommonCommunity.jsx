@@ -178,7 +178,7 @@ const CommonCommunity = () => {
                         className={styles.inputField}
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Ví dụ: TP.HCM, Hà Nội"
+                        placeholder="Trong phạm vi TP.HCM"
                     />
                 </div>
                 <button type="submit" className={styles.searchButton} disabled={loading}>
