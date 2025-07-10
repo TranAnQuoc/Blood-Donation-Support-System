@@ -1,9 +1,9 @@
-.adminDropdown {
+.StaffDropdown {
   position: relative;
   margin: 0 20px 20px;
-  background-color: rgb(178, 219, 248); /* Màu nền của dropdown */
+  background-color: #007A64;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* (Tùy chọn) Thêm đổ bóng nhẹ để tăng hiệu ứng 3D */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .dropdownToggle {
@@ -16,44 +16,47 @@
   justify-content: space-between;
 }
 
-.userIcon {
+/* .userIcon {
   margin-right: 10px;
   font-size: 20px;
   color: black;
-}
+} */
 
 .arrowIcon {
   margin-left: 10px;
   font-size: 12px;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .dropdownMenu {
   position: absolute;
-  top: 100%; /* Đặt menu ngay dưới toggle */
+  top: 100%;
   left: 0;
   right: 0;
-  background-color: rgb(178, 219, 248); /* Màu nền menu */
+  background-color: rgb(255, 255, 255);
   list-style: none;
   padding: 5px 0;
   margin: 0;
   margin-top: 5px;
-  border-radius: 8px; 
-  border: 1px solid rgb(120, 160, 200); 
-  
-  z-index: 10; /* Đảm bảo menu hiển thị trên các phần khác */
+  border-radius: 8px;
+  border: 1px solid #007A64;
+  z-index: 10;
+  font-weight: 500;
 }
 
 .dropdownMenuItem {
   padding: 10px 15px;
   cursor: pointer;
-  color: black;
+  color: rgb(126, 116, 116);
 }
 
 .dropdownMenuItem:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(236, 201, 201, 0.1);
+  color: #007A64;
 }
 
-.adminName{
-    color: black;
+.StaffName{
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    padding: 0 20px;
 }

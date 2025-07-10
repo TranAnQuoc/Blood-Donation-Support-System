@@ -1,0 +1,197 @@
+.recommendationContainer {
+    background-color: #003364;
+    padding: 40px 20px;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+.pageTitle {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    color: #F7C41C;
+    /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
+    border-bottom: none;
+}
+
+.contentGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.rightColumn {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: 30px;
+}
+
+.card {
+    background-color: #fff;
+    color: #333;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cardHeader h3 {
+    font-size: 1.8em;
+    margin: 0;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.shouldCard .cardHeader h3 {
+    color: #00B8CC;
+}
+
+.shouldNotCard .cardHeader h3 {
+    color: #ED2E2E;
+}
+
+.noteCard .cardHeader h3 {
+    color: #FF8127;
+}
+
+.shouldIcon {
+    color: #00B8CC;
+    font-size: 2.5em;
+}
+
+.shouldNotIcon {
+    color: #ED2E2E;
+    font-size: 2.5em;
+}
+
+.noteIcon {
+    color: #FF8127;
+    font-size: 2.5em;
+}
+
+.recommendationList {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.recommendationList li {
+    margin-bottom: 10px;
+    font-size: 1em;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 20px;
+}
+
+.shouldCard .recommendationList li::before {
+    content: '✓';
+    color: #00B8CC;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.shouldNotCard .recommendationList li::before {
+    content: '✗';
+    color: #ED2E2E;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.noteCard .recommendationList li::before {
+    content: '!';
+    color: #FF8127;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+
+.doctorInfo {
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    width: 100%;
+    font-size: 0.9em;
+    color: #666;
+    text-align: right;
+}
+
+.doctorInfo p {
+    margin: 5px 0;
+    text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pageTitle {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+
+    .contentGrid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .cardHeader h3 {
+        font-size: 1.5em;
+    }
+
+    .shouldIcon, .shouldNotIcon, .noteIcon {
+        font-size: 2em;
+    }
+
+    .recommendationList li {
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageTitle {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .cardHeader h3 {
+        font-size: 1.3em;
+    }
+
+    .shouldIcon, .shouldNotIcon, .noteIcon {
+        font-size: 1.8em;
+    }
+
+    .recommendationList li {
+        font-size: 0.9em;
+    }
+
+    .doctorInfo {
+        font-size: 0.8em;
+    }
+}

@@ -40,36 +40,36 @@ const Header = () => {
                 <nav>
                     <ul>
                         {isAuthenticated && user?.role === "MEMBER" ? (
-                            <li><Link to="/member" onClick={closeMenu}>HOME</Link></li>
+                            <li><Link to="/member" onClick={closeMenu}>TRANG CHỦ</Link></li>
                         ) : (
-                            <li><Link to="/" onClick={closeMenu}>HOME</Link></li>
+                            <li><Link to="/" onClick={closeMenu}>TRANG CHỦ</Link></li>
                         )}
                         {isAuthenticated && user?.role === "MEMBER" ? (
-                            <li><Link to="/member/member-service" onClick={closeMenu}>SERVICE</Link></li>
+                            <li><Link to="/member/member-service" onClick={closeMenu}>DỊCH VỤ</Link></li>
                         ) : (
-                            <li><Link to="/service" onClick={closeMenu}>SERVICE</Link></li>
+                            <li><Link to="/service" onClick={closeMenu}>DỊCH VỤ</Link></li>
                         )}
                         {isAuthenticated && user?.role === "MEMBER" ? (
-                            <li><Link to="/member/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
+                            <li><Link to="/member/emergency" onClick={closeMenu}>KHẨN CẤP</Link></li>
                         ) : (
-                            <li><Link to="/emergency" onClick={closeMenu}>EMERGENCY</Link></li>
+                            <li><Link to="/emergency" onClick={closeMenu}>KHẨN CẤP</Link></li>
                         )}
                         {isAuthenticated && user?.role === "MEMBER" ? (
-                            <li><Link to="/member/community" onClick={closeMenu}>COMMUNITY</Link></li>
+                            <li><Link to="/member/community" onClick={closeMenu}>CỘNG ĐỒNG</Link></li>
                         ) : (
-                            <li><Link to="/community" onClick={closeMenu}>COMMUNITY</Link></li>
+                            <li><Link to="/community" onClick={closeMenu}>CỘNG ĐỒNG</Link></li>
                         )}
                         {isAuthenticated && user?.role === "MEMBER" ? (
-                            <li><Link to="/member/about-us" onClick={closeMenu}>ABOUT US</Link></li>
+                            <li><Link to="/member/about-us" onClick={closeMenu}>VỀ CHÚNG TÔI</Link></li>
                         ) : (
-                            <li><Link to="/about-us" onClick={closeMenu}>ABOUT US</Link></li>
+                            <li><Link to="/about-us" onClick={closeMenu}>VỀ CHÚNG TÔI</Link></li>
                         )}
                         {isAuthenticated && user?.role === "MEMBER" ? (
                             <div className={styles.dropdownWrapper}>
                                 <MemberDropdown />
                             </div>
                         ) : (
-                            <li><Link to="/login" onClick={closeMenu}>LOGIN</Link></li>
+                            <li><Link to="/login" onClick={closeMenu}>ĐĂNG NHẬP</Link></li>
                         )}
                     </ul>
                 </nav>

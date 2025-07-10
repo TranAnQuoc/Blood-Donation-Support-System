@@ -17,7 +17,6 @@ import {
     faClipboardList,
     faBook,
     faHistory,
-    faFileAlt,
     faCalendarAlt,
     faBox,
     faCalendarCheck,
@@ -81,7 +80,6 @@ const LeftPanel = () => {
         { id: 'requestManagement', icon: faClipboardList, label: 'Quản Lý Yêu Cầu', hasDropdown: true },
         { id: 'process', icon: faBook, label: 'Quy Trình', hasDropdown: true },
         { id: 'history', icon: faHistory, label: 'Lịch Sử', hasDropdown: true },
-        { id: 'registrationList', icon: faFileAlt, label: 'Đơn Đăng Ký', fullPath: '/staff-dashboard/registration-list' },
         { id: 'eventManagement', icon: faCalendarAlt, label: 'Quản Lý Sự Kiện Hiến Máu', fullPath: '/staff-dashboard/event-management' },
         { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-storage' },
         { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/staff-dashboard/recovery-reminders' },
@@ -155,6 +153,10 @@ const LeftPanel = () => {
                         </div>
                     );
                 })}
+            </div>
+            
+            <div className={styles.leftPanelFooter}>
+                <p>&copy; 2025 Save A Life - Donate Blood. All rights reserved.</p>
             </div>
         </div>
     );
