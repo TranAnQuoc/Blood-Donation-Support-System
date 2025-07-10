@@ -26,7 +26,7 @@ public class TransfusionHistoryServiceImpl implements TransfusionHistoryService 
     private TransfusionHistoryResponseDTO mapToDTO(com.gtwo.bdss_system.entity.transfusion.TransfusionProcess proc) {
         TransfusionHistoryResponseDTO dto = new TransfusionHistoryResponseDTO();
 
-
+        dto.setId(proc.getId());
         if (proc.getRequest() != null) {
             dto.setRecipientId(proc.getRequest().getRecipientId());
             dto.setTransfusionDate(proc.getTransfusionCompletedAt() != null
@@ -40,7 +40,6 @@ public class TransfusionHistoryServiceImpl implements TransfusionHistoryService 
         dto.setBirthdateSnapshot(proc.getBirthdateSnapshot());
         dto.setBloodTypeSnapshot(proc.getBloodTypeSnapshot());
         dto.setRhFactorSnapshot(proc.getRhFactorSnapshot() != null ? proc.getRhFactorSnapshot().name() : null);
-        dto.setFacilityName(proc.getFacilityName());
         dto.setResultNotes(proc.getStaffNotes());
 
         return dto;

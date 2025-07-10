@@ -33,9 +33,6 @@ public class TransfusionHistory {
     @Column(name = "transfusion_date")
     private LocalDate transfusionDate;
 
-    @Column(name = "facility_name")
-    private String facilityName;
-
     private String componentReceived;
 
     private Integer quantity;

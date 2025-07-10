@@ -1,63 +1,65 @@
 package com.gtwo.bdss_system.entity.transfusion;
 
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.RhFactor;
+import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.gtwo.bdss_system.enums.StatusProcess;
-import lombok.Data;
-import org.hibernate.annotations.Nationalized;
-
-@Data
 @Entity
 @Table(name = "transfusion_process")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TransfusionProcess {
 
     @Id
-    @Column(name = "transfusion_request_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "transfusion_request_id")
+    // Yêu cầu truyền máu liên kết
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transfusion_request_id", nullable = false)
     private TransfusionRequest request;
 
-    @Column(name = "transfusion_started_at")
-    private LocalDateTime transfusionStartedAt;
+    @ManyToOne
+    @JoinColumn(name = "performed_by") // Tên cột foreign key trong bảng Transfusion_Process
+    private Account performedBy;
+
+    @Column(name = "transfusion_started_at", nullable = false)
+    private LocalDateTime transfusionStartedAt = LocalDateTime.now();
 
     @Column(name = "transfusion_completed_at")
     private LocalDateTime transfusionCompletedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private StatusProcess status;
+    @Column(name = "status")
+    private StatusProcess status; // enum: IN_PROGRESS, COMPLETED, FAILED
 
     @Column(name = "staff_notes", columnDefinition = "TEXT")
     private String staffNotes;
 
-    @Column(name = "used_blood_unit_id")
-    private Long usedBloodUnitId;
-
     @Column(name = "health_check_passed")
     private Boolean healthCheckPassed;
 
-    @Column(name = "blood_pressure", length = 20)
+    @Column(name = "blood_pressure")
     private String bloodPressure;
 
     @Column(name = "heart_rate")
     private Integer heartRate;
 
-    @Column(name = "temperature", precision = 4, scale = 1)
-    private BigDecimal temperature;
+    @Column(name = "temperature")
+    private Double temperature;
 
     @Column(name = "allergy_notes", columnDefinition = "TEXT")
     private String allergyNotes;
 
-    @Nationalized
-    @Column(name = "full_name_snapshot")
+    @Column(name = "Full_Name_Snapshot")
     private String fullNameSnapshot;
 
     @Column(name = "birthdate_snapshot")
@@ -66,11 +68,9 @@ public class TransfusionProcess {
     @Column(name = "blood_type_snapshot")
     private String bloodTypeSnapshot;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "rh_factor_snapshot")
+    @Enumerated(EnumType.STRING)
     private RhFactor rhFactorSnapshot;
-
-    @Column(name = "facility_name")
-    private String facilityName;
-
 }
+
+
