@@ -273,6 +273,20 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         return modelMapper.map(process, DonationProcessDTO.class);
     }
 
+    @Override
+    public DonationProcess startDonationProcess(Long id) {
+        DonationProcess process = processRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy DonationProcess với ID: " + id));
+        if (process.getProcess() != StatusProcess.WAITING) {
+            throw new IllegalStateException("Chỉ có thể bắt đầu quy trình khi trạng thái là WAITING.");
+        }
+        process.setProcess(StatusProcess.IN_PROCESS);
+        process.setStartTime(LocalDateTime.now());
+
+        return processRepository.save(process);
+    }
+
+
     @Transactional
     public void autoSetupExpiredProcesses() {
         LocalDate today = LocalDate.now();
@@ -287,16 +301,6 @@ public class DonationProcessServiceImpl implements DonationProcessService {
                     process.setNotes("Người dùng không tham gia hoạt động hiến đúng ngày.");
                     processRepository.save(process);
                     createDonationHistory(process);
-                }
-            }
-        }
-        for (DonationProcess process : pendingProcesses) {
-            DonationEvent event = process.getRequest().getEvent();
-            if (event != null) {
-                LocalDate eventDate = event.getDate();
-                if (eventDate.isEqual(today)) {
-                    process.setProcess(StatusProcess.IN_PROCESS);
-                    processRepository.save(process);
                 }
             }
         }

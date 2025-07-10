@@ -69,8 +69,16 @@ public class DonationProcessAPI {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/start/{id}")
     @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<?> startDonationProcess(@PathVariable Long id) {
+        DonationProcess started = service.startDonationProcess(id);
+        return ResponseEntity.ok(started);
+    }
+
+
     @GetMapping("/my-process")
+    @PreAuthorize("hasRole('MEMBER')")
     public ResponseEntity<DonationProcessDTO> getMyProcess(@AuthenticationPrincipal Account user) {
         Long userId = user.getId();
         DonationProcessDTO dto = service.getMyLatestProcess(userId);

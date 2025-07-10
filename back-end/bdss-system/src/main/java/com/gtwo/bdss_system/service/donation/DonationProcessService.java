@@ -19,4 +19,5 @@ public interface DonationProcessService {
     DonationProcessViewDTO processViewDTO(DonationProcess entity);
     DonationProcessDTO getMyLatestProcess(Long userId);
     void autoSetupExpiredProcesses();
+    DonationProcess startDonationProcess(Long id);
 }
