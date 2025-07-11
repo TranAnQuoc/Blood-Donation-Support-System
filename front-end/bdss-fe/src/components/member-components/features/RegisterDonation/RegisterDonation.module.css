@@ -12,7 +12,8 @@
     font-weight: 700;
     margin-bottom: 2rem;
     text-align: center;
-    color: #C12759;
+    color: #031B4E;
+    border-bottom: 2px solid #031B4E;
 }
 
 .warningBanner {
@@ -47,7 +48,7 @@
 
 .label {
     display: block;
-    color: #1f2937;
+    color: #031B4E;
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -89,19 +90,20 @@
 }
 
 .submitButton {
-    background-color: #ffffff;
-    color: #C12759;
+    background-color: #C12759;
+    color: #fff;
     border: 1px solid #C12759;
     font-size: 16px;
     font-weight: bold;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
     width: 100%;
+    cursor: pointer;
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .submitButton:hover {
-    background-color: #C12759;
+    background-color: #a01a38;
     color: #ffffff;
 }
 

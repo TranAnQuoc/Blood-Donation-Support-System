@@ -1,4 +1,4 @@
-.StaffDropdown {
+.adminDropdown {
   position: relative;
   margin: 0 20px 20px;
   background-color: #007A64;
@@ -55,7 +55,7 @@
   color: #007A64;
 }
 
-.StaffName{
+.adminName{
     color: rgb(255, 255, 255);
     font-weight: 500;
     padding: 0 20px;

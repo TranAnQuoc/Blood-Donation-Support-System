@@ -27,7 +27,7 @@ const Footer = () => {
                     </div>
                     <div className={styles.contactItem}>
                         <FontAwesomeIcon icon={faPhone} className={styles.mainContactIcon} />
-                        <p><span className={styles.contactLabel}>Điện thoại:</span> 090 119 3219</p>
+                        <p><span className={styles.contactLabel}>Điện thoại:</span> 012 345 6789</p>
                     </div>
                 </div>
 

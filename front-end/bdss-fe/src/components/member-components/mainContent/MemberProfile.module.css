@@ -1,184 +1,176 @@
 .profileContainer {
-    padding: 30px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
-    margin: 30px auto;
+    padding: 32px;
+    background-color: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    max-width: 850px;
+    margin: 40px auto;
     text-align: center;
 }
 
 h2 {
-    font-size: 2.2em;
-    color: #34495e;
+    font-size: 2.4em;
+    color: #2c3e50;
     margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e6ea;
+    padding-bottom: 12px;
 }
 
 .loadingMessage,
 .errorMessage,
 .noProfileMessage {
     text-align: center;
-    padding: 30px;
+    padding: 24px;
     font-size: 1.1em;
-    color: #777;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-top: 20px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 25px;
 }
 
 .errorMessage {
     color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+    background-color: #fbeaea;
+    border: 1px solid #f5c2c7;
 }
 
 .profileDetails,
 .editForm {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
+    background-color: #ffffff;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 32px;
     text-align: left;
 }
 
 .profileDetails p {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     font-size: 1.05em;
-    color: #333;
+    color: #343a40;
 }
 
 .profileDetails p strong {
     color: #495057;
     display: inline-block;
-    min-width: 150px;
+    min-width: 160px;
     margin-right: 10px;
 }
 
 /* Edit Form Styles */
 .formGroup {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .formGroup label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #495057;
+    color: #212529;
 }
 
 .formGroup input[type="text"],
 .formGroup input[type="email"],
 .formGroup input[type="number"],
 .formGroup input[type="date"],
-.formGroup select {
+.formGroup select,
+.formGroup textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 14px;
     border: 1px solid #ced4da;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1em;
     box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .formGroup input:focus,
-.formGroup select:focus {
+.formGroup select:focus,
+.formGroup textarea:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
 }
 
-/* Style cho input bị disabled */
+/* Disabled Input Style */
 .disabledInput {
     background-color: #e9ecef;
-    cursor: not-allowed;
     color: #6c757d;
+    cursor: not-allowed;
     opacity: 0.8;
 }
 
 .formGroup select.disabledInput {
     appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     background-image: none;
     padding-right: 12px;
 }
 
-.actionButtonsViewMode {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
+.actionButtonsViewMode,
 .formActions {
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
     gap: 15px;
     margin-top: 30px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
 }
 
 .editButton,
 .saveButton,
 .cancelButton,
 .deactivateButton {
-    padding: 10px 20px;
+    padding: 10px 22px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 8px;
     font-size: 1em;
     font-weight: 500;
+    cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
+/* Button Colors */
 .editButton {
-    background-color: #007bff;
-    color: white;
-    margin: 20px;
+    background-color: #20a0c0;
+    color: #fff;
 }
-
 .editButton:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px);
+    background-color: #1686A3;
+    /* transform: translateY(-1px); */
 }
 
 .saveButton {
-    background-color: #28a745;
-    color: white;
+    background-color: #20a0c0;
+    color: #fff;
 }
-
 .saveButton:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
+    background-color: #1686A3;
+    /* transform: translateY(-1px); */
 }
 
 .cancelButton {
-    background-color: #6c757d;
-    color: white;
-    margin: 20px
+    background-color: #fff;
+    color: #000000;
+    border: 1px solid #000000;
 }
-
 .cancelButton:hover {
-    background-color: #5a6268;
-    transform: translateY(-1px);
+    background-color: #031B4E;
+    color: #fff;
+    /* transform: translateY(-1px); */
 }
 
 .deactivateButton {
-    background-color: #dc3545;
-    color: white;
+    background-color: #C12759;
+    color: #fff;
     margin-right: auto;
 }
-
 .deactivateButton:hover {
-    background-color: #c82333;
-    transform: translateY(-1px);
+    background-color: #a01a38;
+    /* transform: translateY(-1px); */
 }
 
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 768px) {
     .profileContainer {
         padding: 20px;
@@ -187,7 +179,6 @@ h2 {
 
     h2 {
         font-size: 1.8em;
-        margin-bottom: 20px;
     }
 
     .profileDetails p {
@@ -195,30 +186,24 @@ h2 {
     }
 
     .profileDetails p strong {
-        min-width: 100px;
-        margin-right: 5px;
+        min-width: 120px;
     }
 
     .editForm {
         padding: 20px;
     }
 
-    .formGroup {
-        margin-bottom: 15px;
-    }
-
-    .formGroup label {
-        margin-bottom: 5px;
-    }
-
-    .formActions {
+    .formActions,
+    .actionButtonsViewMode {
         flex-direction: column;
+        align-items: stretch;
         gap: 10px;
     }
 
     .editButton,
     .saveButton,
-    .cancelButton {
+    .cancelButton,
+    .deactivateButton {
         width: 100%;
     }
 }

@@ -11,9 +11,10 @@
 
 .pageTitle {
     text-align: center;
-    color: #333;
+    color: #031B4E;
     margin-bottom: 30px;
     font-size: 2em;
+    border-bottom: 2px solid #031B4E;
     font-weight: bold;
 }
 
@@ -50,7 +51,7 @@
 
 .cardHeader h3 {
     margin: 0;
-    color: #0056b3;
+    color: #031B4E;
     font-size: 1.6em;
 }
 
@@ -65,9 +66,9 @@
 
 /* Status specific colors (based on backend StatusProcess enum) */
 .pending { background-color: #ffc107; color: #333; } /* Yellow */
-.approved { background-color: #28a745; } /* Green */
+.approved { background-color: #007bff; } /* Green */
 .rejected { background-color: #dc3545; } /* Red */
-.completed { background-color: #007bff; } /* Blue */
+.completed { background-color: #28a745; } /* Blue */
 .canceled { background-color: #6c757d; } /* Gray */
 .in_progress { background-color: #17a2b8; } /* Teal */
 
@@ -87,7 +88,7 @@
     color: #333;
     font-size: 1.3em;
     margin-bottom: 15px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid #031B4E;
     padding-left: 10px;
 }
 
@@ -107,7 +108,7 @@
 }
 
 .detailGrid p strong {
-    color: #333;
+    color: #031B4E;
     min-width: 120px; /* Helps align values for multi-line details */
     display: inline-block;
 }

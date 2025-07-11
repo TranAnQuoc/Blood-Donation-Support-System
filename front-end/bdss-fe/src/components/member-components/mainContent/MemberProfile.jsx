@@ -169,7 +169,7 @@ const MemberProfile = () => {
                 <div className={styles.profileDetails}>
                     <p><strong>Email:</strong> {profile.email || 'Chưa cập nhật'}</p>
                     <p><strong>Họ và tên:</strong> {profile.fullName || 'Chưa cập nhật'}</p>
-                    <p><strong>Vai trò:</strong> {profile.role || 'Chưa cập nhật'}</p> {/* Thêm Vai trò */}
+                    {/* <p><strong>Vai trò:</strong> {profile.role || 'Chưa cập nhật'}</p>  */}
                     <p><strong>Giới tính:</strong> {genderMap[profile.gender] || 'Chưa cập nhật'}</p>
                     <p>
                         <strong>Nhóm máu:</strong>{' '}

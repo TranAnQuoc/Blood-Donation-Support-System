@@ -106,7 +106,7 @@ const MemberList = () => {
                                 <th>Ngày sinh</th>
                                 <th>Nhóm máu</th>
                                 <th>Địa chỉ</th>
-                                <th>Ngày đăng ký</th>
+                                {/* <th>Ngày đăng ký</th> */}
                                 <th>Trạng thái TK</th>
                                 <th>Trạng thái HM</th>
                                 <th>Hành động</th>
@@ -128,7 +128,7 @@ const MemberList = () => {
                                             : 'N/A'}
                                     </td>
                                     <td>{member.address || 'N/A'}</td>
-                                    <td>{formatDateTime(member.createAt) || 'N/A'}</td>
+                                    {/* <td>{formatDateTime(member.createAt) || 'N/A'}</td> */}
                                     <td>
                                         <span className={`${styles.statusBadge} ${styles[member.status ? member.status.toLowerCase() : '']}`}>
                                             {member.status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}

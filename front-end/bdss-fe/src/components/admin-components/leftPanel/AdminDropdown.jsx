@@ -1,7 +1,7 @@
 // src/components/LeftPanel/AdminDropdown.jsx
 import React, { useState } from 'react';
 import styles from './AdminDropdown.module.css';
-import { FaUserCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/features/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +27,6 @@ const AdminDropdown = () => {
   return (
     <div className={styles.adminDropdown}>
       <div className={styles.dropdownToggle} onClick={toggleDropdown}>
-        <FaUserCircle className={styles.userIcon} />
         <span className={styles.adminName}>Admin: {user?.fullName || "Admin"}</span>
         {isOpen ? <FaChevronUp className={styles.arrowIcon} /> : <FaChevronDown className={styles.arrowIcon} />}
       </div>
