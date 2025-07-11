@@ -1,9 +1,11 @@
 package com.gtwo.bdss_system.dto.emergency;
 
+import com.gtwo.bdss_system.enums.CrossmatchResult;
 import com.gtwo.bdss_system.enums.EmergencyStatus;
 import lombok.Data;
 
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class EmergencyProcessDTO {
@@ -15,17 +17,11 @@ public class EmergencyProcessDTO {
     @Size(max = 1000, message = "Health check summary must be less than 1000 characters.")
     private String healthCheckSummary;
 
-    @NotNull(message = "Confirm is required.")
-    private Boolean confirmed;
-
     @NotNull(message = "Status is required.")
     private EmergencyStatus status;
 
     @NotBlank(message = "Symptoms must not be blank.")
     private String symptoms;
-
-    @NotBlank(message = "Vital signs must not be blank.")
-    private String vitalSigns;
 
     @NotNull(message = "Hemoglobin level is required.")
     @DecimalMin(value = "0.0", inclusive = false, message = "Hemoglobin level must be positive.")
@@ -38,12 +34,29 @@ public class EmergencyProcessDTO {
     private Integer quantity;
 
     @NotBlank(message = "Crossmatch result is required.")
-    private String crossmatchResult;
+    private CrossmatchResult crossmatchResult;
 
     @NotBlank(message = "Component need must be specified.")
     private String needComponent;
 
     @NotBlank(message = "Reason for transfusion is required.")
     private String reasonForTransfusion;
+
+    @NotBlank(message = "Blood pressure is required.")
+    private String bloodPressure;
+
+    @NotNull(message = "Pulse is required.")
+    @Positive(message = "Pulse must be a positive number.")
+    private Integer pulse;
+
+    @NotNull(message = "Respiratory rate is required.")
+    @Positive(message = "Respiratory rate must be a positive number.")
+    private Integer respiratoryRate;
+
+    @NotNull(message = "Temperature is required.")
+    @DecimalMin(value = "25.0", message = "Temperature must be reasonable.")
+    private Double temperature;
+
+
 }
 

@@ -55,11 +55,12 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         history.setBloodType(process.getEmergencyRequest().getBloodType());
         history.setComponent(process.getEmergencyRequest().getBloodComponent());
         history.setQuantity(process.getEmergencyRequest().getQuantity());
-        history.setResult(
-                Boolean.TRUE.equals(process.getConfirmed())
-                        ? EmergencyResult.FULLFILLED
-                        : EmergencyResult.UNFULLFILLED
-        );
+        if (process.getStatus() == EmergencyStatus.COMPLETED) {
+            history.setResult(EmergencyResult.FULLFILLED);
+        } else {
+            history.setResult(EmergencyResult.UNFULLFILLED);
+        }
+
         history.setNotes(process.getHealthCheckSummary());
         history.setDelete(false);
 

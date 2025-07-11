@@ -16,5 +16,7 @@ public interface EmergencyRequestRepository extends JpaRepository<EmergencyReque
     boolean existsByPhoneAndSubmittedAtAfter(String phone, LocalDateTime dateTime);
     List<EmergencyRequest> findByStatus(Status status);
     Optional<EmergencyRequest> findByIdAndStatus(Long id, Status status);
+    Optional<EmergencyRequest> findByFullNameAndPhoneAndStatus(String fullName, String phone, Status status);
+
 }
 

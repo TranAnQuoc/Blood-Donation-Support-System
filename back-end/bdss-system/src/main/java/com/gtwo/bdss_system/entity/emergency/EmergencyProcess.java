@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.entity.emergency;
 
 import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.enums.CrossmatchResult;
 import com.gtwo.bdss_system.enums.EmergencyStatus;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusProcess;
@@ -27,9 +28,6 @@ public class EmergencyProcess {
     @Nationalized
     private String healthCheckSummary;
 
-    @Column(name = "confirmed")
-    private Boolean confirmed;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_staff")
     private Account assignedStaff;
@@ -52,19 +50,15 @@ public class EmergencyProcess {
     @Nationalized
     private String symptoms;
 
-    @Column(name = "vital_signs")
-    @Nationalized
-    private String vitalSigns;
-
     @Column(name = "hemoglobin_level")
     private Double hemoglobinLevel;
 
     @Column(name = "blood_group_confirmed")
     private Boolean bloodGroupConfirmed;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "crossmatch_result")
-    @Nationalized
-    private String crossmatchResult;
+    private CrossmatchResult crossmatchResult;
 
     @Column(name = "need_component")
     @Nationalized
@@ -76,4 +70,21 @@ public class EmergencyProcess {
     @Column(name = "reason_for_transfusion")
     @Nationalized
     private String reasonForTransfusion;
+
+    @Column(name = "blood_pressure")
+    @Nationalized
+    private String bloodPressure;
+
+    @Column(name = "pulse")
+    private Integer pulse;
+
+    @Column(name = "respiratory_rate")
+    private Integer respiratoryRate;
+
+    @Column(name = "temperature")
+    private Double temperature;
+
+    @Column(name = "health_file_url")
+    private String healthFileUrl;
+
 }
