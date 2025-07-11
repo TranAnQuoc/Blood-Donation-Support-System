@@ -1,4 +1,6 @@
 package com.gtwo.bdss_system.dto.emergency;
+import com.gtwo.bdss_system.entity.commons.BloodComponent;
+import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -41,6 +43,8 @@ public class EmergencyRequestDTO {
     @NotBlank(message = "Lý do khẩn cấp không được để trống")
     private String emergencyProof;
 
+    private BloodType bloodType;
+    private BloodComponent bloodComponent;
 }
 
 

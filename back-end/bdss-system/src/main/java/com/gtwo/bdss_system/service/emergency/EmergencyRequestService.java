@@ -15,5 +15,6 @@ public interface EmergencyRequestService {
     void updateEmergencyRequest(Long id, StatusRequest decision,String note, Account account);
     void deleteEmergencyRequest(Long id);
     void restoreEmergencyRequest(Long id);
+    EmergencyRequestDTO findByFullNameAndPhone(String fullName, String phone);
 
 }

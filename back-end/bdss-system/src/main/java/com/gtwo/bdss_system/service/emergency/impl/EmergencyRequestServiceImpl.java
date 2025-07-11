@@ -134,6 +134,13 @@ public List<EmergencyRequestResponseDTO> getAllResponseRequests() {
         }
 
     }
+    @Override
+    public EmergencyRequestDTO findByFullNameAndPhone(String fullName, String phone) {
+        EmergencyRequest request = emergencyRequestRepository
+                .findByFullNameAndPhoneAndStatus(fullName, phone, Status.ACTIVE)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy yêu cầu với thông tin đã nhập"));
+        return convertToDTO(request);
+    }
 
 
 
