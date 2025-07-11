@@ -36,6 +36,16 @@ const MyDonationHistory = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    const donationTypeMap = {
+        WHOLE_BLOOD: 'Toàn phần',
+        PLATELETS: 'Tiểu cầu',
+        PLASMA: 'Huyết tương',
+        OTHER: 'Khác'
+    };
+
+    const translateDonationType = (type) => donationTypeMap[type] || 'Không xác định';
+
+
     const fetchMyDonationHistories = async () => {
         setLoading(true);
         setError(null);
@@ -72,7 +82,7 @@ const MyDonationHistory = () => {
 
     return (
         <div className={styles.myDonationHistoryContainer}>
-            <h2 className={styles.pageTitle}>Lịch Sử Hiến Máu Của Tôi</h2>
+            <h2 className={styles.pageTitle}>LỊCH SỬ HIẾN MÁU</h2>
 
             {histories.length === 0 ? (
                 <div className={styles.noHistoryMessage}>
@@ -90,7 +100,7 @@ const MyDonationHistory = () => {
                                 <th>Ngày hiến</th>
                                 <th>Loại hiến</th>
                                 <th>Số lượng (ml)</th>
-                                <th>Cơ sở</th>
+                                {/* <th>Cơ sở</th> */}
                                 <th>Địa chỉ</th>
                                 <th>Ghi chú</th>
                                 <th>Trạng thái</th>
@@ -102,18 +112,18 @@ const MyDonationHistory = () => {
                                 <tr key={history.id}>
                                     <td>{history.id}</td>
                                     <td>{formatDateTime(history.donationDate) || 'N/A'}</td>
-                                    <td>{history.donationType || 'N/A'}</td>
+                                    <td>{translateDonationType(history.donationType)}</td>
                                     <td>{history.quantity || 'N/A'}</td>
-                                    <td>{history.facilityName || 'N/A'}</td>
+                                    {/* <td>{history.facilityName || 'N/A'}</td> */}
                                     <td>{history.address || 'N/A'}</td>
                                     <td>{history.note || 'Không có'}</td>
                                     <td>
                                         <span className={`${styles.statusBadge} ${styles[history.status ? history.status.toLowerCase() : '']}`}>
                                             {history.status === 'COMPLETED' ? 'Hoàn thành' :
-                                             (history.status === 'FAILED' ? 'Thất bại' : history.status || 'N/A')}
+                                            (history.status === 'FAILED' ? 'Thất bại' : history.status || 'N/A')}
                                         </span>
                                     </td>
-                                    <td>{history.staffName || 'N/A'}</td>
+                                    <td>{history.staff?.fullName || 'N/A'}</td>
                                 </tr>
                             ))}
                         </tbody>

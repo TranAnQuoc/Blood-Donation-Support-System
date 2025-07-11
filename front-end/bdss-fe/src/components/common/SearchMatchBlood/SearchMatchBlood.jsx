@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
 import styles from "./SearchMatchBlood.module.css"; // Đảm bảo file CSS của bạn có tên là index.module.css
 
 const CompatibilityChecker = () => {
@@ -10,7 +11,7 @@ const CompatibilityChecker = () => {
   // Đảm bảo `id` ở đây khớp với `id` trong database của bạn
   // ==========================================================
   const staticBloodTypes = [
-    { id: 1, groupName: "Uknow", rhFactor: "" }, // UNKNOWN UNKNOWN từ backend được map thành Uknow
+    // { id: 1, groupName: "Uknow", rhFactor: "" },
     { id: 2, groupName: "A", rhFactor: "+" },
     { id: 3, groupName: "A", rhFactor: "-" },
     { id: 4, groupName: "B", rhFactor: "+" },
@@ -22,7 +23,7 @@ const CompatibilityChecker = () => {
   ];
 
   const staticBloodComponents = [
-    { id: 1, name: "Unknow" },
+    // { id: 1, name: "Unknow" },
     { id: 2, name: "Toàn phần" },
     { id: 3, name: "Huyết tương" },
     { id: 4, name: "Hồng cầu" },
@@ -39,6 +40,7 @@ const CompatibilityChecker = () => {
   const [selectedDonorBloodTypeId, setSelectedDonorBloodTypeId] = useState("");
   const [selectedRecipientBloodTypeId, setSelectedRecipientBloodTypeId] = useState("");
   const [selectedComponentId, setSelectedComponentId] = useState("");
+  const navigate = useNavigate();
 
   const [compatibilityResult, setCompatibilityResult] = useState(null); // Lưu trữ kết quả từ API
   const [loading, setLoading] = useState(false);
@@ -153,6 +155,10 @@ const CompatibilityChecker = () => {
     return `${bloodType.groupName}${bloodType.rhFactor}`;
   };
 
+  const handleGoBack = () => {
+        navigate(-1);
+    };
+
   return (
     <div className={styles.container}>
       <h2 className={styles.pageTitle}>Kiểm Tra Tương Thích Nhóm Máu</h2>
@@ -173,7 +179,7 @@ const CompatibilityChecker = () => {
             onChange={(e) => setSelectedDonorBloodTypeId(e.target.value)}
             disabled={loading} // Disabled khi đang loading
           >
-            <option value="">-- Chọn nhóm máu --</option>
+            {/* <option value="">-- Chọn nhóm máu --</option> */}
             {bloodTypes.map((type) => (
               <option key={type.id} value={type.id}>
                 {getBloodTypeName(type)}
@@ -193,7 +199,7 @@ const CompatibilityChecker = () => {
             onChange={(e) => setSelectedRecipientBloodTypeId(e.target.value)}
             disabled={loading}
           >
-            <option value="">-- Chọn nhóm máu --</option>
+            {/* <option value="">-- Chọn nhóm máu --</option> */}
             {bloodTypes.map((type) => (
               <option key={type.id} value={type.id}>
                 {getBloodTypeName(type)}
@@ -225,6 +231,12 @@ const CompatibilityChecker = () => {
         <button type="submit" className={styles.checkButton} disabled={loading}>
           {loading ? "Đang kiểm tra..." : "Kiểm tra tương thích"}
         </button>
+
+        <div className={styles.actionButtons}>
+                                <button className={styles.backButton} onClick={handleGoBack}>
+                                    Quay lại
+                                </button>
+                            </div>
       </form>
 
       {/* Hiển thị lỗi nếu có */}
@@ -236,7 +248,7 @@ const CompatibilityChecker = () => {
           className={`${styles.resultCard} ${
             // SỬA ĐỔI: Sử dụng so sánh nghiêm ngặt `=== true` để khắc phục lỗi hiển thị
             // dù API trả về `true` vẫn hiển thị "Không tương thích".
-            compatibilityResult.isCompatible === true
+            compatibilityResult.compatible === true
               ? styles.compatible
               : styles.incompatible
           }`}
@@ -265,7 +277,7 @@ const CompatibilityChecker = () => {
         </div>
       )}
 
-      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );
 };

@@ -114,35 +114,33 @@ function LoginForm() {
           />
           {emailError && <p className={styles.errorMessage}>{emailError}</p>}
         </div>
+
         <div className={styles.inputGroup}>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            className={`${styles.inputField} ${passwordError ? styles.inputError : ''}`}
-            placeholder="Password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-          <button
-            type="button"
-            className={styles.togglePasswordButton}
-            onClick={handleTogglePasswordVisibility}
-          >
-            {showPassword ? (
-              <FontAwesomeIcon icon={faEyeSlash} />
-            ) : (
-              <FontAwesomeIcon icon={faEye} />
-            )}
-          </button>
-          {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
+          <div className={styles.passwordWrapper}>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              className={`${styles.inputField} ${passwordError ? styles.inputError : ''}`}
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+            <span className={styles.eyeIcon} onClick={handleTogglePasswordVisibility}>
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </span>
+            </div>
+            {passwordError && <p className={styles.errorMessage}>{passwordError}</p>}
         </div>
+
         <div className={styles.forgotPassword}>
           <Link to="/forgot-password">Quên mật khẩu?</Link>
         </div>
+
         <button type="submit" className={styles.loginButton}>
           Đăng Nhập
         </button>
+
         <div className={styles.signupPrompt}>
           Bạn không có tài khoản? <Link to="/register">Đăng ký</Link>
         </div>

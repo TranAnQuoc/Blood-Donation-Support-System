@@ -1,38 +1,38 @@
 .myDonationHistoryContainer {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 1000px;
+    padding: 28px;
+    background-color: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    margin: 32px auto;
+    max-width: 1100px;
     text-align: center;
 }
 
 .pageTitle {
-    font-size: 2.2em;
-    color: #34495e;
+    font-size: 2.4em;
+    color: #031B4E;
     margin-bottom: 30px;
     text-align: center;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 15px;
+    border-bottom: 2px solid #031B4E;
+    padding-bottom: 12px;
 }
 
 .loadingMessage,
 .errorMessage,
 .noHistoryMessage {
     text-align: center;
-    padding: 30px;
+    padding: 24px;
     font-size: 1.1em;
-    color: #777;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-top: 20px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 25px;
 }
 
 .errorMessage {
     color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+    background-color: #fbeaea;
+    border: 1px solid #f5c2c7;
 }
 
 .tableWrapper {
@@ -42,62 +42,67 @@
 
 .historyTable {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 24px;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
 .historyTable th,
 .historyTable td {
-    padding: 12px 15px;
+    padding: 14px 18px;
     border: 1px solid #dee2e6;
     text-align: left;
+    font-size: 1em;
     white-space: nowrap;
 }
 
 .historyTable th {
     background-color: #e9ecef;
-    color: #495057;
+    color: #031B4E;
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 0.9em;
+    font-size: 0.85em;
 }
 
 .historyTable tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f8f9fc;
 }
 
 .historyTable tbody tr:hover {
-    background-color: #e2e6ea;
+    background-color: #e7f1ff;
+    transition: background-color 0.2s ease;
 }
 
 /* Status Badges */
 .statusBadge {
-    padding: 4px 8px;
-    border-radius: 5px;
+    padding: 6px 12px;
+    border-radius: 12px;
     font-size: 0.85em;
     font-weight: bold;
     color: #fff;
     display: inline-block;
+    text-transform: capitalize;
 }
 
 .completed {
-    background-color: #28a745; 
+    background-color: #28a745;
 }
 
 .failed {
-    background-color: #dc3545; 
+    background-color: #dc3545;
 }
 
+/* Action buttons */
 .actionButtons {
     display: flex;
     justify-content: flex-end;
     gap: 15px;
     margin-top: 30px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #dee2e6;
     padding-top: 20px;
 }
 
@@ -105,12 +110,12 @@
     background-color: #ffffff;
     border: 1px solid #031B4E;
     color: #031B4E;
-    padding: 8px 16px;
-    border-radius: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
     margin-bottom: 16px;
 }
 
@@ -119,11 +124,11 @@
     color: #ffffff;
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 768px) {
     .myDonationHistoryContainer {
-        margin: 10px;
-        padding: 15px;
+        margin: 16px;
+        padding: 20px;
     }
 
     .pageTitle {
@@ -133,13 +138,14 @@
 
     .historyTable th,
     .historyTable td {
-        padding: 10px;
+        padding: 10px 12px;
         font-size: 0.85em;
     }
 
     .actionButtons {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
+        align-items: stretch;
     }
 
     .backButton {
@@ -150,6 +156,7 @@
 @media (max-width: 480px) {
     .historyTable th,
     .historyTable td {
-        font-size: 0.75em;
+        font-size: 0.78em;
+        padding: 8px 10px;
     }
 }

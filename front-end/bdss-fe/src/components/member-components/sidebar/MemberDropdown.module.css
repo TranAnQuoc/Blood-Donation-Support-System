@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  z-index: 9999;
 }
 
 .avatar {
@@ -44,7 +45,7 @@
   border-radius: 8px;
   margin-top: 8px;
   min-width: 150px;
-  z-index: 1000;
+  z-index: 10000;
   animation: fadeIn 0.3s ease;
 }
 
@@ -66,6 +67,7 @@
   background-color: #fef1f3;
   color: #d9534f;
   text-decoration: underline;
+  border-radius: 10px;
 }
 
 @keyframes fadeIn {

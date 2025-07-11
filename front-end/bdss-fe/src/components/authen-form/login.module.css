@@ -18,19 +18,16 @@
 .loginForm h2 {
   text-align: center;
   margin-bottom: 25px;
-  color: #C02044;
+  color: #C12759;
 }
 
 .inputGroup {
-  position: relative;
   margin-bottom: 20px;
 }
 
 .inputField {
-  width: calc(100% - 40px);
-  /* Trừ đi khoảng trống cho icon và padding */
-  padding: 12px 15px 12px 40px;
-  /* Thêm padding bên trái cho icon */
+  width: 100%;
+  padding: 12px 40px 12px 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
@@ -39,27 +36,26 @@
 
 .inputField:focus {
   outline: none;
-  border-color: #ff7878;
+  border-color: #C12759;
   box-shadow: 0 0 5px #ffe5ea;
 }
 
-.togglePasswordButton {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #C02044;
-  font-size: 1.2em;
+.inputError {
+  border-color: #C12759;
+}
+
+.passwordWrapper {
+  position: relative;
 }
 
 .eyeIcon {
-  color: #777;
-  width: 20px;
-  height: 20px;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #C12759;
+  font-size: 1.1rem;
 }
 
 .forgotPassword {
@@ -68,7 +64,7 @@
 }
 
 .forgotPassword a {
-  color: #000000;
+  color: #223645;
   text-decoration: none;
   font-size: 14px;
 }
@@ -78,8 +74,7 @@
 }
 
 .loginButton {
-  background-color: #C02044;
-  /* Màu tím tương tự hình ảnh */
+  background-color: #C12759;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -91,17 +86,18 @@
 }
 
 .loginButton:hover {
-  background-color: #DA5E5A;
+  background-color: #970a29;
 }
 
 .signupPrompt {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
+  color: #223645;
 }
 
 .signupPrompt a {
-  color: #C02044;
+  color: #C12759;
   text-decoration: none;
   font-weight: bold;
 }
@@ -111,13 +107,9 @@
 }
 
 .errorMessage {
-  color: #dc3545; /* Bootstrap's danger red */
+  color: #dc3545;
   font-size: 0.85em;
   margin-top: 5px;
   text-align: left;
   padding-left: 5px;
-}
-
-.inputField.inputError {
-  border-color: #dc3545; /* Highlight border for invalid input */
 }

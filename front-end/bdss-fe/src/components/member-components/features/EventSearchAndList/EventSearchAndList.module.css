@@ -1,19 +1,26 @@
 .eventSearchAndList {
-    padding: 30px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 1000px;
-    margin: 30px auto;
+    padding: 40px 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    max-width: 1100px;
+    margin: 40px auto;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
 }
 
 .pageTitle {
     text-align: center;
-    color: #343a40;
-    margin-bottom: 40px;
-    font-size: 2em;
-    font-weight: 600;
+    color: #C02044;
+    font-size: 2.4em;
+    font-weight: 700;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
 }
+
 
 .searchForm {
     display: flex;
@@ -39,7 +46,7 @@
     display: flex;
     align-items: center;
     font-weight: normal;
-    color: #343a40;
+    color: #223645;
 }
 
 .radioGroup input[type="radio"] {
@@ -65,36 +72,41 @@
 }
 
 .formGroup label {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    font-size: 0.95em;
     font-weight: 600;
-    color: #495057;
+    color: #343a40;
 }
 
 .formGroup input[type="date"],
 .formGroup input[type="text"] {
     padding: 10px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
+    border: 1px solid #ccd3da;
+    border-radius: 6px;
     font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
+.formGroup input:focus {
+    border-color: #C02044;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(192, 32, 68, 0.1);
 }
 
 .searchButton {
-    padding: 10px 25px;
-    background-color: #007bff;
-    color: white;
+    background-color: #C02044;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    padding: 12px 18px;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-    flex-shrink: 0;
+    transition: background-color 0.25s ease;
 }
 
 .searchButton:hover {
-    background-color: #0056b3;
+    background-color: #a01a38;
 }
 
 .dateErrorMessage {
@@ -123,47 +135,49 @@
     border-radius: 8px;
 }
 
-/* Component common/Table/DataTable.css */
 .dataTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 
 .dataTable th,
 .dataTable td {
+    padding: 14px 16px;
     border: 1px solid #dee2e6;
-    padding: 12px 15px;
     text-align: left;
 }
 
 .dataTable th {
-    background-color: #e9ecef;
-    font-weight: bold;
-    color: #495057;
+    background-color: #f8f9fa;
+    color: #343a40;
+    font-weight: 600;
 }
 
 .dataTable tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f4f7fb;
 }
 
 .dataTable tbody tr:hover {
-    background-color: #e2f0ff;
+    background-color: #eaf4ff;
 }
 
 .registerButton {
-    background-color: #007bff;
+    background-color: #20a0c0;
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 0.95em;
     cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.25s ease;
 }
 
 .registerButton:hover {
-    background-color: #0056b3;
+    background-color: #1686a3;
 }
 
 .unavailableText {

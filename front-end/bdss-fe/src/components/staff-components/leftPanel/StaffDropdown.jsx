@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './StaffDropdown.module.css';
-import { FaUserCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/features/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -24,10 +24,9 @@ const StaffDropdown = () => {
     };
 
     return (
-        <div className={styles.StaffDropdown}>
+        <div className={styles.staffDropdown}>
             <div className={styles.dropdownToggle} onClick={toggleDropdown}>
-                {/* <FaUserCircle className={styles.userIcon} /> */}
-                <span className={styles.StaffName}>Staff: {user?.fullName || "Staff"}</span>
+                <span className={styles.staffName}>Staff: {user?.fullName || "Staff"}</span>
                 {isOpen ? <FaChevronUp className={styles.arrowIcon} /> : <FaChevronDown className={styles.arrowIcon} />}
             </div>
             {isOpen && (

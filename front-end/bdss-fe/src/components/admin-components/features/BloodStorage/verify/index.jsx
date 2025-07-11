@@ -37,7 +37,12 @@ const VerifiedBloodStorage = ({ storageId, currentStatus, verifiedStatus, onVeri
     // 2. Trạng thái hiện tại của kho máu là IN_USED hoặc TRANSFERRED
     // 3. Trạng thái xác minh chưa được đặt (hoặc bạn muốn cho phép xác minh lại)
     const canVerify = userRole === 'ADMIN' &&
-                      (currentStatus === "IN_USED" || currentStatus === "TRANSFERRED");
+        (currentStatus === "IN_USED" || currentStatus === "TRANSFERRED");
+    // Nếu đã xác minh rồi (CONFIRMED hoặc UNCONFIRMED), không hiển thị lại form
+    if (verifiedStatus === StatusVerified.CONFIRMED || verifiedStatus === StatusVerified.UNCONFIRMED) {
+        return null;
+    }
+
 
     // Nếu đã có trạng thái xác minh và bạn không muốn cho phép thay đổi
     // if (verifiedStatus && verifiedStatus !== "") {

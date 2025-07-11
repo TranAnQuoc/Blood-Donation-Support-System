@@ -20,9 +20,9 @@ import {
     faCalendarAlt,
     faBox,
     faCalendarCheck,
-    faNewspaper,
+    // faNewspaper,
     faChartBar,
-    faHeadset
+    // faHeadset
 } from '@fortawesome/free-solid-svg-icons';
 
 const LeftPanel = () => {
@@ -83,9 +83,9 @@ const LeftPanel = () => {
         { id: 'eventManagement', icon: faCalendarAlt, label: 'Quản Lý Sự Kiện Hiến Máu', fullPath: '/staff-dashboard/event-management' },
         { id: 'bloodStock', icon: faBox, label: 'Kho Máu', fullPath: '/staff-dashboard/blood-storage' },
         { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/staff-dashboard/recovery-reminders' },
-        { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/staff-dashboard/community-posts' },
+        // { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/staff-dashboard/community-posts' },
         { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/staff-dashboard/reports' },
-        { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ', fullPath: '/staff-dashboard/support-center' },
+        // { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ', fullPath: '/staff-dashboard/support-center' },
     ];
 
     return (
