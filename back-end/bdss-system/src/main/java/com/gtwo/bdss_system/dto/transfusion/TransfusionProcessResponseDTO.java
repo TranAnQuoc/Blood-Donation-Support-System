@@ -12,7 +12,6 @@ public class TransfusionProcessResponseDTO {
     private LocalDateTime transfusionCompletedAt;
     private String status;
     private String staffNotes;
-    private Long usedBloodUnitId;
     private Boolean healthCheckPassed;
     private String bloodPressure;
     private Integer heartRate;

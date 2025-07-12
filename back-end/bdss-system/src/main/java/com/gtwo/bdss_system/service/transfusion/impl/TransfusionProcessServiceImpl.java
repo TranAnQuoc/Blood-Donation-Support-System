@@ -42,6 +42,7 @@ public class TransfusionProcessServiceImpl implements TransfusionProcessService 
             throw new RuntimeException("Request must be approved before processing");
         }
 
+
         Optional<TransfusionProcess> optionalProc = procRepo.findByRequest_Id(requestId);
         TransfusionProcess proc = optionalProc.orElseGet(() -> initializeNewProcess(request));
 
