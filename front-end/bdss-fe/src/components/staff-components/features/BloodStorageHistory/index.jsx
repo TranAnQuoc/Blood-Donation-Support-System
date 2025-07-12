@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,16 +23,18 @@ const API_BASE_URL = "http://localhost:8080/blood-storage-history";
 
 // Enums must match backend StatusBloodStorage and StatusVerified
 const BloodStorageHistoryStatus = {
-    IN_USED: "IN_USED",
-    TRANSFERRED: "TRANSFERRED",
-    // You might also list other statuses if they exist in the enum but aren't filterable by API directly
-    // e.g., STORED: "STORED", PENDING: "PENDING", EXPIRED: "EXPIRED", REJECTED: "REJECTED"
+    IN_USED: "Đang sử dụng",
+    TRANSFERRED: "Đã chuyển giao",
+    STORED: "Đã lưu trữ",
+    PENDING: "Đang chờ",
+    EXPIRED: "Hết hạn",
+    REJECTED: "Bị từ chối"
 };
 
 const VerifiedStatus = {
-    SUCCESS: "SUCCESS",
-    FAILED: "FAILED",
-    PENDING: "PENDING",
+    SUCCESS: "Thành công",
+    FAILED: "Thất bại",
+    PENDING: "Đang chờ"
 };
 
 // Utility function to get auth data (reused from previous components)
@@ -81,7 +83,7 @@ const BloodStorageHistoryList = () => {
     const { token } = getAuthData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchHistoryRecords = async () => {
+    const fetchHistoryRecords = useCallback(async () => {
         setLoading(true);
         setError(null);
         setHistoryRecords([]);
@@ -139,11 +141,11 @@ const BloodStorageHistoryList = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedStatusFilter, token]);
 
     useEffect(() => {
         fetchHistoryRecords();
-    }, [fetchHistoryRecords, selectedStatusFilter, token]); // Re-fetch when filter or token changes
+    }, [fetchHistoryRecords]); // Re-fetch when filter or token changes
 
     const handleStatusFilterChange = (e) => {
         setSelectedStatusFilter(e.target.value);
@@ -203,7 +205,7 @@ const BloodStorageHistoryList = () => {
                             className={styles.historyCard}
                             onClick={() => handleViewDetails(item)}
                         >
-                            <p className={styles.cardId}>ID Lịch sử: {item.id}</p>
+                            <p className={styles.cardId}><strong>ID Lịch sử:</strong> {item.id}</p>
                             <p>
                                 <strong>ID Kho gốc:</strong> {item.originalBloodStorageId}
                             </p>
@@ -219,19 +221,20 @@ const BloodStorageHistoryList = () => {
                             <p>
                                 <strong>Số lượng:</strong> {item.quantity}
                             </p>
-                            <p
-                                className={`${styles.statusBadge} ${
-                                    styles[item.bloodStatus?.toLowerCase()]
-                                }`}
-                            >
-                                Trạng thái: {item.bloodStatus?.replace(/_/g, " ")}
+                            <p>
+                                <strong>Trạng thái:</strong>{" "}
+                                <span
+                                    className={`${styles.statusBadge} ${styles[item.bloodStatus?.toLowerCase()]}`}
+                                >
+                                    {BloodStorageHistoryStatus[item.bloodStatus] || item.bloodStatus}
+                                </span>
                             </p>
                             <p className={styles.cardCreated}>
-                                Thời điểm tạo lịch sử: {formatDateTime(item.createAt)}
+                                <strong>Thời điểm tạo lịch sử:</strong> {formatDateTime(item.createAt)}
                             </p>
                             {item.archivedAt && (
                                 <p className={styles.cardArchived}>
-                                    Thời điểm lưu trữ: {formatDateTime(item.archivedAt)}
+                                    <strong>Thời điểm lưu trữ:</strong> {formatDateTime(item.archivedAt)}
                                 </p>
                             )}
                         </div>
@@ -278,11 +281,9 @@ const BloodStorageHistoryList = () => {
                                 <strong>Trạng thái:</strong>
                             </p>
                             <p
-                                className={`${styles.statusBadge} ${
-                                    styles[selectedRecord.bloodStatus?.toLowerCase()]
-                                }`}
-                            >
-                                {selectedRecord.bloodStatus?.replace(/_/g, " ")}
+                                className={`${styles.statusBadge} ${styles[selectedRecord.bloodStatus?.toLowerCase()]}`}
+                                >
+                                    {BloodStorageHistoryStatus[selectedRecord.bloodStatus] || selectedRecord.bloodStatus}
                             </p>
                         </div>
                         <div className={styles.detailRow}>
@@ -353,7 +354,11 @@ const BloodStorageHistoryList = () => {
                                     <p>
                                         <strong>Trạng thái xác minh:</strong>
                                     </p>
-                                    <p>{selectedRecord.verifiedStatus?.replace(/_/g, " ") || "N/A"}</p>
+                                    <p
+                                    className={`${styles.detailRow} ${styles[selectedRecord.verifiedStatus?.toLowerCase()]}`}
+                                    >
+                                        {VerifiedStatus[selectedRecord.verifiedStatus] || selectedRecord.verifiedStatus}
+                                    </p>
                                 </div>
                                 <div className={styles.detailRow}>
                                     <p>
@@ -390,7 +395,7 @@ const BloodStorageHistoryList = () => {
             )}
 
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={3000}
                 hideProgressBar
                 newestOnTop

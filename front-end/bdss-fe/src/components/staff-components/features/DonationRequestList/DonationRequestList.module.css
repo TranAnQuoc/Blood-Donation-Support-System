@@ -3,10 +3,18 @@
     background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .donationRequestListContainer h2 {
     text-align: center;
+    color: #007A64;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
 }
 
 .tableWrapper {
@@ -22,15 +30,21 @@
     overflow: hidden;
 }
 
+.wideColumn {
+    min-width: 150px;
+}
+
+
 .donationRequestTable th,
 .donationRequestTable td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
+    
 }
 
 .donationRequestTable th {
-    background-color: #007bff;
+    background-color: #007A64;
     color: white;
     font-weight: bold;
     text-transform: uppercase;
@@ -62,7 +76,7 @@
 .statusBadge {
     display: inline-block;
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 20px;
     font-weight: bold;
     font-size: 0.85em;
     text-transform: uppercase;
@@ -86,28 +100,30 @@
 .approveButton,
 .cancelButton {
     padding: 8px 12px;
-    margin-right: 5px;
+    margin-top: 3px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em;
     transition: background-color 0.2s ease-in-out;
+    min-width: 100px;
+    text-align: center;
 }
 
 .approveButton {
-    background-color: #28a745;
+    background-color: #20a0c0;
     color: white;
 }
 
 .approveButton:hover {
-    background-color: #218838;
+    background-color: #1686a3;
 }
 
 .cancelButton {
-    background-color: #dc3545;
+    background-color: #C02044;
     color: white;
 }
 
 .cancelButton:hover {
-    background-color: #c82333;
+    background-color: #a01a38;
 }

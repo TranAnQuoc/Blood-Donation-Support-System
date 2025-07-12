@@ -40,7 +40,7 @@ const getAuthData = () => {
 // Đảm bảo `id` ở đây khớp với `id` trong database của bạn
 // ==========================================================
 const staticBloodTypes = [
-    { id: 1, groupName: "Uknow", rhFactor: "" }, // ID 1 là "Không xác định"
+    // { id: 1, groupName: "Uknow", rhFactor: "" }, // ID 1 là "Không xác định"
     { id: 2, groupName: "A", rhFactor: "+" },
     { id: 3, groupName: "A", rhFactor: "-" },
     { id: 4, groupName: "B", rhFactor: "+" },
@@ -52,7 +52,7 @@ const staticBloodTypes = [
 ];
 
 const staticBloodComponents = [
-    { id: 1, name: "Unknow" }, // ID 1 là "Không xác định"
+    // { id: 1, name: "Unknow" }, // ID 1 là "Không xác định"
     { id: 2, name: "Toàn phần" },
     { id: 3, name: "Huyết tương" },
     { id: 4, name: "Hồng cầu" },
@@ -291,11 +291,19 @@ const BloodStorageCreateForm = ({ onCreateSuccess }) => {
                 <button type="submit" className={styles.submitButton} disabled={loading}>
                     {loading ? 'Đang tạo...' : 'Tạo Kho Máu'}
                 </button>
+
+                <button
+                    type="button"
+                    className={styles.backButton}
+                    onClick={() => window.history.back()}
+                >
+                    Quay lại
+                </button>
             </form>
 
             {apiError && <p className={styles.apiErrorMessage}>{apiError}</p>}
 
-            <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
         </div>
     );
 };

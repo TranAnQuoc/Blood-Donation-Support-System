@@ -1,47 +1,112 @@
 .donationHistoryListContainer {
     padding: 20px;
+    margin: 20px auto;
     background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 1550px;
+    text-align: center;
 }
 
+/* ===== TITLE ===== */
+.listTitle {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #007A64;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #BDA25C;
+    position: relative;
+}
+
+/* ===== TABLE WRAPPER ===== */
 .tableWrapper {
+    border: 1px solid #e0e0e0;
     overflow-x: auto;
     margin-top: 20px;
+    border-radius: 8px;
 }
 
+/* ===== TABLE ===== */
 .donationHistoryTable {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 8px;
     overflow: hidden;
+    font-size: 0.95em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
 }
 
 .donationHistoryTable th,
 .donationHistoryTable td {
-    padding: 12px 15px;
+    padding: 14px 18px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     vertical-align: middle;
 }
 
 .donationHistoryTable th {
-    background-color: #007bff;
-    color: white;
+    background-color: #007A64;
+    color: #fff;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.9em;
+    letter-spacing: 0.5px;
 }
 
 .donationHistoryTable tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f8f9fb;
 }
 
 .donationHistoryTable tbody tr:hover {
-    background-color: #e9ecef;
+    background-color: #eef4ff;
+    transition: background-color 0.2s ease-in-out;
 }
 
+/* ===== STATUS BADGES ===== */
+.statusBadge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+.statusBadge.waiting {
+    background-color: #ffc107;
+}
+
+.statusBadge.screening {
+    background-color: #17a2b8;
+}
+
+.statusBadge.screening_failed {
+    background-color: #fd7e14;
+}
+
+.statusBadge.in_process {
+    background-color: #007bff;
+}
+
+.statusBadge.completed {
+    background-color: #28a745;
+}
+
+.statusBadge.failed {
+    background-color: #dc3545;
+}
+
+.statusBadge.donor_cancel {
+    background-color: #6c757d;
+}
+
+/* ===== SYSTEM MESSAGES ===== */
 .loadingMessage,
 .errorMessage,
 .noHistoryMessage {
@@ -56,22 +121,25 @@
     font-weight: bold;
 }
 
-.statusBadge {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.85em;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .listTitle {
+        font-size: 1.6em;
+        padding-bottom: 10px;
+    }
 
-/* Màu sắc cho trạng thái lịch sử (sẽ là COMPLETED hoặc FAILED) */
-.statusBadge.completed {
-    background-color: #28a745;
-    color: white;
-}
-.statusBadge.failed {
-    background-color: #dc3545;
-    color: white;
+    .donationHistoryTable th,
+    .donationHistoryTable td {
+        padding: 10px 12px;
+        font-size: 0.85em;
+    }
+
+    .donationHistoryTable {
+        min-width: 700px;
+    }
+
+    .statusBadge {
+        font-size: 0.75em;
+        padding: 5px 10px;
+    }
 }

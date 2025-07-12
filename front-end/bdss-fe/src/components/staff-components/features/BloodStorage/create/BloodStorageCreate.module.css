@@ -1,52 +1,78 @@
-/* ... (Giữ nguyên các style đã có cho BloodStorageList, Modal, v.v.) ... */
-
-/* Styles cho BloodStorageCreateForm */
+/* =============================
+   Form Container
+============================= */
 .formContainer {
     padding: 30px;
     max-width: 600px;
     margin: 40px auto;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
     animation: fadeIn 0.5s ease-out;
 }
 
+/* =============================
+   Title & Intro
+============================= */
 .formTitle {
-    color: #2c3e50;
     text-align: center;
-    margin-bottom: 25px;
-    font-size: 2.5em;
+    color: #007A64;
+    font-size: 2.2rem;
     font-weight: 700;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 18px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 12px;
 }
 
 .formIntro {
     text-align: center;
     color: #555;
-    margin-bottom: 40px;
-    font-size: 1.15em;
+    margin-bottom: 35px;
+    font-size: 1.05rem;
     line-height: 1.6;
 }
 
+/* =============================
+   Form Layout
+============================= */
 .bloodStorageForm {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* Các formGroup, label, inputField, selectField đã được định nghĩa ở trên,
-   chỉ cần đảm bảo chúng có các style tương tự hoặc dùng chung. */
-/* Ví dụ: */
-/* .formGroup { ... } */
-/* .label { ... } */
-/* .inputField { ... } */
-/* .selectField { ... } */
+.inputField,
+.selectField {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
 
+.inputField:focus,
+.selectField:focus {
+    border-color: #007A64;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 122, 100, 0.2);
+}
+
+.label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* =============================
+   Error
+============================= */
 .inputError {
-    border-color: #e74c3c !important; /* Màu đỏ cho viền khi có lỗi */
+    border-color: #e74c3c !important;
     box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25) !important;
 }
 
@@ -57,34 +83,55 @@
     margin-left: 5px;
 }
 
+/* =============================
+   Buttons
+============================= */
 .submitButton {
-    padding: 15px 30px;
-    background-color: #28a745; /* Màu xanh lá cây cho nút submit */
+    padding: 12px;
+    background-color: #BDA25C;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-top: 25px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
 }
 
 .submitButton:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+    background-color: #9b813f;
 }
 
 .submitButton:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
     opacity: 0.7;
-    transform: none;
-    box-shadow: none;
 }
 
+/* Quay lại */
+.backButton {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #031B4E;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #031B4E;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.backButton:hover {
+    background-color: #031B4E;
+    color: #fff;
+}
+
+/* =============================
+   API Error
+============================= */
 .apiErrorMessage {
     color: #dc3545;
     text-align: center;
@@ -97,21 +144,22 @@
     padding: 10px;
 }
 
-/* Responsive adjustments (có thể dùng chung với BloodStorageList) */
+/* =============================
+   Responsive
+============================= */
 @media (max-width: 768px) {
     .formContainer {
-        margin: 20px auto;
+        margin: 20px;
         padding: 20px;
     }
     .formTitle {
-        font-size: 2em;
+        font-size: 2rem;
     }
     .formIntro {
-        font-size: 1em;
-    }
-    .inputField, .selectField, .submitButton {
         font-size: 1rem;
-        padding: 10px 15px;
+    }
+    .inputField, .selectField, .submitButton, .backButton {
+        font-size: 1rem;
     }
 }
 
@@ -121,6 +169,6 @@
         padding: 15px;
     }
     .formTitle {
-        font-size: 1.8em;
+        font-size: 1.7rem;
     }
 }

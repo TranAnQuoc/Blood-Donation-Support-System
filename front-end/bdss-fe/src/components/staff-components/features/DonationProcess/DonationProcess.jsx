@@ -80,7 +80,7 @@ const DonationProcess = () => {
 
     return (
         <div className={styles.donationProcessListContainer}>
-            <h2>Danh sách Quy trình Hiến máu</h2>
+            <h2>Danh Sách Quy trình Hiến máu</h2>
             
             {processes.length === 0 ? (
                 <p className={styles.noProcessesMessage}>Không có quy trình hiến máu nào đang chờ xử lý.</p>

@@ -1,5 +1,3 @@
-/* src/components/DonationProcess/DonationProcess.module.css */
-
 .loadingMessage,
 .errorMessage,
 .noProcessesMessage {
@@ -10,28 +8,33 @@
 }
 
 .errorMessage {
-    color: #dc3545; /* Red for errors */
+    color: #dc3545;
     font-weight: bold;
 }
 
 .donationProcessListContainer {
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 1200px; /* Có thể điều chỉnh */
     margin: 20px auto;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 1550px;
+    text-align: center;
 }
 
 .donationProcessListContainer h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #007A64;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #BDA25C;
+    position: relative;
 }
 
 .processCardsContainer {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid for cards */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     justify-content: center;
 }
@@ -54,7 +57,7 @@
 }
 
 .processCard h3 {
-    color: #007bff;
+    color: #007A64;
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.3em;
@@ -62,59 +65,58 @@
 
 .processCard p {
     margin-bottom: 8px;
-    color: #666;
+    color: #000000;
+    text-align: left;
 }
 
 .processCard strong {
-    color: #333;
+    color: #007A64;
 }
 
 .statusBadge {
     display: inline-block;
     padding: 4px 8px;
-    border-radius: 5px; /* Changed from 4px to 5px for consistency with prior suggestions */
+    border-radius: 20px;
     font-weight: bold;
     color: white;
     font-size: 0.9em;
     text-transform: uppercase;
-    white-space: nowrap; /* Prevent text wrapping for badges */
+    white-space: nowrap;
 }
 
-/* Existing status badge styles (some colors updated for consistency with earlier suggestions) */
 .statusBadge.waiting {
-    background-color: #ffc107; /* yellow - Added this, it was missing */
+    background-color: #ffc107;
 }
 
 .statusBadge.in_process {
-    background-color: #28a745; /* green - Updated from yellow as per prior suggestion */
+    background-color: #007bff;
 }
 
 .statusBadge.completed {
-    background-color: #007bff; /* blue - Updated from green as per prior suggestion */
+    background-color: #28a745;
 }
 
 .statusBadge.failed {
-    background-color: #dc3545; /* red */
+    background-color: #dc3545;
 }
 
-/* NEW STATUS BADGE STYLES */
 .statusBadge.screening {
-    background-color: #6f42c1; /* Purple */
+    background-color: #17a2b8;
 }
 
 .statusBadge.screening_failed {
-    background-color: #fd7e14; /* Orange */
+    background-color: #fd7e14;
 }
 
 .statusBadge.donor_cancel {
-    background-color: #6c757d; /* Grey/Slate */
+    background-color: #6c757d;
 }
 
 
 .viewDetailButton {
-    background-color: #007bff;
-    color: white;
-    border: none;
+    background-color: #ffffff;
+    color: #BDA25C;
+    border: 1px solid #BDA25C;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
@@ -125,7 +127,6 @@
 }
 
 .viewDetailButton:hover {
-    background-color: #0056b3;
+    background-color: #9b813f;
+    color: #ffffff;
 }
-
-/* Bạn có thể bỏ qua các style table cũ như .donationProcessTable, .tableWrapper nếu không còn dùng bảng nữa */

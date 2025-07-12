@@ -1,28 +1,31 @@
-/* src/components/Modal.css */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6); /* Lớp phủ mờ */
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Đảm bảo modal nằm trên cùng */
+    align-items: flex-start;     /* Đẩy modal lên đầu (thay vì giữa) */
+    overflow-y: auto;            /* Cuộn toàn modal nếu dài */
+    padding: 40px 20px;          /* Padding tránh dính mép trên/dưới */
+    z-index: 1000;
     animation: fadeInOverlay 0.3s ease-out;
 }
+
 
 .modal-content {
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    max-height: 90vh; /* Giới hạn chiều cao của modal */
-    overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
-    position: relative; /* Để các button bên trong có thể position tương đối */
+    max-height: none;           /* Bỏ giới hạn chiều cao */
+    overflow-y: visible;        /* Không cuộn bên trong modal */
+    position: relative;
     animation: slideInModal 0.3s ease-out;
 }
+
 
 @keyframes fadeInOverlay {
     from { opacity: 0; }

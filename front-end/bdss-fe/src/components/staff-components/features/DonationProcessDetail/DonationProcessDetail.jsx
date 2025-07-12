@@ -76,13 +76,13 @@ const DonationProcessDetail = () => {
     };
 
     const processStatusMap = {
-        'WAITING': 'Đang chờ',
+        // 'WAITING': 'Đang chờ',
         'SCREENING': 'Đang sàng lọc',
         'SCREENING_FAILED': 'Sàng lọc thất bại',
         'IN_PROCESS': 'Đang tiến hành',
         'COMPLETED': 'Hoàn thành',
         'FAILED': 'Thất bại',
-        'DONOR_CANCEL': 'Người hiến hủy bỏ'
+        // 'DONOR_CANCEL': 'Người hiến hủy bỏ'
     };
 
     const donationTypeMap = {
@@ -323,8 +323,8 @@ const DonationProcessDetail = () => {
                     <p><strong>Người hiến:</strong> {process.donorFullName || 'N/A'}</p>
                     <p><strong>Nhóm máu ĐK:</strong> {process.donorBloodType ? `${process.donorBloodType.type}${process.donorBloodType.rhFactor}` : 'N/A'}</p>
                     <p><strong>Sự kiện:</strong> {process.eventName || 'N/A'}</p>
-                    <p><strong>Ngày sự kiện:</strong> {formatDateTime(process.date) || 'N/A'}</p>
-                    <p><strong>Giờ sự kiện:</strong> {formatDateTime(process.startTime) || 'N/A'}</p>
+                    {/* <p><strong>Ngày sự kiện:</strong> {formatDateTime(process.date) || 'N/A'}</p> */}
+                    <p><strong>Thời gian sự kiện:</strong> {formatDateTime(process.startTime) || 'N/A'}</p>
                     <p><strong>Ngày thực hiện:</strong> {process.processDate ? formatDateTime(process.processDate) : 'N/A'}</p>
                     <p><strong>Thể tích máu:</strong> {process.quantity || 'N/A'} ml</p>
                     <p><strong>Loại hiến:</strong> {donationTypeMap[process.type] || 'N/A'}</p> 
@@ -387,12 +387,12 @@ const DonationProcessDetail = () => {
                         <strong>Sự kiện hiến máu:</strong>
                         <span>{process.eventName || 'N/A'}</span>
                     </div>
-                    <div className={styles.infoGroup}>
+                    {/* <div className={styles.infoGroup}>
                         <strong>Ngày sự kiện:</strong>
                         <span>{process.date ? formatDateTime(process.date) : 'N/A'}</span>
-                    </div>
+                    </div> */}
                     <div className={styles.infoGroup}>
-                        <strong>Giờ sự kiện:</strong>
+                        <strong>Thời gian sự kiện:</strong>
                         <span>{process.startTime ? formatDateTime(process.startTime) : 'N/A'} - {process.endTime ? formatDateTime(process.endTime) : 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
@@ -409,96 +409,15 @@ const DonationProcessDetail = () => {
                 <div className={styles.editableSection}>
                     <h3>Thông tin Quy trình Hiến máu (Cập nhật)</h3>
                     <form>
-                        <div className={styles.formGroup}>
-                            <label htmlFor="process">Trạng thái Quy trình:</label>
-                            <select
-                                id="process"
-                                name="process"
-                                value={editData.process}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable && !(process.process === 'WAITING' && editData.process === 'SCREENING')} 
-                                className={styles.selectInput}
-                            >
-                                {Object.keys(processStatusMap).map(key => (
-                                    <option key={key} value={key}>
-                                        {processStatusMap[key]}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        
-                        <div className={styles.formGroup}>
-                            <label htmlFor="processDate">Ngày thực hiện:</label>
+                        <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
+                            <label htmlFor="healthCheck">Kiểm tra sức khỏe đạt yêu cầu?</label>
                             <input
-                                type="date"
-                                id="processDate"
-                                name="processDate"
-                                value={editData.processDate}
+                                type="checkbox"
+                                id="healthCheck"
+                                name="healthCheck"
+                                checked={editData.healthCheck}
                                 onChange={handleInputChange}
                                 disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="quantity">Thể tích máu (ml):</label>
-                            <input
-                                type="number"
-                                id="quantity"
-                                name="quantity"
-                                value={editData.quantity}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 450"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="type">Loại hiến:</label> 
-                            <select
-                                id="type" 
-                                name="type" 
-                                value={editData.type} 
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                                className={styles.selectInput}
-                            >
-                                <option value="">Chọn loại hiến</option>
-                                {Object.keys(donationTypeMap).map(key => (
-                                    <option key={key} value={key}>{donationTypeMap[key]}</option>
-                                ))}
-                            </select>
-                        </div>
-                        
-                        <hr className={styles.divider} />
-                        <h4>Thông tin khám sàng lọc</h4>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="hemoglobin">Hemoglobin (g/dL):</label>
-                            <input
-                                type="number"
-                                step="0.1"
-                                id="hemoglobin"
-                                name="hemoglobin"
-                                value={editData.hemoglobin}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="bloodPressure">Huyết áp (VD: 120/80):</label>
-                            <input
-                                type="text"
-                                id="bloodPressure"
-                                name="bloodPressure"
-                                value={editData.bloodPressure}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 120/80"
-                                disabled={!isFormEditable}
-                                className={styles.input}
                             />
                         </div>
 
@@ -560,18 +479,35 @@ const DonationProcessDetail = () => {
                                 className={styles.input}
                             />
                         </div>
-                        
-                        <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
-                            <label htmlFor="healthCheck">Kiểm tra sức khỏe đạt yêu cầu?</label>
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="hemoglobin">Hemoglobin (g/dL):</label>
                             <input
-                                type="checkbox"
-                                id="healthCheck"
-                                name="healthCheck"
-                                checked={editData.healthCheck}
+                                type="number"
+                                step="0.1"
+                                id="hemoglobin"
+                                name="hemoglobin"
+                                value={editData.hemoglobin}
                                 onChange={handleInputChange}
                                 disabled={!isFormEditable}
+                                className={styles.input}
                             />
                         </div>
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="bloodPressure">Huyết áp (VD: 120/80):</label>
+                            <input
+                                type="text"
+                                id="bloodPressure"
+                                name="bloodPressure"
+                                value={editData.bloodPressure}
+                                onChange={handleInputChange}
+                                placeholder="Ví dụ: 120/80"
+                                disabled={!isFormEditable}
+                                className={styles.input}
+                            />
+                        </div>
+
                         <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
                             <label htmlFor="hasChronicDisease">Có tiền sử bệnh mãn tính?</label>
                             <input
@@ -583,6 +519,7 @@ const DonationProcessDetail = () => {
                                 disabled={!isFormEditable}
                             />
                         </div>
+
                         <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
                             <label htmlFor="hasRecentTattoo">Có hình xăm gần đây (trong 12 tháng)?</label>
                             <input
@@ -594,6 +531,7 @@ const DonationProcessDetail = () => {
                                 disabled={!isFormEditable}
                             />
                         </div>
+
                         <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
                             <label htmlFor="hasUsedDrugs">Có sử dụng ma túy/chất kích thích?</label>
                             <input
@@ -621,6 +559,20 @@ const DonationProcessDetail = () => {
                         </div>
 
                         <div className={styles.formGroup}>
+                            <label htmlFor="quantity">Thể tích máu (ml):</label>
+                            <input
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                value={editData.quantity}
+                                onChange={handleInputChange}
+                                placeholder="Ví dụ: 450"
+                                disabled={!isFormEditable}
+                                className={styles.input}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
                             <label htmlFor="notes">Ghi chú chung:</label>
                             <textarea
                                 id="notes"
@@ -635,30 +587,82 @@ const DonationProcessDetail = () => {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Trạng thái hiện tại:</label>
-                            <span className={styles.currentStatus}>{getStatusName(process.process)}</span>
+                            <label htmlFor="typeDonation">Loại hiến:</label> 
+                            <select
+                                id="type" 
+                                name="type" 
+                                value={editData.typeDonation} 
+                                onChange={handleInputChange}
+                                disabled={!isFormEditable}
+                                className={styles.selectInput}
+                            >
+                                <option value="">Chọn loại hiến</option>
+                                {Object.keys(donationTypeMap).map(key => (
+                                    <option key={key} value={key}>{donationTypeMap[key]}</option>
+                                ))}
+                            </select>
                         </div>
 
-                        {isFormEditable && (
-                            <div className={styles.actionButtons}>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="processDate">Ngày thực hiện:</label>
+                            <input
+                                type="date"
+                                id="processDate"
+                                name="processDate"
+                                value={editData.processDate}
+                                onChange={handleInputChange}
+                                disabled={!isFormEditable}
+                                className={styles.input}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="process">Trạng thái Quy trình:</label>
+                            <select
+                                id="process"
+                                name="process"
+                                value={editData.process}
+                                onChange={handleInputChange}
+                                disabled={!isFormEditable && !(process.process === 'WAITING' && editData.process === 'SCREENING')} 
+                                className={styles.selectInput}
+                            >
+                                {Object.keys(processStatusMap).map(key => (
+                                    <option key={key} value={key}>
+                                        {processStatusMap[key]}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label>Trạng thái hiện tại:</label>
+                            <span className={`${styles.statusBadge} ${styles[process.process?.toLowerCase()]}`}>
+                                {getStatusName(process.process)}
+                            </span>
+                        </div>
+
+                        <div className={styles.actionButtons}>
+                            <button type="button" className={`${styles.button} ${styles.backButton}`} onClick={() => navigate(-1)}>
+                                Quay lại
+                            </button>
+
+                            {!isFormEditable && !isCompletedOrCancelled && (
                                 <button
                                     type="button"
-                                    className={`${styles.button} ${styles.saveButton}`} 
-                                    onClick={handleSave} 
-                                >
-                                    Lưu
-                                </button>
-                            </div>
-                        )}
-                        <div className={styles.navigationButtons}> 
-                            <button type="button" className={styles.backButton} onClick={() => navigate(-1)}>Quay lại</button>
-                            {!isFormEditable && !isCompletedOrCancelled && (
-                                 <button 
-                                    type="button" 
-                                    className={`${styles.button} ${styles.editButton}`} 
+                                    className={`${styles.button} ${styles.editButton}`}
                                     onClick={() => setIsFormEditable(true)}
                                 >
-                                    Chỉnh Sửa
+                                    Chỉnh sửa
+                                </button>
+                            )}
+
+                            {isFormEditable && (
+                                <button
+                                    type="button"
+                                    className={`${styles.button} ${styles.saveButton}`}
+                                    onClick={handleSave}
+                                >
+                                    Lưu
                                 </button>
                             )}
                         </div>
