@@ -15,7 +15,7 @@ const API_BASE_URL = "http://localhost:8080/api/blood-storage";
 // Nếu ID không chắc chắn, bạn cần kiểm tra cơ sở dữ liệu hoặc logic backend.
 // Ở đây tôi giả định ID tăng dần từ 1.
 const STATIC_BLOOD_COMPONENTS = [
-    { id: 1, componentName: "Unknow" },
+    // { id: 1, componentName: "Unknow" },
     { id: 2, componentName: "Toàn phần" },
     { id: 3, componentName: "Huyết tương" },
     { id: 4, componentName: "Hồng cầu" },
@@ -26,7 +26,7 @@ const STATIC_BLOOD_COMPONENTS = [
 // Dữ liệu Blood Types tĩnh dựa trên backend init
 // Tương tự, giả định ID tăng dần từ 1.
 const STATIC_BLOOD_TYPES = [
-    { id: 1, bloodTypeName: "UNKNOWN", rhType: "UNKNOWN" },
+    // { id: 1, bloodTypeName: "UNKNOWN", rhType: "UNKNOWN" },
     { id: 2, bloodTypeName: "A", rhType: "+" },
     { id: 3, bloodTypeName: "A", rhType: "-" },
     { id: 4, bloodTypeName: "B", rhType: "+" },
@@ -39,12 +39,12 @@ const STATIC_BLOOD_TYPES = [
 
 // Enum cho trạng thái kho máu (phải khớp với backend)
 const BloodStorageStatus = {
-    PENDING: "PENDING",
-    REJECTED: "REJECTED",
-    STORED: "STORED",
-    IN_USED: "IN_USED",
-    TRANSFERRED: "TRANSFERRED",
-    EXPIRED: "EXPIRED",
+    PENDING: "Đang chờ",
+    REJECTED: "Bị từ chối",
+    STORED: "Đã lưu",
+    IN_USED: "Đang sử dụng",
+    TRANSFERRED: "Đã chuyển giao",
+    EXPIRED: "Đã hết hạn",
 };
 
 // Hàm tiện ích để format ngày giờ
@@ -303,7 +303,7 @@ const BloodStorageList = () => {
 
                 {canCreate && (
                     <button className={styles.createButton} onClick={handleCreateNew}>
-                        Tạo mới Kho máu
+                        Tạo mới kho máu
                     </button>
                 )}
             </div>
@@ -325,7 +325,7 @@ const BloodStorageList = () => {
                             className={styles.bloodStorageCard}
                             onClick={() => handleViewDetails(item)}
                         >
-                            <p className={styles.cardId}>ID: {item.id}</p>
+                            <p className={styles.cardId}><strong>ID: {item.id}</strong></p>
                             <p>
                                 <strong>Nhóm máu:</strong> {item.bloodTypeName}
                                 {item.bloodTypeRh}
@@ -336,13 +336,10 @@ const BloodStorageList = () => {
                             <p>
                                 <strong>Số lượng:</strong> {item.quantity}
                             </p>
-                            <p
-                                className={`${styles.statusBadge} ${
-                                    styles[item.bloodStatus?.toLowerCase()]
-                                }`}
-                            >
-                                Trạng thái: {item.bloodStatus?.replace(/_/g, " ")}
+                            <p className={`${styles.statusBadge} ${styles[item.bloodStatus?.toLowerCase()]}`}>
+                                Trạng thái: {BloodStorageStatus[item.bloodStatus] || "Không xác định"}
                             </p>
+
                             <p className={styles.cardCreated}>
                                 Ngày tạo: {formatDateTime(item.createAt)}
                             </p>
@@ -377,15 +374,13 @@ const BloodStorageList = () => {
                             <p>{selectedStorage.quantity}</p>
                         </div>
                         <div className={styles.detailRow}>
-                            <p>
-                                <strong>Trạng thái:</strong>
-                            </p>
+                            <p><strong>Trạng thái:</strong></p>
                             <p
                                 className={`${styles.statusBadge} ${
                                     styles[selectedStorage.bloodStatus?.toLowerCase()]
                                 }`}
                             >
-                                {selectedStorage.bloodStatus?.replace(/_/g, " ")}
+                                {BloodStorageStatus[selectedStorage.bloodStatus] || selectedStorage.bloodStatus?.replace(/_/g, " ")}
                             </p>
                         </div>
                         <div className={styles.detailRow}>
@@ -567,7 +562,7 @@ const BloodStorageList = () => {
             )}
 
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={3000}
                 hideProgressBar
                 newestOnTop

@@ -1,20 +1,19 @@
-/* BloodStorageHistory.module.css */
-
 .container {
     padding: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #f9f9f9;
+    background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .pageTitle {
     text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-size: 2em;
-    font-weight: bold;
+    color: #007A64;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
 }
 
 .topControls {
@@ -122,18 +121,18 @@
 }
 
 /* Status specific colors for BloodStorageHistory */
-.in_used { background-color: #6f42c1; } /* Purple */
-.transferred { background-color: #17a2b8; } /* Teal */
-/* Add other status colors if you display them (e.g., from original blood storage) */
+.in_used { background-color: #007bff; } /* Purple */
+.transferred { background-color: #fd7e14; } /* Teal */
 .stored { background-color: #28a745; } /* Green */
 .pending { background-color: #ffc107; } /* Yellow */
-.expired { background-color: #6c757d; } /* Gray */
+.expired { background-color: #850512; } /* Gray */
 .rejected { background-color: #dc3545; } /* Red */
 
 
 /* For verified status if needed (e.g., in modal) */
 .success { background-color: #28a745; }
 .failed { background-color: #dc3545; }
+.pending { background-color: #ffc107; }
 
 
 .cardCreated, .cardArchived {
@@ -209,21 +208,21 @@
 }
 
 .closeModalButton {
-    display: block;
     width: 100%;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
     margin-top: 25px;
-    transition: background-color 0.2s ease-in-out;
+    padding: 12px;
+    border: 1px solid #031B4E;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #031B4E;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .closeModalButton:hover {
-    background-color: #0056b3;
+    background-color: #031B4E;
+    color: #fff
 }
 
 /* Responsive adjustments */

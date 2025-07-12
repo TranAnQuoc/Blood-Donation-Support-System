@@ -139,15 +139,15 @@ const DonationRequestList = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Tên Người hiến</th>
+                <th className={styles.wideColumn}>Tên Người hiến</th>
                 <th>Giới tính</th>
                 <th>Nhóm máu</th>
-                <th>Tên Sự kiện</th>
-                <th>Thời gian yêu cầu</th>
+                <th className={styles.wideColumn}>Tên Sự kiện</th>
+                <th className={styles.wideColumn}>Thời gian yêu cầu</th>
                 <th>Trạng thái</th>
                 <th>Người duyệt</th>
                 <th>Thời gian duyệt</th>
-                <th>Ghi chú của người duyệt</th>
+                <th className={styles.extraWideColumn}>Ghi chú của người duyệt</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -155,7 +155,7 @@ const DonationRequestList = () => {
               {requests.map((request) => (
                 <tr key={request.id}>
                   <td>{request.id}</td>
-                  <td>{request.donorFullName}</td>
+                  <td className={styles.wideColumn}>{request.donorFullName}</td>
                   <td>
                     {request.donorGender === "MALE"
                       ? "Nam"
@@ -169,8 +169,8 @@ const DonationRequestList = () => {
                       : "Chưa rõ"}
                   </td>
                   <td>{request.eventName}</td>
-                  <td>{formatDateTime(request.requestTime)}</td>
-                  <td>
+                  <td className={styles.wideColumn}>{formatDateTime(request.requestTime)}</td>
+                  <td className={styles.wideColumn}>
                     <span
                       className={`${styles.statusBadge} ${
                         styles[request.statusRequest.toLowerCase()]

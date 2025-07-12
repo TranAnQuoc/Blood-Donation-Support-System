@@ -1,20 +1,20 @@
 .listContainer {
-  max-width: 1200px; /* Tăng độ rộng để chứa nhiều cột hơn */
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #333;
+  padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .listTitle {
   text-align: center;
-  color: #2c3e50;
-  margin-bottom: 35px;
-  font-size: 2.2em;
-  font-weight: 700;
+    color: #007A64;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
 }
 
 .loading, .error, .noProcesses {
@@ -152,7 +152,7 @@
 .formGroup label {
   margin-bottom: 8px;
   font-weight: 600;
-  color: #34495e;
+  color: #007A64;
 }
 
 .formGroup input[type="text"],
@@ -205,22 +205,22 @@
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.confirmButton { /* Use for Update button */
-    background-color: #28a745;
+.confirmButton {
+    background-color: #20a0c0;
     color: white;
 }
 
 .confirmButton:hover {
-    background-color: #218838;
+    background-color: #1686a3;
 }
 
 .cancelButton {
-    background-color: #6c757d;
+    background-color: #C02044;
     color: white;
 }
 
 .cancelButton:hover {
-    background-color: #5a6268;
+    background-color: #a01a38;
 }
 
 .errorText { /* For validation errors */

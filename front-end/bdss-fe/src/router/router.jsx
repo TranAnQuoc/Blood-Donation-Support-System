@@ -49,6 +49,7 @@ import EmergencyTransfusionHistory from "../components/staff-components/features
 import EventManagement from "../components/staff-components/features/EventManagement/EventManagement.jsx";
 import BloodStorageStaff from "../components/staff-components/features/BloodStorage/view/BloodStorage.jsx";
 import BloodStorageCreateForm from "../components/staff-components/features/BloodStorage/create/BloodStorageCreate.jsx"
+import BloodStorageHistory from "../components/staff-components/features/BloodStorageHistory/index.jsx";
 
 //ADMIN
 import AdminProfile from "../components/admin-components/mainContent/AdminProfile/AdminProfile.jsx";
@@ -178,6 +179,7 @@ const router = createBrowserRouter([
       //BloodStorage
       { path: "blood-storage", element: <BloodStorageStaff /> },
       { path: "blood-storage/create", element: <BloodStorageCreateForm /> },
+      { path: "blood-storage-history", element: <BloodStorageHistory/> },
 
       //OTHER
       { path: "member-list", element: <MemberList /> },

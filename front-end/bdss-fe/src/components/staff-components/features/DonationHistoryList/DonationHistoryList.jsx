@@ -32,6 +32,28 @@ const DonationHistoryList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const formatDonationType = (type) => {
+        switch (type) {
+            case 'WHOLE_BLOOD': return 'Toàn phần';
+            case 'PLASMA': return 'Huyết tương';
+            case 'PLATELETS': return 'Tiểu cầu';
+            default: return type || 'N/A';
+        }
+    };
+
+    const formatStatus = (status) => {
+        switch (status) {
+            case 'WAITING': return 'Chờ xử lý';
+            case 'SCREENING': return 'Đang khám sàng lọc';
+            case 'SCREENING_FAILED': return 'Không đạt sàng lọc';
+            case 'IN_PROCESS': return 'Đang thực hiện';
+            case 'COMPLETED': return 'Hoàn thành';
+            case 'FAILED': return 'Thất bại';
+            case 'DONOR_CANCEL': return 'Người hiến hủy';
+            default: return status || 'N/A';
+        }
+    };
+
     const fetchDonationHistories = async () => {
         setLoading(true);
         setError(null);
@@ -65,6 +87,7 @@ const DonationHistoryList = () => {
 
     return (
         <div className={styles.donationHistoryListContainer}>
+            <h2 className={styles.listTitle}>Danh Sách Lịch Sử Hiến Máu</h2>
             <div className={styles.tableWrapper}>
                 {histories.length === 0 ? (
                     <p className={styles.noHistoryMessage}>Không có lịch sử hiến máu nào.</p>
@@ -95,16 +118,19 @@ const DonationHistoryList = () => {
                                     <td>{history.donorPhone || 'N/A'}</td>
                                     <td>{history.donorGender === 'MALE' ? 'Nam' : (history.donorGender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
                                     <td>{formatDateTime(history.donorDateOfBirth) || 'N/A'}</td>
-                                    <td>{history.bloodType || 'N/A'}</td>
+                                    <td>{history.bloodType}</td>
                                     <td>{formatDateTime(history.donationDate) || 'N/A'}</td>
-                                    <td>{history.donationType || 'N/A'}</td>
+                                    <td>{formatDonationType(history.donationType) || 'N/A'}</td>
                                     <td>{history.quantity || 'N/A'}</td>
                                     <td>{history.address || 'N/A'}</td>
                                     <td>{history.note || 'Không có'}</td>
                                     <td>
-                                        <span className={`${styles.statusBadge} ${styles[history.status ? history.status.toLowerCase() : '']}`}>
-                                            {history.status === 'COMPLETED' ? 'Hoàn thành' :
-                                             (history.status === 'FAILED' ? 'Thất bại' : history.status || 'N/A')}
+                                        <span
+                                            className={`${styles.statusBadge} ${
+                                                styles[history.status?.toLowerCase()]
+                                            }`}
+                                            >
+                                            {formatStatus(history.status)}
                                         </span>
                                     </td>
                                     <td>{history.staffName || 'N/A'}</td>
