@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @SecurityRequirement(name = "api")
 @RestController
 @RequestMapping("/api/transfusion-requests")
@@ -72,4 +74,11 @@ public class TransfusionRequestAPI {
         requestService.approveRequest(id);
         return ResponseEntity.ok("Request approved successfully");
     }
+
+    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN', 'MEMBER')")
+    @GetMapping
+    public ResponseEntity<List<TransfusionRequestResponseDTO>> getAllRequests() {
+        return ResponseEntity.ok(requestService.getAllRequests());
+    }
+
 }

@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -120,5 +121,11 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
         requestRepository.save(request);
     }
 
+    @Override
+    public List<TransfusionRequestResponseDTO> getAllRequests() {
+        return requestRepository.findAll().stream()
+                .map(entity -> mapper.map(entity, TransfusionRequestResponseDTO.class))
+                .toList();
+    }
 
 }
