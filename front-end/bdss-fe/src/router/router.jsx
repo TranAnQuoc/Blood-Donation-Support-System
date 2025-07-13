@@ -67,6 +67,7 @@ import CreateAccountForm from "../components/admin-components/features/UserManag
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 import BloodStorageAdmin from "../components/admin-components/features/BloodStorage/view/BloodStorage.jsx";
+import BloodStorageHistoryAdmin from "../components/admin-components/features/BloodStorageHistory/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -133,6 +134,7 @@ const router = createBrowserRouter([
 
       //BloodStorage
       { path: "blood-storage", element: <BloodStorageAdmin /> },
+      { path: "blood-storage-history", element: <BloodStorageHistoryAdmin /> },
 
       //OTHER
       { path: "event-management", element: <EventManagement /> },

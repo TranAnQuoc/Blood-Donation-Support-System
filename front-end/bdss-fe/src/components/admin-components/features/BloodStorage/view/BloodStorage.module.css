@@ -1,7 +1,6 @@
-/* Container chính của component */
 .container {
     padding: 30px;
-    max-width: 1200px; /* Mở rộng hơn để chứa lưới thẻ */
+    max-width: 1550px; /* Mở rộng hơn để chứa lưới thẻ */
     margin: 40px auto;
     background-color: #ffffff;
     border-radius: 12px;
@@ -18,13 +17,12 @@
 
 /* Tiêu đề trang */
 .pageTitle {
-    color: #2c3e50;
+    font-size: 2.2em;
+    color: #007A64;
+    margin-bottom: 30px;
     text-align: center;
-    margin-bottom: 25px;
-    font-size: 2.5em;
-    font-weight: 700;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 18px;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
 }
 
 /* Phần lọc */
@@ -93,281 +91,209 @@
 
 /* Lưới thẻ kho máu */
 .cardGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 300px là chiều rộng tối thiểu của mỗi thẻ */
-    gap: 25px;
-    margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
 }
 
 .bloodStorageCard {
-    background-color: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  text-align: justify;
 }
 
 .bloodStorageCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-color: #3498db;
+  border-color: #007A64;
+  box-shadow: 0 5px 15px rgba(47, 184, 12, 0.15);
+  transform: translateY(-3px);
 }
 
 .cardId {
-    font-size: 0.9em;
-    color: #888;
-    margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
 }
 
 .bloodStorageCard p {
-    margin-bottom: 8px;
-    font-size: 1em;
-    color: #444;
-}
-
-.bloodStorageCard strong {
-    color: #222;
+  margin: 6px 0;
+  color: #333;
+  font-size: 1rem;
 }
 
 .cardCreated {
-    font-size: 0.9em;
-    color: #666;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-    margin-top: 15px;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #777;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
 }
 
-/* Status Badges */
+/* Badge trạng thái */
 .statusBadge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85em;
-    font-weight: bold;
-    color: white;
-    text-transform: uppercase;
-    margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-top: 8px;
+  color: #fff;
 }
 
-/* Colors for different statuses */
-.pending { background-color: #f39c12; } /* Orange */
-.rejected { background-color: #e74c3c; } /* Red */
-.stored { background-color: #28a745; } /* Green */
-.in_used { background-color: #007bff; } /* Blue */
-.transferred { background-color: #6c757d; } /* Gray */
-.expired { background-color: #343a40; } /* Dark Gray */
+.pending { background-color: #ffc107; }
+.rejected { background-color: #dc3545; }
+.stored { background-color: #28a745; }
+.in_used { background-color: #007bff; }
+.transferred { background-color: #fd7e14; }
+.expired { background-color: #850512; }
 
+.confirmed { background-color: #28a745; }
+.unconfirmed {background-color: #dc3545;}
 
-/* Modal Styles */
-/* Đảm bảo bạn đã có Modal component cơ bản, dưới đây là style cho nội dung bên trong modal */
+/* Modal */
 .modalContent {
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 90%;
-    margin: 0 auto; /* Căn giữa modal nếu không dùng portal */
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    position: relative;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .modalContent h3 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 25px;
-    font-size: 2em;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
+  font-size: 2rem;
+  color: #007A64;
+  margin-bottom: 15px;
 }
 
 .modalContent h4 {
-    color: #3498db;
-    margin-top: 25px;
-    margin-bottom: 15px;
-    border-bottom: 1px dashed #e0e0e0;
-    padding-bottom: 8px;
+  color: #0077cc;
+  margin-top: 20px;
+  font-size: 1.1rem;
 }
 
 .detailRow {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px dotted #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted #ddd;
+  padding: 8px 0;
 }
 
-.detailRow:last-of-type {
-    border-bottom: none;
+.detailRow:last-child {
+  border-bottom: none;
 }
 
 .detailRow p {
-    margin: 0;
-    flex-basis: 50%; /* Chia đôi cột */
+  margin: 0;
+  font-size: 0.95rem;
+  flex-basis: 48%;
 }
 
 .detailRow p:first-child {
-    font-weight: bold;
-    color: #555;
+  font-weight: 600;
+  color: #444;
 }
 
+/* Nút đóng modal */
 .closeModalButton {
-    display: block;
-    width: 100%;
-    padding: 12px 20px;
-    background-color: #6c757d; /* Màu xám */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.05rem;
-    font-weight: 500;
-    margin-top: 30px;
-    transition: background-color 0.3s ease;
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  border: 1px solid #031B4E;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #031B4E;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .closeModalButton:hover {
-    background-color: #5a6268;
+  background-color: #031B4E;
+  color: #fff
 }
 
-
-/* Responsive adjustments */
+/* === Responsive: Tablet trở xuống (≤ 992px) === */
 @media (max-width: 992px) {
-    .cardGrid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
-    }
-    .container {
-        padding: 25px;
-    }
-    .modalContent {
-        padding: 25px;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        margin: 20px auto;
-        padding: 20px;
-    }
-    .pageTitle {
-        font-size: 2em;
-    }
-    .filterSection {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    .selectField {
-        width: 100%; /* Full width on small screens */
-    }
-    .cardGrid {
-        grid-template-columns: 1fr; /* Một cột duy nhất trên màn hình nhỏ */
-        gap: 15px;
-    }
-    .modalContent {
-        padding: 20px;
-    }
-    .modalContent h3 {
-        font-size: 1.8em;
-    }
-    .modalContent h4 {
-        font-size: 1.1em;
-    }
-    .detailRow p {
-        font-size: 0.95em;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        margin: 15px;
-        padding: 15px;
-    }
-    .pageTitle {
-        font-size: 1.8em;
-    }
-    .selectField {
-        background-position: right 10px center;
-        background-size: 12px;
-    }
-    .bloodStorageCard {
-        padding: 15px;
-    }
-    .modalContent {
-        padding: 15px;
-    }
-    .modalContent h3 {
-        font-size: 1.5em;
-    }
-}
-
-.modalContent {
-    display: flex;
+  .topControls {
     flex-direction: column;
-    gap: 10px; /* Khoảng cách giữa các hàng chi tiết */
-    padding-bottom: 20px; /* Thêm padding dưới nếu nút duyệt ở cuối */
-}
+    align-items: stretch;
+    gap: 20px;
+  }
 
-.approveButton {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: background-color 0.2s ease-in-out;
-    margin-top: 20px;
-    align-self: center; 
-}
+  .filterSection {
+    flex-direction: column;
+    gap: 15px;
+  }
 
-.approveButton:hover {
-    background-color: #218838;
-}
-
-.approveButton:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.filterSection {
-    display: flex;
-    flex-wrap: wrap; /* Cho phép các filter xuống dòng nếu không đủ chỗ */
-    gap: 20px; /* Khoảng cách giữa các nhóm filter */
-    margin-bottom: 25px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.filterGroup {
-    flex: 1; /* Mỗi nhóm filter chiếm một phần bằng nhau */
-    min-width: 200px; /* Đảm bảo mỗi filter có đủ không gian */
-}
-
-.label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
-}
-
-.selectField {
+  .filterGroup {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    background-color: white;
-    cursor: pointer;
-    box-sizing: border-box; /* Rất quan trọng để padding không làm tăng chiều rộng */
+  }
+
+  .selectField {
+    width: 100%;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .modalContent {
+    padding: 25px;
+    max-width: 90%;
+  }
 }
 
-.selectField:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+/* === Responsive: Điện thoại nhỏ (≤ 576px) === */
+@media (max-width: 576px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .createButton {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .bloodStorageCard {
+    padding: 15px;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .modalContent h3 {
+    font-size: 1.5rem;
+  }
+
+  .modalContent h4 {
+    font-size: 1.1rem;
+  }
+
+  .detailRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detailRow p {
+    flex-basis: 100%;
+    font-size: 0.95rem;
+  }
+
+  .closeModalButton {
+    font-size: 1rem;
+    padding: 10px;
+  }
 }

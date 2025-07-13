@@ -32,15 +32,26 @@ const STATIC_BLOOD_TYPES = [
     { id: 9, bloodTypeName: "O", rhType: "-" },
 ];
 
+const Role = {
+    ADMIN: "Quản trị viên",
+    STAFF: "Nhân viên",
+    MEMBER: "Thành viên",
+}
+
+const verifiedStatus = {
+    CONFIRMED: "Đã xác minh",
+    UNCONFIRMED: "Chưa xác minh",
+}
+
 
 // Enum cho trạng thái kho máu (phải khớp với backend)
 const BloodStorageStatus = {
-    PENDING: "PENDING",
-    REJECTED: "REJECTED",
-    STORED: "STORED",
-    IN_USED: "IN_USED",
-    TRANSFERRED: "TRANSFERRED",
-    EXPIRED: "EXPIRED",
+    PENDING: "Đang chờ",
+    REJECTED: "Từ chối",
+    STORED: "Đã lưu",
+    IN_USED: "Đang sử dụng",
+    TRANSFERRED: "Đã chuyển giao",
+    EXPIRED: "Đã hết hạn",
 };
 
 // Hàm tiện ích để format ngày giờ
@@ -322,7 +333,7 @@ const BloodStorageList = () => {
                             className={styles.bloodStorageCard}
                             onClick={() => handleViewDetails(item)}
                         >
-                            <p className={styles.cardId}>ID: {item.id}</p>
+                            <p className={styles.cardId}><strong>ID: {item.id}</strong></p>
                             <p>
                                 <strong>Nhóm máu:</strong> {item.bloodTypeName}
                                 {item.bloodTypeRh}
@@ -333,15 +344,14 @@ const BloodStorageList = () => {
                             <p>
                                 <strong>Số lượng:</strong> {item.quantity}
                             </p>
-                            <p
-                                className={`${styles.statusBadge} ${
-                                    styles[item.bloodStatus?.toLowerCase()]
-                                }`}
-                            >
-                                Trạng thái: {item.bloodStatus?.replace(/_/g, " ")}
+                            <p>
+                                <strong>Trạng thái:</strong>{" "}
+                                <span className={`${styles.statusBadge} ${styles[item.bloodStatus?.toLowerCase()]}`}>
+                                    {BloodStorageStatus[item.bloodStatus] || item.bloodStatus?.replace(/_/g, " ")}
+                                </span>
                             </p>
                             <p className={styles.cardCreated}>
-                                Ngày tạo: {formatDateTime(item.createAt)}
+                                <strong>Ngày tạo:</strong> {formatDateTime(item.createAt)}
                             </p>
                         </div>
                     ))}
@@ -378,11 +388,9 @@ const BloodStorageList = () => {
                                 <strong>Trạng thái:</strong>
                             </p>
                             <p
-                                className={`${styles.statusBadge} ${
-                                    styles[selectedStorage.bloodStatus?.toLowerCase()]
-                                }`}
+                                className={`${styles.statusBadge} ${styles[selectedStorage.bloodStatus?.toLowerCase()]}`}
                             >
-                                {selectedStorage.bloodStatus?.replace(/_/g, " ")}
+                                {BloodStorageStatus[selectedStorage.bloodStatus] || selectedStorage.bloodStatus?.replace(/_/g, " ")}
                             </p>
                         </div>
                         <div className={styles.detailRow}>
@@ -409,7 +417,7 @@ const BloodStorageList = () => {
                             <p>
                                 <strong>Vai trò:</strong>
                             </p>
-                            <p>{selectedStorage.donorRole || "N/A"}</p>
+                            <p>{Role[selectedStorage.donorRole] || "N/A"}</p>
                         </div>
 
                         <h4>Thông tin Người tạo:</h4>
@@ -429,7 +437,7 @@ const BloodStorageList = () => {
                             <p>
                                 <strong>Vai trò:</strong>
                             </p>
-                            <p>{selectedStorage.createdByRole || "N/A"}</p>
+                            <p>{Role[selectedStorage.createdByRole] || "N/A"}</p>
                         </div>
 
                         {selectedStorage.approvedAt && (
@@ -457,7 +465,7 @@ const BloodStorageList = () => {
                                     <p>
                                         <strong>Vai trò:</strong>
                                     </p>
-                                    <p>{selectedStorage.approvedByRole || "N/A"}</p>
+                                    <p>{Role[selectedStorage.approvedByRole] || "N/A"}</p>
                                 </div>
                             </>
                         )}
@@ -493,7 +501,7 @@ const BloodStorageList = () => {
                                     <p>
                                         <strong>Vai trò:</strong>
                                     </p>
-                                    <p>{selectedStorage.takeByRole || "N/A"}</p>
+                                    <p>{Role[selectedStorage.takeByRole] || "N/A"}</p>
                                 </div>
                             </>
                         )}
@@ -511,7 +519,13 @@ const BloodStorageList = () => {
                                     <p>
                                         <strong>Trạng thái xác minh:</strong>
                                     </p>
-                                    <p>{selectedStorage.verifiedStatus || "N/A"}</p>
+                                    <p
+                                        className={`${styles.statusBadge} ${
+                                            styles[selectedStorage.verifiedStatus?.toLowerCase()]
+                                        }`}
+                                        >
+                                        {verifiedStatus[selectedStorage.verifiedStatus] || "N/A"}
+                                    </p>
                                 </div>
                                 <div className={styles.detailRow}>
                                     <p>
@@ -535,7 +549,7 @@ const BloodStorageList = () => {
                                     <p>
                                         <strong>Vai trò người xác minh:</strong>
                                     </p>
-                                    <p>{selectedStorage.verifiedByRole || "N/A"}</p>
+                                    <p>{Role[selectedStorage.verifiedByRole] || "N/A"}</p>
                                 </div>
                             </>
                         )}
@@ -566,7 +580,7 @@ const BloodStorageList = () => {
             )}
 
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={3000}
                 hideProgressBar
                 newestOnTop

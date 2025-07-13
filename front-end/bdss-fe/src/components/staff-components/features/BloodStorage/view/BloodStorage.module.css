@@ -175,6 +175,9 @@
 .transferred { background-color: #fd7e14; }
 .expired { background-color: #850512; }
 
+.confirmed { background-color: #28a745; }
+.unconfirmed {background-color: #dc3545;}
+
 /* Modal */
 .modalContent {
   background-color: #fff;

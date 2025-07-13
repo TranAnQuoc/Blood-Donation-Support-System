@@ -10,10 +10,10 @@
 
 .pageTitle {
     font-size: 2.2em;
-    color: #34495e;
+    color: #007A64;
     margin-bottom: 30px;
     text-align: center;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid #BDA25C;
     padding-bottom: 15px;
 }
 
@@ -94,8 +94,8 @@
 }
 
 .staffTable th {
-    background-color: #e9ecef;
-    color: #495057;
+    background-color: #007A64;
+    color: #fff;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.9em;
@@ -129,13 +129,13 @@
 }
 
 .createButton {
-    background-color: #28a745;
+    background-color: #20a0c0;
     color: white;
 }
 
 .createButton:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
+    background-color: #1686a3;
+    /* transform: translateY(-1px); */
 }
 
 .viewButton {
@@ -155,7 +155,7 @@
 
 .deleteButton:hover {
     background-color: #c82333;
-    transform: translateY(-1px);
+    /* transform: translateY(-1px); */
 }
 
 .activateButton {
@@ -165,12 +165,12 @@
 
 .activateButton:hover {
     background-color: #e0a800;
-    transform: translateY(-1px);
+    /* transform: translateY(-1px); */
 }
 
 .statusBadge {
     padding: 4px 8px;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 0.85em;
     font-weight: bold;
     color: #fff;

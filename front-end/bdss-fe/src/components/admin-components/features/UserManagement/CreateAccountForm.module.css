@@ -10,10 +10,10 @@
 
 .createAccountForm h2 {
     font-size: 2.2em;
-    color: #34495e;
-    margin-bottom: 20px;
+    color: #007A64;
+    margin-bottom: 30px;
     text-align: center;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid #BDA25C;
     padding-bottom: 15px;
 }
 
@@ -109,23 +109,25 @@
 }
 
 .createButton {
-    background-color: #28a745;
+    background-color: #20a0c0;
     color: white;
 }
 
 .createButton:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
+    background-color: #1686a3;
+    /* transform: translateY(-2px); */
 }
 
 .backButton {
-    background-color: #6c757d;
-    color: white;
+    background-color: #fff;
+    color: #031B4E;
+    border: 1px solid #031B4E;
 }
 
 .backButton:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
+    background-color: #031B4E;
+    color: #fff
+    /* transform: translateY(-2px); */
 }
 
 /* Responsive adjustments */
