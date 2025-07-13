@@ -34,7 +34,8 @@ const BloodStorageHistoryStatus = {
 const VerifiedStatus = {
     SUCCESS: "Thành công",
     FAILED: "Thất bại",
-    PENDING: "Đang chờ"
+    PENDING: "Đang chờ",
+    CONFIRMED: "Đã xác minh"
 };
 
 // Utility function to get auth data (reused from previous components)
@@ -205,7 +206,7 @@ const BloodStorageHistoryList = () => {
                             className={styles.historyCard}
                             onClick={() => handleViewDetails(item)}
                         >
-                            <p className={styles.cardId}><strong>ID Lịch sử:</strong> {item.id}</p>
+                            <p className={styles.cardId}><strong>ID Lịch sử: {item.id}</strong></p>
                             <p>
                                 <strong>ID Kho gốc:</strong> {item.originalBloodStorageId}
                             </p>
@@ -280,11 +281,11 @@ const BloodStorageHistoryList = () => {
                             <p>
                                 <strong>Trạng thái:</strong>
                             </p>
-                            <p
+                            <span
                                 className={`${styles.statusBadge} ${styles[selectedRecord.bloodStatus?.toLowerCase()]}`}
                                 >
                                     {BloodStorageHistoryStatus[selectedRecord.bloodStatus] || selectedRecord.bloodStatus}
-                            </p>
+                            </span>
                         </div>
                         <div className={styles.detailRow}>
                             <p>
@@ -351,14 +352,10 @@ const BloodStorageHistoryList = () => {
                                     <p>{formatDateTime(selectedRecord.verifiedAt)}</p>
                                 </div>
                                 <div className={styles.detailRow}>
-                                    <p>
-                                        <strong>Trạng thái xác minh:</strong>
-                                    </p>
-                                    <p
-                                    className={`${styles.detailRow} ${styles[selectedRecord.verifiedStatus?.toLowerCase()]}`}
-                                    >
+                                    <p><strong>Trạng thái xác minh:</strong></p>
+                                    <span className={`${styles.statusBadge} ${styles[selectedRecord.verifiedStatus?.toLowerCase()]}`}>
                                         {VerifiedStatus[selectedRecord.verifiedStatus] || selectedRecord.verifiedStatus}
-                                    </p>
+                                    </span>
                                 </div>
                                 <div className={styles.detailRow}>
                                     <p>

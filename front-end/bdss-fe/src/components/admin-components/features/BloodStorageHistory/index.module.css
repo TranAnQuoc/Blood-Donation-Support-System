@@ -2,19 +2,20 @@
 
 .container {
     padding: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #f9f9f9;
+    background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .pageTitle {
     text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-size: 2em;
-    font-weight: bold;
+    color: #007A64;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
 }
 
 .topControls {
@@ -113,7 +114,7 @@
 .statusBadge {
     display: inline-block;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 0.85em;
     font-weight: bold;
     color: #fff;
@@ -134,6 +135,8 @@
 /* For verified status if needed (e.g., in modal) */
 .success { background-color: #28a745; }
 .failed { background-color: #dc3545; }
+.pending { background-color: #ffc107; }
+.confirmed { background-color: #007bff; }
 
 
 .cardCreated, .cardArchived {
@@ -166,20 +169,20 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 600px;
     margin: 20px auto;
-    overflow-y: auto; /* Enable scrolling for long content */
-    max-height: 90vh; /* Limit height to viewport height */
+    overflow-y: unset; /* Enable scrolling for long content */
+    /* max-height: 90vh; */
     position: relative; /* For positioning close button if needed */
 }
 
 .modalContent h3 {
     text-align: center;
-    color: #333;
+    color: #007A64;
     margin-bottom: 20px;
     font-size: 1.8em;
 }
 
 .modalContent h4 {
-    color: #0056b3;
+    color: #007A64;
     margin-top: 25px;
     margin-bottom: 10px;
     border-bottom: 1px solid #eee;
@@ -209,21 +212,21 @@
 }
 
 .closeModalButton {
-    display: block;
     width: 100%;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
     margin-top: 25px;
-    transition: background-color 0.2s ease-in-out;
+    padding: 12px;
+    border: 1px solid #031B4E;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #031B4E;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .closeModalButton:hover {
-    background-color: #0056b3;
+    background-color: #031B4E;
+    color: #fff
 }
 
 /* Responsive adjustments */

@@ -39,7 +39,7 @@
 }
 
 .approveButton {
-  background-color: #4caf50;
+  background-color: #20a0c0;
   color: white;
   border: none;
   padding: 10px 18px;
@@ -50,12 +50,12 @@
 }
 
 .approveButton:hover {
-  background-color: #43a047;
-  transform: translateY(-1px);
+  background-color: #1686a3;
+  /* transform: translateY(-1px); */
 }
 
 .rejectButton {
-  background-color: #f44336;
+  background-color: #C02044;
   color: white;
   border: none;
   padding: 10px 18px;
@@ -66,8 +66,8 @@
 }
 
 .rejectButton:hover {
-  background-color: #e53935;
-  transform: translateY(-1px);
+  background-color: #a01a38;
+  /* transform: translateY(-1px); */
 }
 
 .approveButton:disabled,

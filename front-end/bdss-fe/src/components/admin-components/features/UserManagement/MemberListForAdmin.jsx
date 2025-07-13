@@ -33,6 +33,30 @@ const MemberListForAdmin = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const formatRole = (role) => {
+        switch (role) {
+            case 'MEMBER': return 'Thành viên';
+        }
+    }
+
+    const formatStatus = (status) => {
+        switch (status) {
+            case 'ACTIVE': return 'Hoạt động';
+            case 'INACTIVE': return 'Không hoạt động';
+            default: return status || 'N/A';
+        }
+    };
+
+    const formatStatusDonation = (status) => {
+        switch (status) {
+            case 'AVAILABLE': return 'Có thể hiến máu';
+            case 'INACTIVE': return 'Không thể hiến máu';
+            default: return status || 'N/A';
+        }
+    };
+
+
+
     const fetchMembers = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -92,7 +116,7 @@ const MemberListForAdmin = () => {
                                     <td>{member.fullName || 'N/A'}</td>
                                     <td>{member.email || 'N/A'}</td>
                                     <td>{member.phone || 'N/A'}</td>
-                                    <td>{member.role || 'N/A'}</td>
+                                    <td>{formatRole(member.role) || 'N/A'}</td>
                                     <td>{member.gender === 'MALE' ? 'Nam' : (member.gender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
                                     <td>{formatDateTime(member.dateOfBirth) || 'N/A'}</td>
                                     <td>
@@ -103,13 +127,13 @@ const MemberListForAdmin = () => {
                                     <td>{member.address || 'N/A'}</td>
                                     <td>{formatDateTime(member.createAt) || 'N/A'}</td>
                                     <td>
-                                        <span className={`${styles.statusBadge} ${styles[member.status ? member.status.toLowerCase() : '']}`}>
-                                            {member.status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+                                        <span className={`${styles.statusBadge} ${styles[member.status?.toLowerCase()]}`}>
+                                            {formatStatus(member.status)}
                                         </span>
                                     </td>
                                     <td>
-                                        <span className={`${styles.statusBadge} ${styles[member.statusDonation ? member.statusDonation.toLowerCase() : '']}`}>
-                                            {member.statusDonation === 'ACTIVE' ? 'Hoạt động hiến máu' : 'Không hoạt động hiến máu'}
+                                        <span className={`${styles.statusBadge} ${styles[member.statusDonation?.toLowerCase()]}`}>
+                                            {formatStatusDonation(member.statusDonation)}
                                         </span>
                                     </td>
                                 </tr>

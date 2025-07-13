@@ -4,7 +4,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin: 20px;
-    max-width: 1200px;
+    max-width: 1550px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -12,10 +12,10 @@
 
 .pageTitle {
     font-size: 2.2em;
-    color: #34495e;
+    color: #007A64;
     margin-bottom: 30px;
     text-align: center;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid #BDA25C;
     padding-bottom: 15px;
 }
 
@@ -61,8 +61,8 @@
 }
 
 .memberTable th {
-    background-color: #e9ecef;
-    color: #495057;
+    background-color: #007A64;
+    color: #fff;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.9em;
@@ -113,6 +113,26 @@
 .deleteButton:hover {
     background-color: #c82333;
     transform: translateY(-1px);
+}
+
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.active {
+    background-color: #28a745;
+}
+
+.inactive {
+    background-color: #6c757d;
+}
+
+.available {
+    background-color: #17a2b8;
 }
 
 /* Responsive adjustments */

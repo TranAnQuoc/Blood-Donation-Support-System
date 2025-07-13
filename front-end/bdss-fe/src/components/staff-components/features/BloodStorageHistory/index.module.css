@@ -112,7 +112,7 @@
 .statusBadge {
     display: inline-block;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 0.85em;
     font-weight: bold;
     color: #fff;
@@ -133,6 +133,7 @@
 .success { background-color: #28a745; }
 .failed { background-color: #dc3545; }
 .pending { background-color: #ffc107; }
+.confirmed { background-color: #007bff; }
 
 
 .cardCreated, .cardArchived {
@@ -165,20 +166,20 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 600px;
     margin: 20px auto;
-    overflow-y: auto; /* Enable scrolling for long content */
-    max-height: 90vh; /* Limit height to viewport height */
+    overflow-y: unset; /* Enable scrolling for long content */
+    /* max-height: 90vh; */
     position: relative; /* For positioning close button if needed */
 }
 
 .modalContent h3 {
     text-align: center;
-    color: #333;
+    color: #007A64;
     margin-bottom: 20px;
     font-size: 1.8em;
 }
 
 .modalContent h4 {
-    color: #0056b3;
+    color: #007A64;
     margin-top: 25px;
     margin-bottom: 10px;
     border-bottom: 1px solid #eee;

@@ -33,7 +33,7 @@ function CreateAccountForm() {
     const [loading, setLoading] = useState(false);
     
     const staticBloodTypes = [
-        { id: 1, type: 'UNKNOWN', rhFactor: 'UNKNOWN', displayName: 'Không xác định' },
+        // { id: 1, type: 'UNKNOWN', rhFactor: 'UNKNOWN', displayName: 'Không xác định' },
         { id: 2, type: 'A', rhFactor: '+', displayName: 'A+' },
         { id: 3, type: 'A', rhFactor: '-', displayName: 'A-' },
         { id: 4, type: 'B', rhFactor: '+', displayName: 'B+' },
@@ -47,7 +47,21 @@ function CreateAccountForm() {
     const navigate = useNavigate();
 
     const genders = ['MALE', 'FEMALE', 'OTHER'];
+    const formatGender = (gender) => {
+        switch (gender) {
+            case 'MALE':return 'Nam';
+            case 'FEMALE':return 'Nữ';
+            case 'OTHER':return 'Khác';
+        }
+    };
+
     const roles = ['STAFF', 'ADMIN'];
+    const formatRole = (role) => {
+        switch (role) {
+            case 'ADMIN':return 'Quản trị viên';
+            case 'STAFF':return 'Nhân viên';
+        }
+    };
 
     useEffect(() => {
         if (loggedInAdminEmail && formData.emailOwner !== loggedInAdminEmail) {
@@ -311,7 +325,7 @@ function CreateAccountForm() {
                     >
                         <option value="">Chọn vai trò</option>
                         {roles.map(role => (
-                            <option key={role} value={role}>{role}</option>
+                            <option key={role} value={role}>{formatRole(role)}</option>
                         ))}
                     </select>
                     {errors.role && <p className={styles.errorMessage}>{errors.role}</p>}
@@ -323,7 +337,7 @@ function CreateAccountForm() {
                         type="email"
                         id="email"
                         className={`${styles.inputField} ${errors.email ? styles.inputError : ''}`}
-                        placeholder="Email address"
+                        placeholder="Địa chỉ email"
                         value={formData.email}
                         onChange={handleInputChange}
                         required
@@ -338,7 +352,7 @@ function CreateAccountForm() {
                         type={showPassword ? 'text' : 'password'}
                         id="password"
                         className={`${styles.inputField} ${errors.password ? styles.inputError : ''}`}
-                        placeholder="Password"
+                        placeholder="Nhập mật khẩu"
                         value={formData.password}
                         onChange={handleInputChange}
                         required
@@ -361,7 +375,7 @@ function CreateAccountForm() {
                         type={showConfirmPassword ? 'text' : 'password'}
                         id="confirmPassword"
                         className={`${styles.inputField} ${errors.confirmPassword ? styles.inputError : ''}`}
-                        placeholder="Confirm Password"
+                        placeholder="Xác nhận mật khẩu"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
                         required
@@ -384,7 +398,7 @@ function CreateAccountForm() {
                         type="text"
                         id="fullName"
                         className={`${styles.inputField} ${errors.fullName ? styles.inputError : ''}`}
-                        placeholder="Full Name"
+                        placeholder="Họ và tên"
                         value={formData.fullName}
                         onChange={handleInputChange}
                         required
@@ -405,7 +419,7 @@ function CreateAccountForm() {
                     >
                         <option value="">Chọn giới tính</option>
                         {genders.map(gender => (
-                            <option key={gender} value={gender}>{gender}</option>
+                            <option key={gender} value={gender}>{formatGender(gender)}</option>
                         ))}
                     </select>
                     {errors.gender && <p className={styles.errorMessage}>{errors.gender}</p>}
@@ -431,7 +445,7 @@ function CreateAccountForm() {
                         type="tel"
                         id="phone"
                         className={`${styles.inputField} ${errors.phone ? styles.inputError : ''}`}
-                        placeholder="Phone Number"
+                        placeholder="Số điện thoại (ví dụ: 0912345678)"
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
@@ -446,7 +460,7 @@ function CreateAccountForm() {
                         type="text"
                         id="address"
                         className={`${styles.inputField} ${errors.address ? styles.inputError : ''}`}
-                        placeholder="Address"
+                        placeholder="Địa chỉ (phải thuộc TP.HCM)"
                         value={formData.address}
                         onChange={handleInputChange}
                         required
@@ -492,7 +506,7 @@ function CreateAccountForm() {
                 </div>
 
                 <button type="submit" className={styles.createButton} disabled={loading}>
-                    {loading ? 'Đang tạo...' : 'Tạo Tài Khoản'}
+                    {loading ? 'Đang tạo...' : 'Tạo tài khoản'}
                 </button>
                 <button type="button" className={styles.backButton} onClick={() => navigate(-1)} disabled={loading}>
                     Quay lại
