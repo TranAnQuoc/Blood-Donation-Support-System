@@ -17,6 +17,7 @@ import ResetPassword from "../components/authen-form/ResetPassword/ResetPassword
 import GuestDashboard from "../pages/Home/GuestDashboard.jsx";
 import GuestService from "../pages/Service/GuestService.jsx";
 import SearchMatchBlood from "../components/common/SearchMatchBlood/SearchMatchBlood.jsx";//ALSO GUEST
+import EmergencyRequestLookup from "../components/common/EmergencyRequestLookup/EmergencyRequestLookup.jsx";
 
 //MEMBER
 import Community from "../pages/Community/CommonCommunity.jsx"; //ALSO GUEST
@@ -92,6 +93,7 @@ const router = createBrowserRouter([
       { path: "community", element: <Community /> },
       { path: "about-us", element: <AboutUs /> },
       { path: "SearchMatchBlood", element: <SearchMatchBlood /> },
+      { path: "emergency-lookup", element: <EmergencyRequestLookup />},
     ],
   },
 

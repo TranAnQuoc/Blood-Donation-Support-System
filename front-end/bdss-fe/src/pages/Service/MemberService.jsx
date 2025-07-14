@@ -11,7 +11,8 @@ import {
     faClipboardList,
     faTasks,
     faHistory,
-    faSearch
+    faSearch,
+    faBell
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -93,6 +94,18 @@ const MemberService = () => {
                     <h3 className={styles.cardTitle}>Tra Cứu Nhóm Máu</h3>
                     <p className={styles.cardDescription}>Tra cứu thông tin phù hợp giữa các nhóm máu của người nhận và người hiến.</p>
                     <Link to="/member/SearchMatchBlood" className={styles.actionButton}>
+                        <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/>
+                        </svg>
+                    </Link>
+                </div>
+                 <div className={styles.featureCard}>
+                    <div className={styles.iconWrapper}>
+                        <FontAwesomeIcon icon={faBell} className={styles.featureIcon} /> {/* Icon mới */}
+                    </div>
+                    <h3 className={styles.cardTitle}>Tra Cứu Đơn Khẩn Cấp</h3>
+                    <p className={styles.cardDescription}>Kiểm tra trạng thái yêu cầu nhận máu khẩn cấp của bạn bằng thông tin cá nhân.</p>
+                    <Link to="/emergency-lookup" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/>
                         </svg>

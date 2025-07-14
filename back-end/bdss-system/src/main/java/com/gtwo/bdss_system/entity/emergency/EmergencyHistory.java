@@ -2,13 +2,13 @@ package com.gtwo.bdss_system.entity.emergency;
 
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
+import com.gtwo.bdss_system.enums.CrossmatchResult;
 import com.gtwo.bdss_system.enums.EmergencyResult;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "emergency_history")
 @Data
@@ -29,10 +29,12 @@ public class EmergencyHistory {
     @Nationalized
     private String fullNameSnapshot;
 
+    @Column(name= "phone_snapshot")
+    private String phoneSnapshot;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blood_type_id")
     private BloodType bloodType;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "component_id")
@@ -47,7 +49,38 @@ public class EmergencyHistory {
 
     @Column(name = "notes")
     @Nationalized
-    private String notes;
+    private String notes; // summary
+
+    @Column(name = "reason_for_transfusion")
+    private String reasonForTransfusion;
+
+    @Column(name = "need_component")
+    private String needComponent;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "crossmatch_result")
+    private CrossmatchResult crossmatchResult;
+
+    @Column(name = "hemoglobin_level")
+    private Double hemoglobinLevel;
+
+    @Column(name = "blood_group_confirmed")
+    private Boolean bloodGroupConfirmed;
+
+    @Column(name = "pulse")
+    private Integer pulse;
+
+    @Column(name = "temperature")
+    private Double temperature;
+
+    @Column(name = "respiratory_rate")
+    private Integer respiratoryRate;
+
+    @Column(name = "blood_pressure")
+    private String bloodPressure;
+
+    @Column(name = "symptoms")
+    private String symptoms;
 
     @Column(name = "deleted")
     private Boolean delete = false;

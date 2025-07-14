@@ -10,4 +10,5 @@ public interface EmergencyHistoryService {
     List<EmergencyHistoryDTO> getAll();
     void restore(Long id);
     void autoCreateFromProcess(EmergencyProcess  process);
+
 }
