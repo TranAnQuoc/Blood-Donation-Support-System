@@ -147,7 +147,6 @@ const EmergencyRequestList = () => {
               <th>Số Lượng (ml)</th>
               <th>Địa Điểm</th>
               <th>Minh Chứng</th>
-              <th>Trạng Thái</th>
               <th>Hành Động</th>
             </tr>
           </thead>
@@ -173,7 +172,6 @@ const EmergencyRequestList = () => {
                     "Không có"
                   )}
                 </td>
-                <td>{request.statusRequest || "PENDING"}</td>
                 <td>
                   {request.statusRequest === "PENDING" ? (
                     <>

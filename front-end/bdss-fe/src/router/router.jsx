@@ -69,6 +69,8 @@ import CreateAccountForm from "../components/admin-components/features/UserManag
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 import BloodStorageAdmin from "../components/admin-components/features/BloodStorage/view/BloodStorage.jsx";
 import BloodStorageHistoryAdmin from "../components/admin-components/features/BloodStorageHistory/index.jsx";
+import EmergencyTransfusionProcessAdmin from "../components/admin-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx"
+import EmergencyTransfusionHistoryListAdmin from "../components/admin-components/features/EmergencyTransfusionHistory/EmergencyTransfusionHistory.jsx"
 
 const router = createBrowserRouter([
   {
@@ -127,13 +129,13 @@ const router = createBrowserRouter([
       { path: "transfusion-requests-management", element: <TransfusionRequestList /> },
       { path: "transfusion-requests-management/:id",element: <TransfusionRequestDetail /> },
       { path: "transfusion-processes", element: <TransfusionProcess /> },
+      
       // { path: "transfusion-histories", element: <TransfusionHistory /> },
 
-      //Emergency Transfusion
-      // { path: "emergency-transfusion-requests",element: <EmergencyTransfusionRequestList /> },
-      // { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcess /> },
-      // { path: "transfusion-histories", element: <TransfusionHistoryList /> },
-
+      // Emergency Transfusion
+      { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcessAdmin /> },
+      { path: "emergency-histories", element: <EmergencyTransfusionHistoryListAdmin /> },
+      
       //BloodStorage
       { path: "blood-storage", element: <BloodStorageAdmin /> },
       { path: "blood-storage-history", element: <BloodStorageHistoryAdmin /> },

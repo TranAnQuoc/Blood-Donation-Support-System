@@ -17,6 +17,33 @@ const CROSSMATCH_OPTIONS = [
     { value: 'INCOMPATIBLE', label: 'Không tương thích' }
 ];
 
+// Dữ liệu tĩnh cho Blood Types dựa trên initBloodTypes của backend
+const BLOOD_TYPES = [
+    { id: 2, type: "A", rhFactor: "+", label: "A+" },
+    { id: 3, type: "A", rhFactor: "-", label: "A-" },
+    { id: 4, type: "B", rhFactor: "+", label: "B+" },
+    { id: 5, type: "B", rhFactor: "-", label: "B-" },
+    { id: 6, type: "AB", rhFactor: "+", label: "AB+" },
+    { id: 7, type: "AB", rhFactor: "-", label: "AB-" },
+    { id: 8, type: "O", rhFactor: "+", label: "O+" },
+    { id: 9, type: "O", rhFactor: "-", label: "O-" }
+    // Lưu ý: ID ở đây là giả định. Trong thực tế, bạn cần lấy ID chính xác từ DB
+    // hoặc đảm bảo rằng mapping giữa front-end và back-end là nhất quán.
+    // Nếu bạn không muốn gọi API, bạn phải biết ID mà backend sẽ tạo ra cho các giá trị này.
+    // Ví dụ, nếu UNKNOWN luôn là ID 1, A+ luôn là ID 2, v.v.
+];
+
+// Dữ liệu tĩnh cho Blood Components dựa trên initBloodComponents của backend
+const BLOOD_COMPONENTS = [
+    { id: 2, name: "Toàn phần" },
+    { id: 3, name: "Huyết tương" },
+    { id: 4, name: "Hồng cầu" },
+    { id: 5, name: "Tiểu cầu" },
+    { id: 6, name: "Bạch cầu" }
+    // Tương tự như Blood Types, ID ở đây là giả định và cần nhất quán với backend.
+];
+
+
 const EmergencyProcessList = () => {
     const [processes, setProcesses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,8 +67,10 @@ const EmergencyProcessList = () => {
         pulse: 0,
         respiratoryRate: 0,
         temperature: 0.0,
+        bloodtypeId: null, // Giá trị mặc định là null hoặc ID của 'UNKNOWN'
+        componentId: null, // Giá trị mặc định là null hoặc ID của 'Unknow'
     });
-    const [healthFile, setHealthFile] = useState(null);
+    // Removed healthFile state as we are no longer uploading a new file here
     const [currentHealthCheckFileUrl, setCurrentHealthCheckFileUrl] = useState('');
 
     const [editError, setEditError] = useState(null);
@@ -72,11 +101,8 @@ const EmergencyProcessList = () => {
 
     const handleEditClick = (process) => {
         setCurrentProcess(process);
-        // Tìm label tương ứng để hiển thị trong select
-        // Giá trị process.status từ API sẽ là 'PENDING', 'IN_PROCESS', v.v.
-        // Chúng ta cần đảm bảo rằng nó được gán đúng cách cho select.
         setEditFormData({
-            status: process.status || 'PENDING', // Giá trị từ backend (enum string)
+            status: process.status || 'PENDING',
             symptoms: process.symptoms || '',
             hemoglobinLevel: process.hemoglobinLevel || 0.0,
             bloodGroupConfirmed: process.bloodGroupConfirmed || false,
@@ -89,9 +115,12 @@ const EmergencyProcessList = () => {
             pulse: process.pulse || 0,
             respiratoryRate: process.respiratoryRate || 0,
             temperature: process.temperature || 0.0,
+            // Đảm bảo rằng ID được lấy đúng, chuyển đổi sang number nếu cần
+            bloodtypeId: process.bloodtypeId ? Number(process.bloodtypeId) : null,
+            componentId: process.componentId ? Number(process.componentId) : null,
         });
         setCurrentHealthCheckFileUrl(process.healthFileUrl || '');
-        setHealthFile(null);
+        // setHealthFile(null); // Removed this as we are no longer managing file state for upload
         setEditError(null);
         setShowEditModal(true);
     };
@@ -100,7 +129,7 @@ const EmergencyProcessList = () => {
         setShowEditModal(false);
         setCurrentProcess(null);
         setEditError(null);
-        setHealthFile(null);
+        // setHealthFile(null); // Removed this
         setCurrentHealthCheckFileUrl('');
     };
 
@@ -108,13 +137,16 @@ const EmergencyProcessList = () => {
         const { name, value, type, checked } = e.target;
         setEditFormData(prevState => ({
             ...prevState,
-            [name]: type === 'checkbox' ? checked : (type === 'number' ? (name === 'hemoglobinLevel' || name === 'temperature' ? parseFloat(value) : parseInt(value, 10)) : value)
+            // Chuyển đổi giá trị sang kiểu số (Integer/Double) hoặc Boolean nếu cần
+            [name]: type === 'checkbox' ? checked : (
+                type === 'number' || name === 'bloodtypeId' || name === 'componentId'
+                    ? (value === '' ? null : parseFloat(value)) // Sử dụng parseFloat để xử lý cả số nguyên và số thập phân, hoặc null nếu rỗng
+                    : value
+            )
         }));
     };
 
-    const handleFileChange = (e) => {
-        setHealthFile(e.target.files[0]);
-    };
+    // Removed handleFileChange as file upload is no longer part of this form
 
     const handleSubmitEdit = async (e) => {
         e.preventDefault();
@@ -128,12 +160,19 @@ const EmergencyProcessList = () => {
         const formData = new FormData();
 
         for (const key in editFormData) {
-            formData.append(key, editFormData[key]);
+            // Kiểm tra và bỏ qua các trường có giá trị null hoặc undefined
+            // Đặc biệt quan trọng cho các trường số (như ID) nếu chúng có thể là null
+            if (editFormData[key] === null || editFormData[key] === undefined) {
+                continue; // Không thêm trường này vào formData nếu giá trị là null/undefined
+            }
+            if (typeof editFormData[key] === 'boolean') {
+                formData.append(key, editFormData[key].toString());
+            } else {
+                formData.append(key, editFormData[key]);
+            }
         }
 
-        if (healthFile) {
-            formData.append('healthFile', healthFile);
-        }
+        // Removed logic for appending healthFile to formData
 
         try {
             await axios.put(
@@ -142,6 +181,7 @@ const EmergencyProcessList = () => {
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
+                        // Content-Type is automatically set to multipart/form-data when using FormData
                     },
                 }
             );
@@ -195,48 +235,54 @@ const EmergencyProcessList = () => {
                                 <th>Kết quả Crossmatch</th>
                                 <th>Thành phần cần</th>
                                 <th>Lý do truyền máu</th>
+                                <th>Nhóm máu</th> {/* Đổi tên cột để hiển thị tên */}
+                                <th>Thành phần máu</th> {/* Đổi tên cột để hiển thị tên */}
                                 <th>Hành Động</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {processes.map((process) => (
-                                <tr key={process.id}>
-                                    <td>{process.id || 'N/A'}</td>
-                                    <td>{process.idRequest || 'N/A'}</td>
-                                    <td>{process.healthCheckSummary || 'N/A'}</td>
-                                    <td>
-                                        {process.healthFileUrl ? (
-                                            <a href={`http://localhost:8080${process.healthFileUrl}`} target="_blank" rel="noopener noreferrer">Xem File</a>
-                                        ) : 'N/A'}
-                                    </td>
-                                    {/* Hiển thị label thay vì value enum */}
-                                    <td>
-                                        {EMERGENCY_STATUS_OPTIONS.find(opt => opt.value === process.status)?.label || process.status || 'N/A'}
-                                    </td>
-                                    <td>{process.symptoms}</td>
-                                    <td>{process.bloodPressure || 'N/A'}</td>
-                                    <td>{process.pulse !== null ? process.pulse : 'N/A'}</td>
-                                    <td>{process.respiratoryRate !== null ? process.respiratoryRate : 'N/A'}</td>
-                                    <td>{process.temperature !== null ? `${process.temperature}°C` : 'N/A'}</td>
-                                    <td>{process.hemoglobinLevel !== null ? `${process.hemoglobinLevel} g/dL` : 'N/A'}</td>
-                                    <td>{process.bloodGroupConfirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}</td>
-                                    <td>{process.quantity !== null ? `${process.quantity} ml` : 'N/A'}</td>
-                                    {/* Hiển thị label cho Crossmatch Result */}
-                                    <td>
-                                        {CROSSMATCH_OPTIONS.find(opt => opt.value === process.crossmatchResult)?.label || process.crossmatchResult || 'N/A'}
-                                    </td>
-                                    <td>{process.needComponent}</td>
-                                    <td>{process.reasonForTransfusion}</td>
-                                    <td>
-                                        <button
-                                            className={styles.editButton}
-                                            onClick={() => handleEditClick(process)}
-                                        >
-                                            Chỉnh sửa
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {processes.map((process) => {
+                                const bloodType = BLOOD_TYPES.find(bt => bt.id === process.bloodtypeId);
+                                const bloodComponentName = BLOOD_COMPONENTS.find(bc => bc.id === process.componentId);
+                                return (
+                                    <tr key={process.id}>
+                                        <td>{process.id || 'N/A'}</td>
+                                        <td>{process.idRequest || 'N/A'}</td>
+                                        <td>{process.healthCheckSummary || 'N/A'}</td>
+                                        <td>
+                                            {process.healthFileUrl ? (
+                                                <a href={`http://localhost:8080${process.healthFileUrl}`} target="_blank" rel="noopener noreferrer">Xem File</a>
+                                            ) : 'N/A'}
+                                        </td>
+                                        <td>
+                                            {EMERGENCY_STATUS_OPTIONS.find(opt => opt.value === process.status)?.label || process.status || 'N/A'}
+                                        </td>
+                                        <td>{process.symptoms || 'N/A'}</td>
+                                        <td>{process.bloodPressure || 'N/A'}</td>
+                                        <td>{process.pulse !== null ? process.pulse : 'N/A'}</td>
+                                        <td>{process.respiratoryRate !== null ? process.respiratoryRate : 'N/A'}</td>
+                                        <td>{process.temperature !== null ? `${process.temperature}°C` : 'N/A'}</td>
+                                        <td>{process.hemoglobinLevel !== null ? `${process.hemoglobinLevel} g/dL` : 'N/A'}</td>
+                                        <td>{process.bloodGroupConfirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}</td>
+                                        <td>{process.quantity !== null ? `${process.quantity} ml` : 'N/A'}</td>
+                                        <td>
+                                            {CROSSMATCH_OPTIONS.find(opt => opt.value === process.crossmatchResult)?.label || process.crossmatchResult || 'N/A'}
+                                        </td>
+                                        <td>{process.needComponent || 'N/A'}</td>
+                                        <td>{process.reasonForTransfusion || 'N/A'}</td>
+                                        <td>{bloodType ? bloodType.label : 'N/A'}</td> {/* Hiển thị label nhóm máu */}
+                                        <td>{bloodComponentName ? bloodComponentName.name : 'N/A'}</td> {/* Hiển thị tên thành phần máu */}
+                                        <td>
+                                            <button
+                                                className={styles.editButton}
+                                                onClick={() => handleEditClick(process)}
+                                            >
+                                                Chỉnh sửa
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -285,7 +331,7 @@ const EmergencyProcessList = () => {
                                             type="number"
                                             id="pulse"
                                             name="pulse"
-                                            value={editFormData.pulse}
+                                            value={editFormData.pulse !== null ? editFormData.pulse : ''} // Display empty string if null
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -295,7 +341,7 @@ const EmergencyProcessList = () => {
                                             type="number"
                                             id="respiratoryRate"
                                             name="respiratoryRate"
-                                            value={editFormData.respiratoryRate}
+                                            value={editFormData.respiratoryRate !== null ? editFormData.respiratoryRate : ''}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -305,7 +351,7 @@ const EmergencyProcessList = () => {
                                             type="number"
                                             id="temperature"
                                             name="temperature"
-                                            value={editFormData.temperature}
+                                            value={editFormData.temperature !== null ? editFormData.temperature : ''}
                                             onChange={handleChange}
                                             step="0.1"
                                         />
@@ -340,26 +386,7 @@ const EmergencyProcessList = () => {
                                 ></textarea>
                             </div>
 
-                            {/* 5. Hồ sơ sức khỏe (File) - Không bắt buộc, full width */}
-                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label htmlFor="healthFile">Hồ sơ sức khỏe (File):</label>
-                                <input
-                                    type="file"
-                                    id="healthFile"
-                                    name="healthFile"
-                                    onChange={handleFileChange}
-                                />
-                                {currentHealthCheckFileUrl && !healthFile && (
-                                    <p className={styles.currentFile}>
-                                        File hiện tại:
-                                        <a href={`http://localhost:8080${currentHealthCheckFileUrl}`} target="_blank" rel="noopener noreferrer" className={styles.viewFileLink}> (Xem file)</a>
-                                    </p>
-                                )}
-                                {healthFile && (
-                                    <p className={styles.newFile}>File mới chọn: {healthFile.name}</p>
-                                )}
-                            </div>
-
+                           
                             {/* 6. Xác nhận nhóm máu - Không bắt buộc, single column */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="bloodGroupConfirmed">Xác nhận nhóm máu:</label>
@@ -423,6 +450,43 @@ const EmergencyProcessList = () => {
                                     rows="3"
                                 ></textarea>
                             </div>
+
+                            {/* Trường chọn Blood Type (Select) */}
+                            <div className={styles.formGroup}>
+                                <label htmlFor="bloodtypeId">Nhóm máu:</label>
+                                <select
+                                    id="bloodtypeId"
+                                    name="bloodtypeId"
+                                    value={editFormData.bloodtypeId !== null ? editFormData.bloodtypeId : ''}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">-- Chọn nhóm máu --</option>
+                                    {BLOOD_TYPES.map(type => (
+                                        <option key={type.id} value={type.id}>
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Trường chọn Blood Component (Select) */}
+                            <div className={styles.formGroup}>
+                                <label htmlFor="componentId">Thành phần máu:</label>
+                                <select
+                                    id="componentId"
+                                    name="componentId"
+                                    value={editFormData.componentId !== null ? editFormData.componentId : ''}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">-- Chọn thành phần máu --</option>
+                                    {BLOOD_COMPONENTS.map(component => (
+                                        <option key={component.id} value={component.id}>
+                                            {component.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
 
                             {/* 11. Trạng thái xử lý - Required, single column */}
                             <div className={styles.formGroup}>

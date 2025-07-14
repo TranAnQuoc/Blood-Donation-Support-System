@@ -53,8 +53,5 @@ public class EmergencyProcessDTO {
     @NotNull(message = "Temperature is required.")
     @DecimalMin(value = "25.0", message = "Temperature must be reasonable.")
     private Double temperature;
-
-
-
 }
 
