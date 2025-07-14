@@ -14,9 +14,6 @@ public class EmergencyProcessDTO {
 
     private Long idRequest;
 
-    @Size(max = 1000, message = "Health check summary must be less than 1000 characters.")
-    private String healthCheckSummary;
-
     @NotNull(message = "Status is required.")
     private EmergencyStatus status;
 
@@ -56,6 +53,7 @@ public class EmergencyProcessDTO {
     @NotNull(message = "Temperature is required.")
     @DecimalMin(value = "25.0", message = "Temperature must be reasonable.")
     private Double temperature;
+
 
 
 }

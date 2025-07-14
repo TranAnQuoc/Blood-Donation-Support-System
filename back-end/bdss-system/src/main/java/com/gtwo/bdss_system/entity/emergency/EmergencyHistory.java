@@ -49,9 +49,10 @@ public class EmergencyHistory {
 
     @Column(name = "notes")
     @Nationalized
-    private String notes; // summary
+    private String notes;
 
     @Column(name = "reason_for_transfusion")
+    @Nationalized
     private String reasonForTransfusion;
 
     @Column(name = "need_component")
@@ -80,8 +81,12 @@ public class EmergencyHistory {
     private String bloodPressure;
 
     @Column(name = "symptoms")
+    @Nationalized
     private String symptoms;
 
     @Column(name = "deleted")
     private Boolean delete = false;
+
+    @Column(name = "health_file_url")
+    private String healthFileUrl;
 }

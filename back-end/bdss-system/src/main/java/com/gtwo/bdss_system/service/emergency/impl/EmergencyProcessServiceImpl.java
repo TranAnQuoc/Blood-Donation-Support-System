@@ -10,10 +10,14 @@ import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
 import com.gtwo.bdss_system.enums.EmergencyResult;
 import com.gtwo.bdss_system.enums.EmergencyStatus;
 import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.repository.commons.BloodComponentRepository;
+import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyHistoryRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyRequestRepository;
+import com.gtwo.bdss_system.service.emergency.EmergencyHistoryService;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,11 +34,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EmergencyProcessServiceImpl implements EmergencyProcessService {
 
     private final EmergencyProcessRepository processRepo;
     private final EmergencyRequestRepository requestRepo;
-    private final EmergencyHistoryRepository historyRepo;
+    private final BloodTypeRepository bloodTypeRepo;
+    private final BloodComponentRepository  componentRepo;
+    private final EmergencyHistoryService  historyService;
+    private final BloodComponentRepository bloodComponentRepository;
+
     @Override
     public void updateWithFile(Long id, EmergencyProcessFormDTO form, Account staff) {
         EmergencyProcess process = processRepo.findById(id)
@@ -43,19 +52,19 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         Optional<EmergencyRequest> request = requestRepo.findById(process.getEmergencyRequest().getId());
 
         // Lưu file nếu có
-        if (form.getHealthFile() != null && !form.getHealthFile().isEmpty()) {
-            String originalFileName = form.getHealthFile().getOriginalFilename();
-            String savedName = System.currentTimeMillis() + "_" + originalFileName;
-            Path path = Paths.get("uploads", savedName);
-
-            try {
-                Files.createDirectories(path.getParent());
-                Files.write(path, form.getHealthFile().getBytes());
-                process.setHealthFileUrl("/uploads/" + savedName);
-            } catch (IOException e) {
-                throw new RuntimeException("Không thể lưu file hồ sơ sức khỏe", e);
-            }
-        }
+//        if (form.getHealthFile() != null && !form.getHealthFile().isEmpty()) {
+//            String originalFileName = form.getHealthFile().getOriginalFilename();
+//            String savedName = System.currentTimeMillis() + "_" + originalFileName;
+//            Path path = Paths.get("uploads", savedName);
+//
+//            try {
+//                Files.createDirectories(path.getParent());
+//                Files.write(path, form.getHealthFile().getBytes());
+//                process.setHealthFileUrl("/uploads/" + savedName);
+//            } catch (IOException e) {
+//                throw new RuntimeException("Không thể lưu file hồ sơ sức khỏe", e);
+//            }
+//        }
 
         // Gán thông tin form vào entity
         process.setHealthCheckSummary(form.getHealthCheckSummary());
@@ -73,36 +82,40 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setQuantity(form.getQuantity());
         process.setStatus(form.getStatus());
         process.setCompletedAt(LocalDateTime.now());
-
+        process.setBloodType(bloodTypeRepo.findById(form.getBloodtypeId()).orElse(null));
+        process.setBloodComponent(componentRepo.findById(form.getComponentId()).orElse(null));
+        process.setHealthFileUrl(request.get().getEmergencyProof());
         if (form.getStatus() == EmergencyStatus.COMPLETED || form.getStatus() == EmergencyStatus.CANCELED) {
             process.setStatusAvailable(Status.INACTIVE);
         }
+        System.out.println("HealthFileUrl length = " + process.getHealthFileUrl().length());
 
         EmergencyProcess saved = processRepo.save(process);
 
         // Chuyển vào history nếu hoàn tất
-        if (saved.getStatus() == EmergencyStatus.COMPLETED || saved.getStatus() == EmergencyStatus.CANCELED) {
-            boolean alreadyExists = historyRepo.findByDeleteFalse().stream()
-                    .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.get().getId()));
-            if (!alreadyExists) {
-                EmergencyHistory history = new EmergencyHistory();
-                history.setEmergencyRequest(saved.getEmergencyRequest());
-                history.setResolvedAt(LocalDateTime.now());
-                history.setFullNameSnapshot(request.get().getFullName());
-                history.setBloodType(request.get().getBloodType());
-                history.setComponent(request.get().getBloodComponent());
-                history.setQuantity(request.get().getQuantity());
-                if (process.getStatus() == EmergencyStatus.COMPLETED) {
-                    history.setResult(EmergencyResult.FULLFILLED);
-                } else {
-                    history.setResult(EmergencyResult.UNFULLFILLED);
-                }
-
-                history.setNotes(saved.getHealthCheckSummary());
-                history.setDelete(false);
-                historyRepo.save(history);
-            }
-        }
+//        if (saved.getStatus() == EmergencyStatus.COMPLETED || saved.getStatus() == EmergencyStatus.CANCELED) {
+//            boolean alreadyExists = historyRepo.findByDeleteFalse().stream()
+//                    .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.get().getId()));
+//            if (!alreadyExists) {
+//                EmergencyHistory history = new EmergencyHistory();
+//                history.setEmergencyRequest(saved.getEmergencyRequest());
+//                history.setResolvedAt(LocalDateTime.now());
+//                history.setFullNameSnapshot(request.get().getFullName());
+//                history.setBloodType(request.get().getBloodType());
+//                history.setComponent(request.get().getBloodComponent());
+//                history.setQuantity(request.get().getQuantity());
+//                if (process.getStatus() == EmergencyStatus.COMPLETED) {
+//                    history.setResult(EmergencyResult.FULLFILLED);
+//                } else {
+//                    history.setResult(EmergencyResult.UNFULLFILLED);
+//                }
+//
+//                history.setNotes(saved.getHealthCheckSummary());
+//                history.setDelete(false);
+//                historyRepo.save(history);
+//            }
+//        }
+        historyService.autoCreateFromProcess(saved);
     }
 
 
@@ -149,7 +162,6 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         EmergencyProcessDTO dto = new EmergencyProcessDTO();
         dto.setId(entity.getId());
         dto.setIdRequest(entity.getEmergencyRequest().getId());
-        dto.setHealthCheckSummary(entity.getHealthCheckSummary());
         dto.setSymptoms(entity.getSymptoms());
         dto.setQuantity(entity.getQuantity());
         dto.setHemoglobinLevel(entity.getHemoglobinLevel());

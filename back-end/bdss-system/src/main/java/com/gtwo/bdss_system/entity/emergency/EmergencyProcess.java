@@ -86,7 +86,7 @@ public class EmergencyProcess {
     @Column(name = "temperature")
     private Double temperature;
 
-    @Column(name = "health_file_url")
+    @Column(name = "health_file_url", columnDefinition = "NVARCHAR(MAX)")
     private String healthFileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

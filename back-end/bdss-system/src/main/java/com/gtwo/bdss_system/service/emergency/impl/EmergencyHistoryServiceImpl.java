@@ -9,6 +9,7 @@ import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.emergency.EmergencyHistoryRepository;
 import com.gtwo.bdss_system.repository.emergency.EmergencyProcessRepository;
 import com.gtwo.bdss_system.service.emergency.EmergencyHistoryService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
 
     private final EmergencyHistoryRepository historyRepo;
@@ -55,8 +57,6 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         // 🟢 Lấy snapshot từ process thay vì request
         history.setFullNameSnapshot(process.getEmergencyRequest().getFullName()); // Vẫn từ request (nếu không thay đổi)
         history.setPhoneSnapshot(process.getEmergencyRequest().getPhone());
-        history.setBloodType(process.getEmergencyRequest().getBloodType());       // Nếu không thay đổi trong quá trình xử lý
-        history.setComponent(process.getEmergencyRequest().getBloodComponent());  // Tương tự
         history.setQuantity(process.getQuantity());                               // 🟢 Cập nhật quantity từ process
         history.setResult(
                 process.getStatus() == EmergencyStatus.COMPLETED
@@ -79,6 +79,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         history.setBloodType(process.getBloodType());
         history.setComponent(process.getBloodComponent());
         history.setDelete(false);
+        history.setHealthFileUrl(process.getHealthFileUrl());
         historyRepo.save(history);
     }
 
