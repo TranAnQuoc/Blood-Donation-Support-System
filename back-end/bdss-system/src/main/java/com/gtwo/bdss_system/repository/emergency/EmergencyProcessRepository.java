@@ -9,7 +9,7 @@ import java.util.List;
 public interface EmergencyProcessRepository extends JpaRepository<EmergencyProcess, Long> {
     List<EmergencyProcess> findByAssignedStaff_Id(Long staffId);
     List<EmergencyProcess> findByStatusAvailable(Status status);
-
+    List<EmergencyProcess> findByEmergencyRequest_FullNameAndEmergencyRequest_Phone(String fullName, String phone);
 }
 
 

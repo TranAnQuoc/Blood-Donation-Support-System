@@ -36,4 +36,5 @@ public class EmergencyHistoryAPI {
         historyService.restore(id);
         return ResponseEntity.ok().build();
     }
+
 }

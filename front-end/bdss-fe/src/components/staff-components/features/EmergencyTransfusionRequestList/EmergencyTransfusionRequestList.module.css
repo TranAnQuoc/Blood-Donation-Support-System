@@ -1,24 +1,20 @@
 .listContainer {
-  max-width: 1550px;
-  margin: 20px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: #333;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .listTitle {
   text-align: center;
-  color: #007A64;
-  /* margin-bottom: 35px;
+  color: #2c3e50;
+  margin-bottom: 35px;
   font-size: 2.2em;
-  font-weight: 700; */
-  border-bottom: 2px solid #BDA25C;
-  padding-bottom: 15px;
+  font-weight: 700;
 }
 
 .loading, .error, .noRequests {
@@ -256,4 +252,19 @@
     font-size: 0.85em;
     margin-top: 5px;
     display: block;
+}
+
+.statusPending {
+    color: #ffc107; /* Màu vàng cam */
+    font-weight: bold;
+}
+
+.statusApproved {
+    color: #28a745; /* Màu xanh lá cây */
+    font-weight: bold;
+}
+
+.statusRejected {
+    color: #dc3545; /* Màu đỏ */
+    font-weight: bold;
 }

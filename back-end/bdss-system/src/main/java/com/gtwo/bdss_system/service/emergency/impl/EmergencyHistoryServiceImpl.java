@@ -51,21 +51,37 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         EmergencyHistory history = new EmergencyHistory();
         history.setEmergencyRequest(process.getEmergencyRequest());
         history.setResolvedAt(LocalDateTime.now());
-        history.setFullNameSnapshot(process.getEmergencyRequest().getFullName());
-        history.setBloodType(process.getEmergencyRequest().getBloodType());
-        history.setComponent(process.getEmergencyRequest().getBloodComponent());
-        history.setQuantity(process.getEmergencyRequest().getQuantity());
-        if (process.getStatus() == EmergencyStatus.COMPLETED) {
-            history.setResult(EmergencyResult.FULLFILLED);
-        } else {
-            history.setResult(EmergencyResult.UNFULLFILLED);
-        }
 
+        // 🟢 Lấy snapshot từ process thay vì request
+        history.setFullNameSnapshot(process.getEmergencyRequest().getFullName()); // Vẫn từ request (nếu không thay đổi)
+        history.setPhoneSnapshot(process.getEmergencyRequest().getPhone());
+        history.setBloodType(process.getEmergencyRequest().getBloodType());       // Nếu không thay đổi trong quá trình xử lý
+        history.setComponent(process.getEmergencyRequest().getBloodComponent());  // Tương tự
+        history.setQuantity(process.getQuantity());                               // 🟢 Cập nhật quantity từ process
+        history.setResult(
+                process.getStatus() == EmergencyStatus.COMPLETED
+                        ? EmergencyResult.FULLFILLED
+                        : EmergencyResult.UNFULLFILLED
+        );
         history.setNotes(process.getHealthCheckSummary());
-        history.setDelete(false);
 
+        // 🟢 Các trường lấy từ process
+        history.setReasonForTransfusion(process.getReasonForTransfusion());
+        history.setNeedComponent(process.getNeedComponent());
+        history.setCrossmatchResult(process.getCrossmatchResult());
+        history.setHemoglobinLevel(process.getHemoglobinLevel());
+        history.setBloodGroupConfirmed(process.getBloodGroupConfirmed());
+        history.setPulse(process.getPulse());
+        history.setTemperature(process.getTemperature());
+        history.setRespiratoryRate(process.getRespiratoryRate());
+        history.setBloodPressure(process.getBloodPressure());
+        history.setSymptoms(process.getSymptoms());
+        history.setBloodType(process.getBloodType());
+        history.setComponent(process.getBloodComponent());
+        history.setDelete(false);
         historyRepo.save(history);
     }
+
 
     @Override
     public void restore(Long id) {
@@ -81,12 +97,25 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         dto.setRequestId(entity.getEmergencyRequest().getId());
         dto.setResolvedAt(entity.getResolvedAt());
         dto.setFullNameSnapshot(entity.getFullNameSnapshot());
+        dto.setPhoneSnapshot(entity.getPhoneSnapshot());
         dto.setBloodTypeId(entity.getBloodType() != null ? entity.getBloodType().getId() : null);
         dto.setComponentId(entity.getComponent() != null ? entity.getComponent().getId() : null);
         dto.setQuantity(entity.getQuantity());
         dto.setResult(entity.getResult());
         dto.setNotes(entity.getNotes());
+        dto.setReasonForTransfusion(entity.getReasonForTransfusion());
+        dto.setNeedComponent(entity.getNeedComponent());
+        dto.setCrossmatchResult(entity.getCrossmatchResult());
+        dto.setHemoglobinLevel(entity.getHemoglobinLevel());
+        dto.setBloodGroupConfirmed(entity.getBloodGroupConfirmed());
+        dto.setPulse(entity.getPulse());
+        dto.setTemperature(entity.getTemperature());
+        dto.setRespiratoryRate(entity.getRespiratoryRate());
+        dto.setBloodPressure(entity.getBloodPressure());
+        dto.setSymptoms(entity.getSymptoms());
+
         dto.setDeleted(entity.getDelete());
         return dto;
     }
+
 }

@@ -1,238 +1,314 @@
+/* General container and text styles */
 .listContainer {
-  padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    max-width: 1550px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
 }
 
 .listTitle {
-  text-align: center;
-    color: #007A64;
-    border-bottom: 2px solid #BDA25C;
-    padding-bottom: 15px;
+    color: #0056b3;
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 .loading, .error, .noProcesses {
-  text-align: center;
-  font-size: 1.1em;
-  color: #555;
-  padding: 20px;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #666;
 }
 
 .error {
-  color: #dc3545;
-  font-weight: bold;
+    color: #d9534f;
+    font-weight: bold;
 }
 
+/* Table styles */
 .tableWrapper {
-  overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
-  -webkit-overflow-scrolling: touch; /* Hỗ trợ cuộn mượt mà trên di động */
-  border: 1px solid #ddd; /* Viền bao quanh bảng */
-  border-radius: 8px; /* Bo góc cho wrapper */
+    overflow-x: auto; /* Allow horizontal scrolling if table is too wide */
+    margin-top: 20px;
 }
 
 .processTable {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1000px; /* Đảm bảo bảng không bị quá nhỏ trên màn hình hẹp */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.processTable th,
-.processTable td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-  vertical-align: top; /* Căn trên cho nội dung cell */
+.processTable th, .processTable td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+    white-space: nowrap; /* Prevent content from wrapping in table cells */
 }
 
 .processTable th {
-  background-color: #f2f2f2;
-  font-weight: 600;
-  color: #34495e;
-  white-space: nowrap; /* Ngăn không cho tiêu đề cột xuống dòng */
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
 }
 
 .processTable tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+    background-color: #f9f9f9;
 }
 
 .processTable tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-/* Điều chỉnh độ rộng cột nếu cần */
-.processTable td:nth-child(1) { width: 5%; } /* Mã YC */
-.processTable td:nth-child(2) { width: 15%; } /* Hồ sơ SK */
-.processTable td:nth-child(3) { width: 8%; } /* Xác nhận */
-.processTable td:nth-child(4) { width: 8%; } /* Trạng thái */
-/* Các cột còn lại sẽ chia đều hoặc bạn có thể định nghĩa cụ thể */
-
-/* ... (Giữ nguyên các styles cũ của bảng) ... */
-
-/* Thêm cột hành động vào bảng */
-.processTable th:last-child,
-.processTable td:last-child {
-  width: 100px; /* Điều chỉnh độ rộng cho cột hành động */
-  text-align: center;
+    background-color: #e9e9e9;
 }
 
 .editButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.2s ease;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
 }
 
 .editButton:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
-/* Modal Styles (sử dụng lại từ EmergencyRequestList, có thể tùy chỉnh) */
+/* Modal styles */
 .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .modalContent {
-  background: white;
-  padding: 25px;
-  border-radius: 8px;
-  max-width: 700px; /* Tăng độ rộng modal cho form */
-  max-height: 90%;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px; /* Max width for larger screens */
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-out;
+    max-height: 90vh; /* Limit modal height */
+    overflow-y: auto; /* Add scrollbar if content is too long */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .closeModalButton {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 2em;
-  cursor: pointer;
-  color: #888;
-  transition: color 0.2s ease;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    color: #aaa;
 }
 
 .closeModalButton:hover {
-  color: #333;
+    color: #666;
+}
+
+.modalContent h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0056b3;
 }
 
 .editForm {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Chia form thành 2 cột */
-  gap: 15px 25px; /* Khoảng cách giữa các phần tử */
-  margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns layout */
+    gap: 15px 25px; /* Row and column gap */
 }
 
 .formGroup {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .formGroup label {
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #007A64;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    display: flex; /* To keep asterisk on the same line */
+    align-items: center;
 }
 
 .formGroup input[type="text"],
 .formGroup input[type="number"],
-.formGroup textarea,
-.formGroup select {
-  padding: 10px;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  font-size: 0.95em;
-  width: 100%; /* Đảm bảo các input chiếm toàn bộ chiều rộng cột */
-  box-sizing: border-box; /* Bao gồm padding và border trong width */
+.formGroup select,
+.formGroup textarea {
+    padding: 10px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding does not increase width */
 }
 
 .formGroup input[type="checkbox"] {
-  width: auto; /* Cho checkbox không chiếm hết chiều rộng */
-  align-self: flex-start; /* Căn lề trái cho checkbox */
-  margin-top: 10px; /* Khoảng cách với label */
-}
-
-.formGroup textarea {
-  resize: vertical; /* Cho phép thay đổi kích thước theo chiều dọc */
-  min-height: 60px;
+    width: auto; /* Checkbox should not take 100% width */
+    margin-top: 5px;
+    transform: scale(1.2); /* Slightly enlarge checkbox */
 }
 
 .formGroup input:focus,
-.formGroup textarea:focus,
-.formGroup select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-  outline: none;
+.formGroup select:focus,
+.formGroup textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
 }
 
-/* Styles cho nút trong modal (sử dụng lại từ EmergencyRequestList) */
+.formGroup textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 60px;
+}
+
 .modalActions {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  width: 100%;
+    grid-column: 1 / -1; /* Spans full width of the grid */
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-.actionButton { /* Base style from previous component */
-    border: none;
+.actionButton {
     padding: 10px 20px;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .confirmButton {
-    background-color: #20a0c0;
+    background-color: #28a745;
     color: white;
 }
 
 .confirmButton:hover {
-    background-color: #1686a3;
+    background-color: #218838;
+    transform: translateY(-2px);
 }
 
 .cancelButton {
-    background-color: #C02044;
+    background-color: #dc3545;
     color: white;
 }
 
 .cancelButton:hover {
-    background-color: #a01a38;
+    background-color: #c82333;
+    transform: translateY(-2px);
 }
 
-.errorText { /* For validation errors */
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 5px;
+.errorText {
+    grid-column: 1 / -1; /* Spans full width for error messages */
+    color: #dc3545;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
 }
 
-/* Responsive adjustments */
+/* Styles for required fields asterisk */
+.required {
+    color: #dc3545; /* Red color */
+    margin-left: 5px; /* Spacing from label */
+    font-size: 1.2em; /* Larger size */
+    line-height: 1; /* Ensure proper alignment */
+}
+
+/* Full width for specific form groups */
+.fullWidth {
+    grid-column: 1 / -1; /* Occupies both columns */
+}
+
+/* Styles for file upload section */
+.currentFile, .newFile {
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #555;
+}
+
+.viewFileLink {
+    margin-left: 5px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.viewFileLink:hover {
+    text-decoration: underline;
+}
+
+.formGroup input[type="file"] {
+    padding: 8px; /* Slightly reduced padding for file input */
+    height: auto; /* Auto height */
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    font-size: 0.95em;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f8f8f8; /* Light background */
+}
+
+.formGroup input[type="file"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+/* Styles for the Vital Signs group */
+.vitalSignsGroup {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fcfcfc;
+    margin-bottom: 15px; /* Spacing from other groups */
+    grid-column: 1 / -1; /* Make the group span full width */
+}
+
+.vitalSignsGroup .groupLabel {
+    font-size: 1.1em;
+    color: #0056b3;
+    margin-bottom: 10px;
+    display: block; /* Make label occupy its own line */
+    text-align: center;
+    font-weight: bold; /* Make the group label bold */
+}
+
+.vitalSignsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 2 or more columns based on space */
+    gap: 15px;
+}
+
+/* Ensure inputs within vitalSignsGrid have normal padding and border */
+.vitalSignsGrid .formGroup input {
+    width: 100%; /* Ensure inputs in the grid are also full width of their cell */
+}
+
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-  .editForm {
-    grid-template-columns: 1fr; /* Một cột trên màn hình nhỏ hơn */
-  }
-}
+    .editForm {
+        grid-template-columns: 1fr; /* Revert to 1 column on small screens */
+    }
 
+    .modalContent {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    .vitalSignsGrid {
+        grid-template-columns: 1fr; /* 1 column on small screens */
+    }
+}

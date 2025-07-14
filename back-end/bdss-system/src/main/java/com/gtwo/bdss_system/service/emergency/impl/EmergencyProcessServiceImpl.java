@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.service.emergency.impl;
 
+import com.gtwo.bdss_system.dto.emergency.EmergencyHistoryDTO;
 import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 import com.gtwo.bdss_system.dto.emergency.EmergencyProcessFormDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
@@ -122,6 +123,16 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         return processRepo.findByStatusAvailable(Status.ACTIVE).stream()
                 .map(this::toDTO).collect(Collectors.toList());
     }
+    @Override
+    public List<EmergencyProcessDTO> lookupByNameAndPhone(String fullName, String phone) {
+        return processRepo
+                .findByEmergencyRequest_FullNameAndEmergencyRequest_Phone(fullName, phone).stream()
+                .filter(p -> p.getStatusAvailable() == Status.ACTIVE)
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 
     @Override
     public void autoCreateByRequest(EmergencyRequest request) {

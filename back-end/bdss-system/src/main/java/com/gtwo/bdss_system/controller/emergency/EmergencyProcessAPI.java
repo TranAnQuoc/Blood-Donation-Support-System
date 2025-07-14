@@ -6,6 +6,7 @@ import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,15 +27,6 @@ public class EmergencyProcessAPI {
 
     private final EmergencyProcessService emergencyProcessService;
 
-//    @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('STAFF')")
-//    public ResponseEntity<EmergencyProcessDTO> updateProcess(
-//            @PathVariable Long id,
-//            @Valid @RequestBody EmergencyProcessDTO dto,
-//            @AuthenticationPrincipal Account account) {
-//        EmergencyProcessDTO updated = emergencyProcessService.update(id, dto, account);
-//        return ResponseEntity.ok(updated);
-//    }
 @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 @Operation(summary = "Cập nhật quy trình khẩn cấp kèm file hồ sơ sức khỏe")
 public ResponseEntity<?> updateEmergencyProcess(
@@ -61,4 +53,14 @@ public ResponseEntity<?> updateEmergencyProcess(
     public ResponseEntity<List<EmergencyProcessDTO>> getAll() {
         return ResponseEntity.ok(emergencyProcessService.getAll());
     }
+
+    @GetMapping("/emergency-lookup")
+    @Operation(summary = "Tra cứu tiến độ xử lý đơn khẩn cấp theo họ tên và số điện thoại")
+    public ResponseEntity<List<EmergencyProcessDTO>> lookupProcessStatus(
+            @RequestParam String fullName,
+            @RequestParam String phone) {
+        List<EmergencyProcessDTO> result = emergencyProcessService.lookupByNameAndPhone(fullName, phone);
+        return ResponseEntity.ok(result);
+    }
+
 }

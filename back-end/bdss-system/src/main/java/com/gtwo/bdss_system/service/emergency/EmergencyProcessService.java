@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.service.emergency;
 
+import com.gtwo.bdss_system.dto.emergency.EmergencyHistoryDTO;
 import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
 import com.gtwo.bdss_system.dto.emergency.EmergencyProcessFormDTO;
 import com.gtwo.bdss_system.entity.emergency.EmergencyRequest;
@@ -14,4 +15,6 @@ public interface EmergencyProcessService {
     List<EmergencyProcessDTO> getAll();
     void autoCreateByRequest(EmergencyRequest request);
     void updateWithFile(Long id, EmergencyProcessFormDTO form, Account staff);
+    List<EmergencyProcessDTO> lookupByNameAndPhone(String fullName, String phone);
+
 }
