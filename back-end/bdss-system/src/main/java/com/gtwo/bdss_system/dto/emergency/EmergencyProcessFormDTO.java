@@ -51,6 +51,6 @@ public class EmergencyProcessFormDTO {
     @Size(max = 500, message = "Lý do truyền máu tối đa 500 ký tự")
     private String reasonForTransfusion;
 
-    @Schema(type = "string", format = "binary", description = "File hồ sơ sức khỏe")
-    private MultipartFile healthFile;
+    private Long bloodtypeId;
+    private Long componentId;
 }
