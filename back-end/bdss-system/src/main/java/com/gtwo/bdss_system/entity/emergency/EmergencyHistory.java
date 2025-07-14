@@ -87,6 +87,6 @@ public class EmergencyHistory {
     @Column(name = "deleted")
     private Boolean delete = false;
 
-    @Column(name = "health_file_url")
+    @Column(name = "health_file_url", columnDefinition = "NVARCHAR(MAX)")
     private String healthFileUrl;
 }

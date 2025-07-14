@@ -114,7 +114,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         dto.setRespiratoryRate(entity.getRespiratoryRate());
         dto.setBloodPressure(entity.getBloodPressure());
         dto.setSymptoms(entity.getSymptoms());
-
+        dto.setHealthFile(entity.getHealthFileUrl());
         dto.setDeleted(entity.getDelete());
         return dto;
     }

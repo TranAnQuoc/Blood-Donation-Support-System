@@ -22,21 +22,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/emergency-process")
 @RequiredArgsConstructor
-@SecurityRequirement(name ="api")
+@SecurityRequirement(name = "api")
 public class EmergencyProcessAPI {
 
     private final EmergencyProcessService emergencyProcessService;
 
-@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-@Operation(summary = "Cập nhật quy trình khẩn cấp kèm file hồ sơ sức khỏe")
-public ResponseEntity<?> updateEmergencyProcess(
-        @PathVariable Long id,
-        @ModelAttribute EmergencyProcessFormDTO form,
-        @AuthenticationPrincipal Account staff
-) {
-    emergencyProcessService.updateWithFile(id, form, staff);
-    return ResponseEntity.ok("Cập nhật quy trình thành công.");
-}
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Cập nhật quy trình khẩn cấp kèm file hồ sơ sức khỏe")
+    public ResponseEntity<?> updateEmergencyProcess(
+            @PathVariable Long id,
+            @ModelAttribute EmergencyProcessFormDTO form,
+            @AuthenticationPrincipal Account staff
+    ) {
+        emergencyProcessService.updateWithFile(id, form, staff);
+        return ResponseEntity.ok("Cập nhật quy trình thành công.");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EmergencyProcessDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(emergencyProcessService.getById(id));

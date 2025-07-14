@@ -31,7 +31,7 @@ public class EmergencyHistoryDTO {
     private Integer respiratoryRate;
     private String bloodPressure;
     private String symptoms;
-    private MultipartFile healthFile;
+    private String healthFile;
 
     @JsonIgnore
     private Boolean deleted;
