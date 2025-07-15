@@ -29,12 +29,16 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
     @Override
     public TransfusionRequest createRequest(TransfusionRequestDTO dto) {
         Long recipientId = getCurrentUserId();
+        if (dto.getAddress() == null || dto.getAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("Address is required when creating a transfusion request.");
+        }
         TransfusionRequest entity = TransfusionRequest.builder()
                 .recipientId(recipientId)
                 .bloodComponentNeeded(dto.getBloodComponentNeeded())
                 .quantityNeeded(dto.getQuantityNeeded())
                 .doctorDiagnosis(dto.getDoctorDiagnosis())
                 .preCheckNotes(dto.getPreCheckNotes())
+                .address(dto.getAddress())
                 .requestedAt(LocalDateTime.now())
                 .statusRequest(StatusRequest.PENDING)
                 .status(Status.ACTIVE)
@@ -127,5 +131,4 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
                 .map(entity -> mapper.map(entity, TransfusionRequestResponseDTO.class))
                 .toList();
     }
-
 }

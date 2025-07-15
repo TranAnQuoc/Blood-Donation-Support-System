@@ -51,6 +51,8 @@ public class TransfusionRequestAPI {
         dto.setRequestedAt(entity.getRequestedAt());
         dto.setStatusRequest(entity.getStatusRequest());
         dto.setStatus(entity.getStatus());
+        dto.setAddress(entity.getAddress());
+        dto.setApprovedAt(entity.getApprovedAt());
         return ResponseEntity.ok(dto);
     }
 

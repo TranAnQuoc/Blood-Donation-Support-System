@@ -17,4 +17,5 @@ public class TransfusionRequestDTO {
 
     private String preCheckNotes;
 
+    private String address;
 }

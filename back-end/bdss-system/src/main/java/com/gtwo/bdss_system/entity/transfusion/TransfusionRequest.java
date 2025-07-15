@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +31,6 @@ public class TransfusionRequest {
     @Column(name = "status_request", nullable = false)
     private StatusRequest statusRequest;
 
-
     @Column(name = "approved_by")
     private Integer approvedBy;
 
@@ -49,8 +49,11 @@ public class TransfusionRequest {
     @Column(name = "pre_check_notes")
     private String preCheckNotes;
 
-    // 💡 Trường thêm để soft delete
+    @Column(name = "address")
+    @Nationalized
+    private String address;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.ACTIVE;
+    private Status status;
 }

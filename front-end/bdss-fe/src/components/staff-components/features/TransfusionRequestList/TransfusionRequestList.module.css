@@ -205,3 +205,50 @@
         display: none; /* Ẩn label "Hành động" trên mobile nếu nút đã rõ ràng */
     }
 }
+
+/* ... (các style hiện có của bạn) ... */
+
+/* Status Badges - Đồng bộ với TransfusionRequestDetail */
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    white-space: nowrap; /* Ngăn ngắt dòng chữ trong badge */
+}
+
+/* Trạng thái yêu cầu (StatusRequest) */
+.statusBadge.pending {
+    background-color: #ffc107; /* Màu vàng */
+    color: #343a40;
+}
+
+.statusBadge.approved {
+    background-color: #28a745; /* Màu xanh lá cây */
+    color: white;
+}
+
+.statusBadge.rejected {
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}
+
+.statusBadge.cancelled {
+    background-color: #6c757d; /* Màu xám */
+    color: white;
+}
+
+/* Trạng thái hệ thống (Status) */
+.statusBadge.active {
+    background-color: #007bff; /* Màu xanh dương cho active */
+    color: white;
+}
+
+.statusBadge.deleted {
+    background-color: #6c757d; /* Màu xám đậm hơn cho deleted */
+    color: white;
+}
+
+/* ... (các style khác) ... */

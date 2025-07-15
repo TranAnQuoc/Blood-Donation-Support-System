@@ -1,0 +1,226 @@
+/* src/components/staff-components/EmergencyHotlineListForStaff/EmergencyHotlineListForStaff.module.css */
+
+.container {
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1000px; /* Có thể nhỏ hơn một chút vì ít cột hơn */
+    margin: 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container h2 {
+    color: #007bff; /* Màu xanh cho STAFF */
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+.loadingMessage,
+.errorMessage,
+.noHotlinesMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.topActions {
+    display: flex;
+    justify-content: center; /* Căn giữa search bar */
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.searchBar {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+    max-width: 600px; /* Giới hạn độ rộng của search bar */
+    flex-wrap: wrap;
+}
+
+.searchInput {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1em;
+    min-width: 180px; /* Đảm bảo đủ rộng */
+}
+
+.searchButton,
+.clearSearchButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+}
+
+.searchButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.searchButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.clearSearchButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.clearSearchButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Không có nút .addButton */
+
+.tableWrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 0.95em;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table th,
+.table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #e9ecef; /* Màu nền tiêu đề cho STAFF */
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #e2f2ff; /* Màu hover nhẹ nhàng */
+}
+
+/* Status Badges */
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.statusBadge.active {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.statusBadge.deleted {
+    background-color: #6c757d; /* Gray */
+    color: white;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+
+    .container h2 {
+        font-size: 1.8em;
+    }
+
+    .topActions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchInput,
+    .searchButton,
+    .clearSearchButton {
+        width: 100%;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #6c757d;
+    }
+}

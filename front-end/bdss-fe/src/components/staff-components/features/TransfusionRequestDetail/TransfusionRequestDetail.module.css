@@ -68,8 +68,10 @@
     text-transform: uppercase;
     align-self: flex-start; /* Để badge không chiếm hết chiều rộng */
     margin-top: 5px; /* Khoảng cách với tiêu đề strong */
+    white-space: nowrap; /* Ngăn ngắt dòng chữ trong badge */
 }
 
+/* Trạng thái yêu cầu (StatusRequest) */
 .statusBadge.pending {
     background-color: #ffc107;
     color: #343a40;
@@ -90,22 +92,41 @@
     color: white;
 }
 
+/* Trạng thái hệ thống (Status) */
+.statusBadge.active {
+    background-color: #007bff; /* Ví dụ: màu xanh cho active */
+    color: white;
+}
+
+.statusBadge.deleted {
+    background-color: #6c757d; /* Ví dụ: màu xám cho deleted */
+    color: white;
+}
+
+
 .actions {
     text-align: center;
     margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Khoảng cách giữa các nút */
 }
 
 .backButton,
 .editButton,
-.deleteButton {
+.deleteButton,
+.saveButton,
+.cancelButton,
+.actionButton { /* Thêm .actionButton để dùng chung style */
     padding: 10px 20px;
-    margin: 0 10px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 1em;
     font-weight: 600;
     transition: background-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap; /* Ngăn ngắt dòng chữ trên nút */
 }
 
 .backButton {
@@ -139,7 +160,7 @@
 }
 
 .editInput {
-    width: calc(100% - 20px); /* Điều chỉnh padding */
+    width: 100%;
     padding: 10px;
     margin-top: 5px; /* Khoảng cách với label/strong */
     border: 1px solid #ced4da;
@@ -155,18 +176,9 @@
     outline: none;
 }
 
-/* Các nút Lưu và Hủy mới */
 .saveButton {
     background-color: #28a745; /* Xanh lá cây */
     color: white;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 600;
-    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .saveButton:hover {
@@ -177,14 +189,6 @@
 .cancelButton {
     background-color: #6c757d; /* Xám */
     color: white;
-    padding: 10px 20px;
-    margin: 0 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 600;
-    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .cancelButton:hover {
@@ -192,13 +196,56 @@
     transform: translateY(-1px);
 }
 
-/* Cập nhật style cho editButton để phù hợp với màu mới */
-.editButton {
-    background-color: #007bff; /* Xanh dương */
+/* New: Styles for Approve/Reject buttons */
+.approveButton {
+    background-color: #28a745; /* Màu xanh lá cây */
     color: white;
 }
+.approveButton:hover {
+    background-color: #218838;
+}
 
-.editButton:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px);
+.rejectButton {
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}
+.rejectButton:hover {
+    background-color: #c82333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+    .container h2 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+    .detailGrid {
+        gap: 15px;
+    }
+    .detailItem {
+        padding: 12px 15px;
+    }
+    .detailItem strong {
+        font-size: 1em;
+    }
+    .detailItem span {
+        font-size: 0.9em;
+    }
+    .actions {
+        flex-direction: column;
+        gap: 10px; /* Giảm khoảng cách giữa các nút trên mobile */
+    }
+    .backButton,
+    .editButton,
+    .deleteButton,
+    .saveButton,
+    .cancelButton,
+    .actionButton {
+        width: 100%; /* Các nút chiếm toàn bộ chiều rộng */
+        margin: 0; /* Bỏ margin ngang */
+    }
 }
