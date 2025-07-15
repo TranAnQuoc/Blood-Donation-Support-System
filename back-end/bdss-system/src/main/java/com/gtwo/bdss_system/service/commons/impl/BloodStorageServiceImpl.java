@@ -229,4 +229,29 @@ public class BloodStorageServiceImpl implements BloodStorageService {
 
         repository.saveAll(storedBags);
     }
+
+    @Override
+    public List<BloodStorageStatusDTO> findAllByDonor(Long donorId) {
+        List<BloodStorage> bags = repository.findByDonorId(donorId);
+
+        return bags.stream()
+                .map(this::convertToStatusDTO)
+                .collect(Collectors.toList());
+    }
+
+    private BloodStorageStatusDTO convertToStatusDTO(BloodStorage bag) {
+        BloodStorageStatusDTO dto = new BloodStorageStatusDTO();
+        dto.setId(bag.getId());
+        dto.setBloodType(bag.getBloodType() != null ? bag.getBloodType().getType() : null);
+        dto.setBloodComponent(bag.getBloodComponent() != null ? bag.getBloodComponent().getName() : null);
+        dto.setQuantity(bag.getQuantity());
+        dto.setBloodStatus(bag.getBloodStatus());
+        dto.setCreateAt(bag.getCreateAt());
+        dto.setApprovedAt(bag.getApprovedAt());
+        dto.setTakeAt(bag.getTakeAt());
+        dto.setUsageReason(bag.getUsageReason());
+        dto.setVerifiedStatus(bag.getVerifiedStatus());
+        dto.setVerifiedNote(bag.getVerifiedNote());
+        return dto;
+    }
 }

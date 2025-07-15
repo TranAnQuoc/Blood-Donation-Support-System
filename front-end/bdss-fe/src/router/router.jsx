@@ -32,6 +32,7 @@ import MyDonationHistory from "../components/member-components/features/MyDonati
 import TransfusionRequest from "../components/member-components/features/TransfusionRequest/TransfusionRequest.jsx";
 import EmergencyRequestForm from '../components/common/EmergencyRequestForm/EmergencyRequestForm.jsx';
 import StatusDonationSetup from '../pages/Community/StatusDonationSetting.jsx'
+import BloodTracking from "../components/member-components/features/BloodTracking/index.jsx"
 
 //STAFF
 import StaffProfile from "../components/staff-components/mainContent/StaffProfile/StaffProfile.jsx";
@@ -229,6 +230,8 @@ const router = createBrowserRouter([
       { path: "my-donation-process", element: <MyDonationProcess /> },
       { path: "my-donation-history", element: <MyDonationHistory /> },
       { path: "emergency", element: <EmergencyRequestForm /> },
+      { path: "blood-tracking", element: <BloodTracking /> },
+      
       //CONTENT
       // { path: "about-us", element: <About Us /> },
       { path: "register-donation", element: <RegisterDonation /> },

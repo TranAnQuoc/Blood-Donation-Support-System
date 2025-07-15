@@ -15,4 +15,5 @@ public interface BloodStorageRepository extends JpaRepository<BloodStorage,Long>
             "AND (:bloodComponentId IS NULL OR bs.bloodComponent.id = :bloodComponentId)")
     List<BloodStorage> searchByTypeAndComponent(@Param("bloodTypeId") Long bloodTypeId,
                                                 @Param("bloodComponentId") Long bloodComponentId);
+    List<BloodStorage> findByDonorId(Long donorId);
 }

@@ -23,4 +23,6 @@ public interface BloodStorageService {
     List<BloodStorageResponseDTO> searchByTypeRhComponent(Long bloodTypeId, Long bloodComponentId);
 
     void checkAndExpireStoredBags();
+
+    List<BloodStorageStatusDTO> findAllByDonor(Long donorId);
 }
