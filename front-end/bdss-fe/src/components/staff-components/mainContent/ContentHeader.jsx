@@ -2,7 +2,7 @@
 import React from 'react';
 import Logo from '../../../commons/Logo';
 import SearchBar from './SearchBar';
-import NotificationIcon from './NotificationIcon';
+import NotificationIcon from './Notification/NotificationIcon';
 import styles from './ContentHeader.module.css';
 import { FaBell, FaBars } from 'react-icons/fa';
 import logoImage from '../../../assets/logo.png';

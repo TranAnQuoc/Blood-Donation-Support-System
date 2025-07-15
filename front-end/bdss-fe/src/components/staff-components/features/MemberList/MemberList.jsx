@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
 import styles from './MemberList.module.css';
+import { useWebSocket } from '../../../../hooks/useWebSocket';
 
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';
@@ -37,6 +38,8 @@ const getDonationStatusName = (statusDonation) => {
 };
 
 const MemberList = () => {
+    const { notifications } = useWebSocket();
+
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -60,6 +63,19 @@ const MemberList = () => {
     useEffect(() => {
         fetchMembers();
     }, [fetchMembers]);
+
+    useEffect(() => {
+        if (notifications.length === 0) return;
+
+        const latest = notifications[notifications.length - 1];
+        console.log("Notification mới:", latest);
+
+        // Nếu thông báo có chứa từ "khẩn cấp" thì gọi lại danh sách thành viên
+        if (latest.message && latest.message.toLowerCase().includes("khẩn cấp")) {
+            fetchMembers();
+        }
+    }, [notifications, fetchMembers]);
+
 
     const handleToggleStatus = async (memberId, currentStatus) => {
         const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';

@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import LeftPanel from '../components/staff-components/leftPanel/LeftPanel';
 import ContentHeader from '../components/staff-components/mainContent/ContentHeader';
+import { ToastContainer } from 'react-toastify';
 import styles from './LayoutStaff.module.css';
 
 const LayoutStaff = () => {
@@ -14,6 +15,7 @@ const LayoutStaff = () => {
                     <Outlet />
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

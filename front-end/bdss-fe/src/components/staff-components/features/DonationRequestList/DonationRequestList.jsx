@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axiosInstance from "../../../../configs/axios";
 import styles from "./DonationRequestList.module.css";
+import { useWebSocket } from '../../../../hooks/useWebSocket';
+import { toast } from 'react-toastify';
+
 
 const formatDateTime = (isoString) => {
   if (!isoString) return "N/A";
@@ -23,26 +26,24 @@ const formatDateTime = (isoString) => {
 };
 
 const DonationRequestList = () => {
+  const { notifications } = useWebSocket();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchDonationRequests = async () => {
+  const fetchDonationRequests = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await axiosInstance.get("/donation-requests/pending");
       setRequests(response.data);
-      console.log("Đã lấy yêu cầu hiến máu ĐANG CHỜ:", response.data);
     } catch (err) {
       console.error("Lỗi khi lấy yêu cầu hiến máu:", err);
-      setError(
-        "Không thể tải danh sách yêu cầu hiến máu. Vui lòng thử lại sau."
-      );
+      setError("Không thể tải danh sách yêu cầu hiến máu. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleApproveRequest = async (requestId) => {
     if (
@@ -63,13 +64,13 @@ const DonationRequestList = () => {
         console.log("Yêu cầu đã được duyệt:", response.data);
 
         fetchDonationRequests();
-        alert(`Yêu cầu ID ${requestId} đã được duyệt thành công!`);
+        toast.success(`Yêu cầu ID ${requestId} đã được duyệt thành công!`);
       } catch (err) {
         console.error("Lỗi khi duyệt yêu cầu:", err);
         const errorMessage =
           err.response?.data?.message ||
           "Có lỗi xảy ra khi duyệt yêu cầu. Vui lòng thử lại.";
-        alert(errorMessage);
+        toast.error(errorMessage);
       }
     }
   };
@@ -112,7 +113,17 @@ const DonationRequestList = () => {
 
   useEffect(() => {
     fetchDonationRequests();
-  }, []);
+  }, [fetchDonationRequests]);
+
+  useEffect(() => {
+  const hasDonationUpdate = notifications.some(n => 
+    n.type === 'DONATION_REQUEST_UPDATED' || 
+    n.type === 'DONATION_REQUEST_CREATED'
+  );
+  if (hasDonationUpdate) {
+    fetchDonationRequests();
+  }
+}, [notifications, fetchDonationRequests]);
 
   if (loading) {
     return (

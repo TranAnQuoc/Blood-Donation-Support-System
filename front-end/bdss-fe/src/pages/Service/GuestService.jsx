@@ -98,9 +98,10 @@ const GuestService = () => {
                         </svg>
                     </Link>
                 </div>
-                 <div className={styles.featureCard}>
+
+                <div className={styles.featureCard}>
                     <div className={styles.iconWrapper}>
-                        <FontAwesomeIcon icon={faBell} className={styles.featureIcon} /> {/* Icon mới */}
+                        <FontAwesomeIcon icon={faBell} className={styles.featureIcon} />
                     </div>
                     <h3 className={styles.cardTitle}>Tra Cứu Đơn Khẩn Cấp</h3>
                     <p className={styles.cardDescription}>Kiểm tra trạng thái yêu cầu nhận máu khẩn cấp của bạn bằng thông tin cá nhân.</p>
