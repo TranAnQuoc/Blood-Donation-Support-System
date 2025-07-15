@@ -23,6 +23,14 @@ public class BloodStorageAPI {
     @Autowired
     private BloodStorageService service;
 
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping("/my-bags")
+    public ResponseEntity<List<BloodStorageStatusDTO>> getAllMyBloodBags(@AuthenticationPrincipal Account donor) {
+        Long donorId = donor.getId();
+        List<BloodStorageStatusDTO> resp = service.findAllByDonor(donorId);
+        return ResponseEntity.ok(resp);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> create(@Valid @RequestBody BloodStorageDTO dto, @AuthenticationPrincipal Account creater) {
