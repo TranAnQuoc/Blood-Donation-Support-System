@@ -14,6 +14,9 @@ public class TransfusionRequestResponseDTO {
     private int quantityNeeded;
     private String doctorDiagnosis;
     private String preCheckNotes;
+    private String address;
+    private Long staffId;
+    private LocalDateTime approvedAt;
     private StatusRequest statusRequest;
     private LocalDateTime requestedAt;
     private Status status;

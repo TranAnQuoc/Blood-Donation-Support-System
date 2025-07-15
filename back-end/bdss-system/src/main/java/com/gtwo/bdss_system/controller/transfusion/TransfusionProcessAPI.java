@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @SecurityRequirement(name = "api")
 @RestController
-@RequestMapping("/api/transfusion-requests")
+@RequestMapping("/api/transfusion-process")
 public class TransfusionProcessAPI {
 
     private final TransfusionProcessService service;
@@ -80,5 +80,4 @@ public class TransfusionProcessAPI {
         TransfusionProcessResponseDTO resp = mapper.map(proc, TransfusionProcessResponseDTO.class);
         return ResponseEntity.ok(resp);
     }
-
 }

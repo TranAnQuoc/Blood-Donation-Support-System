@@ -1,73 +1,84 @@
-.formContainer {
-    padding: 25px;
+/* CreateTransfusionRequest.module.css */
+
+.container {
+    padding: 30px;
+    max-width: 600px;
+    margin: 40px auto;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 600px;
-    margin: 30px auto;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.formContainer h2 {
-    color: #007bff;
+.pageTitle {
     text-align: center;
+    color: #333;
     margin-bottom: 30px;
-    font-size: 2em;
-    font-weight: 600;
+    font-size: 2.2em;
+    font-weight: 700;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .formGroup {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .formGroup label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
+    font-weight: 600;
+    color: #555;
+    font-size: 1em;
 }
 
-.formGroup input[type="text"],
-.formGroup input[type="tel"],
-.formGroup input[type="number"],
-.formGroup textarea {
+.input,
+.textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ced4da;
+    border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1em;
-    box-sizing: border-box; /* Ensures padding doesn't increase total width */
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    color: #333;
+    box-sizing: border-box; /* Ensures padding doesn't add to the width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.formGroup input[type="text"]:focus,
-.formGroup input[type="tel"]:focus,
-.formGroup input[type="number"]:focus,
-.formGroup textarea:focus {
+.input:focus,
+.textarea:focus {
     border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
     outline: none;
 }
 
-.formGroup textarea {
-    resize: vertical;
+.textarea {
+    resize: vertical; /* Allows vertical resizing */
     min-height: 80px;
 }
 
 .submitButton {
-    width: 100%;
-    padding: 14px;
     background-color: #007bff;
     color: white;
+    padding: 14px 25px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1.1em;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center; /* Center the button if form is flex column */
+    width: 100%; /* Make button span full width of form */
+    max-width: 300px; /* Limit button width */
+    margin-top: 20px;
 }
 
-.submitButton:hover:not(:disabled) {
+.submitButton:hover {
     background-color: #0056b3;
     transform: translateY(-2px);
 }
@@ -75,4 +86,21 @@
 .submitButton:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+    transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+    .pageTitle {
+        font-size: 1.8em;
+    }
+    .submitButton {
+        padding: 12px 20px;
+        font-size: 1em;
+        max-width: 100%;
+    }
 }

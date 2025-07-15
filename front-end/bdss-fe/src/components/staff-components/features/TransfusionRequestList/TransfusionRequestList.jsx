@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../../configs/axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import styles from './TransfusionRequestList.module.css';
 
@@ -24,7 +25,6 @@ const formatDateTime = (isoString) => {
     }
 };
 
-
 const TransfusionRequestList = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,22 +34,20 @@ const TransfusionRequestList = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axiosInstance.get('/transfusions/requests');
-            setRequests(response.data);
+            const response = await axiosInstance.get('/transfusion-requests');
+            // Lọc các yêu cầu có status là DELETED nếu bạn không muốn hiển thị chúng
+            // const activeRequests = response.data.filter(req => req.status !== 'DELETED');
+            // setRequests(activeRequests);
+            setRequests(response.data); // Hiển thị tất cả, bao gồm cả DELETED nếu cần
             console.log("Đã lấy yêu cầu truyền máu:", response.data);
         } catch (err) {
             console.error('Lỗi khi lấy danh sách yêu cầu truyền máu:', err);
             setError('Không thể tải danh sách yêu cầu truyền máu. Vui lòng thử lại sau.');
-            toast.error('Lỗi: Không thể tải danh sách yêu cầu truyền máu.');
+            toast.error(`Lỗi: ${err.response?.data?.message || err.message}`);
         } finally {
             setLoading(false);
         }
     };
-
-    // Bạn có thể thêm các hàm handleApprove/handleReject tương tự như DonationRequestList nếu API cho phép
-    // và hiển thị các nút Duyệt/Từ chối cho yêu cầu truyền máu ở trạng thái PENDING.
-    // Hiện tại API bạn cung cấp cho TransfusionRequest là PUT/DELETE theo ID, chưa có API duyệt/từ chối cụ thể.
-    // Nếu có, logic sẽ tương tự DonationRequestList.
 
     useEffect(() => {
         fetchTransfusionRequests();
@@ -82,9 +80,10 @@ const TransfusionRequestList = () => {
                             <th>Lượng cần (ml)</th>
                             <th>Chẩn đoán</th>
                             <th>Ghi chú tiền kiểm tra</th>
-                            <th>Trạng thái</th>
+                            <th>Địa chỉ</th> {/* Thêm cột Địa chỉ */}
+                            <th>Trạng thái Y/C</th> {/* Đổi tên thành "Trạng thái Y/C" */}
+                            <th>Trạng thái H/T</th> {/* Thêm cột "Trạng thái H/T" (hệ thống) */}
                             <th>Yêu cầu lúc</th>
-                            <th>Người duyệt</th>
                             <th>Thời gian duyệt</th>
                             <th>Cơ sở</th>
                             <th>Hành động</th>
@@ -97,25 +96,37 @@ const TransfusionRequestList = () => {
                                 <td data-label="ID Người Nhận">{request.recipientId}</td>
                                 <td data-label="Thành phần máu">{request.bloodComponentNeeded}</td>
                                 <td data-label="Lượng cần (ml)">{request.quantityNeeded}</td>
-                                <td data-label="Chẩn đoán">{request.doctorDiagnosis}</td>
-                                <td data-label="Ghi chú tiền kiểm tra">{request.preCheckNotes}</td>
-                                <td data-label="Trạng thái">
+                                <td data-label="Chẩn đoán">{request.doctorDiagnosis || "N/A"}</td>
+                                <td data-label="Ghi chú tiền kiểm tra">{request.preCheckNotes || "N/A"}</td>
+                                <td data-label="Địa chỉ">{request.address || "N/A"}</td> {/* Hiển thị Địa chỉ */}
+                                <td data-label="Trạng thái Y/C">
                                     <span
                                         className={`${styles.statusBadge} ${
-                                            styles[request.status.toLowerCase()] // Chú ý: 'status' thay vì 'statusRequest'
+                                            styles[request.statusRequest?.toLowerCase()]
                                         }`}
                                     >
-                                        {request.status === "PENDING" ? "Đang chờ"
-                                        : request.status === "APPROVED" ? "Đã duyệt"
-                                        : request.status === "REJECTED" ? "Đã từ chối"
-                                        : request.status === "CANCELLED" ? "Đã hủy"
-                                        : request.status}
+                                        {request.statusRequest === "PENDING" ? "Đang chờ"
+                                        : request.statusRequest === "APPROVED" ? "Đã duyệt"
+                                        : request.statusRequest === "REJECTED" ? "Đã từ chối"
+                                        : request.statusRequest === "CANCELLED" ? "Đã hủy"
+                                        : request.statusRequest || "N/A"}
+                                    </span>
+                                </td>
+                                <td data-label="Trạng thái H/T">
+                                    <span
+                                        className={`${styles.statusBadge} ${
+                                            styles[request.status?.toLowerCase()]
+                                        }`}
+                                    >
+                                        {request.status === "ACTIVE" ? "Hoạt động"
+                                        : request.status === "DELETED" ? "Đã xóa"
+                                        : request.status || "N/A"}
                                     </span>
                                 </td>
                                 <td data-label="Yêu cầu lúc">{formatDateTime(request.requestedAt)}</td>
-                                <td data-label="Người duyệt">{request.approvedById || "Chưa duyệt"}</td>
                                 <td data-label="Thời gian duyệt">{formatDateTime(request.approvedAt)}</td>
-                                <td data-label="Cơ sở">{request.facilityId || "Chưa gán"}</td>
+                                {/* Lưu ý: DTO của bạn không có facilityId, nếu backend vẫn trả về thì giữ, nếu không thì bỏ */}
+                                <td data-label="Cơ sở">{request.address || "Chưa gán"}</td>
                                 <td data-label="Hành động">
                                     <Link to={`${request.id}`} className={styles.viewButton}>
                                         Xem chi tiết
@@ -126,6 +137,7 @@ const TransfusionRequestList = () => {
                     </tbody>
                 </table>
             </div>
+            <ToastContainer />
         </div>
     );
 };

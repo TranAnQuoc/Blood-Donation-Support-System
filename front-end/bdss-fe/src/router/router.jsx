@@ -51,6 +51,8 @@ import EventManagement from "../components/staff-components/features/EventManage
 import BloodStorageStaff from "../components/staff-components/features/BloodStorage/view/BloodStorage.jsx";
 import BloodStorageCreateForm from "../components/staff-components/features/BloodStorage/create/BloodStorageCreate.jsx"
 import BloodStorageHistory from "../components/staff-components/features/BloodStorageHistory/index.jsx";
+import EmergencyCallStaff from "../components/staff-components/features/EmergencyHotline/index.jsx"
+
 
 //ADMIN
 import AdminProfile from "../components/admin-components/mainContent/AdminProfile/AdminProfile.jsx";
@@ -71,6 +73,8 @@ import BloodStorageAdmin from "../components/admin-components/features/BloodStor
 import BloodStorageHistoryAdmin from "../components/admin-components/features/BloodStorageHistory/index.jsx";
 import EmergencyTransfusionProcessAdmin from "../components/admin-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx"
 import EmergencyTransfusionHistoryListAdmin from "../components/admin-components/features/EmergencyTransfusionHistory/EmergencyTransfusionHistory.jsx"
+import EmergencyCall from "../components/admin-components/features/EmergencyHotline/index.jsx"
+
 
 const router = createBrowserRouter([
   {
@@ -142,6 +146,7 @@ const router = createBrowserRouter([
 
       //OTHER
       { path: "event-management", element: <EventManagement /> },
+      { path: "emergencyCall", element: <EmergencyCall /> },
       // { path: "recovery-reminders", element: <RecoveryReminder/> },
       // { path: "community-posts", element: <CommunityPost/> },
       // { path: "reports", element: <Report/> },
@@ -190,6 +195,7 @@ const router = createBrowserRouter([
       //OTHER
       { path: "member-list", element: <MemberList /> },
       { path: "event-management", element: <EventManagement /> },
+      { path: "emergencyCall", element: <EmergencyCallStaff /> },
       // { path: "recovery-reminders", element: <RecoveryReminder/> },
       // { path: "community-posts", element: <CommunityPost/> },
       // { path: "reports", element: <Report/> },

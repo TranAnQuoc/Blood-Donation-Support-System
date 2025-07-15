@@ -87,7 +87,7 @@ const LeftPanel = () => {
         // { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/staff-dashboard/recovery-reminders' },
         // { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/staff-dashboard/community-posts' },
         { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/staff-dashboard/reports' },
-        { id: 'emergencyCall', icon: faPhoneVolume, label: 'Liên Lạc Khẩn Cấp', fullPatch: '/admin-dashboard/emergencyCall'}
+        { id: 'emergencyCall', icon: faPhoneVolume, label: 'Liên Lạc Khẩn Cấp', fullPath: '/staff-dashboard/emergencyCall'}
         // { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ', fullPath: '/staff-dashboard/support-center' },
     ];
 
