@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import styles from './DonationProcess.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useWebSocket } from '../../../../hooks/useWebSocket';
 
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';
@@ -42,6 +43,8 @@ const getStatusName = (status) => {
 };
 
 const DonationProcess = () => {
+    const { notifications } = useWebSocket();
+
     const navigate = useNavigate();
     const [processes, setProcesses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -65,6 +68,14 @@ const DonationProcess = () => {
     useEffect(() => {
         fetchProcesses();
     }, []);
+
+    useEffect(() => {
+        const hasProcessUpdate = notifications.some(n => n.type === 'DONATION_PROCESS_UPDATED');
+        if (hasProcessUpdate) {
+            fetchProcesses();
+        }
+    }, [notifications]);
+
 
     const handleViewDetailClick = (processId) => {
         navigate(`/staff-dashboard/donation-process/${processId}`);

@@ -135,7 +135,7 @@ const router = createBrowserRouter([
       // Emergency Transfusion
       { path: "emergency-transfusion-processes",element: <EmergencyTransfusionProcessAdmin /> },
       { path: "emergency-histories", element: <EmergencyTransfusionHistoryListAdmin /> },
-      
+
       //BloodStorage
       { path: "blood-storage", element: <BloodStorageAdmin /> },
       { path: "blood-storage-history", element: <BloodStorageHistoryAdmin /> },

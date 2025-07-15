@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-
 import styles from './EventManagement.module.css';
 import DataTableContainer from '../../mainContent/DataTableContainer';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
+import { useWebSocket } from '../../../../hooks/useWebSocket';
+
 
 const EventManagement = () => {
+    const { notifications } = useWebSocket();
 
     const [events, setEvents] = useState([]);
     const [showForm, setShowForm] = useState(false);
@@ -73,6 +75,13 @@ const EventManagement = () => {
     useEffect(() => {
         fetchEvents();
     }, [fetchEvents]);
+
+    useEffect(() => {
+    const hasEventUpdate = notifications.some(n => n.type === 'EVENT_UPDATED');
+    if (hasEventUpdate) {
+        fetchEvents();
+    }
+}, [notifications, fetchEvents]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
