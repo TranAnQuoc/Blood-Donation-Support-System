@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.service.commons.impl;
 
 import com.gtwo.bdss_system.dto.commons.*;
 import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodStorage;
 import com.gtwo.bdss_system.enums.StatusBloodStorage;
 import com.gtwo.bdss_system.enums.StatusVerified;
@@ -11,6 +12,7 @@ import com.gtwo.bdss_system.repository.commons.BloodStorageRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.service.commons.BloodStorageHistoryService;
 import com.gtwo.bdss_system.service.commons.BloodStorageService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -182,5 +184,49 @@ public class BloodStorageServiceImpl implements BloodStorageService {
         dto.setVerifiedStatus(entity.getVerifiedStatus());
         dto.setVerifiedNote(entity.getVerifiedNote());
         return dto;
+    }
+
+    @Transactional
+    public void checkAndExpireStoredBags() {
+        List<BloodStorage> storedBags = repository.findByBloodStatus(StatusBloodStorage.STORED);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        for (BloodStorage bag : storedBags) {
+            BloodComponent component = bag.getBloodComponent();
+            String componentName = component.getName();
+
+            long expireDays = 0;
+
+            switch (componentName) {
+                case "Toàn phần":
+                    expireDays = 35;
+                    break;
+                case "Hồng cầu":
+                    expireDays = 35;
+                    break;
+                case "Huyết tương":
+                    expireDays = 365;
+                    break;
+                case "Tiểu cầu":
+                    expireDays = 5;
+                    break;
+                case "Bạch cầu":
+                    expireDays = 1;
+                    break;
+                default:
+                    // Nếu "Unknow" hoặc không xác định, giả sử 1 ngày để an toàn
+                    expireDays = 1;
+                    break;
+            }
+
+            if (bag.getCreateAt() != null && bag.getCreateAt().plusDays(expireDays).isBefore(now)) {
+                bag.setBloodStatus(StatusBloodStorage.EXPIRED);
+                // Bạn có thể log thêm nếu muốn
+                System.out.println("✅ Túi máu ID " + bag.getId() + " đã hết hạn và được set EXPIRED.");
+            }
+        }
+
+        repository.saveAll(storedBags);
     }
 }
