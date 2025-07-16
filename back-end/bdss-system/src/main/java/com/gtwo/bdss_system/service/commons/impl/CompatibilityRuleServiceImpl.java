@@ -6,6 +6,8 @@ import com.gtwo.bdss_system.service.commons.CompatibilityRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CompatibilityRuleServiceImpl implements CompatibilityRuleService {
 
@@ -14,8 +16,11 @@ public class CompatibilityRuleServiceImpl implements CompatibilityRuleService {
 
     @Override
     public CompatibilityRule getRule(Long donorId, Long recipientId, Long componentId) {
-        return compatibilityRuleRepository.findByDonorBloodType_IdAndRecipientBloodType_IdAndComponent_Id(
-                donorId, recipientId, componentId
-        ).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy quy tắc tương thích."));
+        List<CompatibilityRule> rules = compatibilityRuleRepository
+                .findByDonorBloodType_IdAndRecipientBloodType_IdAndComponent_Id(donorId, recipientId, componentId);
+        if (rules.isEmpty()) {
+            throw new IllegalArgumentException("Không tìm thấy quy tắc tương thích.");
+        }
+        return rules.get(0);
     }
 }
