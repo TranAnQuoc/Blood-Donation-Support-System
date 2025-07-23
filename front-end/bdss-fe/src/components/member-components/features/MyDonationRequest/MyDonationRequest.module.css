@@ -91,7 +91,7 @@
     background-color: #dc3545;
 }
 
-.cancelled {
+.canceled {
     background-color: #6c757d;
 }
 
@@ -118,7 +118,7 @@
 
 .cancelButton:hover {
     background-color: #c0392b;
-    transform: translateY(-1px);
+    /* transform: translateY(-1px); */
 }
 
 .backButton {
@@ -131,13 +131,57 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
-    margin-bottom: 16px;
 }
 
 .backButton:hover {
     background-color: #031B4E;
     color: #ffffff;
 }
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContent {
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.modalActions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.confirmButton {
+    background-color: #20a0c0;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.confirmButton:hover {
+    background-color: #1686a3;
+}
+
 
 
 /* Responsive adjustments */

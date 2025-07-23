@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './register.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../configs/axios';
+import axiosInstance from '../../../configs/axios';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -26,8 +26,15 @@ function RegisterForm() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
 
+    const genderOptions = [
+        { label: 'Nam', value: 'MALE' },
+        { label: 'Nữ', value: 'FEMALE' },
+        { label: 'Khác', value: 'OTHER' }
+    ];
+
+
     const staticBloodTypes = [
-        { id: 1, bloodName: 'Unknown', type: 'Unknown', rhFactor: '' },
+        { id: 1, bloodName: 'Không rõ', type: '', rhFactor: '' },
         { id: 2, bloodName: 'A+', type: 'A', rhFactor: '+' },
         { id: 3, bloodName: 'A-', type: 'A', rhFactor: '-' },
         { id: 4, bloodName: 'B+', type: 'B', rhFactor: '+' },
@@ -37,8 +44,6 @@ function RegisterForm() {
         { id: 8, bloodName: 'O+', type: 'O', rhFactor: '+' },
         { id: 9, bloodName: 'O-', type: 'O', rhFactor: '-' }
     ];
-
-    const genders = ['MALE', 'FEMALE', 'OTHER'];
 
     const validateEmail = (email) => {
         if (!email) return 'Email là bắt buộc.';
@@ -239,42 +244,49 @@ function RegisterForm() {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <input
-                        type={showPassword ? 'text' : 'password'}
-                        id="password"
-                        className={`${styles.inputField} ${errors.password ? styles.inputError : ''}`}
-                        placeholder="Mật khẩu"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <button
-                        type="button"
-                        className={styles.togglePasswordButton}
-                        onClick={handleTogglePasswordVisibility}
-                    >
-                        {showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
-                    </button>
+                    <div className={styles.inputWithIcon}>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            id="password"
+                            className={`${styles.inputField} ${errors.password ? styles.inputError : ''}`}
+                            placeholder="Mật khẩu"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className={styles.togglePasswordButton}
+                            onClick={handleTogglePasswordVisibility}
+                            tabIndex={-1}
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                        </button>
+                    </div>
                     {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
                 </div>
 
+
                 <div className={styles.inputGroup}>
-                    <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        id="confirmPassword"
-                        className={`${styles.inputField} ${errors.confirmPassword ? styles.inputError : ''}`}
-                        placeholder="Confirm Password"
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <button
-                        type="button"
-                        className={styles.togglePasswordButton}
-                        onClick={handleToggleConfirmPasswordVisibility}
-                    >
-                        {showConfirmPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
-                    </button>
+                    <div className={styles.inputWithIcon}>
+                        <input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            id="confirmPassword"
+                            className={`${styles.inputField} ${errors.confirmPassword ? styles.inputError : ''}`}
+                            placeholder="Xác nhận mật khẩu"
+                            value={formData.confirmPassword}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className={styles.togglePasswordButton}
+                            onClick={handleToggleConfirmPasswordVisibility}
+                            tabIndex={-1}
+                        >
+                            <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                        </button>
+                    </div>
                     {errors.confirmPassword && <p className={styles.errorMessage}>{errors.confirmPassword}</p>}
                 </div>
 
@@ -312,8 +324,8 @@ function RegisterForm() {
                         required
                     >
                         <option value="">Chọn giới tính</option>
-                        {genders.map(gender => (
-                            <option key={gender} value={gender}>{gender}</option>
+                        {genderOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                     </select>
                     {errors.gender && <p className={styles.errorMessage}>{errors.gender}</p>}
@@ -365,7 +377,7 @@ function RegisterForm() {
                         type="text"
                         id="address"
                         className={`${styles.inputField} ${errors.address ? styles.inputError : ''}`}
-                        placeholder="Vui lòng nhập đầy đủ địa chỉ của bạn (bao gồm Thành phố Hồ Chí Minh)"
+                        placeholder="Nhập đầy đủ địa chỉ của bạn (gồm Thành phố Hồ Chí Minh)"
                         value={formData.address}
                         onChange={handleInputChange}
                         required

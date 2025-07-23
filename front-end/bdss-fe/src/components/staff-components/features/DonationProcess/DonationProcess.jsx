@@ -117,6 +117,16 @@ const DonationProcess = () => {
                             >
                                 Xem chi tiết
                             </button>
+
+                            {/* <button onClick={async () => {
+                                try {
+                                    await axiosInstance.get('/donation-processes/auto-expire');
+                                    fetchProcesses();
+                                    alert('Đã cập nhật trạng thái quá hạn!');
+                                } catch (e) {
+                                    alert('Lỗi khi cập nhật trạng thái quá hạn!');
+                                }
+                            }}>Chạy kiểm tra hết hạn</button> */}
                         </div>
                     ))}
                 </div>

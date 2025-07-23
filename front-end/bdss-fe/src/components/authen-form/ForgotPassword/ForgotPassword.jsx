@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axiosInstance from "../../../configs/axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import styles from "./ForgotPassword.module.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const navigate = useNavigate()
 
   const validateEmail = (email) => {
     if (!email) {
@@ -72,6 +74,9 @@ const ForgotPassword = () => {
         </div>
         <button type="submit" className={styles.formButton} disabled={loading}>
           {loading ? "Đang gửi..." : "Gửi Yêu Cầu"}
+        </button>
+        <button type="button" className={styles.backButton} onClick={() => navigate(-1)}>
+          Quay lại
         </button>
       </form>
     </div>
