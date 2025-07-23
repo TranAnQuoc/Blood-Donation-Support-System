@@ -8,8 +8,8 @@ import LayoutAdmin from "../layouts/LayoutAdmin.jsx";
 import LayoutStaff from "../layouts/LayoutStaff.jsx";
 
 //AUTH
-import LoginForm from "../components/authen-form/LoginForm.jsx";
-import RegisterForm from "../components/authen-form/RegisterForm.jsx";
+import LoginForm from "../components/authen-form/LoginForm/LoginForm.jsx";
+import RegisterForm from "../components/authen-form/RegisterForm/RegisterForm.jsx";
 import ForgotPassword from "../components/authen-form/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "../components/authen-form/ResetPassword/ResetPassword.jsx";
 

@@ -5,10 +5,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-dayjs.extend(isSameOrAfter);
 import styles from './RegisterDonation.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
+dayjs.extend(isSameOrAfter);
 
 const RegisterDonation = () => {
     const [donationEvents, setDonationEvents] = useState([]);
@@ -19,8 +19,12 @@ const RegisterDonation = () => {
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [hasRegisteredBefore, setHasRegisteredBefore] = useState(false);
-    const navigate = useNavigate();
+    const [hasRecentDonation, setHasRecentDonation] = useState(false);
 
+
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const eventIdFromUrl = searchParams.get('eventId');
 
     const staticBloodTypes = [
         { id: 1, bloodName: 'Unknown', type: 'Unknown', rhFactor: '' },
@@ -38,36 +42,34 @@ const RegisterDonation = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                
-                const eventRes = await axiosInstance.get('/event');
-                console.log("Raw events from API:", eventRes.data);
 
+                const eventRes = await axiosInstance.get('/event');
                 const now = dayjs();
                 const activeEvents = eventRes.data.filter((event) => {
                     const availableSlots = event.maxSlot - (event.currentSlot || 0);
                     const eventDateTime = dayjs(`${event.date}T${event.startTime}`);
-                    
-                    console.log(`--- Event ID: ${event.id} ---`);
-                    console.log(`Event Date/Time: ${eventDateTime.format('YYYY-MM-DD HH:mm:ss')}`);
-                    console.log(`Current Time (now): ${now.format('YYYY-MM-DD HH:mm:ss')}`);
-                    console.log(`Status is ACTIVE: ${event.status === 'ACTIVE'}`);
-                    console.log(`Available Slots > 0: ${availableSlots > 0} (Slots: ${availableSlots})`);
-                    console.log(`Event is same or after current day: ${eventDateTime.isSameOrAfter(now, 'day')}`);
-
                     return (
                         event.status === 'ACTIVE' &&
                         availableSlots > 0 &&
                         eventDateTime.isSameOrAfter(now, 'day')
                     );
                 });
-                console.log("Active events after filtering:", activeEvents);
                 setDonationEvents(activeEvents);
+
+                if (eventIdFromUrl && activeEvents.length > 0) {
+                    const matchedEvent = activeEvents.find(e => e.id.toString() === eventIdFromUrl);
+                    if (matchedEvent) {
+                        setSelectedEvent({
+                            value: matchedEvent.id,
+                            label: `${matchedEvent.name} - ${dayjs(`${matchedEvent.date}T${matchedEvent.startTime}`).format('DD/MM/YYYY HH:mm')} - ${dayjs(`${matchedEvent.date}T${matchedEvent.endTime}`).format('HH:mm')} - ${matchedEvent.address} (Còn ${matchedEvent.maxSlot - (matchedEvent.currentSlot || 0)} slot)`
+                        });
+                    }
+                }
 
                 const userProfileRes = await axiosInstance.get('/account/view-profile');
                 const userProfile = userProfileRes.data;
-                console.log("User Profile:", userProfile);
 
-                if (userProfile && userProfile.bloodType) {
+                if (userProfile?.bloodType) {
                     const matchedBloodType = staticBloodTypes.find(
                         bt => bt.id === userProfile.bloodType.id
                     );
@@ -82,7 +84,7 @@ const RegisterDonation = () => {
                     }
                 } else {
                     setError('Không tìm thấy thông tin nhóm máu trong hồ sơ của bạn.');
-                    toast.warn('Vui lòng cập nhật thông tin nhóm máu trong hồ sơ cá nhân để hoàn tất đăng ký.');
+                    toast.warn('Vui lòng cập nhật nhóm máu trong hồ sơ cá nhân để hoàn tất đăng ký.');
                 }
 
             } catch (err) {
@@ -124,21 +126,43 @@ const RegisterDonation = () => {
             setHasRegisteredBefore(false);
 
             setDonationEvents(prevEvents =>
-                prevEvents.map(event =>
-                    event.id === selectedEvent.value ? { ...event, currentSlot: (event.currentSlot || 0) + 1 } : event
-                ).filter(event => (event.maxSlot - (event.currentSlot || 0)) > 0)
+                prevEvents
+                    .map(event =>
+                        event.id === selectedEvent.value
+                            ? { ...event, currentSlot: (event.currentSlot || 0) + 1 }
+                            : event
+                    )
+                    .filter(event => (event.maxSlot - (event.currentSlot || 0)) > 0)
             );
         } catch (err) {
             console.error('Lỗi khi đăng ký hiến máu:', err);
-            if (err.response) {
-                const errorMessage = err.response.data?.message || 'Có lỗi xảy ra từ máy chủ.';
 
-                if (errorMessage.includes('Tài khoản này đã đăng ký hiến máu trước đó.')) {
+            const rawResponse = err.response?.data;
+
+            if (rawResponse) {
+                // Nếu là string thì dùng trực tiếp, nếu là object thì lấy .message
+                let errorMessage = typeof rawResponse === 'string' ? rawResponse : rawResponse.message;
+
+                // Loại bỏ prefix "Lỗi hệ thống: " nếu có
+                if (errorMessage.startsWith('Lỗi hệ thống:')) {
+                    errorMessage = errorMessage.replace(/^Lỗi hệ thống:\s*/, '');
+                }
+
+                const warningMessages = [
+                    'Bạn đã đăng ký hiến máu và đang chờ xử lý.',
+                    'Đơn hiến máu trước đó đang trong quá trình xử lý.',
+                ];
+
+                const recentDonationMessage = 'Bạn cần chờ ít nhất 12 tuần sau khi hiến máu để đăng ký lại.';
+
+                if (warningMessages.includes(errorMessage)) {
                     setHasRegisteredBefore(true);
-                    toast.warn('Bạn đã đăng ký hiến máu cho một sự kiện trước đó. Vui lòng kiểm tra trạng thái.');
+                    toast.warn(errorMessage);
+                } else if (errorMessage === recentDonationMessage) {
+                    setHasRecentDonation(true);
+                    toast.warn(errorMessage);
                 } else {
-                    setHasRegisteredBefore(false);
-                    toast.error(`Lỗi hệ thống: ${errorMessage}`);
+                    toast.error(errorMessage);
                 }
             } else if (err.request) {
                 toast.error('Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng của bạn.');
@@ -152,17 +176,12 @@ const RegisterDonation = () => {
         }
     };
 
-    if (loading) {
-        return <div className={styles.loadingContainer}>Đang tải dữ liệu...</div>;
-    }
-
-    if (error) {
-        return <div className={styles.errorContainer}>{error}</div>;
-    }
+    if (loading) return <div className={styles.loadingContainer}>Đang tải dữ liệu...</div>;
+    if (error) return <div className={styles.errorContainer}>{error}</div>;
 
     const eventOptions = donationEvents.map((event) => ({
         value: event.id,
-        label: `${event.name} - ${dayjs(`${event.date}T${event.startTime}`).format('DD/MM/YYYY HH:mm')} - ${event.address} (Còn ${event.maxSlot - (event.currentSlot || 0)} slot)`,
+        label: `${event.name} - ${dayjs(`${event.date}T${event.startTime}`).format('DD/MM/YYYY HH:mm')} - ${event.address} (Còn ${event.maxSlot - (event.currentSlot || 0)} slot)`
     }));
 
     const bloodTypeOptions = userBloodType ? [userBloodType] : [];
@@ -176,11 +195,18 @@ const RegisterDonation = () => {
                     <p>Tài khoản của bạn đã đăng ký hiến máu cho một sự kiện trước đó. Vui lòng kiểm tra trạng thái yêu cầu của bạn hoặc đợi sự kiện hiện tại kết thúc trước khi đăng ký lại.</p>
                 </div>
             )}
+            {hasRecentDonation && (
+                <div className={styles.warningBanner} role="alert">
+                    <p className={styles.warningTitle}>Thông báo:</p>
+                    <p>
+                        Bạn đã hiến máu gần đây. Vui lòng chờ ít nhất 12 tuần kể từ lần hiến gần nhất
+                        trước khi đăng ký lại. Hãy quay lại sau để tiếp tục hành trình hiến máu của bạn!
+                    </p>
+                </div>
+            )}
             <form onSubmit={handleSubmit} className={styles.form}>
                 <div>
-                    <label htmlFor="event" className={styles.label}>
-                        Chọn Sự kiện Hiến Máu:
-                    </label>
+                    <label htmlFor="event" className={styles.label}>Chọn Sự kiện Hiến Máu:</label>
                     <Select
                         id="event"
                         options={eventOptions}
@@ -193,36 +219,29 @@ const RegisterDonation = () => {
                         classNamePrefix="react-select"
                         isDisabled={isSubmitting || eventOptions.length === 0}
                     />
-                    {eventOptions.length === 0 && !loading && (
+                    {eventOptions.length === 0 && (
                         <p className={styles.noScheduleMessage}>Hiện không có sự kiện hiến máu nào khả dụng.</p>
                     )}
                 </div>
 
                 <div>
-                    <label htmlFor="bloodType" className={styles.label}>
-                        Nhóm Máu Của Bạn:
-                    </label>
+                    <label htmlFor="bloodType" className={styles.label}>Nhóm Máu Của Bạn:</label>
                     <Select
                         id="bloodType"
                         options={bloodTypeOptions}
                         value={userBloodType}
-                        placeholder={userBloodType ? userBloodType.label : "Đang tải nhóm máu..."}
+                        placeholder={userBloodType?.label || "Đang tải nhóm máu..."}
                         isClearable={false}
                         required
                         className={styles.reactSelectContainer}
                         classNamePrefix="react-select"
-                        isDisabled={true}
+                        isDisabled
                         components={{ DropdownIndicator: null }}
                     />
-                    {!userBloodType && !loading && !error && (
-                        <p className={styles.noBloodTypeMessage}>Vui lòng cập nhật nhóm máu trong hồ sơ cá nhân của bạn.</p>
-                    )}
                 </div>
 
                 <div>
-                    <label htmlFor="reason" className={styles.label}>
-                        Lý Do Đăng Ký Hiến Máu:
-                    </label>
+                    <label htmlFor="reason" className={styles.label}>Lý Do Đăng Ký Hiến Máu:</label>
                     <textarea
                         id="reason"
                         rows="4"
@@ -238,7 +257,7 @@ const RegisterDonation = () => {
                 <button
                     type="submit"
                     className={styles.submitButton}
-                    disabled={isSubmitting || eventOptions.length === 0 || !userBloodType} 
+                    disabled={isSubmitting || eventOptions.length === 0 || !userBloodType}
                 >
                     {isSubmitting ? 'Đang gửi...' : 'Gửi Yêu Cầu Đăng Ký'}
                 </button>

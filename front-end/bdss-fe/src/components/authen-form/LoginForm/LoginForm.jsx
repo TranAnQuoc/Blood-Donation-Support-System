@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styles from './login.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../../configs/axios';
+import api from '../../../configs/axios';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/features/userSlice';
+import { login } from '../../../redux/features/userSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -107,7 +107,7 @@ function LoginForm() {
             type="text"
             id="email"
             className={`${styles.inputField} ${emailError ? styles.inputError : ''}`}
-            placeholder="Email address"
+            placeholder="Địa chỉ email của bạn"
             value={email}
             onChange={handleEmailChange}
             required
@@ -121,7 +121,7 @@ function LoginForm() {
               type={showPassword ? 'text' : 'password'}
               id="password"
               className={`${styles.inputField} ${passwordError ? styles.inputError : ''}`}
-              placeholder="Password"
+              placeholder="Mật khẩu"
               value={password}
               onChange={handlePasswordChange}
               required
