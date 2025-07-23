@@ -10,6 +10,7 @@ import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationEvent;
 import com.gtwo.bdss_system.enums.Gender;
 import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusHealthCheck;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
@@ -60,52 +61,22 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     public DonationProcess update(Long processId, DonationProcessDTO dto, Account performer) {
         DonationProcess existing = getById(processId);
         if (existing.getProcess() == StatusProcess.WAITING && existing.getDate() != null) {
-            LocalDate processDate = existing.getDate();
-            LocalDate today = LocalDate.now();
-            if (processDate.isAfter(today)) {
+            if (existing.getDate().isAfter(LocalDate.now())) {
                 throw new IllegalStateException("Chưa đến ngày thực hiện, không thể chỉnh sửa quy trình hiến máu.");
             }
         }
         LocalDateTime now = LocalDateTime.now();
         existing.setStartTime(existing.getStartTime() == null ? now : existing.getStartTime());
         existing.setEndTime(now);
+        existing.setDate(dto.getDate());
         existing.setPerformer(performer);
-        StatusProcess inputStatus = dto.getProcess();
-        if (inputStatus == StatusProcess.COMPLETED) {
-            if (dto.getBloodPressure() == null || !dto.getBloodPressure().matches("\\d{2,3}/\\d{2,3}")) {
-                throw new IllegalArgumentException("Huyết áp không hợp lệ. Ví dụ hợp lệ: 120/80");
-            }
-            if (dto.getQuantity() <= 249 || dto.getQuantity() > 500) {
-                throw new IllegalArgumentException("Lượng máu hiến phải nằm trong khoảng 250 - 500 ml.");
-            }
-            if (dto.getType() == null) {
-                throw new IllegalArgumentException("Loại hiến máu không được để trống.");
-            }
-            if (dto.getHeartRate() == null || !dto.getHeartRate().matches("\\d{2,3}")) {
-                throw new IllegalArgumentException("Nhịp tim không hợp lệ. Vui lòng nhập số từ 60 đến 100.");
-            } else {
-                int heartRateValue = Integer.parseInt(dto.getHeartRate());
-                if (heartRateValue < 60 || heartRateValue > 100) {
-                    throw new IllegalArgumentException("Nhịp tim phải từ 60 đến 100 lần/phút.");
-                }
-            }
-            if (dto.getTemperature() == null || dto.getTemperature() < 36.0 || dto.getTemperature() > 37.5) {
-                throw new IllegalArgumentException("Nhiệt độ cơ thể phải từ 36.0°C đến 37.5°C.");
-            }
-            if (dto.getHeight() == null || dto.getHeight() < 145) {
-                throw new IllegalArgumentException("Chiều cao phải từ 145 cm trở lên.");
-            }
-            if (dto.getWeight() == null) {
-                throw new IllegalArgumentException("Cân nặng không được để trống.");
-            }
-            Gender gender = existing.getRequest().getDonor().getGender();
-            if (gender == Gender.MALE && dto.getWeight() < 45) {
-                throw new IllegalArgumentException("Nam giới phải nặng ít nhất 45 kg để hiến máu.");
-            }
-            if (gender == Gender.FEMALE && dto.getWeight() < 42) {
-                throw new IllegalArgumentException("Nữ giới phải nặng ít nhất 42 kg để hiến máu.");
-            }
-        }
+        existing.setHeartRate(dto.getHeartRate());
+        existing.setTemperature(dto.getTemperature());
+        existing.setWeight(dto.getWeight());
+        existing.setHeight(dto.getHeight());
+        existing.setHemoglobin(dto.getHemoglobin());
+        existing.setBloodPressure(dto.getBloodPressure());
+        existing.setStatusHealthCheck(dto.getStatusHealthCheck());
         if (dto.getBloodTypeId() != null) {
             if (dto.getBloodTypeId() == 1L || !bloodTypeRepository.existsById(dto.getBloodTypeId())) {
                 throw new IllegalArgumentException("Nhóm máu không hợp lệ.");
@@ -118,52 +89,79 @@ public class DonationProcessServiceImpl implements DonationProcessService {
                 accountRepository.save(donor);
             }
         }
-        existing.setDate(dto.getDate());
-        existing.setHealthCheck(dto.isHealthCheck());
-        existing.setHeartRate(dto.getHeartRate());
-        existing.setTemperature(dto.getTemperature());
-        existing.setWeight(dto.getWeight());
-        existing.setHeight(dto.getHeight());
-        existing.setHemoglobin(dto.getHemoglobin());
-        existing.setBloodPressure(dto.getBloodPressure());
-        existing.setHasChronicDisease(dto.getHasChronicDisease());
-        existing.setHasRecentTattoo(dto.getHasRecentTattoo());
-        existing.setHasUsedDrugs(dto.getHasUsedDrugs());
-        existing.setScreeningNote(dto.getScreeningNote());
-        existing.setQuantity(dto.getQuantity());
-        existing.setNotes(dto.getNotes());
-        existing.setType(dto.getType());
-        existing.setProcess(dto.getProcess());
-        existing.setPerformer(performer);
-
-        StatusProcess currentStatus = existing.getProcess();
-        if (currentStatus != StatusProcess.COMPLETED &&
-                currentStatus != StatusProcess.FAILED &&
-                currentStatus != StatusProcess.SCREENING_FAILED &&
-                currentStatus != StatusProcess.DONOR_CANCEL) {
-            if (Boolean.TRUE.equals(dto.getHasChronicDisease()) ||
-                    Boolean.TRUE.equals(dto.getHasRecentTattoo()) ||
-                    Boolean.TRUE.equals(dto.getHasUsedDrugs())) {
-                existing.setProcess(StatusProcess.SCREENING_FAILED);
-            } else if (Boolean.FALSE.equals(dto.getHasChronicDisease()) ||
-                    Boolean.FALSE.equals(dto.getHasRecentTattoo()) ||
-                    Boolean.FALSE.equals(dto.getHasUsedDrugs())) {
-                existing.setProcess(StatusProcess.SCREENING);
-            } else {
-                existing.setProcess(StatusProcess.IN_PROCESS);
+        StatusHealthCheck healthCheckStatus = dto.getStatusHealthCheck();
+        if (healthCheckStatus == null) {
+            if (dto.getProcess() != null && dto.getProcess() != StatusProcess.IN_PROCESS) {
+                throw new IllegalStateException("Phải đánh giá tình trạng sức khỏe trước khi thay đổi trạng thái.");
             }
         }
-        StatusProcess newStatus = existing.getProcess();
-        if (newStatus == StatusProcess.COMPLETED) {
+        if (healthCheckStatus == StatusHealthCheck.FAIL) {
+            if (dto.getFailureReason() == null || dto.getFailureReason().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vui lòng nhập lý do thất bại khi kết quả khám sức khỏe là FAIL.");
+            }
+            if (dto.getNotes() == null || dto.getNotes().trim().isEmpty()) {
+                throw new IllegalArgumentException("Vui lòng nhập ghi chú của nhân viên khi khám sức khỏe không đạt.");
+            }
+            existing.setFailureReason(dto.getFailureReason());
+            existing.setNotes(dto.getNotes());
+            existing.setProcess(StatusProcess.FAILED);
+        } else if (healthCheckStatus == StatusHealthCheck.PASS) {
+            if (dto.getProcess() == StatusProcess.COMPLETED) {
+                if (dto.getBloodPressure() == null || !dto.getBloodPressure().matches("\\d{2,3}/\\d{2,3}")) {
+                    throw new IllegalArgumentException("Huyết áp không hợp lệ. Ví dụ hợp lệ: 120/80");
+                }
+                if (dto.getHeartRate() == null || !dto.getHeartRate().matches("\\d{2,3}")) {
+                    throw new IllegalArgumentException("Nhịp tim không hợp lệ. Vui lòng nhập số từ 60 đến 100.");
+                } else {
+                    int heartRateValue = Integer.parseInt(dto.getHeartRate());
+                    if (heartRateValue < 60 || heartRateValue > 100) {
+                        throw new IllegalArgumentException("Nhịp tim phải từ 60 đến 100 lần/phút.");
+                    }
+                }
+                if (dto.getTemperature() == null || dto.getTemperature() < 36.0 || dto.getTemperature() > 37.5) {
+                    throw new IllegalArgumentException("Nhiệt độ cơ thể phải từ 36.0°C đến 37.5°C.");
+                }
+                if (dto.getHeight() == null || dto.getHeight() < 145) {
+                    throw new IllegalArgumentException("Chiều cao phải từ 145 cm trở lên.");
+                }
+                if (dto.getWeight() == null) {
+                    throw new IllegalArgumentException("Cân nặng không được để trống.");
+                }
+                Gender gender = existing.getRequest().getDonor().getGender();
+                if (gender == Gender.MALE && dto.getWeight() < 45) {
+                    throw new IllegalArgumentException("Nam giới phải nặng ít nhất 45 kg để hiến máu.");
+                }
+                if (gender == Gender.FEMALE && dto.getWeight() < 42) {
+                    throw new IllegalArgumentException("Nữ giới phải nặng ít nhất 42 kg để hiến máu.");
+                }
+                if (dto.getQuantity() < 250 || dto.getQuantity() > 500) {
+                    throw new IllegalArgumentException("Lượng máu hiến phải nằm trong khoảng 250 - 500 ml.");
+                }
+                if (dto.getType() == null) {
+                    throw new IllegalArgumentException("Loại hiến máu không được để trống.");
+                }
+            }
+            existing.setQuantity(dto.getQuantity());
+            existing.setType(dto.getType());
+            existing.setNotes(dto.getNotes());
+            if (dto.getProcess() != null) {
+                existing.setProcess(dto.getProcess());
+            }
+        }
+        if (existing.getProcess() != StatusProcess.COMPLETED &&
+                existing.getProcess() != StatusProcess.FAILED &&
+                existing.getProcess() != StatusProcess.DONOR_CANCEL) {
+            existing.setProcess(StatusProcess.IN_PROCESS);
+        }
+        StatusProcess finalStatus = existing.getProcess();
+        if (finalStatus == StatusProcess.COMPLETED) {
             existing.setStatus(Status.INACTIVE);
             createDonationHistory(existing);
-        } else if (newStatus == StatusProcess.FAILED ||
-                newStatus == StatusProcess.SCREENING_FAILED ||
-                newStatus == StatusProcess.DONOR_CANCEL) {
+        } else if (finalStatus == StatusProcess.FAILED || finalStatus == StatusProcess.DONOR_CANCEL) {
             createDonationHistory(existing);
         }
-        DonationProcess saved = processRepository.save(existing);
-        return saved;
+
+        return processRepository.save(existing);
     }
 
     @Override
@@ -205,9 +203,14 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         dto.setEventName(event.getName());
         dto.setStartTime(entity.getStartTime());
         dto.setEndTime(entity.getEndTime());
-        dto.setHealthCheck(entity.getHealthCheck() != null ? entity.getHealthCheck() : false);
         dto.setHemoglobin(entity.getHemoglobin());
         dto.setBloodPressure(entity.getBloodPressure());
+        dto.setTemperature(entity.getTemperature());
+        dto.setWeight(entity.getWeight());
+        dto.setHeight(entity.getHeight());
+        dto.setHeartRate(entity.getHeartRate());
+        dto.setStatusHealthCheck(entity.getStatusHealthCheck());
+        dto.setFailureReason(entity.getFailureReason());
         dto.setQuantity(entity.getQuantity());
         dto.setNotes(entity.getNotes());
         dto.setTypeDonation(entity.getType());
@@ -221,10 +224,11 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     @Transactional
     public void createDonationHistory(DonationProcess process) {
         StatusProcess p = process.getProcess();
+        StatusHealthCheck healthCheck = process.getStatusHealthCheck();
         if (p != StatusProcess.COMPLETED &&
                 p != StatusProcess.FAILED &&
-                p != StatusProcess.SCREENING_FAILED &&
-                p != StatusProcess.DONOR_CANCEL) {
+                p != StatusProcess.DONOR_CANCEL &&
+                healthCheck != StatusHealthCheck.FAIL) {
             return;
         }
         DonationRequest request = process.getRequest();
@@ -238,17 +242,14 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         history.setGender(donor.getGender());
         history.setAddress(event.getAddress());
         history.setDateOfBirth(donor.getDateOfBirth());
-        history.setHealthCheck(process.getHealthCheck());
         history.setHemoglobin(process.getHemoglobin());
         history.setBloodPressure(process.getBloodPressure());
         history.setTemperature(process.getTemperature());
         history.setWeight(process.getWeight());
         history.setHeight(process.getHeight());
         history.setHeartRate(process.getHeartRate());
-        history.setScreeningNote(process.getScreeningNote());
-        history.setHasChronicDisease(process.getHasChronicDisease());
-        history.setHasRecentTattoo(process.getHasRecentTattoo());
-        history.setHasUsedDrugs(process.getHasUsedDrugs());
+        history.setStatusHealthCheck(process.getStatusHealthCheck());
+        history.setFailureReason(process.getFailureReason());
         BloodType bloodType = donor.getBloodType();
         if (bloodType != null) {
             history.setBloodType(bloodType.getType() + bloodType.getRhFactor());

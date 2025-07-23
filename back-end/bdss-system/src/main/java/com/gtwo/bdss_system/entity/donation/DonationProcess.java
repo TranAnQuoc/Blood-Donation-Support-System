@@ -2,8 +2,10 @@ package com.gtwo.bdss_system.entity.donation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gtwo.bdss_system.entity.auth.Account;
+import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.enums.DonationType;
 import com.gtwo.bdss_system.enums.Status;
+import com.gtwo.bdss_system.enums.StatusHealthCheck;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -35,10 +37,6 @@ public class DonationProcess {
     @Column(name = "EndTime")
     private LocalDateTime endTime;
 
-    // Kết quả kiểm tra sức khỏe tổng quát (có đủ điều kiện hiến hay không)
-    @Column(name = "Health_Check")
-    private Boolean healthCheck;
-
     // 🔎 Các thông số khám lâm sàng
     @Column(name = "Heart_Rate")
     private String heartRate; // VD: "72 bpm"
@@ -54,24 +52,18 @@ public class DonationProcess {
 
     // 🩸 Kết quả test nhanh
     @Column(name = "Hemoglobin_Level")
-    private Double hemoglobin; // VD: 13.5 g/dL
+    private Double hemoglobin; // VD: 125 g/l
 
     @Column(name = "Blood_Pressure")
     private String bloodPressure; // VD: "120/80"
 
-    // 🧾 Khai báo y tế sàng lọc
-    @Column(name = "Has_Chronic_Disease")
-    private Boolean hasChronicDisease;
+    @Column(name = "Status_Health_Check")
+    @Enumerated(EnumType.STRING)
+    private StatusHealthCheck statusHealthCheck;
 
-    @Column(name = "Has_Recent_Tattoo")
-    private Boolean hasRecentTattoo;
-
-    @Column(name = "Has_Used_Drugs")
-    private Boolean hasUsedDrugs;
-
-    @Column(name = "Screening_Note")
+    @Column(name = "Failure_Reason")
     @Nationalized
-    private String screeningNote;
+    private String failureReason;
 
     // Lượng máu hiến được (ml)
     @Column(name = "Quantity")

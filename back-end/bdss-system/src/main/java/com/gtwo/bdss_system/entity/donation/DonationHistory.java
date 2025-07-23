@@ -3,6 +3,7 @@ package com.gtwo.bdss_system.entity.donation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.enums.Gender;
+import com.gtwo.bdss_system.enums.StatusHealthCheck;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -55,9 +56,6 @@ public class DonationHistory {
     @Column(name = "Quantity")
     private int quantity;
 
-    @Column(name = "Health_Check")
-    private Boolean healthCheck;
-
     @Column(name = "Heart_Rate")
     private String heartRate;
 
@@ -76,18 +74,13 @@ public class DonationHistory {
     @Column(name = "Blood_Pressure")
     private String bloodPressure;
 
-    @Column(name = "Has_Chronic_Disease")
-    private Boolean hasChronicDisease;
+    @Column(name = "Status_Health_Check")
+    @Enumerated(EnumType.STRING)
+    private StatusHealthCheck statusHealthCheck;
 
-    @Column(name = "Has_Recent_Tattoo")
-    private Boolean hasRecentTattoo;
-
-    @Column(name = "Has_Used_Drugs")
-    private Boolean hasUsedDrugs;
-
-    @Column(name = "Screening_Note")
+    @Column(name = "Failure_Reason")
     @Nationalized
-    private String screeningNote;
+    private String failureReason;
 
     @Column(name = "Address")
     @Nationalized
