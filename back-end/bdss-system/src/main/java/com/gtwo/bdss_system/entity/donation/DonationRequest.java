@@ -33,9 +33,50 @@ public class DonationRequest {
     @Enumerated(EnumType.STRING)
     private StatusRequest statusRequest;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Approver_ID")
-    private Account approver;
+    // ========== Các trường khảo sát sức khỏe ==========
+
+    // a. Lịch sử sức khỏe
+    @Column(name = "Is_Healthy_Today")
+    private Boolean isHealthyToday;
+
+    @Column(name = "Has_Symptoms")
+    private Boolean hasSymptoms; // sốt, ho, tiêu chảy,...
+
+    // b. Bệnh truyền nhiễm
+    @Column(name = "Has_Infectious_Diseases")
+    private Boolean hasInfectiousDiseases;
+
+    @Column(name = "Unsafe_Sex")
+    private Boolean unsafeSex;
+
+    // c. Phẫu thuật / xăm / vaccine
+    @Column(name = "Recent_Surgery_Tattoo")
+    private Boolean recentSurgeryTattoo;
+
+    @Column(name = "Recent_Vaccination")
+    private Boolean recentVaccination;
+
+    // d. Thuốc và điều trị
+    @Column(name = "On_Medication")
+    private Boolean onMedication;
+
+    @Column(name = "Has_Chronic_Disease")
+    private Boolean hasChronicDisease;
+
+    @Column(name = "Chronic_Disease_Note")
+    @Nationalized
+    private String chronicDiseaseNote;
+
+    // e. Tiền sử hiến máu
+    @Column(name = "Last_Donation_Days")
+    private Integer lastDonationDays;
+
+    @Column(name = "Had_Reaction_Previous_Donation")
+    private Boolean hadReactionPreviousDonation;
+
+    @Column(name = "Previous_Reaction_Note")
+    @Nationalized
+    private String previousReactionNote;
 
     @Column(name = "Approved_Time")
     private LocalDateTime approvedTime;

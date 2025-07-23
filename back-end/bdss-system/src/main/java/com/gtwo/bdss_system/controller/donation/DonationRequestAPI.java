@@ -1,11 +1,14 @@
 package com.gtwo.bdss_system.controller.donation;
 
 import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
+import com.gtwo.bdss_system.dto.donation.DonationRequestDetailDTO;
+import com.gtwo.bdss_system.dto.donation.DonationSurveyDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.service.donation.DonationRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,22 +34,23 @@ public class DonationRequestAPI {
     @PostMapping("/register/{scheduleId}")
     public ResponseEntity<DonationRequest> registerRequest(
             @PathVariable Long scheduleId,
+            @Valid @RequestBody DonationSurveyDTO surveyDTO,
             @AuthenticationPrincipal Account currentUser) {
-        DonationRequest newRequest = service.createRequest(scheduleId, currentUser);
+        DonationRequest newRequest = service.createRequest(scheduleId, currentUser, surveyDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
-    @PutMapping("/approved/{id}")
-    public ResponseEntity<DonationRequest> approvedRequest(
-            @PathVariable Long id,
-            @RequestParam boolean accept,
-            @RequestParam(required = false) String note,
-            @AuthenticationPrincipal Account staff) {
-        StatusRequest decision = accept ? StatusRequest.APPROVED : StatusRequest.REJECTED;
-        DonationRequest updated = service.approvedRequest(id, decision, note, staff);
-        return ResponseEntity.ok(updated);
-    }
+//    @PreAuthorize("hasRole('STAFF')")
+//    @PutMapping("/approved/{id}")
+//    public ResponseEntity<DonationRequest> approvedRequest(
+//            @PathVariable Long id,
+//            @RequestParam boolean accept,
+//            @RequestParam(required = false) String note,
+//            @AuthenticationPrincipal Account staff) {
+//        StatusRequest decision = accept ? StatusRequest.APPROVED : StatusRequest.REJECTED;
+//        DonationRequest updated = service.approvedRequest(id, decision, note, staff);
+//        return ResponseEntity.ok(updated);
+//    }
 
     @PreAuthorize("hasRole('MEMBER')")
     @PutMapping("/cancel/{id}")
@@ -60,9 +64,9 @@ public class DonationRequestAPI {
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<List<DonationRequestDTO>> getAll() {
+    public ResponseEntity<List<DonationRequestDetailDTO>> getAll() {
         List<DonationRequest> requests = service.getAll();
-        List<DonationRequestDTO> dtoList = requests.stream()
+        List<DonationRequestDetailDTO> dtoList = requests.stream()
                 .map(request -> donationRequestService.requestTable(request))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
@@ -70,9 +74,9 @@ public class DonationRequestAPI {
 
     @GetMapping("/pending")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<List<DonationRequestDTO>> getPendingRequests() {
+    public ResponseEntity<List<DonationRequestDetailDTO>> getPendingRequests() {
         List<DonationRequest> requests = donationRequestService.getPendingRequests();
-        List<DonationRequestDTO> dtoList = requests.stream()
+        List<DonationRequestDetailDTO> dtoList = requests.stream()
                 .map(request -> donationRequestService.requestTable(request))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
@@ -80,17 +84,17 @@ public class DonationRequestAPI {
 
     @GetMapping("/search/{id}")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<DonationRequestDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<DonationRequestDetailDTO> getById(@PathVariable Long id) {
         DonationRequest entity = service.getById(id);
-        DonationRequestDTO dto = service.requestTable(entity);
+        DonationRequestDetailDTO dto = service.requestTable(entity);
         return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/my-latest")
     @PreAuthorize("hasRole('MEMBER')")
-    public ResponseEntity<List<DonationRequestDTO>> getMyRequests(@AuthenticationPrincipal Account user) {
+    public ResponseEntity<List<DonationRequestDetailDTO>> getMyRequests(@AuthenticationPrincipal Account user) {
         Long userId = user.getId();
-        List<DonationRequestDTO> dtos = service.getAllRequestsByMember(userId);
+        List<DonationRequestDetailDTO> dtos = service.getAllRequestsByMember(userId);
         return ResponseEntity.ok(dtos);
     }
 }

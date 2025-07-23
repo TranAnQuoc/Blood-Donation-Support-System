@@ -1,6 +1,8 @@
 package com.gtwo.bdss_system.service.donation.impl;
 
 import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
+import com.gtwo.bdss_system.dto.donation.DonationRequestDetailDTO;
+import com.gtwo.bdss_system.dto.donation.DonationSurveyDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
@@ -39,7 +41,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
     private ModelMapper modelMapper;
 
     @Override
-    public DonationRequest createRequest(Long scheduleId, Account currentUser) {
+    public DonationRequest createRequest(Long scheduleId, Account currentUser, DonationSurveyDTO surveyDTO) {
         if (!currentUser.getRole().equals(Role.MEMBER)) {
             throw new IllegalArgumentException("Chỉ người dùng với vai trò MEMBER mới được đăng ký hiến máu.");
         }
@@ -47,9 +49,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
             throw new IllegalArgumentException("Không có thông tin ngày sinh. Vui lòng cập nhật hồ sơ.");
         }
         LocalDate birthDate = currentUser.getDateOfBirth().toLocalDate();
-        LocalDate now = LocalDate.now();
-        Period age = Period.between(birthDate, now);
-        if (age.getYears() < 18) {
+        if (Period.between(birthDate, LocalDate.now()).getYears() < 18) {
             throw new IllegalArgumentException("Người hiến máu phải đủ 18 tuổi để đăng ký hiến máu.");
         }
         List<DonationRequest> previousRequests = repository.findAllByUserIdOrderByRequestTimeDesc(currentUser.getId());
@@ -66,10 +66,7 @@ public class DonationRequestServiceImpl implements DonationRequestService {
                                 throw new IllegalArgumentException("Bạn cần chờ ít nhất 12 tuần sau khi hiến máu để đăng ký lại.");
                             }
                         }
-                        case IN_PROCESS -> {
-                            throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
-                        }
-                        default -> {
+                        case IN_PROCESS, FAILED -> {
                             throw new IllegalArgumentException("Đơn hiến máu trước đó đang trong quá trình xử lý.");
                         }
                     }
@@ -84,35 +81,78 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         request.setDonor(currentUser);
         request.setEvent(event);
         request.setRequestTime(LocalDateTime.now());
-        request.setStatusRequest(StatusRequest.PENDING);
-        request.setApprover(null);
-        request.setApprovedTime(null);
-        request.setNote(null);
-        return repository.save(request);
-    }
-
-    @Override
-    public DonationRequest approvedRequest(Long requestId, StatusRequest decision, String note, Account approver) {
-        DonationRequest request = repository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found"));
-        if (request.getStatusRequest() == StatusRequest.APPROVED) {
-            throw new IllegalStateException("Request already approved");
+        // Mapping survey
+        request.setIsHealthyToday(surveyDTO.getIsHealthyToday());
+        request.setHasSymptoms(surveyDTO.getHasSymptoms());
+        request.setHasInfectiousDiseases(surveyDTO.getHasInfectiousDiseases());
+        request.setUnsafeSex(surveyDTO.getUnsafeSex());
+        request.setRecentSurgeryTattoo(surveyDTO.getRecentSurgeryTattoo());
+        request.setRecentVaccination(surveyDTO.getRecentVaccination());
+        request.setOnMedication(surveyDTO.getOnMedication());
+        request.setHasChronicDisease(surveyDTO.getHasChronicDisease());
+        request.setChronicDiseaseNote(surveyDTO.getChronicDiseaseNote());
+        request.setLastDonationDays(surveyDTO.getLastDonationDays());
+        request.setHadReactionPreviousDonation(surveyDTO.getHadReactionPreviousDonation());
+        request.setPreviousReactionNote(surveyDTO.getPreviousReactionNote());
+        // Logic tự động xét duyệt
+        String autoRejectReason = evaluateSurvey(surveyDTO);
+        if (autoRejectReason != null) {
+            request.setStatusRequest(StatusRequest.REJECTED);
+            request.setNote(autoRejectReason);
+        } else {
+            request.setStatusRequest(StatusRequest.APPROVED);
+            request.setNote("Tự động duyệt dựa trên khảo sát sức khỏe.");
+            request.setApprovedTime(LocalDateTime.now());
         }
-        request.setStatusRequest(decision);
-        request.setApprovedTime(LocalDateTime.now());
-        request.setApprover(approver);
-        request.setNote(note);
         DonationRequest savedRequest = repository.save(request);
-        if (decision == StatusRequest.APPROVED) {
+        // Nếu được duyệt, tự động tạo DonationProcess
+        if (savedRequest.getStatusRequest() == StatusRequest.APPROVED) {
             donationProcessService.autoCreateByRequest(savedRequest);
-        }
-        DonationEvent event = request.getEvent();
-        int approved = repository.countEventIdInRequest(event.getId());
-        if (approved >= event.getMaxSlot()) {
-            event.setStatus(Status.INACTIVE);
-            scheduleRepository.save(event);
+            int approved = repository.countEventIdInRequest(event.getId());
+            if (approved >= event.getMaxSlot()) {
+                event.setStatus(Status.INACTIVE);
+                scheduleRepository.save(event);
+            }
         }
         return savedRequest;
+    }
+
+//    @Override
+//    public DonationRequest approvedRequest(Long requestId, StatusRequest decision, String note, Account approver) {
+//        DonationRequest request = repository.findById(requestId)
+//                .orElseThrow(() -> new RuntimeException("Request not found"));
+//        if (request.getStatusRequest() == StatusRequest.APPROVED) {
+//            throw new IllegalStateException("Request already approved");
+//        }
+//        request.setStatusRequest(decision);
+//        request.setApprovedTime(LocalDateTime.now());
+//        request.setApprover(approver);
+//        request.setNote(note);
+//        DonationRequest savedRequest = repository.save(request);
+//        if (decision == StatusRequest.APPROVED) {
+//            donationProcessService.autoCreateByRequest(savedRequest);
+//        }
+//        DonationEvent event = request.getEvent();
+//        int approved = repository.countEventIdInRequest(event.getId());
+//        if (approved >= event.getMaxSlot()) {
+//            event.setStatus(Status.INACTIVE);
+//            scheduleRepository.save(event);
+//        }
+//        return savedRequest;
+//    }
+
+    private String evaluateSurvey(DonationSurveyDTO dto) {
+        if (Boolean.FALSE.equals(dto.getIsHealthyToday())) return "Bạn không cảm thấy khỏe hôm nay.";
+        if (Boolean.TRUE.equals(dto.getHasSymptoms())) return "Bạn đang có triệu chứng nghi ngờ bệnh.";
+        if (Boolean.TRUE.equals(dto.getHasInfectiousDiseases())) return "Bạn có nguy cơ mắc bệnh truyền nhiễm.";
+        if (Boolean.TRUE.equals(dto.getUnsafeSex())) return "Lịch sử quan hệ tình dục không an toàn.";
+        if (Boolean.TRUE.equals(dto.getRecentSurgeryTattoo())) return "Bạn vừa trải qua phẫu thuật/xăm.";
+        if (Boolean.TRUE.equals(dto.getRecentVaccination())) return "Bạn vừa tiêm vaccine gần đây.";
+        if (Boolean.TRUE.equals(dto.getOnMedication())) return "Bạn đang dùng thuốc điều trị.";
+        if (Boolean.TRUE.equals(dto.getHasChronicDisease())) return "Bạn có bệnh mãn tính.";
+        if (Boolean.TRUE.equals(dto.getHadReactionPreviousDonation())) return "Bạn từng phản ứng khi hiến máu trước.";
+        if (dto.getLastDonationDays() != null && dto.getLastDonationDays() < 84) return "Chưa đủ 12 tuần từ lần hiến máu gần nhất.";
+        return null;
     }
 
     @Override
@@ -144,8 +184,8 @@ public class DonationRequestServiceImpl implements DonationRequestService {
                 .orElseThrow(() -> new EntityNotFoundException("DonationRequest not found or inactive"));
     }
 
-    public DonationRequestDTO requestTable(DonationRequest entity) {
-        DonationRequestDTO dto = new DonationRequestDTO();
+    public DonationRequestDetailDTO requestTable(DonationRequest entity) {
+        DonationRequestDetailDTO dto = new DonationRequestDetailDTO();
         dto.setId(entity.getId());
         dto.setDonorFullName(entity.getDonor().getFullName());
         dto.setDonorGender(entity.getDonor().getGender().toString());
@@ -153,19 +193,16 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         dto.setEventName(entity.getEvent().getName());
         dto.setRequestTime(entity.getRequestTime());
         dto.setStatusRequest(entity.getStatusRequest().toString());
-        if (entity.getApprover() != null) {
-            dto.setApproverFullName(entity.getApprover().getFullName());
-            dto.setApprovedTime(entity.getApprovedTime());
-        }
+        dto.setApprovedTime(entity.getApprovedTime());
         dto.setNote(entity.getNote());
         return dto;
     }
 
     @Override
-    public List<DonationRequestDTO> getAllRequestsByMember(Long userId) {
+    public List<DonationRequestDetailDTO> getAllRequestsByMember(Long userId) {
         List<DonationRequest> requests = repository.findAllByUserIdOrderBySubmittedAtDesc(userId);
         return requests.stream()
-                .map(entity -> modelMapper.map(entity, DonationRequestDTO.class))
+                .map(entity -> modelMapper.map(entity, DonationRequestDetailDTO.class))
                 .toList();
     }
 }

@@ -14,7 +14,6 @@ public class DonationRequestDTO {
     private String eventName;
     private LocalDateTime requestTime;
     private String statusRequest;
-    private String approverFullName;
     private LocalDateTime approvedTime;
     private String note;
 }

@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.dto.donation;
 
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.enums.DonationType;
+import com.gtwo.bdss_system.enums.StatusHealthCheck;
 import com.gtwo.bdss_system.enums.StatusProcess;
 import lombok.Data;
 
@@ -18,17 +19,14 @@ public class DonationProcessViewDTO {
     private BloodType donorBloodType;
     private String eventName;
     private LocalDateTime startTime;
-    private boolean healthCheck;
     private String heartRate;
     private Double temperature;
     private Double weight;
     private Double height;
     private Double hemoglobin;
     private String bloodPressure;
-    private Boolean hasChronicDisease;
-    private Boolean hasRecentTattoo;
-    private Boolean hasUsedDrugs;
-    private String screeningNote;
+    private String failureReason;
+    private StatusHealthCheck statusHealthCheck;
     private int quantity;
     private String notes;
     private DonationType typeDonation;
