@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.service.commons.impl;
 
 import com.gtwo.bdss_system.dto.auth.AccountCreateDTO;
+import com.gtwo.bdss_system.dto.commons.EmailDetailForDonationApproved;
 import com.gtwo.bdss_system.dto.commons.EmailDetailForForgotPassword;
 import com.gtwo.bdss_system.dto.commons.EmailDetailForRegister;
 import com.gtwo.bdss_system.entity.auth.Account;
@@ -27,17 +28,17 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject(emailDetail.getSubject());
         String loginLink = "http://localhost:5173/login";
         String body = String.format("""
-            Xin chào!
-
-            Tài khoản của bạn đã được đăng ký thành công với địa chỉ email: %s
-
-            Chúng tôi rất vui khi được đồng hành cùng bạn. Hãy đăng nhập vào hệ thống để bắt đầu sử dụng dịch vụ.
-
-            %s
-
-            Trân trọng,
-            Hệ thống hỗ trợ
-            """,
+                        Xin chào!
+                        
+                        Tài khoản của bạn đã được đăng ký thành công với địa chỉ email: %s
+                        
+                        Chúng tôi rất vui khi được đồng hành cùng bạn. Hãy đăng nhập vào hệ thống để bắt đầu sử dụng dịch vụ.
+                        
+                        %s
+                        
+                        Trân trọng,
+                        Hệ thống hỗ trợ
+                        """,
                 emailDetail.getToEmail(), loginLink);
         message.setText(body);
         mailSender.send(message);
@@ -52,13 +53,13 @@ public class EmailServiceImpl implements EmailService {
 
         String body = String.format("""
                 Xin chào %s,
-
+                
                 Bạn đã yêu cầu đặt lại mật khẩu. Vui lòng click vào liên kết bên dưới để tiếp tục:
-
+                
                 %s
-
+                
                 Nếu bạn không yêu cầu, vui lòng bỏ qua email này.
-
+                
                 Trân trọng,
                 Hệ thống hỗ trợ
                 """, emailDetailForForgotPassword.getAccount().getFullName(), emailDetailForForgotPassword.getLink());
@@ -76,22 +77,22 @@ public class EmailServiceImpl implements EmailService {
         String loginLink = "http://localhost:5173/login";
 
         String body = String.format("""
-        Xin chào %s,
-        
-        Tài khoản staff của bạn đã được tạo thành công.
-        
-        Vui lòng sử dụng thông tin đăng nhập sau để truy cập hệ thống:
-        
-        Email đăng nhập: %s
-        Mật khẩu: %s
-        
-        Đường dẫn đăng nhập: %s
-
-        Sau khi đăng nhập, bạn nên đổi mật khẩu để đảm bảo bảo mật.
-        
-        Trân trọng,
-        Hệ thống hỗ trợ
-        """,
+                        Xin chào %s,
+                        
+                        Tài khoản staff của bạn đã được tạo thành công.
+                        
+                        Vui lòng sử dụng thông tin đăng nhập sau để truy cập hệ thống:
+                        
+                        Email đăng nhập: %s
+                        Mật khẩu: %s
+                        
+                        Đường dẫn đăng nhập: %s
+                        
+                        Sau khi đăng nhập, bạn nên đổi mật khẩu để đảm bảo bảo mật.
+                        
+                        Trân trọng,
+                        Hệ thống hỗ trợ
+                        """,
                 emailDetail.getFullName(),
                 emailDetail.getEmail(),
                 emailDetail.getPassword(),
@@ -107,14 +108,14 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendReminderEmail(Account donor, LocalDate nextDate) {
         String body = String.format("""
-            Xin chào %s,
-            
-            Bạn đã đủ điều kiện để hiến máu tiếp theo kể từ ngày: %s.
-            Vui lòng đặt lịch hẹn để tiếp tục hỗ trợ cộng đồng nhé!
-            
-            Trân trọng,
-            Hệ thống hỗ trợ
-            """,
+                        Xin chào %s,
+                        
+                        Bạn đã đủ điều kiện để hiến máu tiếp theo kể từ ngày: %s.
+                        Vui lòng đặt lịch hẹn để tiếp tục hỗ trợ cộng đồng nhé!
+                        
+                        Trân trọng,
+                        Hệ thống hỗ trợ
+                        """,
                 donor.getFullName(),
                 nextDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         );
@@ -125,6 +126,49 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject("Nhắc nhở hiến máu lần tiếp theo");
         message.setText(body);
 
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendDonationApprovedEmail(EmailDetailForDonationApproved detail) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("demofortest999@gmail.com");
+        message.setTo(detail.getToEmail());
+        message.setSubject(detail.getSubject());
+
+        String formattedDate = detail.getDonationDate()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        String formattedStart = detail.getStartTime()
+                .toLocalTime()
+                .format(DateTimeFormatter.ofPattern("HH:mm"));
+
+        String formattedEnd = detail.getEndTime()
+                .toLocalTime()
+                .format(DateTimeFormatter.ofPattern("HH:mm"));
+
+        String body = String.format("""
+                        Xin chào %s,
+                        
+                        Đơn đăng ký hiến máu của bạn tại sự kiện "%s" đã được hệ thống phê duyệt thành công.
+                        
+                        🕒 Thời gian: %s từ %s đến %s  
+                        📍 Địa điểm: %s
+                        
+                        Vui lòng đến đúng giờ và mang theo giấy tờ tùy thân.
+                        
+                        Trân trọng,  
+                        Hệ thống hỗ trợ
+                        """,
+                detail.getDonorName(),
+                detail.getEventName(),
+                formattedDate,
+                formattedStart,
+                formattedEnd,
+                detail.getLocation()
+        );
+
+        message.setText(body);
         mailSender.send(message);
     }
 }

@@ -63,7 +63,7 @@ public class DonationRequestAPI {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<DonationRequestDetailDTO>> getAll() {
         List<DonationRequest> requests = service.getAll();
         List<DonationRequestDetailDTO> dtoList = requests.stream()
@@ -90,7 +90,7 @@ public class DonationRequestAPI {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/my-latest")
+    @GetMapping("/my-requests")
     @PreAuthorize("hasRole('MEMBER')")
     public ResponseEntity<List<DonationRequestDetailDTO>> getMyRequests(@AuthenticationPrincipal Account user) {
         Long userId = user.getId();

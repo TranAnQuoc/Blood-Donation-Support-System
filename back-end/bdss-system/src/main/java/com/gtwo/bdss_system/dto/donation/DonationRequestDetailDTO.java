@@ -20,7 +20,7 @@ public class DonationRequestDetailDTO {
     private String statusRequest;
     private LocalDateTime approvedTime;
     private String note;
-
+    //Survey
     private Boolean isHealthyToday;
     private Boolean hasSymptoms;
     private Boolean hasInfectiousDiseases;

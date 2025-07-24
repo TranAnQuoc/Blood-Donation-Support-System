@@ -1,109 +1,101 @@
 .donationProcessDetailContainer {
-    padding: 20px;
-    margin: 20px auto;
+    padding: 30px;
     background-color: #f8f9fa;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    max-width: 1550px;
-    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 30px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .pageTitle {
-    font-size: 2.2em;
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 35px;
+    font-size: 2.5em;
     font-weight: 700;
-    color: #007A64;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #BDA25C;
-    position: relative;
 }
 
-.loadingMessage,
-.errorMessage,
-.noDataMessage {
+/* Messages (loading, error, no data) */
+.loadingMessage, .errorMessage, .noDataMessage {
     text-align: center;
-    padding: 30px;
+    padding: 20px;
     font-size: 1.1em;
-    color: #777;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-top: 20px;
+    color: #555;
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    margin-bottom: 25px;
 }
 
 .errorMessage {
-    color: #dc3545;
+    color: #d32f2f;
+    background-color: #ffe0e0;
+    border: 1px solid #d32f2f;
 }
 
-.completedMessage {
-    text-align: center;
-    font-size: 1.2em;
-    color: #28a745;
-    font-weight: bold;
-    margin: 30px 0;
-}
-
-.summaryDetails {
-    background-color: #e9ecef;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-    text-align: left;
-}
-
-.summaryDetails p {
-    margin-bottom: 8px;
-    color: #343a40;
-}
-
-.summaryDetails strong {
-    display: inline-block;
-    width: 150px;
-    color: #007A64;
+.noDataMessage {
+    color: #7f8c8d;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
 }
 
 .formLayout {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr; 
+    display: flex;
     gap: 30px;
-    margin-top: 30px;
-    text-align: left;
+    flex-wrap: wrap; /* Allows columns to stack on small screens */
 }
 
-.readOnlySection,
-.editableSection {
-    padding: 20px;
-    border: 1px solid #e0e0e0;
+.readOnlySection, .editableSection {
+    flex: 1;
+    min-width: 350px; /* Ensure minimum width before wrapping */
+    background-color: #ffffff;
+    padding: 28px;
     border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
-.readOnlySection h3,
-.editableSection h3 {
-    font-size: 1.4em;
-    color: #007A64;
-    margin-bottom: 20px;
-    border-bottom: 1px dashed #e0e0e0;
-    padding-bottom: 10px;
+.readOnlySection h3, .editableSection h3 {
+    color: #34495e;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.6em;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 12px;
+    font-weight: 600;
 }
 
 .infoGroup {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .infoGroup strong {
-    flex: 0 0 160px; 
-    margin-right: 10px;
-    color: #007A64;
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
 }
 
 .infoGroup span {
-    flex: 1;
+    font-size: 1.08em;
+    color: #333;
+    word-wrap: break-word;
+}
+
+.summaryDetails p {
+    margin-bottom: 15px;
+    font-size: 1.05em;
     color: #333;
 }
 
+.summaryDetails p strong {
+    color: #555;
+    margin-right: 8px;
+}
+
+/* Form Groups for input fields */
 .formGroup {
     margin-bottom: 20px;
 }
@@ -111,190 +103,154 @@
 .formGroup label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: #007A64;
+    color: #34495e;
+    font-weight: 600;
+    font-size: 0.95em;
 }
 
-.formGroup input[type="text"],
-.formGroup input[type="number"],
-.formGroup input[type="date"],
-.formGroup select,
-.formGroup textarea {
-    width: calc(100% - 22px);
-    padding: 10px;
+.input, .textarea, .selectInput {
+    width: 100%;
+    padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 1em;
+    color: #333;
     box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.formGroup input[type="text"]:focus,
-.formGroup input[type="number"]:focus,
-.formGroup input[type="date"]:focus,
-.formGroup select:focus,
-.formGroup textarea:focus {
+.input:focus, .textarea:focus, .selectInput:focus {
+    border-color: #3498db;
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
-.formGroup input[type="text"]:disabled,
-.formGroup input[type="number"]:disabled,
-.formGroup input[type="date"]:disabled,
-.formGroup select:disabled,
-.formGroup textarea:disabled {
-    background-color: #e9ecef;
+.input:disabled, .textarea:disabled, .selectInput:disabled {
+    background-color: #f5f5f5;
+    color: #777;
     cursor: not-allowed;
-    opacity: 0.8;
+    border-color: #e0e0e0;
 }
 
+.textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Status Badges */
 .statusBadge {
-    font-weight: bold;
-    color: white;
+    display: inline-block;
     padding: 6px 12px;
     border-radius: 20px;
-    display: inline-block;
-    font-size: 0.9em;
-    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.85em;
+    color: white;
+    text-align: center;
+    min-width: 110px;
+    margin-top: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.screening {
-    background-color: #17a2b8;
-}
+/* Colors for general process status */
+.waiting { background-color: #f1c40f; }
+.in_process { background-color: #3498db; }
+.screening_failed { background-color: #e74c3c; }
+.completed { background-color: #27ae60; }
+.failed { background-color: #c0392b; }
+.donor_cancel { background-color: #95a5a6; }
 
-.screening_failed {
-    background-color: #fd7e14;
-}
+/* Colors for StatusHealthCheck */
+.pass { background-color: #28a745; } /* Bootstrap success green */
+.fail { background-color: #dc3545; } /* Bootstrap danger red */
 
-.in_process {
-    background-color: #007bff;
-}
 
-.completed {
-    background-color: #28a745;
-}
-
-.failed {
-    background-color: #dc3545;
-}
-
+/* Action Buttons */
 .actionButtons {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: 15px;
     margin-top: 30px;
-    border-top: 1px dashed #e0e0e0;
     padding-top: 20px;
-    justify-content: center;
+    border-top: 1px solid #ecf0f1;
 }
-
-/* .navigationButtons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px; 
-    padding-top: 10px;
-    justify-content: center; 
-    align-items: center;
-} */
 
 .button {
-    padding: 10px 20px;
-    min-width: 120px;
-    height: 40px;
-    font-size: 1em;
-    font-weight: 500;
-    border-radius: 5px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-}
-
-
-.saveButton {
-    background-color: #BDA25C;
-    color: white;
-    border: none;
-}
-
-.saveButton:hover {
-    background-color: #9b813f;
-    /* transform: translateY(-1px); */
-}
-
-
-.editButton {
-    background-color: #BDA25C;
-    color: #fff;
-    border: none;
-}
-
-.editButton:hover {
-    background-color: #9b813f;
+    font-size: 1.05em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .backButton {
-    background-color: #fff;
-    color: #031B4E;
-    border: #031B4E 1px solid;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-
-.backButton:hover {
-    background-color: #031B4E;
+    background-color: #6c757d; /* Grey */
     color: white;
 }
-
-/* Styles for checkbox alignment */
-.formGroup.checkboxGroup {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.backButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
-.formGroup.checkboxGroup label {
-    margin-bottom: 0;
-    order: 1;
-    font-weight: bold;
+.saveButton {
+    background-color: #007bff; /* Blue */
+    color: white;
 }
-
-.formGroup.checkboxGroup input[type="checkbox"] {
-    width: auto;
-    margin: 0;
-    order: 2;
+.saveButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-    .donationProcessDetailContainer {
-        margin: 10px;
-        padding: 15px;
-    }
-
+@media (max-width: 992px) {
     .formLayout {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: 20px;
     }
 
-    .readOnlySection h3,
-    .editableSection h3 {
-        font-size: 1.2em;
+    .readOnlySection, .editableSection {
+        padding: 20px;
+        min-width: unset; /* Allow full width */
     }
 
-    .infoGroup strong {
-        flex: 0 0 120px;
-    }
-
-    .actionButtons,
-    .navigationButtons {
+    .actionButtons {
         flex-direction: column;
         align-items: stretch;
+        gap: 10px;
     }
 
     .button {
         width: 100%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .donationProcessDetailContainer {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .pageTitle {
+        font-size: 2em;
+        margin-bottom: 25px;
+    }
+
+    .readOnlySection h3, .editableSection h3 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+
+    .infoGroup strong, .formGroup label {
+        font-size: 0.88em;
+    }
+
+    .infoGroup span, .input, .textarea, .selectInput {
+        font-size: 0.95em;
     }
 }

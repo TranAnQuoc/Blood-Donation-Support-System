@@ -47,12 +47,12 @@ public class DonationProcessAPI {
 
     @PreAuthorize("hasRole('STAFF')")
     @PutMapping("/edit/{id}")
-    public ResponseEntity<DonationProcess> update(@PathVariable Long id,
+    public ResponseEntity<DonationProcessViewDTO> update(@PathVariable Long id,
                                                   @RequestBody DonationProcessDTO dto,
                                                   @AuthenticationPrincipal Account currentUser) {
         DonationProcess updated = service.update(id, dto, currentUser);
-        DonationProcess response = mapper.map(updated, DonationProcess.class);
-        return ResponseEntity.ok(response);
+        DonationProcessViewDTO viewDto = mapper.map(updated, DonationProcessViewDTO.class);
+        return ResponseEntity.ok(viewDto);
     }
 
     @PreAuthorize("hasRole('STAFF')")
@@ -70,7 +70,7 @@ public class DonationProcessAPI {
     }
 
     @PutMapping("/start/{id}")
-    @PreAuthorize("hasRole('MEMBER')")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> startDonationProcess(@PathVariable Long id) {
         DonationProcess started = service.startDonationProcess(id);
         return ResponseEntity.ok(started);
@@ -79,9 +79,9 @@ public class DonationProcessAPI {
 
     @GetMapping("/my-process")
     @PreAuthorize("hasRole('MEMBER')")
-    public ResponseEntity<DonationProcessDTO> getMyProcess(@AuthenticationPrincipal Account user) {
+    public ResponseEntity<DonationProcessViewDTO> getMyProcess(@AuthenticationPrincipal Account user) {
         Long userId = user.getId();
-        DonationProcessDTO dto = service.getMyLatestProcess(userId);
+        DonationProcessViewDTO dto = service.getMyLatestProcess(userId);
         return ResponseEntity.ok(dto);
     }
 }
