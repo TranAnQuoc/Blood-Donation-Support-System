@@ -1,132 +1,215 @@
-.loadingMessage,
-.errorMessage,
-.noProcessesMessage {
+/* General container for the list page */
+.donationProcessListContainer {
+    padding: 20px;
+    background-color: #f8f9fa; /* Light background */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.donationProcessListContainer h2 {
+    text-align: center;
+    color: #2c3e50; /* Darker text for headings */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+/* Loading and error messages */
+.loadingMessage, .errorMessage, .noDataMessage {
     text-align: center;
     padding: 20px;
     font-size: 1.1em;
     color: #555;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 
 .errorMessage {
-    color: #dc3545;
-    font-weight: bold;
+    color: #d32f2f;
+    background-color: #ffe0e0;
+    border: 1px solid #d32f2f;
 }
 
-.donationProcessListContainer {
-    padding: 20px;
-    margin: 20px auto;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    max-width: 1550px;
-    text-align: center;
+.noDataMessage {
+    color: #7f8c8d;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
 }
 
-.donationProcessListContainer h2 {
-    font-size: 2.2em;
-    font-weight: 700;
-    color: #007A64;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #BDA25C;
-    position: relative;
+/* List styling */
+.processList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.processCardsContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    justify-content: center;
-}
-
-.processCard {
-    background-color: #fff;
-    border: 1px solid #ddd;
+.processItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin-bottom: 15px;
+    padding: 18px 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.processItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* More pronounced hover effect */
+}
+
+.processInfo {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* More robust responsive grid */
+    gap: 12px 25px;
+    font-size: 0.95em;
+    color: #34495e;
+}
+
+.processInfo p {
+    margin: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
-.processCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.processCard h3 {
-    color: #007A64;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.3em;
-}
-
-.processCard p {
-    margin-bottom: 8px;
-    color: #000000;
-    text-align: left;
-}
-
-.processCard strong {
-    color: #007A64;
+.processInfo p strong {
+    color: #7f8c8d; /* Lighter color for labels */
+    margin-bottom: 5px;
+    font-size: 0.88em;
+    text-transform: uppercase;
 }
 
 .statusBadge {
     display: inline-block;
-    padding: 4px 8px;
-    border-radius: 20px;
+    padding: 6px 12px;
+    border-radius: 20px; /* More rounded */
     font-weight: bold;
+    font-size: 0.85em;
     color: white;
-    font-size: 0.9em;
-    text-transform: uppercase;
-    white-space: nowrap;
+    text-align: center;
+    min-width: 110px;
+    margin-top: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Small shadow for badge */
 }
 
-.statusBadge.waiting {
-    background-color: #ffc107;
+/* Status specific colors */
+.waiting { background-color: #f1c40f; } /* Yellow */
+.in_process { background-color: #3498db; } /* Blue */
+.screening_failed { background-color: #e74c3c; } /* Red */
+.completed { background-color: #27ae60; } /* Emerald Green */
+.failed { background-color: #c0392b; } /* Darker Red */
+.donor_cancel { background-color: #95a5a6; } /* Silver */
+
+
+.processActions {
+    margin-left: 30px;
+    display: flex;
+    align-items: center;
 }
 
-.statusBadge.in_process {
-    background-color: #007bff;
-}
-
-.statusBadge.completed {
-    background-color: #28a745;
-}
-
-.statusBadge.failed {
-    background-color: #dc3545;
-}
-
-.statusBadge.screening {
-    background-color: #17a2b8;
-}
-
-.statusBadge.screening_failed {
-    background-color: #fd7e14;
-}
-
-.statusBadge.donor_cancel {
-    background-color: #6c757d;
-}
-
-
-.viewDetailButton {
-    background-color: #ffffff;
-    color: #BDA25C;
-    border: 1px solid #BDA25C;
-    padding: 10px 15px;
-    border-radius: 5px;
+.actionButton {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 15px;
-    width: 100%;
-    transition: background-color 0.2s ease;
+    font-size: 1.05em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+    min-width: 180px; /* Wider buttons */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.viewDetailButton:hover {
-    background-color: #9b813f;
-    color: #ffffff;
+.actionButton.waiting {
+    background-color: #2ecc71; /* Green for 'Xác nhận đã tới' */
+    color: white;
+}
+.actionButton.waiting:hover {
+    background-color: #27ae60;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.actionButton.in_process {
+    background-color: #8e44ad; /* Purple for 'Khảo sát sức khỏe' / 'Tiến hành truyền máu' */
+    color: white;
+}
+.actionButton.in_process:hover {
+    background-color: #6c3483;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Default button for 'Xem chi tiết' and other final states */
+.actionButton.screening_failed,
+.actionButton.completed,
+.actionButton.failed,
+.actionButton.donor_cancel {
+    background-color: #34495e; /* Darker grey-blue for 'Xem chi tiết' */
+    color: white;
+}
+.actionButton.screening_failed:hover,
+.actionButton.completed:hover,
+.actionButton.failed:hover,
+.actionButton.donor_cancel:hover {
+    background-color: #2c3e50;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .processItem {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .processInfo {
+        grid-template-columns: 1fr;
+        width: 100%;
+        margin-bottom: 20px;
+        gap: 8px;
+    }
+
+    .processActions {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+    }
+
+    .actionButton {
+        width: 100%;
+        min-width: unset;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .donationProcessListContainer {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .donationProcessListContainer h2 {
+        font-size: 1.8em;
+    }
+
+    .processItem {
+        padding: 12px;
+    }
+
+    .processInfo p {
+        font-size: 0.9em;
+    }
+
+    .actionButton {
+        font-size: 0.95em;
+    }
 }

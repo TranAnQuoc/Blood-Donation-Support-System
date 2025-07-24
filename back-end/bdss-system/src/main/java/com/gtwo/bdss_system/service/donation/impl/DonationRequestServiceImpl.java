@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.service.donation.impl;
 
+import com.gtwo.bdss_system.dto.commons.EmailDetailForDonationApproved;
 import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
 import com.gtwo.bdss_system.dto.donation.DonationRequestDetailDTO;
 import com.gtwo.bdss_system.dto.donation.DonationSurveyDTO;
@@ -12,6 +13,7 @@ import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
 import com.gtwo.bdss_system.repository.donation.DonationEventRepository;
+import com.gtwo.bdss_system.service.commons.EmailService;
 import com.gtwo.bdss_system.service.donation.DonationProcessService;
 import com.gtwo.bdss_system.service.donation.DonationRequestService;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,6 +41,9 @@ public class DonationRequestServiceImpl implements DonationRequestService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public DonationRequest createRequest(Long scheduleId, Account currentUser, DonationSurveyDTO surveyDTO) {
@@ -109,6 +114,16 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         if (savedRequest.getStatusRequest() == StatusRequest.APPROVED) {
             donationProcessService.autoCreateByRequest(savedRequest);
             int approved = repository.countEventIdInRequest(event.getId());
+            EmailDetailForDonationApproved mail = new EmailDetailForDonationApproved();
+            mail.setToEmail(currentUser.getEmail());
+            mail.setSubject("Thông báo phê duyệt đơn hiến máu");
+            mail.setDonorName(currentUser.getFullName());
+            mail.setEventName(event.getName());
+            mail.setDonationDate(event.getDate());
+            mail.setStartTime(event.getStartTime());
+            mail.setEndTime(event.getEndTime());
+            mail.setLocation(event.getAddress());
+            emailService.sendDonationApprovedEmail(mail);
             if (approved >= event.getMaxSlot()) {
                 event.setStatus(Status.INACTIVE);
                 scheduleRepository.save(event);
@@ -116,30 +131,6 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         }
         return savedRequest;
     }
-
-//    @Override
-//    public DonationRequest approvedRequest(Long requestId, StatusRequest decision, String note, Account approver) {
-//        DonationRequest request = repository.findById(requestId)
-//                .orElseThrow(() -> new RuntimeException("Request not found"));
-//        if (request.getStatusRequest() == StatusRequest.APPROVED) {
-//            throw new IllegalStateException("Request already approved");
-//        }
-//        request.setStatusRequest(decision);
-//        request.setApprovedTime(LocalDateTime.now());
-//        request.setApprover(approver);
-//        request.setNote(note);
-//        DonationRequest savedRequest = repository.save(request);
-//        if (decision == StatusRequest.APPROVED) {
-//            donationProcessService.autoCreateByRequest(savedRequest);
-//        }
-//        DonationEvent event = request.getEvent();
-//        int approved = repository.countEventIdInRequest(event.getId());
-//        if (approved >= event.getMaxSlot()) {
-//            event.setStatus(Status.INACTIVE);
-//            scheduleRepository.save(event);
-//        }
-//        return savedRequest;
-//    }
 
     private String evaluateSurvey(DonationSurveyDTO dto) {
         if (Boolean.FALSE.equals(dto.getIsHealthyToday())) return "Bạn không cảm thấy khỏe hôm nay.";

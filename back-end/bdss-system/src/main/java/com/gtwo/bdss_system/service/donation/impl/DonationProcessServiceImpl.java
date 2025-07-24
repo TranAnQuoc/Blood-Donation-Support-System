@@ -8,10 +8,7 @@ import com.gtwo.bdss_system.entity.donation.DonationHistory;
 import com.gtwo.bdss_system.entity.donation.DonationProcess;
 import com.gtwo.bdss_system.entity.donation.DonationRequest;
 import com.gtwo.bdss_system.entity.donation.DonationEvent;
-import com.gtwo.bdss_system.enums.Gender;
-import com.gtwo.bdss_system.enums.Status;
-import com.gtwo.bdss_system.enums.StatusHealthCheck;
-import com.gtwo.bdss_system.enums.StatusProcess;
+import com.gtwo.bdss_system.enums.*;
 import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
 import com.gtwo.bdss_system.repository.commons.BloodTypeRepository;
 import com.gtwo.bdss_system.repository.donation.DonationHistoryRepository;
@@ -99,12 +96,13 @@ public class DonationProcessServiceImpl implements DonationProcessService {
             if (dto.getFailureReason() == null || dto.getFailureReason().trim().isEmpty()) {
                 throw new IllegalArgumentException("Vui lòng nhập lý do thất bại khi kết quả khám sức khỏe là FAIL.");
             }
-            if (dto.getNotes() == null || dto.getNotes().trim().isEmpty()) {
+            if (dto.getFailureReason().trim().isEmpty()) {
                 throw new IllegalArgumentException("Vui lòng nhập ghi chú của nhân viên khi khám sức khỏe không đạt.");
             }
             existing.setFailureReason(dto.getFailureReason());
             existing.setNotes(dto.getNotes());
-            existing.setProcess(StatusProcess.FAILED);
+            existing.setProcess(StatusProcess.WAITING);
+            existing.setType(DonationType.WHOLE_BLOOD);
         } else if (healthCheckStatus == StatusHealthCheck.PASS) {
             if (dto.getProcess() == StatusProcess.COMPLETED) {
                 if (dto.getBloodPressure() == null || !dto.getBloodPressure().matches("\\d{2,3}/\\d{2,3}")) {
@@ -268,10 +266,10 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     }
 
     @Override
-    public DonationProcessDTO getMyLatestProcess(Long userId) {
+    public DonationProcessViewDTO getMyLatestProcess(Long userId) {
         DonationProcess process = processRepository.findLatestByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Bạn chưa có tiến trình hiến máu nào."));
-        return modelMapper.map(process, DonationProcessDTO.class);
+        return modelMapper.map(process, DonationProcessViewDTO.class);
     }
 
     @Override
@@ -283,7 +281,6 @@ public class DonationProcessServiceImpl implements DonationProcessService {
         }
         process.setProcess(StatusProcess.IN_PROCESS);
         process.setStartTime(LocalDateTime.now());
-
         return processRepository.save(process);
     }
 

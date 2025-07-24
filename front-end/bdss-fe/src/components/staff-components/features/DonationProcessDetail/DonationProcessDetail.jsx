@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
 import styles from './DonationProcessDetail.module.css';
@@ -20,36 +20,18 @@ const formatDateTime = (isoString) => {
             };
             return date.toLocaleString('vi-VN', options);
         } else {
-            let dateToParse = isoString;
-            if (isoString.match(/^\d{2}:\d{2}:\d{2}(.\d{3})?$/)) { 
-                dateToParse = `2000-01-01T${isoString}`;
-            }
-            const date = new Date(dateToParse);
-
-            if (isNaN(date.getTime())) { 
-                return isoString;
-            }
-
-            if (isoString.match(/^\d{2}:\d{2}:\d{2}(.\d{3})?$/)) {
-                const hours = date.getHours();
-                const minutes = date.getMinutes();
-                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            }
-
             const [year, month, day] = isoString.split('-');
             return `${day}/${month}/${year}`;
         }
     } catch (e) {
-        console.error("Chuỗi ngày/giờ không hợp lệ:", isoString, e);
-        return 'Ngày/giờ không hợp lệ';
+        console.error("Invalid date/time string:", isoString, e);
+        return 'Invalid Date/Time';
     }
 };
 
-const getStatusName = (status) => {
+const getStatusProcessName = (status) => {
     switch (status) {
         case 'WAITING': return 'Đang chờ';
-        case 'SCREENING': return 'Đang sàng lọc';
-        case 'SCREENING_FAILED': return 'Sàng lọc thất bại';
         case 'IN_PROCESS': return 'Đang tiến hành';
         case 'COMPLETED': return 'Hoàn thành';
         case 'FAILED': return 'Thất bại';
@@ -61,28 +43,21 @@ const getStatusName = (status) => {
 const DonationProcessDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [process, setProcess] = useState(null);
+    const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+    const initialStepParam = queryParams.get('step');
+
+    const [processView, setProcessView] = useState(null);
     const [editData, setEditData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isFormEditable, setIsFormEditable] = useState(false);
-    const [isCompletedOrCancelled, setIsCompletedOrCancelled] = useState(false);
+    const [currentStep, setCurrentStep] = useState(initialStepParam || 'detail');
 
     const genderMap = {
         'MALE': 'Nam',
         'FEMALE': 'Nữ',
         'OTHER': 'Khác'
-    };
-
-    const processStatusMap = {
-        // 'WAITING': 'Đang chờ',
-        'SCREENING': 'Đang sàng lọc',
-        'SCREENING_FAILED': 'Sàng lọc thất bại',
-        'IN_PROCESS': 'Đang tiến hành',
-        'COMPLETED': 'Hoàn thành',
-        'FAILED': 'Thất bại',
-        // 'DONOR_CANCEL': 'Người hiến hủy bỏ'
     };
 
     const donationTypeMap = {
@@ -91,213 +66,277 @@ const DonationProcessDetail = () => {
         'PLASMA': 'Huyết tương',
     };
 
-    const staticBloodTypes = [// eslint-disable-line no-unused-vars
-        { id: 1, type: 'UNKNOWN', rhFactor: 'UNKNOWN' },
-        { id: 2, type: 'A', rhFactor: '+' },
-        { id: 3, type: 'A', rhFactor: '-' },
-        { id: 4, type: 'B', rhFactor: '+' },
-        { id: 5, type: 'B', rhFactor: '-' },
-        { id: 6, type: 'AB', rhFactor: '+' },
-        { id: 7, type: 'AB', rhFactor: '-' },
-        { id: 8, type: 'O', rhFactor: '+' },
-        { id: 9, type: 'O', rhFactor: '-' },
-    ];
+    const statusHealthCheckMap = {
+        'PASS': 'Đạt',
+        'FAIL': 'Không đạt',
+        'UNKNOWN': 'Chưa xác định'
+    };
 
     const fetchProcessDetail = useCallback(async () => {
         setLoading(true);
         setError(null);
-        
         if (!id) {
-            setError('ID quy trình không hợp lệ. Vui lòng thử lại.');
+            setError('Process ID is missing.');
             setLoading(false);
             return;
         }
-
         try {
             const response = await axiosInstance.get(`/donation-processes/search/${id}`);
-            const fetchedProcess = response.data;
-            setProcess(fetchedProcess);
-            console.log('Fetched Process Detail:', fetchedProcess);
-
-            const formattedProcessDate = fetchedProcess.processDate
-                ? new Date(fetchedProcess.processDate).toISOString().split('T')[0]
-                : '';
+            const fetchedProcessView = response.data;
+            setProcessView(fetchedProcessView);
 
             setEditData({
-                process: fetchedProcess.process, 
-                processDate: formattedProcessDate,
-                quantity: fetchedProcess.quantity !== null ? fetchedProcess.quantity : '', 
-                type: fetchedProcess.type || '',
-
-                hemoglobin: fetchedProcess.hemoglobin !== null ? fetchedProcess.hemoglobin : '',
-                bloodPressure: fetchedProcess.bloodPressure || '',
-                heartRate: fetchedProcess.heartRate !== null ? fetchedProcess.heartRate : '',
-                temperature: fetchedProcess.temperature !== null ? fetchedProcess.temperature : '',
-                weight: fetchedProcess.weight !== null ? fetchedProcess.weight : '',
-                height: fetchedProcess.height !== null ? fetchedProcess.height : '',
-                healthCheck: fetchedProcess.healthCheck !== null ? fetchedProcess.healthCheck : false, 
-                hasChronicDisease: fetchedProcess.hasChronicDisease !== null ? fetchedProcess.hasChronicDisease : false, 
-                hasRecentTattoo: fetchedProcess.hasRecentTattoo !== null ? fetchedProcess.hasRecentTattoo : false, 
-                hasUsedDrugs: fetchedProcess.hasUsedDrugs !== null ? fetchedProcess.hasUsedDrugs : false, 
-                screeningNote: fetchedProcess.screeningNote || '',
-                notes: fetchedProcess.notes || '', 
+                id: fetchedProcessView.id,
+                heartRate: fetchedProcessView.heartRate !== null ? fetchedProcessView.heartRate : '',
+                temperature: fetchedProcessView.temperature !== null ? fetchedProcessView.temperature : '',
+                weight: fetchedProcessView.weight !== null ? fetchedProcessView.weight : '',
+                height: fetchedProcessView.height !== null ? fetchedProcessView.height : '',
+                hemoglobin: fetchedProcessView.hemoglobin !== null ? fetchedProcessView.hemoglobin : '',
+                bloodPressure: fetchedProcessView.bloodPressure || '',
+                statusHealthCheck: fetchedProcessView.statusHealthCheck || '',
+                failureReason: fetchedProcessView.failureReason || '',
+                quantity: fetchedProcessView.quantity !== null ? fetchedProcessView.quantity : '',
+                type: fetchedProcessView.typeDonation || '',
+                notes: fetchedProcessView.notes || '',
+                process: fetchedProcessView.process,
+                bloodTypeId: fetchedProcessView.donorBloodType?.id || null,
+                date: fetchedProcessView.startTime ? new Date(fetchedProcessView.startTime).toISOString().split('T')[0] : null
             });
 
-            const currentStatus = fetchedProcess.process; 
-            if (currentStatus === 'WAITING' || currentStatus === 'COMPLETED' || currentStatus === 'DONOR_CANCEL') {
-                setIsFormEditable(false); 
-                if (currentStatus === 'COMPLETED' || currentStatus === 'DONOR_CANCEL') {
-                    setIsCompletedOrCancelled(true); 
+            const finalStates = ['COMPLETED', 'FAILED', 'DONOR_CANCEL'];
+            if (finalStates.includes(fetchedProcessView.process)) {
+                setCurrentStep('detail');
+            } else if (initialStepParam) {
+                setCurrentStep(initialStepParam);
+            } else if (fetchedProcessView.process === 'IN_PROCESS') {
+                if (fetchedProcessView.statusHealthCheck === 'PASS') {
+                    setCurrentStep('donation');
+                } else if (fetchedProcessView.statusHealthCheck === null || fetchedProcessView.statusHealthCheck === 'UNKNOWN') {
+                    setCurrentStep('screening');
                 } else {
-                    setIsCompletedOrCancelled(false);
+                    setCurrentStep('detail');
                 }
             } else {
-                setIsFormEditable(true); 
-                setIsCompletedOrCancelled(false);
+                setCurrentStep('detail');
             }
 
         } catch (err) {
-            console.error('Lỗi khi tải chi tiết quy trình:', err);
-            const errorMessage = err.response?.data?.message || 'Không thể tải chi tiết quy trình. Vui lòng thử lại.';
+            console.error('Error fetching process detail:', err);
+            const errorMessage = err.response?.data?.message || 'Could not load process details. Please try again.';
             setError(errorMessage);
             toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
-    }, [id]);
+    }, [id, initialStepParam]);
 
     useEffect(() => {
         fetchProcessDetail();
     }, [fetchProcessDetail]);
 
+    useEffect(() => {
+        const newStep = queryParams.get('step');
+        if (newStep && newStep !== currentStep) {
+            setCurrentStep(newStep);
+        }
+    }, [currentStep, queryParams]);
+
     const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value, type } = e.target;
+        let parsedValue = value;
+        if (type === 'number') {
+            parsedValue = value === '' ? null : parseFloat(value);
+        } else if (name === 'statusHealthCheck' && value === '') {
+            parsedValue = null;
+        } else if (name === 'type' && value === '') {
+            parsedValue = null;
+        }
         setEditData(prevData => ({
             ...prevData,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: parsedValue
         }));
     };
-    
-    const handleSave = async () => {
+
+    const getPerformerId = () => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const userObject = JSON.parse(storedUser);
+                return userObject.id;
+            } catch (parseError) {
+                console.error("Error parsing user from localStorage:", parseError);
+                toast.error('Could not identify performer. Please log in again.');
+                return null;
+            }
+        }
+        toast.error('User not logged in. Performer ID unavailable.');
+        return null;
+    };
+
+    const handleSaveScreening = async () => {
         setLoading(true);
         setError(null);
+        const performerId = getPerformerId();
+        if (!performerId) {
+            setLoading(false);
+            return;
+        }
+
         try {
-            const storedUser = localStorage.getItem('user');
-            let performerId = null;
-            if (storedUser) {
-                try {
-                    const userObject = JSON.parse(storedUser);
-                    performerId = userObject.id;
-                } catch (parseError) {
-                    console.error("Lỗi khi phân tích JSON từ localStorage:", parseError);
-                }
-            }
-
-            if (!performerId) {
-                toast.error('Không thể xác định người thực hiện (performerId). Vui lòng đăng nhập lại.');
-                setLoading(false); 
-                return;
-            }
-
-            const eventDateStr = process?.date;
-            let eventDate = null;
-            if (eventDateStr) {
-                eventDate = new Date(eventDateStr);
-                eventDate.setHours(0, 0, 0, 0); 
-            }
-            
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); 
-
-            if (eventDate && eventDate > today) {
-                toast.warn(`Quy trình hiến máu cho sự kiện này (${formatDateTime(eventDateStr)}) chưa tới ngày. Không thể chỉnh sửa.`);
-                setLoading(false); 
-                return;
-            }
-
             const payload = {
+                id: editData.id,
+                heartRate: editData.heartRate,
+                temperature: editData.temperature,
+                weight: editData.weight,
+                height: editData.height,
+                hemoglobin: editData.hemoglobin,
+                bloodPressure: editData.bloodPressure,
+                statusHealthCheck: editData.statusHealthCheck,
+                failureReason: editData.statusHealthCheck === 'FAIL' ? editData.failureReason : null,
+                notes: editData.notes,
+                quantity: editData.quantity || 0,
+                type: editData.type || null,
                 process: editData.process,
-                performerId: performerId,
+                bloodTypeId: editData.bloodTypeId,
+                date: editData.date
             };
 
-            const addFieldToPayload = (fieldName, value, type) => {
-                if (value === '' || value === null || value === undefined) {
-                    payload[fieldName] = null;
-                } else {
-                    if (type === 'int') {
-                        payload[fieldName] = parseInt(value, 10);
-                    } else if (type === 'float') {
-                        payload[fieldName] = parseFloat(value);
-                    } else {
-                        payload[fieldName] = value;
-                    }
-                }
-            };
-
-            addFieldToPayload('processDate', editData.processDate);
-            addFieldToPayload('quantity', editData.quantity, 'int');
-            addFieldToPayload('type', editData.type); 
-            
-            addFieldToPayload('hemoglobin', editData.hemoglobin, 'float');
-            addFieldToPayload('bloodPressure', editData.bloodPressure);
-            addFieldToPayload('heartRate', editData.heartRate, 'int');
-            addFieldToPayload('temperature', editData.temperature, 'float');
-            addFieldToPayload('weight', editData.weight, 'float');
-            addFieldToPayload('height', editData.height, 'float');
-
-            payload.healthCheck = editData.healthCheck;
-            payload.hasChronicDisease = editData.hasChronicDisease;
-            payload.hasRecentTattoo = editData.hasRecentTattoo;
-            payload.hasUsedDrugs = editData.hasUsedDrugs;
-
-            addFieldToPayload('screeningNote', editData.screeningNote);
-            addFieldToPayload('notes', editData.notes);
-
-            const selectedStatus = editData.process;
-
-            if (selectedStatus === 'COMPLETED') {
-                const requiredFieldsForComplete = [
-                    'quantity', 'type', 'processDate', 
-                    'hemoglobin', 'bloodPressure', 'heartRate', 'temperature', 'weight', 'height', 'healthCheck',
-                    'hasChronicDisease', 'hasRecentTattoo', 'hasUsedDrugs' 
-                ];
-                
-                const missingFields = requiredFieldsForComplete.filter(field => {
-                    const value = payload[field];
-                    if (typeof value === 'boolean') {
-                        return value === undefined || value === null; 
-                    }
-                    return value === null || value === undefined || String(value).trim() === '';
-                });
-
-                if (missingFields.length > 0) {
-                    throw new Error(`Không thể hoàn thành quy trình. Vui lòng điền đầy đủ các trường sau: ${missingFields.join(', ')}.`);
+            if (!payload.statusHealthCheck || payload.statusHealthCheck === '') {
+                throw new Error('Vui lòng chọn kết quả sàng lọc (Đạt/Không đạt).');
+            }
+            if (payload.statusHealthCheck === 'FAIL' && (!payload.failureReason || payload.failureReason.trim() === '')) {
+                throw new Error('Vui lòng nhập lý do thất bại khi kết quả khám sức khỏe là FAIL.');
+            }
+            if (payload.statusHealthCheck === 'PASS') {
+                const requiredFields = ['heartRate', 'temperature', 'weight', 'height', 'hemoglobin', 'bloodPressure'];
+                const missing = requiredFields.filter(f => payload[f] === null || payload[f] === '');
+                if (missing.length > 0) {
+                    throw new Error(`Vui lòng điền đầy đủ các trường sàng lọc bắt buộc cho trạng thái "Đạt": ${missing.join(', ')}.`);
                 }
             }
-            
-            if ((selectedStatus === 'FAILED' || selectedStatus === 'SCREENING_FAILED') && !payload.notes) {
-                throw new Error('Vui lòng thêm ghi chú lý do thất bại.');
-            }
-            
-            const response = await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
-            console.log("Quy trình đã được cập nhật:", response.data);
-            toast.success(`Cập nhật quy trình thành công${selectedStatus === 'COMPLETED' ? ' và hoàn thành!' : '.'}`);
 
-            if (['COMPLETED'].includes(selectedStatus)) {
-                navigate('/staff-dashboard/donation-histories');
-            } else {
-                await fetchProcessDetail();
-            }
+            await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
+            toast.success('Kết quả sàng lọc sức khỏe đã được cập nhật!');
+
+            await fetchProcessDetail();
 
         } catch (err) {
-            console.error('Lỗi khi cập nhật quy trình:', err);
-            const errorMessage = err.message || err.response?.data?.message || 'Không thể cập nhật quy trình. Vui lòng thử lại.';
+            console.error('Error saving screening data:', err);
+            const errorMessage = err.message || err.response?.data?.message || 'Không thể cập nhật dữ liệu sàng lọc. Vui lòng thử lại.';
             setError(errorMessage);
             toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
+
+    const handleSaveDonation = async () => {
+        setLoading(true);
+        setError(null);
+        const performerId = getPerformerId();
+        if (!performerId) {
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const payload = {
+                id: editData.id,
+                quantity: editData.process === 'COMPLETED' ? editData.quantity : 0,
+                type: editData.process === 'COMPLETED' ? (editData.type || null) : null,
+                notes: editData.notes,
+                process: editData.process,
+                heartRate: editData.heartRate,
+                temperature: editData.temperature,
+                weight: editData.weight,
+                height: editData.height,
+                hemoglobin: editData.hemoglobin,
+                bloodPressure: editData.bloodPressure,
+                statusHealthCheck: editData.statusHealthCheck,
+                failureReason: editData.failureReason,
+                bloodTypeId: editData.bloodTypeId,
+                date: editData.date
+            };
+
+            if (!payload.process) {
+                throw new Error('Vui lòng chọn trạng thái cuối cùng của Quy trình (Hoàn thành/Thất bại).');
+            }
+            if (payload.process === 'COMPLETED') {
+                const requiredFields = ['quantity', 'type'];
+                const missing = requiredFields.filter(f => payload[f] === null || payload[f] === 0 || (f === 'type' && payload[f] === ''));
+                if (missing.length > 0) {
+                    throw new Error(`Vui lòng điền đầy đủ các trường hiến máu bắt buộc cho trạng thái "Hoàn thành": ${missing.join(', ')}.`);
+                }
+            }
+            if (payload.process === 'FAILED' && (!payload.notes || payload.notes.trim() === '')) {
+                throw new Error('Vui lòng nhập ghi chú cho lý do thất bại hiến máu.');
+            }
+
+            await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
+            toast.success(`Quy trình hiến máu đã được ${payload.process === 'COMPLETED' ? 'hoàn thành' : 'cập nhật thất bại'}!`);
+
+            navigate('/staff-dashboard/donation-processes');
+
+        } catch (err) {
+            console.error('Error saving donation data:', err);
+            const errorMessage = err.message || err.response?.data?.message || 'Không thể cập nhật dữ liệu hiến máu. Vui lòng thử lại.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRescreening = async () => {
+        setLoading(true);
+        setError(null);
+        const performerId = getPerformerId();
+        if (!performerId) {
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const payload = {
+                id: editData.id,
+                process: 'IN_PROCESS',
+                statusHealthCheck: null,
+                failureReason: null,
+                notes: editData.notes,
+                heartRate: null,
+                temperature: null,
+                weight: null,
+                height: null,
+                hemoglobin: null,
+                bloodPressure: null,
+                quantity: 0,
+                type: null,
+                bloodTypeId: editData.bloodTypeId,
+                date: editData.date
+            };
+
+            await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
+            toast.success('Quy trình đã được đặt lại để tái kiểm tra sức khỏe.');
+
+            navigate(`/staff-dashboard/donation-processes/${id}?step=screening`);
+            await fetchProcessDetail();
+
+        } catch (err) {
+            console.error('Error initiating re-screening:', err);
+            const errorMessage = err.response?.data?.message || 'Không thể đặt lại quy trình để tái kiểm tra. Vui lòng thử lại.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const isFinalState = ['COMPLETED', 'FAILED', 'DONOR_CANCEL'].includes(processView?.process);
+    const isDetailView = currentStep === 'detail' || isFinalState;
+    const canEditScreening = currentStep === 'screening' && processView?.process === 'IN_PROCESS' && !isFinalState;
+    const canEditDonation = currentStep === 'donation' && processView?.process === 'IN_PROCESS' && processView?.statusHealthCheck === 'PASS' && !isFinalState;
+
+    const canRescreen = processView?.process === 'FAILED' && processView?.statusHealthCheck === 'FAIL';
 
     if (loading) {
         return <div className={styles.loadingMessage}>Đang tải chi tiết quy trình...</div>;
@@ -307,366 +346,243 @@ const DonationProcessDetail = () => {
         return <div className={styles.errorMessage}>{error}</div>;
     }
 
-    if (!process) {
+    if (!processView) {
         return <div className={styles.noDataMessage}>Không tìm thấy chi tiết quy trình.</div>;
-    }
-
-    if (isCompletedOrCancelled) {
-        return (
-            <div className={styles.donationProcessDetailContainer}>
-                <h2 className={styles.pageTitle}>Chi tiết Quy trình Hiến máu</h2>
-                <p className={styles.completedMessage}>
-                    Quy trình này đã **{getStatusName(process.process)}**. Không thể chỉnh sửa thêm.
-                </p>
-                <div className={styles.summaryDetails}>
-                    <p><strong>ID Quy trình:</strong> {process.id || 'N/A'}</p>
-                    <p><strong>Người hiến:</strong> {process.donorFullName || 'N/A'}</p>
-                    <p><strong>Nhóm máu ĐK:</strong> {process.donorBloodType ? `${process.donorBloodType.type}${process.donorBloodType.rhFactor}` : 'N/A'}</p>
-                    <p><strong>Sự kiện:</strong> {process.eventName || 'N/A'}</p>
-                    {/* <p><strong>Ngày sự kiện:</strong> {formatDateTime(process.date) || 'N/A'}</p> */}
-                    <p><strong>Thời gian sự kiện:</strong> {formatDateTime(process.startTime) || 'N/A'}</p>
-                    <p><strong>Ngày thực hiện:</strong> {process.processDate ? formatDateTime(process.processDate) : 'N/A'}</p>
-                    <p><strong>Thể tích máu:</strong> {process.quantity || 'N/A'} ml</p>
-                    <p><strong>Loại hiến:</strong> {donationTypeMap[process.type] || 'N/A'}</p> 
-                    <p><strong>Hemoglobin:</strong> {process.hemoglobin || 'N/A'}</p>
-                    <p><strong>Huyết áp:</strong> {process.bloodPressure || 'N/A'}</p>
-                    <p><strong>Nhịp tim:</strong> {process.heartRate || 'N/A'}</p>
-                    <p><strong>Nhiệt độ:</strong> {process.temperature || 'N/A'} °C</p>
-                    <p><strong>Cân nặng:</strong> {process.weight || 'N/A'} kg</p>
-                    <p><strong>Chiều cao:</strong> {process.height || 'N/A'} cm</p>
-                    <p><strong>Kiểm tra sức khỏe đạt:</strong> {process.healthCheck ? 'Có' : 'Không'}</p>
-                    <p><strong>Mắc bệnh mãn tính:</strong> {process.hasChronicDisease ? 'Có' : 'Không'}</p>
-                    <p><strong>Xăm gần đây:</strong> {process.hasRecentTattoo ? 'Có' : 'Không'}</p>
-                    <p><strong>Sử dụng thuốc:</strong> {process.hasUsedDrugs ? 'Có' : 'Không'}</p>
-                    <p><strong>Ghi chú sàng lọc:</strong> {process.screeningNote || 'Không có'}</p>
-                    <p><strong>Ghi chú chung:</strong> {process.notes || 'Không có'}</p>
-                    <p><strong>Người thực hiện:</strong> {process.performerFullName || 'N/A'}</p>
-                </div>
-                <button className={styles.backButton} onClick={() => navigate(-1)}>Quay lại danh sách</button>
-            </div>
-        );
     }
 
     return (
         <div className={styles.donationProcessDetailContainer}>
-            <h2 className={styles.pageTitle}>Chi tiết Quy trình Hiến máu</h2>
+            <h2 className={styles.pageTitle}>Chi Tiết Quy Trình Hiến Máu</h2>
 
             <div className={styles.formLayout}>
-                {/* Cột trái: Thông tin từ Donation Request*/}
                 <div className={styles.readOnlySection}>
                     <h3>Thông tin Yêu cầu Hiến máu</h3>
                     <div className={styles.infoGroup}>
-                        <strong>Mã yêu cầu:</strong>
-                        <span>{process.id || 'N/A'}</span> 
+                        <strong>Mã QT:</strong>
+                        <span>{processView.id || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
                         <strong>Người đăng ký:</strong>
-                        <span>{process.donorFullName || 'N/A'}</span>
+                        <span>{processView.donorFullName || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
                         <strong>SĐT Người hiến:</strong>
-                        <span>{process.donorPhone || 'N/A'}</span>
-                    </div>
-                     <div className={styles.infoGroup}>
-                        <strong>Ngày sinh Người hiến:</strong>
-                        <span>{process.donorBirthDate ? formatDateTime(process.donorBirthDate) : 'N/A'}</span>
+                        <span>{processView.donorPhone || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <strong>Nhóm máu người hiến:</strong>
+                        <strong>Ngày sinh Người hiến:</strong>
+                        <span>{processView.donorBirthDate ? formatDateTime(processView.donorBirthDate) : 'N/A'}</span>
+                    </div>
+                    <div className={styles.infoGroup}>
+                        <strong>Nhóm máu ĐK:</strong>
                         <span>
-                            {process.donorBloodType
-                                ? `${process.donorBloodType.type}${process.donorBloodType.rhFactor}`
-                                : 'Chưa cập nhật'}
+                            {processView.donorBloodType ? `${processView.donorBloodType.type}${processView.donorBloodType.rhFactor}` : 'Chưa cập nhật'}
                         </span>
                     </div>
                     <div className={styles.infoGroup}>
                         <strong>Giới tính:</strong>
-                        <span>{genderMap[process.donorGender] || 'N/A'}</span>
+                        <span>{genderMap[processView.donorGender] || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
                         <strong>Sự kiện hiến máu:</strong>
-                        <span>{process.eventName || 'N/A'}</span>
+                        <span>{processView.eventName || 'N/A'}</span>
                     </div>
-                    {/* <div className={styles.infoGroup}>
-                        <strong>Ngày sự kiện:</strong>
-                        <span>{process.date ? formatDateTime(process.date) : 'N/A'}</span>
-                    </div> */}
                     <div className={styles.infoGroup}>
                         <strong>Thời gian sự kiện:</strong>
-                        <span>{process.startTime ? formatDateTime(process.startTime) : 'N/A'} - {process.endTime ? formatDateTime(process.endTime) : 'N/A'}</span>
+                        <span>{processView.startTime ? formatDateTime(processView.startTime) : 'N/A'} - {processView.endTime ? formatDateTime(processView.endTime) : 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <strong>Người duyệt yêu cầu:</strong>
-                        <span>{process.performerFullName || 'N/A'}</span> 
+                        <strong>Người thực hiện:</strong>
+                        <span>{processView.performerFullName || 'N/A'}</span>
                     </div>
-                     <div className={styles.infoGroup}>
-                        <strong>Ghi chú Y/C:</strong>
-                        <span>{process.notes || 'Không có'}</span> 
+                    <div className={styles.infoGroup}>
+                        <strong>Trạng thái hiện tại:</strong>
+                        <span className={`${styles.statusBadge} ${styles[processView.process?.toLowerCase()]}`}>
+                            {getStatusProcessName(processView.process)}
+                        </span>
                     </div>
-                </div>
-
-                {/* Cột phải: Thông tin quy trình hiến máu */}
-                <div className={styles.editableSection}>
-                    <h3>Thông tin Quy trình Hiến máu (Cập nhật)</h3>
-                    <form>
-                        <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
-                            <label htmlFor="healthCheck">Kiểm tra sức khỏe đạt yêu cầu?</label>
-                            <input
-                                type="checkbox"
-                                id="healthCheck"
-                                name="healthCheck"
-                                checked={editData.healthCheck}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="heartRate">Nhịp tim (bpm):</label>
-                            <input
-                                type="number"
-                                id="heartRate"
-                                name="heartRate"
-                                value={editData.heartRate}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 75"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="temperature">Nhiệt độ (°C):</label>
-                            <input
-                                type="number"
-                                step="0.1"
-                                id="temperature"
-                                name="temperature"
-                                value={editData.temperature}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 37.0"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="weight">Cân nặng (kg):</label>
-                            <input
-                                type="number"
-                                step="0.1"
-                                id="weight"
-                                name="weight"
-                                value={editData.weight}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 60.5"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="height">Chiều cao (cm):</label>
-                            <input
-                                type="number"
-                                step="0.1"
-                                id="height"
-                                name="height"
-                                value={editData.height}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 170.0"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="hemoglobin">Hemoglobin (g/dL):</label>
-                            <input
-                                type="number"
-                                step="0.1"
-                                id="hemoglobin"
-                                name="hemoglobin"
-                                value={editData.hemoglobin}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="bloodPressure">Huyết áp (VD: 120/80):</label>
-                            <input
-                                type="text"
-                                id="bloodPressure"
-                                name="bloodPressure"
-                                value={editData.bloodPressure}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 120/80"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
-                            <label htmlFor="hasChronicDisease">Có tiền sử bệnh mãn tính?</label>
-                            <input
-                                type="checkbox"
-                                id="hasChronicDisease"
-                                name="hasChronicDisease"
-                                checked={editData.hasChronicDisease}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                            />
-                        </div>
-
-                        <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
-                            <label htmlFor="hasRecentTattoo">Có hình xăm gần đây (trong 12 tháng)?</label>
-                            <input
-                                type="checkbox"
-                                id="hasRecentTattoo"
-                                name="hasRecentTattoo"
-                                checked={editData.hasRecentTattoo}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                            />
-                        </div>
-
-                        <div className={`${styles.formGroup} ${styles.checkboxGroup}`}>
-                            <label htmlFor="hasUsedDrugs">Có sử dụng ma túy/chất kích thích?</label>
-                            <input
-                                type="checkbox"
-                                id="hasUsedDrugs"
-                                name="hasUsedDrugs"
-                                checked={editData.hasUsedDrugs}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="screeningNote">Ghi chú sàng lọc:</label>
-                            <textarea
-                                id="screeningNote"
-                                name="screeningNote"
-                                value={editData.screeningNote}
-                                onChange={handleInputChange}
-                                rows="2"
-                                placeholder="Ghi chú thêm về quá trình sàng lọc..."
-                                disabled={!isFormEditable}
-                                className={styles.textarea}
-                            ></textarea>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="quantity">Thể tích máu (ml):</label>
-                            <input
-                                type="number"
-                                id="quantity"
-                                name="quantity"
-                                value={editData.quantity}
-                                onChange={handleInputChange}
-                                placeholder="Ví dụ: 450"
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="notes">Ghi chú chung:</label>
-                            <textarea
-                                id="notes"
-                                name="notes"
-                                value={editData.notes}
-                                onChange={handleInputChange}
-                                rows="3"
-                                placeholder="Ghi chú chung về quy trình (VD: lý do thất bại)"
-                                disabled={!isFormEditable}
-                                className={styles.textarea}
-                            ></textarea>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="typeDonation">Loại hiến:</label> 
-                            <select
-                                id="type" 
-                                name="type" 
-                                value={editData.typeDonation} 
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                                className={styles.selectInput}
-                            >
-                                <option value="">Chọn loại hiến</option>
-                                {Object.keys(donationTypeMap).map(key => (
-                                    <option key={key} value={key}>{donationTypeMap[key]}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="processDate">Ngày thực hiện:</label>
-                            <input
-                                type="date"
-                                id="processDate"
-                                name="processDate"
-                                value={editData.processDate}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable}
-                                className={styles.input}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="process">Trạng thái Quy trình:</label>
-                            <select
-                                id="process"
-                                name="process"
-                                value={editData.process}
-                                onChange={handleInputChange}
-                                disabled={!isFormEditable && !(process.process === 'WAITING' && editData.process === 'SCREENING')} 
-                                className={styles.selectInput}
-                            >
-                                {Object.keys(processStatusMap).map(key => (
-                                    <option key={key} value={key}>
-                                        {processStatusMap[key]}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label>Trạng thái hiện tại:</label>
-                            <span className={`${styles.statusBadge} ${styles[process.process?.toLowerCase()]}`}>
-                                {getStatusName(process.process)}
+                    {(processView.statusHealthCheck && processView.statusHealthCheck !== 'UNKNOWN') && (
+                        <div className={styles.infoGroup}>
+                            <strong>Tình trạng sàng lọc:</strong>
+                            <span className={`${styles.statusBadge} ${styles[processView.statusHealthCheck?.toLowerCase()]}`}>
+                                {statusHealthCheckMap[processView.statusHealthCheck]}
                             </span>
                         </div>
+                    )}
+                    {processView.failureReason && processView.statusHealthCheck === 'FAIL' && (
+                                <div className={styles.infoGroup}>
+                                    <strong>Lý do sàng lọc thất bại:</strong>
+                                    <span>{processView.failureReason}</span>
+                                </div>
+                    )}
+                </div>
 
-                        <div className={styles.actionButtons}>
-                            <button type="button" className={`${styles.button} ${styles.backButton}`} onClick={() => navigate(-1)}>
-                                Quay lại
-                            </button>
+                <div className={styles.editableSection}>
+                    {isDetailView && (
+                        <>
+                            <h3>Thông tin Chi tiết Quy trình</h3>
+                            <div className={styles.summaryDetails}>
+                                <p><strong>Nhịp tim:</strong> {processView.heartRate || 'N/A'} bpm</p>
+                                <p><strong>Nhiệt độ:</strong> {processView.temperature || 'N/A'} °C</p>
+                                <p><strong>Cân nặng:</strong> {processView.weight || 'N/A'} kg</p>
+                                <p><strong>Chiều cao:</strong> {processView.height || 'N/A'} cm</p>
+                                <p><strong>Hemoglobin:</strong> {processView.hemoglobin || 'N/A'} g/dL</p>
+                                <p><strong>Huyết áp:</strong> {processView.bloodPressure || 'N/A'}</p>
+                                <p><strong>Lượng máu hiến:</strong> {processView.quantity || 'N/A'} ml</p>
+                                <p><strong>Loại hiến:</strong> {donationTypeMap[processView.typeDonation] || 'N/A'}</p>
+                                <p><strong>Ghi chú quy trình:</strong> {processView.notes || 'Không có'}</p>
+                            </div>
+                            <div className={styles.actionButtons}>
+                                <button className={`${styles.button} ${styles.backButton}`} onClick={() => navigate('/staff-dashboard/donation-processes')}>Quay lại danh sách</button>
+                                {canRescreen && (
+                                    <button
+                                        type="button"
+                                        className={`${styles.button} ${styles.rescreenButton}`}
+                                        onClick={handleRescreening}
+                                        disabled={loading}
+                                    >
+                                        Tái kiểm tra
+                                    </button>
+                                )}
+                            </div>
+                        </>
+                    )}
 
-                            {!isFormEditable && !isCompletedOrCancelled && (
-                                <button
-                                    type="button"
-                                    className={`${styles.button} ${styles.editButton}`}
-                                    onClick={() => setIsFormEditable(true)}
-                                >
-                                    Chỉnh sửa
-                                </button>
-                            )}
+                    {!isDetailView && currentStep === 'screening' && (
+                        <>
+                            <h3>Khảo sát sức khỏe</h3>
+                            <form>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="heartRate">Nhịp tim (bpm):</label>
+                                    <input type="number" id="heartRate" name="heartRate"
+                                        value={editData.heartRate} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 75" disabled={!canEditScreening} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="temperature">Nhiệt độ (°C):</label>
+                                    <input type="number" step="0.1" id="temperature" name="temperature"
+                                        value={editData.temperature} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 37.0" disabled={!canEditScreening} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="weight">Cân nặng (kg):</label>
+                                    <input type="number" step="0.1" id="weight" name="weight"
+                                        value={editData.weight} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 60.5" disabled={!canEditScreening} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="height">Chiều cao (cm):</label>
+                                    <input type="number" step="0.1" id="height" name="height"
+                                        value={editData.height} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 170.0" disabled={!canEditScreening} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="hemoglobin">Hemoglobin (g/dL):</label>
+                                    <input type="number" step="0.1" id="hemoglobin" name="hemoglobin"
+                                        value={editData.hemoglobin} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 13.5" disabled={!canEditScreening} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="bloodPressure">Huyết áp (VD: 120/80):</label>
+                                    <input type="text" id="bloodPressure" name="bloodPressure"
+                                        value={editData.bloodPressure} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 120/80" disabled={!canEditScreening} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="statusHealthCheck">Kết quả sàng lọc:</label>
+                                    <select id="statusHealthCheck" name="statusHealthCheck"
+                                        value={editData.statusHealthCheck} onChange={handleInputChange}
+                                        disabled={!canEditScreening} className={styles.selectInput}>
+                                        <option value="">Chọn kết quả</option>
+                                        <option value="PASS">Đạt</option>
+                                        <option value="FAIL">Không đạt</option>
+                                    </select>
+                                </div>
+                                {editData.statusHealthCheck === 'FAIL' && (
+                                    <div className={styles.formGroup}>
+                                        <label htmlFor="failureReason">Lý do thất bại sàng lọc:</label>
+                                        <textarea id="failureReason" name="failureReason"
+                                            value={editData.failureReason} onChange={handleInputChange}
+                                            rows="3" placeholder="Ghi rõ lý do sàng lọc không đạt"
+                                            disabled={!canEditScreening} className={styles.textarea} />
+                                    </div>
+                                )}
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="notes">Ghi chú của nhân viên:</label>
+                                    <textarea id="notes" name="notes"
+                                        value={editData.notes} onChange={handleInputChange}
+                                        rows="3" placeholder="Ghi chú thêm về quá trình"
+                                        disabled={!canEditScreening} className={styles.textarea} />
+                                </div>
+                                <div className={styles.actionButtons}>
+                                    <button type="button" className={`${styles.button} ${styles.backButton}`} onClick={() => navigate('/staff-dashboard/donation-processes')}>
+                                        Quay lại
+                                    </button>
+                                    {canEditScreening && (
+                                        <button type="button" className={`${styles.button} ${styles.saveButton}`} onClick={handleSaveScreening}>
+                                            Lưu kết quả sàng lọc
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                        </>
+                    )}
 
-                            {isFormEditable && (
-                                <button
-                                    type="button"
-                                    className={`${styles.button} ${styles.saveButton}`}
-                                    onClick={handleSave}
-                                >
-                                    Lưu
-                                </button>
-                            )}
-                        </div>
-                    </form>
+                    {!isDetailView && currentStep === 'donation' && (
+                        <>
+                            <h3>Tiến hành truyền máu</h3>
+                            <form>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="quantity">Thể tích máu (ml):</label>
+                                    <input type="number" id="quantity" name="quantity"
+                                        value={editData.quantity} onChange={handleInputChange}
+                                        placeholder="Ví dụ: 450" disabled={!canEditDonation} className={styles.input} />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="type">Loại hiến:</label>
+                                    <select id="type" name="type"
+                                        value={editData.type} onChange={handleInputChange}
+                                        disabled={!canEditDonation} className={styles.selectInput}>
+                                        <option value="">Chọn loại hiến</option>
+                                        {Object.keys(donationTypeMap).map(key => (
+                                            <option key={key} value={key}>
+                                                {donationTypeMap[key]}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="process">Trạng thái cuối cùng của Quy trình:</label>
+                                    <select id="process" name="process"
+                                        value={editData.process} onChange={handleInputChange}
+                                        disabled={!canEditDonation} className={styles.selectInput}>
+                                        <option value="">Chọn trạng thái</option>
+                                        <option value="COMPLETED">Hoàn thành</option>
+                                        <option value="FAILED">Thất bại</option>
+                                    </select>
+                                </div>
+                                {editData.process === 'FAILED' && (
+                                    <div className={styles.formGroup}>
+                                        <label htmlFor="notes">Ghi chú (Lý do thất bại hiến máu):</label>
+                                        <textarea id="notes" name="notes"
+                                            value={editData.notes} onChange={handleInputChange}
+                                            rows="3" placeholder="Ghi chú lý do quy trình thất bại"
+                                            disabled={!canEditDonation} className={styles.textarea} />
+                                    </div>
+                                )}
+                                <div className={styles.actionButtons}>
+                                    <button type="button" className={`${styles.button} ${styles.backButton}`} onClick={() => navigate('/staff-dashboard/donation-processes')}>
+                                        Quay lại
+                                    </button>
+                                    {canEditDonation && (
+                                        <button type="button" className={`${styles.button} ${styles.saveButton}`} onClick={handleSaveDonation}>
+                                            Lưu kết quả hiến máu
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

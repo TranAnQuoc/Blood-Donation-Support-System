@@ -1,0 +1,178 @@
+/* index.module.css */
+
+.surveyContainer {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.pageTitle {
+    text-align: center;
+    color: #c0392b; /* A shade of red for donation theme */
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.description {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+}
+
+.surveyForm {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Space between form groups */
+}
+
+.formGroup {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.questionLabel {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #34495e; /* Darker blue-grey */
+}
+
+.questionNote {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: -10px; /* Adjust as needed */
+    margin-bottom: 15px; /* Space between note and radio group */
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 25px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.radioInput {
+    margin-right: 5px;
+    transform: scale(1.2); /* Slightly larger radio buttons */
+    cursor: pointer;
+}
+
+.radioLabel {
+    font-size: 1em;
+    color: #444;
+    cursor: pointer;
+}
+
+.textInput,
+.textArea {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding in width */
+    resize: vertical; /* Allow vertical resizing for textarea */
+}
+
+.textArea {
+    min-height: 80px;
+}
+
+.errorText {
+    color: #e74c3c; /* Red for errors */
+    font-size: 0.9em;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.nestedFormGroup {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.submitButton,
+.backButton {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: bold;
+}
+
+.submitButton {
+    background-color: #e74c3c; /* Red for submit */
+    color: white;
+}
+
+.submitButton:hover:not(:disabled) {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+.submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.backButton {
+    background-color: #95a5a6; /* Grey for back */
+    color: white;
+}
+
+.backButton:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .surveyContainer {
+        margin: 20px;
+        padding: 20px;
+    }
+    .pageTitle {
+        font-size: 1.8em;
+    }
+    .questionLabel {
+        font-size: 1em;
+    }
+    .radioGroup {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .actionButtons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .submitButton,
+    .backButton {
+        width: 100%;
+        padding: 12px;
+    }
+}

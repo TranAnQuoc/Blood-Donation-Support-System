@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import styles from './MyDonationRequest.module.css';
+import styles from './MyDonationRequest.module.css'; // Ensure this path is correct
 
+// Helper function to format date and time
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';
     try {
@@ -22,23 +23,30 @@ const formatDateTime = (isoString) => {
     }
 };
 
+// Helper function to get readable boolean string
+const formatBoolean = (value) => {
+    if (value === true) return 'Có';
+    if (value === false) return 'Không';
+    return 'N/A';
+};
+
 const MyDonationRequests = () => {
-    const [myRequest, setMyRequest] = useState(null);
+    const [myRequests, setMyRequests] = useState([]); // Changed to an array
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showConfirmCancelModal, setShowConfirmCancelModal] = useState(false); // For cancel confirmation
+    const [selectedRequestToCancel, setSelectedRequestToCancel] = useState(null); // To store which request is being cancelled
+    const [showDetailModal, setShowDetailModal] = useState(false); // For showing request details
+    const [selectedRequestDetail, setSelectedRequestDetail] = useState(null); // To store data for detail modal
     const navigate = useNavigate();
 
-    const fetchMyDonationRequest = async () => {
+    const fetchMyDonationRequests = async () => {
         setLoading(true);
         setError(null);
         try {
             const res = await axiosInstance.get('/donation-requests/my-requests');
-            if (Array.isArray(res.data) && res.data.length > 0) {
-                setMyRequest(res.data[0]);
-            } else {
-                setMyRequest(null);
-            }
+            // Assuming res.data is already a List<DonationRequestDetailDTO>
+            setMyRequests(res.data || []);
         } catch (err) {
             console.error("Lỗi khi tải yêu cầu hiến máu:", err);
             setError('Không thể tải thông tin yêu cầu hiến máu. Vui lòng thử lại sau.');
@@ -49,31 +57,54 @@ const MyDonationRequests = () => {
     };
 
     useEffect(() => {
-        fetchMyDonationRequest();
+        fetchMyDonationRequests();
     }, []);
 
     const handleCancelRequest = async () => {
+        if (!selectedRequestToCancel) return;
+
         try {
-            await axiosInstance.put(`/donation-requests/cancel/${myRequest.id}`);
+            await axiosInstance.put(`/donation-requests/cancel/${selectedRequestToCancel.id}`);
             toast.success('Đơn đăng ký đã được hủy thành công!');
-            setShowConfirmModal(false);
-            fetchMyDonationRequest();
+            setShowConfirmCancelModal(false);
+            setSelectedRequestToCancel(null);
+            fetchMyDonationRequests(); // Refresh the list
         } catch (err) {
             const errorMsg = err.response?.data?.message || 'Không thể hủy đơn. Vui lòng thử lại.';
             toast.error(`Lỗi: ${errorMsg}`);
         }
     };
 
+    const handleOpenCancelModal = (request) => {
+        setSelectedRequestToCancel(request);
+        setShowConfirmCancelModal(true);
+    };
+
+    const handleCloseCancelModal = () => {
+        setShowConfirmCancelModal(false);
+        setSelectedRequestToCancel(null);
+    };
+
+    const handleOpenDetailModal = (request) => {
+        setSelectedRequestDetail(request);
+        setShowDetailModal(true);
+    };
+
+    const handleCloseDetailModal = () => {
+        setShowDetailModal(false);
+        setSelectedRequestDetail(null);
+    };
+
     const handleGoBack = () => navigate(-1);
 
-    if (loading) return <div className={styles.loadingMessage}>Đang tải đơn đăng ký hiến máu của bạn...</div>;
+    if (loading) return <div className={styles.loadingMessage}>Đang tải danh sách đơn đăng ký hiến máu của bạn...</div>;
     if (error) return <div className={styles.errorMessage}>{error}</div>;
 
     return (
         <div className={styles.myDonationRequestsContainer}>
             <h2 className={styles.pageTitle}>Đơn Đăng Ký Hiến Máu Của Tôi</h2>
 
-            {!myRequest ? (
+            {myRequests.length === 0 ? (
                 <div className={styles.noRequestsMessage}>
                     <p>Bạn chưa có đơn đăng ký hiến máu nào.</p>
                     <button className={styles.backButton} onClick={handleGoBack}>
@@ -81,80 +112,195 @@ const MyDonationRequests = () => {
                     </button>
                 </div>
             ) : (
-                <div className={styles.detailSection}>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>ID Yêu cầu:</span>
-                        <span className={styles.value}>{myRequest.id}</span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Sự kiện:</span>
-                        <span className={styles.value}>{myRequest.eventName || 'N/A'}</span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Nhóm máu ĐK:</span>
-                        <span className={styles.value}>
-                            {myRequest.donorBloodType
-                                ? `${myRequest.donorBloodType.type}${myRequest.donorBloodType.rhFactor}`
-                                : 'N/A'}
-                        </span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Lý do đăng ký:</span>
-                        <span className={styles.value}>{myRequest.reason || 'Không có'}</span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Thời gian yêu cầu:</span>
-                        <span className={styles.value}>{formatDateTime(myRequest.requestTime)}</span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Trạng thái:</span>
-                        <span className={`${styles.statusBadge} ${styles[myRequest.statusRequest?.toLowerCase()]}`}>
-                            {myRequest.statusRequest === 'PENDING' ? 'Đang chờ' :
-                             myRequest.statusRequest === 'APPROVED' ? 'Đã duyệt' :
-                             myRequest.statusRequest === 'REJECTED' ? 'Đã từ chối' :
-                             myRequest.statusRequest === 'CANCELED' ? 'Đã hủy' :
-                             myRequest.statusRequest || 'N/A'}
-                        </span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Người duyệt:</span>
-                        <span className={styles.value}>{myRequest.approverFullName || 'Chưa duyệt'}</span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Thời gian duyệt:</span>
-                        <span className={styles.value}>{formatDateTime(myRequest.approvedTime)}</span>
-                    </div>
-                    <div className={styles.infoGroup}>
-                        <span className={styles.label}>Ghi chú của người duyệt:</span>
-                        <span className={styles.value}>{myRequest.note || 'Không có'}</span>
-                    </div>
-
-                    <div className={styles.actionButtons}>
-                        {myRequest.statusRequest === 'PENDING' && (
-                            <button
-                                className={styles.cancelButton}
-                                onClick={() => setShowConfirmModal(true)}
-                            >
-                                Hủy Đơn Đăng Ký
-                            </button>
-                        )}
-                        <button className={styles.backButton} onClick={handleGoBack}>
-                            Quay lại
-                        </button>
-                    </div>
+                <div className={styles.requestList}>
+                    {myRequests.map((request) => (
+                        <div key={request.id} className={styles.requestCard}>
+                            <div className={styles.cardHeader}>
+                                <h3>Sự kiện: {request.eventName || 'N/A'}</h3>
+                                <span className={`${styles.statusBadge} ${styles[request.statusRequest?.toLowerCase()]}`}>
+                                    {request.statusRequest === 'PENDING' ? 'Đang chờ' :
+                                     request.statusRequest === 'APPROVED' ? 'Đã duyệt' :
+                                     request.statusRequest === 'REJECTED' ? 'Đã từ chối' :
+                                     request.statusRequest === 'CANCELED' ? 'Đã hủy' :
+                                     request.statusRequest || 'N/A'}
+                                </span>
+                            </div>
+                            <div className={styles.cardBody}>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Ngày đăng ký:</span>
+                                    <span className={styles.value}>{formatDateTime(request.requestTime)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Nhóm máu ĐK:</span>
+                                    <span className={styles.value}>
+                                        {request.donorBloodType
+                                            ? `${request.donorBloodType.type}${request.donorBloodType.rhFactor}`
+                                            : 'N/A'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className={styles.cardActions}>
+                                <button
+                                    className={styles.detailButton}
+                                    onClick={() => handleOpenDetailModal(request)}
+                                >
+                                    Xem chi tiết
+                                </button>
+                                {request.statusRequest === 'PENDING' && (
+                                    <button
+                                        className={styles.cancelButton}
+                                        onClick={() => handleOpenCancelModal(request)}
+                                    >
+                                        Hủy Đơn
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                    <button className={styles.backButton} onClick={handleGoBack}>
+                        Quay lại
+                    </button>
                 </div>
             )}
 
-            {showConfirmModal && (
+            {/* Confirmation Cancel Modal */}
+            {showConfirmCancelModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
-                        <p>Bạn có chắc chắn muốn <strong>HỦY</strong> đơn đăng ký hiến máu này không?</p>
+                        <p>Bạn có chắc chắn muốn <strong>HỦY</strong> đơn đăng ký hiến máu cho sự kiện **{selectedRequestToCancel?.eventName || 'này'}** không?</p>
                         <div className={styles.modalActions}>
                             <button className={styles.confirmButton} onClick={handleCancelRequest}>
                                 Xác nhận
                             </button>
-                            <button className={styles.cancelButton} onClick={() => setShowConfirmModal(false)}>
+                            <button className={styles.cancelButton} onClick={handleCloseCancelModal}>
                                 Hủy bỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Detail Modal */}
+            {showDetailModal && selectedRequestDetail && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContentLarge}> {/* Added a new class for potentially larger modal */}
+                        <h3 className={styles.modalTitle}>Chi Tiết Đơn Đăng Ký Hiến Máu</h3>
+                        <div className={styles.detailGrid}>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>ID Yêu cầu:</span>
+                                <span className={styles.value}>{selectedRequestDetail.id}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Tên người hiến:</span>
+                                <span className={styles.value}>{selectedRequestDetail.donorFullName || 'N/A'}</span>
+                            </div>
+                             <div className={styles.infoGroup}>
+                                <span className={styles.label}>Giới tính:</span>
+                                <span className={styles.value}>{selectedRequestDetail.donorGender === 'MALE' ? 'Nam' : selectedRequestDetail.donorGender === 'FEMALE' ? 'Nữ' : 'N/A'}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Nhóm máu ĐK:</span>
+                                <span className={styles.value}>
+                                    {selectedRequestDetail.donorBloodType
+                                        ? `${selectedRequestDetail.donorBloodType.type}${selectedRequestDetail.donorBloodType.rhFactor}`
+                                        : 'N/A'}
+                                </span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Sự kiện:</span>
+                                <span className={styles.value}>{selectedRequestDetail.eventName || 'N/A'}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Thời gian yêu cầu:</span>
+                                <span className={styles.value}>{formatDateTime(selectedRequestDetail.requestTime)}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Trạng thái:</span>
+                                <span className={`${styles.statusBadge} ${styles[selectedRequestDetail.statusRequest?.toLowerCase()]}`}>
+                                    {selectedRequestDetail.statusRequest === 'PENDING' ? 'Đang chờ' :
+                                     selectedRequestDetail.statusRequest === 'APPROVED' ? 'Đã duyệt' :
+                                     selectedRequestDetail.statusRequest === 'REJECTED' ? 'Đã từ chối' :
+                                     selectedRequestDetail.statusRequest === 'CANCELED' ? 'Đã hủy' :
+                                     selectedRequestDetail.statusRequest || 'N/A'}
+                                </span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Thời gian duyệt:</span>
+                                <span className={styles.value}>{formatDateTime(selectedRequestDetail.approvedTime)}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Lý do đăng ký:</span>
+                                <span className={styles.value}>{selectedRequestDetail.reason || 'Không có'}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Ghi chú của hệ thống:</span>
+                                <span className={styles.value}>{selectedRequestDetail.note || 'Không có'}</span>
+                            </div>
+
+                            {/* Survey Details Section */}
+                            <h4 className={styles.surveyTitle}>Kết Quả Khảo Sát Sức Khỏe</h4>
+                            <div className={styles.surveyGrid}>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Khỏe mạnh hôm nay:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.isHealthyToday)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Có triệu chứng:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.hasSymptoms)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Mắc bệnh truyền nhiễm:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.hasInfectiousDiseases)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Quan hệ không an toàn:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.unsafeSex)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Phẫu thuật/xăm gần đây:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.recentSurgeryTattoo)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Tiêm vaccine gần đây:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.recentVaccination)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Đang sử dụng thuốc:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.onMedication)}</span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Có bệnh mãn tính:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.hasChronicDisease)}</span>
+                                </div>
+                                {selectedRequestDetail.hasChronicDisease === true && (
+                                    <div className={styles.infoGroupFullWidth}> {/* Apply class for full width */}
+                                        <span className={styles.label}>Ghi chú bệnh mãn tính:</span>
+                                        <span className={styles.value}>{selectedRequestDetail.chronicDiseaseNote || 'Không có'}</span>
+                                    </div>
+                                )}
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Ngày từ lần hiến gần nhất:</span>
+                                    <span className={styles.value}>
+                                        {selectedRequestDetail.lastDonationDays !== null && selectedRequestDetail.lastDonationDays !== undefined
+                                            ? `${selectedRequestDetail.lastDonationDays} ngày`
+                                            : 'Chưa từng hiến/Không có thông tin'}
+                                    </span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Phản ứng sau hiến:</span>
+                                    <span className={styles.value}>{formatBoolean(selectedRequestDetail.hadReactionPreviousDonation)}</span>
+                                </div>
+                                {selectedRequestDetail.hadReactionPreviousDonation === true && (
+                                    <div className={styles.infoGroupFullWidth}> {/* Apply class for full width */}
+                                        <span className={styles.label}>Ghi chú phản ứng:</span>
+                                        <span className={styles.value}>{selectedRequestDetail.previousReactionNote || 'Không có'}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className={styles.modalActions}>
+                            <button className={styles.backButton} onClick={handleCloseDetailModal}>
+                                Đóng
                             </button>
                         </div>
                     </div>

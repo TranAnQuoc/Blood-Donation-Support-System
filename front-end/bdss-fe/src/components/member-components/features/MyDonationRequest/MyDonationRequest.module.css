@@ -1,225 +1,373 @@
+/* MyDonationRequest.module.css */
+
 .myDonationRequestsContainer {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 800px;
-    text-align: center;
+    padding: 30px;
+    max-width: 1000px;
+    margin: 40px auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
 }
 
 .pageTitle {
-    font-size: 2.2em;
-    color: #031B4E;
-    margin-bottom: 30px;
     text-align: center;
-    border-bottom: 2px solid #031B4E;
-    padding-bottom: 15px;
+    color: #c0392b; /* Blood red for emphasis */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
 }
 
-.loadingMessage,
-.errorMessage,
-.noRequestsMessage {
+.loadingMessage, .errorMessage, .noRequestsMessage {
     text-align: center;
-    padding: 30px;
     font-size: 1.1em;
-    color: #777;
-    background-color: #f0f0f0;
-    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    color: #555;
     margin-top: 20px;
 }
 
 .errorMessage {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    background-color: #fcebeb;
 }
 
-.detailSection {
+.noRequestsMessage p {
+    margin-bottom: 20px;
+}
+
+.requestList {
+    display: grid;
+    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+}
+
+.requestCard {
     background-color: #fff;
-    padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
-    text-align: left;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.requestCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.cardHeader h3 {
+    margin: 0;
+    font-size: 1.4em;
+    color: #2c3e50;
+}
+
+.cardBody {
+    flex-grow: 1;
+    margin-bottom: 20px;
 }
 
 .infoGroup {
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
-    border-bottom: 1px dashed #eee;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1em;
+    line-height: 1.5;
 }
 
-.infoGroup:last-child {
-    border-bottom: none;
-}
-
-.label {
-    flex: 0 0 180px;
-    margin-right: 15px;
-    color: #031B4E;
+.infoGroup .label {
     font-weight: 600;
+    color: #555;
+    flex-basis: 45%; /* Adjust width for labels */
 }
 
-.value {
-    flex-grow: 1;
+.infoGroup .value {
+    text-align: right;
+    flex-basis: 55%; /* Adjust width for values */
     color: #333;
-    word-break: break-word; 
+    word-wrap: break-word; /* Ensure long text wraps */
 }
 
 .statusBadge {
-    padding: 4px 8px;
+    padding: 5px 10px;
     border-radius: 5px;
-    font-size: 0.85em;
     font-weight: bold;
+    font-size: 0.9em;
     color: #fff;
-    display: inline-block;
+    text-transform: uppercase;
 }
 
-.pending {
-    background-color: #ffc107;
-    color: #333;
+.statusBadge.pending {
+    background-color: #f39c12; /* Orange for pending */
 }
 
-.approved {
-    background-color: #28a745;
+.statusBadge.approved {
+    background-color: #27ae60; /* Green for approved */
 }
 
-.rejected {
-    background-color: #dc3545;
+.statusBadge.rejected {
+    background-color: #e74c3c; /* Red for rejected */
 }
 
-.canceled {
-    background-color: #6c757d;
+.statusBadge.canceled {
+    background-color: #95a5a6; /* Grey for canceled */
 }
 
-.actionButtons {
+.cardActions {
     display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    margin-top: 30px;
-    border-top: 1px solid #eee; 
-    padding-top: 20px;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto; /* Push buttons to the bottom */
 }
 
-.cancelButton {
-    background-color: #dc3545; 
-    color: white;
-    padding: 10px 20px;
+.detailButton, .cancelButton, .backButton, .confirmButton {
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    flex: 1; /* Allow buttons to share space */
+    white-space: nowrap; /* Prevent text wrapping on buttons */
+}
+
+.detailButton {
+    background-color: #3498db; /* Blue for details */
+    color: white;
+}
+
+.detailButton:hover {
+    background-color: #2980b9;
+}
+
+.cancelButton {
+    background-color: #e74c3c; /* Red for cancel */
+    color: white;
 }
 
 .cancelButton:hover {
     background-color: #c0392b;
-    /* transform: translateY(-1px); */
 }
 
 .backButton {
-    background-color: #ffffff;
-    border: 1px solid #031B4E;
-    color: #031B4E;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: #95a5a6; /* Grey for back */
+    color: white;
+    margin-top: 20px; /* Space above back button if it's outside cards */
+    width: 100%; /* Make back button full width if not in card */
 }
 
 .backButton:hover {
-    background-color: #031B4E;
-    color: #ffffff;
+    background-color: #7f8c8d;
 }
 
-/* Modal */
+/* Modal styles */
 .modalOverlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .modalContent {
-    background: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    max-width: 400px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     width: 90%;
+    max-width: 500px; /* Standard modal width */
     text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
 }
 
-.modalActions {
+.modalContentLarge {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    width: 95%; /* Wider for details */
+    max-width: 800px; /* Larger max width */
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+    max-height: 90vh; /* Limit height for scroll if content is long */
+    overflow-y: auto; /* Enable scrolling for long content */
+}
+
+
+.modalTitle {
+    color: #c0392b;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Two columns, responsive */
+    gap: 15px 25px; /* Row and column gap */
+    margin-bottom: 20px;
+}
+
+.detailGrid .infoGroup {
+    flex-direction: column; /* Stack label and value in detail modal */
+    align-items: flex-start;
+    margin-bottom: 0; /* Reset margin from general .infoGroup */
+}
+
+.detailGrid .infoGroup .label {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+    flex-basis: auto; /* Reset flex basis */
+}
+
+.detailGrid .infoGroup .value {
+    font-size: 1em;
+    color: #333;
+    text-align: left; /* Align text left in detail modal */
+    flex-basis: auto; /* Reset flex basis */
+}
+
+.infoGroupFullWidth {
+    grid-column: 1 / -1; /* Make it span full width in grid */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.infoGroupFullWidth .label {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+}
+.infoGroupFullWidth .value {
+    font-size: 1em;
+    color: #333;
+    text-align: left;
+}
+
+
+.surveyTitle {
+    grid-column: 1 / -1; /* Span full width */
+    text-align: center;
+    color: #2980b9;
     margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.surveyGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px 25px;
+    margin-bottom: 20px;
+}
+
+.surveyGrid .infoGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0;
+}
+
+.surveyGrid .infoGroup .label {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.surveyGrid .infoGroup .value {
+    font-size: 1em;
+    color: #333;
+    text-align: left;
+}
+
+
+.modalActions {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    gap: 15px;
+    margin-top: 25px;
 }
 
 .confirmButton {
-    background-color: #20a0c0;
+    background-color: #27ae60; /* Green for confirm */
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
 .confirmButton:hover {
-    background-color: #1686a3;
+    background-color: #229954;
 }
 
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .myDonationRequestsContainer {
-        margin: 10px;
-        padding: 15px;
+        padding: 20px;
+        margin: 20px auto;
     }
 
     .pageTitle {
         font-size: 1.8em;
-        margin-bottom: 20px;
     }
 
-    .detailSection {
+    .requestList {
+        grid-template-columns: 1fr; /* Single column on small screens */
+    }
+
+    .requestCard {
         padding: 15px;
     }
 
-    .infoGroup {
-        flex-direction: column; 
-        align-items: flex-start;
-        margin-bottom: 10px;
-    }
-
-    .label {
-        flex: unset; 
-        margin-right: 0;
-        margin-bottom: 5px;
-        width: 100%;
-    }
-
-    .actionButtons {
-        flex-direction: column;
+    .detailGrid, .surveyGrid {
+        grid-template-columns: 1fr; /* Single column in detail modal on small screens */
         gap: 10px;
     }
 
-    .cancelButton,
-    .backButton {
-        width: 100%; 
+    .modalContent, .modalContentLarge {
+        padding: 20px;
+        max-width: 95%; /* Slightly wider on small screens */
+    }
+
+    .modalTitle {
+        font-size: 1.5em;
+    }
+
+    .cardActions {
+        flex-direction: column; /* Stack buttons on small cards */
     }
 }
