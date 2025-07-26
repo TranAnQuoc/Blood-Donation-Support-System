@@ -1,6 +1,5 @@
 package com.gtwo.bdss_system.service.donation;
 
-import com.gtwo.bdss_system.dto.auth.AccountResponse;
 import com.gtwo.bdss_system.dto.donation.DonationProcessDTO;
 import com.gtwo.bdss_system.dto.donation.DonationProcessViewDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
@@ -11,6 +10,7 @@ import java.util.List;
 
 public interface DonationProcessService {
     DonationProcess getById(Long id);
+    List<DonationProcess> getAll();
     List<DonationProcess> getAllActive();
     DonationProcess update(Long processId, DonationProcessDTO dto, Account currentUser);
     void delete(Long id);

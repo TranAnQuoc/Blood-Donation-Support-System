@@ -28,9 +28,19 @@ public class DonationProcessAPI {
     private ModelMapper mapper;
 
     @GetMapping("/list")
-    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<List<DonationProcessViewDTO>> getAll() {
         List<DonationProcess> processes = service.getAllActive();
+        List<DonationProcessViewDTO> dto = processes.stream()
+                .map(process -> service.processViewDTO(process))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/all-list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<DonationProcessViewDTO>> getAllAdmin () {
+        List<DonationProcess> processes = service.getAll();
         List<DonationProcessViewDTO> dto = processes.stream()
                 .map(process -> service.processViewDTO(process))
                 .collect(Collectors.toList());

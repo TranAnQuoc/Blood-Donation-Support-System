@@ -40,18 +40,6 @@ public class DonationRequestAPI {
         return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
     }
 
-//    @PreAuthorize("hasRole('STAFF')")
-//    @PutMapping("/approved/{id}")
-//    public ResponseEntity<DonationRequest> approvedRequest(
-//            @PathVariable Long id,
-//            @RequestParam boolean accept,
-//            @RequestParam(required = false) String note,
-//            @AuthenticationPrincipal Account staff) {
-//        StatusRequest decision = accept ? StatusRequest.APPROVED : StatusRequest.REJECTED;
-//        DonationRequest updated = service.approvedRequest(id, decision, note, staff);
-//        return ResponseEntity.ok(updated);
-//    }
-
     @PreAuthorize("hasRole('MEMBER')")
     @PutMapping("/cancel/{id}")
     public ResponseEntity<DonationRequest> cancelOwnRequest(
@@ -66,16 +54,6 @@ public class DonationRequestAPI {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<DonationRequestDetailDTO>> getAll() {
         List<DonationRequest> requests = service.getAll();
-        List<DonationRequestDetailDTO> dtoList = requests.stream()
-                .map(request -> donationRequestService.requestTable(request))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtoList);
-    }
-
-    @GetMapping("/pending")
-    @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<List<DonationRequestDetailDTO>> getPendingRequests() {
-        List<DonationRequest> requests = donationRequestService.getPendingRequests();
         List<DonationRequestDetailDTO> dtoList = requests.stream()
                 .map(request -> donationRequestService.requestTable(request))
                 .collect(Collectors.toList());

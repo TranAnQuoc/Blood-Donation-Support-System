@@ -1,0 +1,212 @@
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.title {
+    text-align: center;
+    color: #0056b3;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.loading, .error, .noProcesses {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+.loading {
+    color: #007bff;
+    background-color: #e7f5ff;
+    border: 1px solid #b3d7ff;
+}
+
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.noProcesses {
+    color: #6c757d;
+    background-color: #e2e3e5;
+    border: 1px solid #d6d8db;
+}
+
+.processList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.processItem {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.processItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.processItem.expanded {
+    border-color: #007bff;
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.2);
+}
+
+.processSummary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.processInfo {
+    flex-grow: 1;
+    min-width: 300px;
+}
+
+.processInfo p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.processInfo strong {
+    color: #555;
+    min-width: 120px;
+    display: inline-block;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 0.3em 0.7em;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* StatusProcess colors */
+.statusBadge.waiting {
+    background-color: #ffc107; /* Warning yellow */
+    color: #343a40;
+}
+
+.statusBadge.in_process {
+    background-color: #17a2b8; /* Info blue-green */
+}
+
+.statusBadge.completed {
+    background-color: #28a745; /* Success green */
+}
+
+.statusBadge.failed {
+    background-color: #dc3545; /* Danger red */
+}
+
+.statusBadge.donor_cancel {
+    background-color: #6c757d; /* Secondary grey */
+}
+
+/* StatusHealthCheck colors */
+.statusBadge.pass {
+    background-color: #28a745; /* Success green */
+}
+
+.statusBadge.fail {
+    background-color: #dc3545; /* Danger red */
+}
+
+.statusBadge.unknown {
+    background-color: #6c757d; /* Secondary grey */
+}
+
+.detailButton {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+}
+
+.detailButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.detailButton:active {
+    transform: translateY(0);
+}
+
+.processDetails {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed #e0e0e0;
+}
+
+.processDetails h3, .processDetails h4 {
+    color: #0056b3;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.processDetails ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.8rem 1.5rem;
+}
+
+.processDetails li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.processDetails li strong {
+    color: #444;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .processSummary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .detailButton {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .processDetails ul {
+        grid-template-columns: 1fr;
+    }
+}

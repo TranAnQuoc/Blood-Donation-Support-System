@@ -116,7 +116,7 @@ const GuestService = () => {
                     <div className={styles.iconWrapper}>
                         <FontAwesomeIcon icon={faBell} className={styles.featureIcon} /> {/* Icon mới */}
                     </div>
-                    <h3 className={styles.cardTitle}>Tra Cứu Đơn Túi Máu Của Bản Thân</h3>
+                    <h3 className={styles.cardTitle}>Tra Cứu Túi Máu Của Bản Thân</h3>
                     <p className={styles.cardDescription}>Kiểm tra tình trạng túi máu của bạn.</p>
                     <Link to="/login" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

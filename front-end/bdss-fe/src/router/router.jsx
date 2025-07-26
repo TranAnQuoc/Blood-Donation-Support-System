@@ -62,8 +62,8 @@ import AdminList from "../components/admin-components/features/UserManagement/Ad
 import StaffList from "../components/admin-components/features/UserManagement/StaffList.jsx";
 import MemberListForAdmin from "../components/admin-components/features/UserManagement/MemberListForAdmin.jsx";
 import CreateAccountForm from "../components/admin-components/features/UserManagement/CreateAccountForm.jsx";
-// import DonationRequest from "../components/admin-components/features/DonationRequest/..."
-// import DonationProcess from "../components/admin-components/features/DonationProcess/..."
+import DonationRequestListAdmin from "../components/admin-components/features/DonationRequest/DonationRequest.jsx"
+import DonationProcessAdmin from "../components/admin-components/features/DonationProcess/DonationProcess.jsx"
 // import DonationHistory from "../components/admin-components/features/DonationHistory/..."
 // import TransfusionRequest from "../components/admin-components/features/TransfusionRequest/..."
 // import TransfusionProcess from "../components/admin-components/features/TransfusionProcess/..."
@@ -128,8 +128,8 @@ const router = createBrowserRouter([
       { path: "user-management/staff-list", element: <StaffList /> },
       { path: "user-management/member-list", element: <MemberListForAdmin /> },
       //Donation
-      { path: "donation-requests", element: <DonationRequestList /> },
-      { path: "donation-processes", element: <DonationProcess /> },
+      { path: "donation-requests", element: <DonationRequestListAdmin /> },
+      { path: "donation-processes", element: <DonationProcessAdmin /> },
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
       { path: "transfusion-requests-management", element: <TransfusionRequestList /> },
