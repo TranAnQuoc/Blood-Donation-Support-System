@@ -34,6 +34,7 @@ import EmergencyRequestForm from '../components/common/EmergencyRequestForm/Emer
 import StatusDonationSetup from '../pages/Community/StatusDonationSetting.jsx'
 import BloodTracking from "../components/member-components/features/BloodTracking/index.jsx"
 import DonationSurvey from "../components/member-components/features/DonationSurvey/index.jsx"
+import TransfusionRequestView from "../components/member-components/features/TransfusionRequestView/index.jsx"
 
 //STAFF
 import StaffProfile from "../components/staff-components/mainContent/StaffProfile/StaffProfile.jsx";
@@ -42,7 +43,7 @@ import DonationRequestList from "../components/staff-components/features/Donatio
 import DonationProcess from "../components/staff-components/features/DonationProcess/DonationProcess.jsx";
 import DonationProcessDetail from "../components/staff-components/features/DonationProcessDetail/DonationProcessDetail.jsx";
 import DonationHistoryList from "../components/staff-components/features/DonationHistoryList/DonationHistoryList.jsx";
-import TransfusionRequestList from "../components/staff-components/features/TransfusionRequestList/TransfusionRequestList.jsx";
+import TransfusionRequestList from "../components/admin-components/features/TransfusionRequest/TransfusionRequest.jsx";
 import TransfusionRequestDetail from "../components/staff-components/features/TransfusionRequestDetail/TransfusionRequestDetail.jsx";
 import TransfusionProcess from "../components/staff-components/features/TransfusionProcess/TransfusionProcess.jsx";
 import TransfusionHistoryList from "../components/staff-components/features/TransfusionHistoryList/TransfusionHistoryList.jsx";
@@ -238,6 +239,7 @@ const router = createBrowserRouter([
       // { path: "about-us", element: <About Us /> },
       { path: "register-donation", element: <RegisterDonation /> },
       { path: "request-transfusion", element: <TransfusionRequest /> },
+      { path: "request-transfusion-view", element: <TransfusionRequestView /> },
       { path: "SearchMatchBlood", element: <SearchMatchBlood /> },
     ],
   },

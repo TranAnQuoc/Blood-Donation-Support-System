@@ -1,14 +1,17 @@
 package com.gtwo.bdss_system.controller.transfusion;
 
+import com.gtwo.bdss_system.dto.transfusion.RequestOwnerDTO;
 import com.gtwo.bdss_system.dto.transfusion.TransfusionRequestDTO;
-import com.gtwo.bdss_system.dto.transfusion.TransfusionRequestResponseDTO;
+import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.transfusion.TransfusionRequest;
 import com.gtwo.bdss_system.service.transfusion.TransfusionRequestService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,68 +22,54 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransfusionRequestAPI {
 
-    private final TransfusionRequestService requestService;
-    private final ModelMapper mapper;
+    private final TransfusionRequestService service;
 
-    @PreAuthorize("hasRole('MEMBER')")
     @PostMapping
-    public ResponseEntity<TransfusionRequestResponseDTO> createRequest(@RequestBody TransfusionRequestDTO dto) {
-        TransfusionRequest entity = requestService.createRequest(dto);
-        TransfusionRequestResponseDTO resp = mapper.map(entity, TransfusionRequestResponseDTO.class);
-        return ResponseEntity.ok(resp);
+    @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<TransfusionRequestDTO> create(@RequestBody @Valid TransfusionRequestDTO dto,
+                                                        @AuthenticationPrincipal Account currentUser) {
+        return ResponseEntity.ok(service.create(dto, currentUser));
     }
 
-    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<TransfusionRequestDTO> update(@PathVariable Long id,
+                                                        @RequestBody @Valid TransfusionRequestDTO dto,
+                                                        @AuthenticationPrincipal Account currentUser) {
+        return ResponseEntity.ok(service.update(id, dto, currentUser));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> softDelete(@PathVariable Integer id) {
-        requestService.softDelete(id);
+    @PreAuthorize("hasAnyRole('STAFF', 'MEMBER')")
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+                                       @AuthenticationPrincipal Account currentUser) {
+        service.delete(id, currentUser);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'MEMBER')")
-    @GetMapping("/{id}")
-    public ResponseEntity<TransfusionRequestResponseDTO> getById(@PathVariable Long id) {
-        TransfusionRequest entity = requestService.getById(id);
-        TransfusionRequestResponseDTO dto = new TransfusionRequestResponseDTO();
-        dto.setId(Long.valueOf(entity.getId()));
-        dto.setRecipientId(entity.getRecipientId());
-        dto.setBloodComponentNeeded(entity.getBloodComponentNeeded());
-        dto.setQuantityNeeded(entity.getQuantityNeeded());
-        dto.setDoctorDiagnosis(entity.getDoctorDiagnosis());
-        dto.setPreCheckNotes(entity.getPreCheckNotes());
-        dto.setRequestedAt(entity.getRequestedAt());
-        dto.setStatusRequest(entity.getStatusRequest());
-        dto.setStatus(entity.getStatus());
-        dto.setAddress(entity.getAddress());
-        dto.setApprovedAt(entity.getApprovedAt());
-        return ResponseEntity.ok(dto);
-    }
-
+    @PostMapping("/{id}/restore")
     @PreAuthorize("hasRole('MEMBER')")
-    @PutMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelRequest(@PathVariable Long id) {
-        requestService.cancelRequest(id);
-        return ResponseEntity.ok("Request cancelled successfully");
+    public ResponseEntity<Void> restore(@PathVariable Long id,
+                                        @AuthenticationPrincipal Account currentUser) {
+        service.restore(id, currentUser);
+        return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<List<RequestOwnerDTO>> getMyRequests(@AuthenticationPrincipal Account currentUser) {
+        return ResponseEntity.ok(service.getMyRequests(currentUser));
+    }
+
+    @GetMapping("/view")
+    @PreAuthorize("hasRole('MEMBER')")
+    public ResponseEntity<List<TransfusionRequestDTO>> getView() {
+        return ResponseEntity.ok(service.getView());
+    }
+
+    @GetMapping("/all-list")
     @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
-    @PutMapping("/{id}/reject")
-    public ResponseEntity<?> rejectRequest(@PathVariable Long id) {
-        requestService.rejectRequest(id);
-        return ResponseEntity.ok("Request rejected successfully");
+    public ResponseEntity<List<RequestOwnerDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
-
-    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN')")
-    @PutMapping("/{id}/approve")
-    public ResponseEntity<?> approveRequest(@PathVariable Long id) {
-        requestService.approveRequest(id);
-        return ResponseEntity.ok("Request approved successfully");
-    }
-
-    @PreAuthorize("hasAnyRole('STAFF', 'ADMIN', 'MEMBER')")
-    @GetMapping
-    public ResponseEntity<List<TransfusionRequestResponseDTO>> getAllRequests() {
-        return ResponseEntity.ok(requestService.getAllRequests());
-    }
-
 }
