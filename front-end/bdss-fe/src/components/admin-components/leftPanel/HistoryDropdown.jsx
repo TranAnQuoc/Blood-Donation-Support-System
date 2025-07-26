@@ -11,7 +11,6 @@ const HistoryDropdown = () => {
 
     const subItems = [
         { id: 'donation-histories', label: 'Lịch Sử Hiến Máu', path: 'donation-histories' },
-        { id: 'transfusion-histories', label: 'Lịch Sử Nhận Máu', path: 'transfusion-histories' },
         { id: 'emergency-histories', label: 'Lịch Sử Nhận Máu Khẩn Cấp', path: 'emergency-histories' },
     ];
 
