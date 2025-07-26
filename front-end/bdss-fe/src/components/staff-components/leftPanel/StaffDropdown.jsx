@@ -26,13 +26,13 @@ const StaffDropdown = () => {
     return (
         <div className={styles.staffDropdown}>
             <div className={styles.dropdownToggle} onClick={toggleDropdown}>
-                <span className={styles.staffName}>Staff: {user?.fullName || "Staff"}</span>
+                <span className={styles.staffName}>Nhân viên: {user?.fullName || "Staff"}</span>
                 {isOpen ? <FaChevronUp className={styles.arrowIcon} /> : <FaChevronDown className={styles.arrowIcon} />}
             </div>
             {isOpen && (
                 <ul className={styles.dropdownMenu}>
-                    <li className={styles.dropdownMenuItem} onClick={() => navigate("/staff-dashboard/staff-profile")}>Profile</li>
-                    <li className={styles.dropdownMenuItem} onClick={handleLogout}>Logout</li>
+                    <li className={styles.dropdownMenuItem} onClick={() => navigate("/staff-dashboard/staff-profile")}>Hồ sơ</li>
+                    <li className={styles.dropdownMenuItem} onClick={handleLogout}>Đăng xuất</li>
                 </ul>
             )}
         </div>

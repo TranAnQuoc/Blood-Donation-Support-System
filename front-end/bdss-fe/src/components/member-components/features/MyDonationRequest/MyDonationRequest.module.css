@@ -1,5 +1,3 @@
-/* MyDonationRequest.module.css */
-
 .myDonationRequestsContainer {
     padding: 30px;
     max-width: 1000px;
@@ -13,7 +11,7 @@
 
 .pageTitle {
     text-align: center;
-    color: #c0392b; /* Blood red for emphasis */
+    color: #c0392b;
     margin-bottom: 30px;
     font-size: 2.2em;
     font-weight: 700;
@@ -43,7 +41,7 @@
 .requestList {
     display: grid;
     gap: 25px;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .requestCard {
@@ -93,14 +91,14 @@
 .infoGroup .label {
     font-weight: 600;
     color: #555;
-    flex-basis: 45%; /* Adjust width for labels */
+    flex-basis: 45%;
 }
 
 .infoGroup .value {
     text-align: right;
-    flex-basis: 55%; /* Adjust width for values */
+    flex-basis: 55%;
     color: #333;
-    word-wrap: break-word; /* Ensure long text wraps */
+    word-wrap: break-word;
 }
 
 .statusBadge {
@@ -113,26 +111,26 @@
 }
 
 .statusBadge.pending {
-    background-color: #f39c12; /* Orange for pending */
+    background-color: #f39c12;
 }
 
 .statusBadge.approved {
-    background-color: #27ae60; /* Green for approved */
+    background-color: #27ae60;
 }
 
 .statusBadge.rejected {
-    background-color: #e74c3c; /* Red for rejected */
+    background-color: #e74c3c;
 }
 
 .statusBadge.canceled {
-    background-color: #95a5a6; /* Grey for canceled */
+    background-color: #95a5a6;
 }
 
 .cardActions {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-top: auto; /* Push buttons to the bottom */
+    margin-top: auto; 
 }
 
 .detailButton, .cancelButton, .backButton, .confirmButton {
@@ -142,12 +140,12 @@
     cursor: pointer;
     font-weight: 600;
     transition: background-color 0.3s ease;
-    flex: 1; /* Allow buttons to share space */
-    white-space: nowrap; /* Prevent text wrapping on buttons */
+    flex: 1;
+    white-space: nowrap;
 }
 
 .detailButton {
-    background-color: #3498db; /* Blue for details */
+    background-color: #3498db;
     color: white;
 }
 
@@ -156,7 +154,7 @@
 }
 
 .cancelButton {
-    background-color: #e74c3c; /* Red for cancel */
+    background-color: #e74c3c;
     color: white;
 }
 
@@ -165,10 +163,10 @@
 }
 
 .backButton {
-    background-color: #95a5a6; /* Grey for back */
+    background-color: #95a5a6;
     color: white;
-    margin-top: 20px; /* Space above back button if it's outside cards */
-    width: 100%; /* Make back button full width if not in card */
+    margin-top: 20px;
+    width: 100%;
 }
 
 .backButton:hover {
@@ -195,7 +193,7 @@
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 500px; /* Standard modal width */
+    max-width: 500px;
     text-align: center;
     position: relative;
     animation: fadeIn 0.3s ease-out;
@@ -206,12 +204,12 @@
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    width: 95%; /* Wider for details */
-    max-width: 800px; /* Larger max width */
+    width: 95%;
+    max-width: 800px;
     position: relative;
     animation: fadeIn 0.3s ease-out;
-    max-height: 90vh; /* Limit height for scroll if content is long */
-    overflow-y: auto; /* Enable scrolling for long content */
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 
@@ -225,33 +223,33 @@
 
 .detailGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Two columns, responsive */
-    gap: 15px 25px; /* Row and column gap */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px 25px;
     margin-bottom: 20px;
 }
 
 .detailGrid .infoGroup {
-    flex-direction: column; /* Stack label and value in detail modal */
+    flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 0; /* Reset margin from general .infoGroup */
+    margin-bottom: 0;
 }
 
 .detailGrid .infoGroup .label {
     font-size: 0.9em;
     color: #666;
     margin-bottom: 5px;
-    flex-basis: auto; /* Reset flex basis */
+    flex-basis: auto;
 }
 
 .detailGrid .infoGroup .value {
     font-size: 1em;
     color: #333;
-    text-align: left; /* Align text left in detail modal */
-    flex-basis: auto; /* Reset flex basis */
+    text-align: left;
+    flex-basis: auto;
 }
 
 .infoGroupFullWidth {
-    grid-column: 1 / -1; /* Make it span full width in grid */
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -270,7 +268,7 @@
 
 
 .surveyTitle {
-    grid-column: 1 / -1; /* Span full width */
+    grid-column: 1 / -1;
     text-align: center;
     color: #2980b9;
     margin-top: 20px;
@@ -314,7 +312,7 @@
 }
 
 .confirmButton {
-    background-color: #27ae60; /* Green for confirm */
+    background-color: #27ae60;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -346,7 +344,7 @@
     }
 
     .requestList {
-        grid-template-columns: 1fr; /* Single column on small screens */
+        grid-template-columns: 1fr;
     }
 
     .requestCard {
@@ -354,13 +352,13 @@
     }
 
     .detailGrid, .surveyGrid {
-        grid-template-columns: 1fr; /* Single column in detail modal on small screens */
+        grid-template-columns: 1fr;
         gap: 10px;
     }
 
     .modalContent, .modalContentLarge {
         padding: 20px;
-        max-width: 95%; /* Slightly wider on small screens */
+        max-width: 95%;
     }
 
     .modalTitle {
@@ -368,6 +366,6 @@
     }
 
     .cardActions {
-        flex-direction: column; /* Stack buttons on small cards */
+        flex-direction: column;
     }
 }
