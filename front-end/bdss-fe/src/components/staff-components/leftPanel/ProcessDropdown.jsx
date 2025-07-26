@@ -10,9 +10,9 @@ const ProcessDropdown = () => {
     };
 
     const subItems = [
-        { id: 'donation-process', label: 'Quy Trình Hiến', path: 'donation-processes' },
-        { id: 'transfusion-process', label: 'Quy Trình Nhận', path: 'transfusion-processes' },
-        { id: 'emergency-transfusion-process', label: 'Quy Trình Nhận Khẩn Cấp', path: 'emergency-transfusion-processes' },
+        { id: 'donation-process', label: 'Quá Trình Hiến Máu', path: 'donation-processes' },
+        { id: 'transfusion-process', label: 'Quá Trình Nhận Máu', path: 'transfusion-processes' },
+        { id: 'emergency-transfusion-process', label: 'Quá Trình Nhận Máu Khẩn Cấp', path: 'emergency-transfusion-processes' },
     ];
 
     return (

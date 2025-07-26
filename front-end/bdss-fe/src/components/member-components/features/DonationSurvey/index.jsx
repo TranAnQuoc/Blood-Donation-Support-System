@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import axiosInstance from "../../../../configs/axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "./index.module.css"; // Make sure this path is correct
+import styles from "./index.module.css";
 
 const DonationSurvey = () => {
-  const { scheduleId } = useParams(); // Get scheduleId from URL parameters
+  const { scheduleId } = useParams();
   const navigate = useNavigate();
 
   const [surveyData, setSurveyData] = useState({
@@ -18,7 +18,7 @@ const DonationSurvey = () => {
     onMedication: null,
     hasChronicDisease: null,
     chronicDiseaseNote: "",
-    lastDonationDays: "", // Keep as string for input, parse to int on submit
+    lastDonationDays: "",
     hadReactionPreviousDonation: null,
     previousReactionNote: "",
   });
@@ -30,7 +30,6 @@ const DonationSurvey = () => {
     setSurveyData((prevData) => {
       let newValue = value;
       if (type === "radio") {
-        // Convert string "true"/"false" to boolean, otherwise keep null or original value
         newValue = value === "true" ? true : value === "false" ? false : null;
       } else if (type === "checkbox") {
         newValue = checked;
@@ -42,7 +41,7 @@ const DonationSurvey = () => {
     });
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: "", // Clear error when input changes
+      [name]: "",
     }));
   };
 
@@ -50,7 +49,6 @@ const DonationSurvey = () => {
     let newErrors = {};
     let isValid = true;
 
-    // Check for null/unanswered boolean questions
     const booleanFields = [
       "isHealthyToday",
       "hasSymptoms",
@@ -69,10 +67,8 @@ const DonationSurvey = () => {
       }
     });
 
-    // Validate lastDonationDays - now optional
     const days = surveyData.lastDonationDays.trim();
     if (days !== "") {
-      // Only validate if a value is provided
       const parsedDays = parseInt(days, 10);
       if (isNaN(parsedDays) || parsedDays < 0) {
         newErrors.lastDonationDays =
@@ -81,7 +77,6 @@ const DonationSurvey = () => {
       }
     }
 
-    // Conditional validation for notes
     if (
       surveyData.hasChronicDisease === true &&
       !surveyData.chronicDiseaseNote.trim()
@@ -120,18 +115,18 @@ const DonationSurvey = () => {
         recentVaccination: surveyData.recentVaccination,
         onMedication: surveyData.onMedication,
         hasChronicDisease: surveyData.hasChronicDisease,
-        // Send null if no chronic disease or note is empty
+        
         chronicDiseaseNote:
           surveyData.hasChronicDisease && surveyData.chronicDiseaseNote.trim()
             ? surveyData.chronicDiseaseNote.trim()
             : null,
-        // Convert to number only if not empty, otherwise send null for optional field
+        
         lastDonationDays:
           surveyData.lastDonationDays.trim() !== ""
             ? parseInt(surveyData.lastDonationDays, 10)
             : null,
         hadReactionPreviousDonation: surveyData.hadReactionPreviousDonation,
-        // Send null if no previous reaction or note is empty
+        
         previousReactionNote:
           surveyData.hadReactionPreviousDonation &&
           surveyData.previousReactionNote.trim()
@@ -144,13 +139,12 @@ const DonationSurvey = () => {
         payload
       );
       toast.success("Đơn đăng ký hiến máu và khảo sát đã được gửi thành công!");
-      // Updated navigation path to include /member/
+      
       navigate("/member/my-donation-request");
     } catch (err) {
       const backendMessage = err.response?.data?.message;
       let errorMsg = "Không thể gửi khảo sát. Vui lòng thử lại.";
 
-      // Specific error handling based on backend messages
       if (backendMessage) {
         if (backendMessage.includes("đã đăng ký hiến máu và đang chờ xử lý")) {
           errorMsg =
@@ -159,7 +153,7 @@ const DonationSurvey = () => {
           backendMessage.includes("cần chờ ít nhất") &&
           backendMessage.includes("sau khi hiến máu để đăng ký lại")
         ) {
-          errorMsg = backendMessage; // Use the exact message from backend for donation frequency
+          errorMsg = backendMessage;
         } else if (
           backendMessage.includes("không tìm thấy lịch hiến máu") ||
           backendMessage.includes("không hợp lệ")
@@ -167,7 +161,7 @@ const DonationSurvey = () => {
           errorMsg =
             "Lịch hiến máu không tồn tại hoặc không hợp lệ. Vui lòng kiểm tra lại URL.";
         } else {
-          errorMsg = `Lỗi: ${backendMessage}`; // Generic error if no specific match
+          errorMsg = `Lỗi: ${backendMessage}`;
         }
       }
       toast.error(errorMsg);
@@ -185,7 +179,6 @@ const DonationSurvey = () => {
       </p>
 
       <form onSubmit={handleSubmit} className={styles.surveyForm}>
-        {/* Question 1: Hôm nay bạn có cảm thấy khỏe mạnh không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             1. Hôm nay bạn có cảm thấy khỏe mạnh không?
@@ -224,7 +217,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 2: Bạn có đang có triệu chứng (sốt, ho, tiêu chảy...) không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             2. Bạn có đang có triệu chứng (sốt, ho, tiêu chảy...) không?
@@ -264,7 +256,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 3: Bạn có từng mắc bệnh truyền nhiễm không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             3. Bạn có từng mắc bệnh truyền nhiễm (VD: Viêm gan B, HIV...) không?
@@ -310,7 +301,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 4: Bạn có quan hệ không an toàn gần đây không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             4. Bạn có quan hệ không an toàn (nhiều bạn tình, quan hệ đồng
@@ -350,7 +340,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 5: Bạn có phẫu thuật/xăm trong vòng 6 tháng không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             5. Bạn có phẫu thuật hoặc xăm, xỏ khuyên trong vòng 6 tháng gần đây
@@ -396,7 +385,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 6: Bạn có tiêm vaccine gần đây không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             6. Bạn có tiêm vaccine (trừ vaccine cúm mùa) trong vòng 4 tuần gần
@@ -437,7 +425,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 7: Bạn có đang sử dụng thuốc không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             7. Bạn có đang sử dụng thuốc (bao gồm cả thuốc bổ, thảo dược...)
@@ -478,7 +465,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 8: Bạn có bệnh mãn tính không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             8. Bạn có bệnh mãn tính (tim mạch, huyết áp, tiểu đường, hen
@@ -541,7 +527,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 9: Số ngày kể từ lần hiến máu gần nhất */}
         <div className={styles.formGroup}>
           <label htmlFor="lastDonationDays" className={styles.questionLabel}>
             9. Số ngày kể từ lần hiến máu gần nhất của bạn:
@@ -564,7 +549,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Question 10: Bạn có từng bị phản ứng sau khi hiến máu không? */}
         <div className={styles.formGroup}>
           <label className={styles.questionLabel}>
             10. Bạn có từng bị phản ứng (choáng, ngất, sưng...) sau khi hiến máu
@@ -637,7 +621,6 @@ const DonationSurvey = () => {
           )}
         </div>
 
-        {/* Action Buttons */}
         <div className={styles.actionButtons}>
           <button
             type="submit"

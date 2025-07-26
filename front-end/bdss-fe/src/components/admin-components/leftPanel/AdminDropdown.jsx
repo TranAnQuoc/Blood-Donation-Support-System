@@ -27,13 +27,13 @@ const AdminDropdown = () => {
   return (
     <div className={styles.adminDropdown}>
       <div className={styles.dropdownToggle} onClick={toggleDropdown}>
-        <span className={styles.adminName}>Admin: {user?.fullName || "Admin"}</span>
+        <span className={styles.adminName}>Quản trị viên: {user?.fullName || "Admin"}</span>
         {isOpen ? <FaChevronUp className={styles.arrowIcon} /> : <FaChevronDown className={styles.arrowIcon} />}
       </div>
       {isOpen && (
         <ul className={styles.dropdownMenu}>
-          <li className={styles.dropdownMenuItem} onClick={() => navigate("/admin-dashboard/admin-profile")}>Profile</li>
-          <li className={styles.dropdownMenuItem} onClick={handleLogout}>Logout</li>
+          <li className={styles.dropdownMenuItem} onClick={() => navigate("/admin-dashboard/admin-profile")}>Hồ sơ</li>
+          <li className={styles.dropdownMenuItem} onClick={handleLogout}>Đăng xuất</li>
         </ul>
       )}
     </div>

@@ -340,7 +340,7 @@ const EventManagement = () => {
             )}
 
             <div className={styles.eventList}>
-                <h3>Danh sách Sự kiện Hiến Máu Hiện có</h3>
+                <h3>Danh sách Sự kiện Hiến Máu Hiện Có</h3>
                 {events.length > 0 ? (
                     <DataTableContainer>
                         <table className={styles.dataTable}>
