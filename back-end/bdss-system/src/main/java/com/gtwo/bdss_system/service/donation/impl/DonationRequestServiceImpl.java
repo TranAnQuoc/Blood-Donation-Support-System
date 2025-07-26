@@ -164,12 +164,6 @@ public class DonationRequestServiceImpl implements DonationRequestService {
     }
 
     @Override
-    public List<DonationRequest> getPendingRequests() {
-        return repository.findByStatusRequest(StatusRequest.PENDING);
-    }
-
-
-    @Override
     public DonationRequest getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("DonationRequest not found or inactive"));
@@ -186,6 +180,18 @@ public class DonationRequestServiceImpl implements DonationRequestService {
         dto.setStatusRequest(entity.getStatusRequest().toString());
         dto.setApprovedTime(entity.getApprovedTime());
         dto.setNote(entity.getNote());
+        dto.setIsHealthyToday(entity.getIsHealthyToday());
+        dto.setHasSymptoms(entity.getHasSymptoms());
+        dto.setHasInfectiousDiseases(entity.getHasInfectiousDiseases());
+        dto.setUnsafeSex(entity.getUnsafeSex());
+        dto.setRecentSurgeryTattoo(entity.getRecentSurgeryTattoo());
+        dto.setRecentVaccination(entity.getRecentVaccination());
+        dto.setOnMedication(entity.getOnMedication());
+        dto.setHasChronicDisease(entity.getHasChronicDisease());
+        dto.setChronicDiseaseNote(entity.getChronicDiseaseNote());
+        dto.setLastDonationDays(entity.getLastDonationDays());
+        dto.setHadReactionPreviousDonation(entity.getHadReactionPreviousDonation());
+        dto.setPreviousReactionNote(entity.getPreviousReactionNote());
         return dto;
     }
 

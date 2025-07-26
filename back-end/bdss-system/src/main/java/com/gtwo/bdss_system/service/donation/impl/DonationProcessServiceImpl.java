@@ -55,6 +55,11 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     }
 
     @Override
+    public List<DonationProcess> getAll(){
+        return processRepository.findAll();
+    }
+
+    @Override
     public DonationProcess update(Long processId, DonationProcessDTO dto, Account performer) {
         DonationProcess existing = getById(processId);
         if (existing.getProcess() == StatusProcess.WAITING && existing.getDate() != null) {
@@ -269,7 +274,8 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     public DonationProcessViewDTO getMyLatestProcess(Long userId) {
         DonationProcess process = processRepository.findLatestByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Bạn chưa có tiến trình hiến máu nào."));
-        return modelMapper.map(process, DonationProcessViewDTO.class);
+        DonationProcessViewDTO dto = processViewDTO(process);
+        return dto;
     }
 
     @Override

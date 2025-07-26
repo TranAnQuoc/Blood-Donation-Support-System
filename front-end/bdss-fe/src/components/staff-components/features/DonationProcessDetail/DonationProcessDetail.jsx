@@ -72,6 +72,24 @@ const DonationProcessDetail = () => {
         'UNKNOWN': 'Chưa xác định'
     };
 
+    // Define blood types directly in the frontend, mapping IDs to display names
+    const bloodTypesOptions = [
+        { id: 1, type: 'Unknow', rhFactor: 'Unknow', displayName: 'Chưa xác định' },
+        { id: 2, type: 'A', rhFactor: '+', displayName: 'A+' },
+        { id: 3, type: 'A', rhFactor: '-', displayName: 'A-' },
+        { id: 4, type: 'B', rhFactor: '+', displayName: 'B+' },
+        { id: 5, type: 'B', rhFactor: '-', displayName: 'B-' },
+        { id: 6, type: 'AB', rhFactor: '+', displayName: 'AB+' },
+        { id: 7, type: 'AB', rhFactor: '-', displayName: 'AB-' },
+        { id: 8, type: 'O', rhFactor: '+', displayName: 'O+' },
+        { id: 9, type: 'O', rhFactor: '-', displayName: 'O-' },
+    ];
+
+    const getBloodTypeDisplayName = (bloodTypeId) => {
+        const bloodType = bloodTypesOptions.find(bt => bt.id === bloodTypeId);
+        return bloodType ? bloodType.displayName : 'Chưa cập nhật';
+    };
+
     const fetchProcessDetail = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -99,7 +117,7 @@ const DonationProcessDetail = () => {
                 type: fetchedProcessView.typeDonation || '',
                 notes: fetchedProcessView.notes || '',
                 process: fetchedProcessView.process,
-                bloodTypeId: fetchedProcessView.donorBloodType?.id || null,
+                bloodTypeId: fetchedProcessView.donorBloodType?.id || null, // Capture the bloodTypeId
                 date: fetchedProcessView.startTime ? new Date(fetchedProcessView.startTime).toISOString().split('T')[0] : null
             });
 
@@ -150,6 +168,10 @@ const DonationProcessDetail = () => {
             parsedValue = null;
         } else if (name === 'type' && value === '') {
             parsedValue = null;
+        } else if (name === 'bloodTypeId' && value === '') { // Handle bloodTypeId specifically
+            parsedValue = null;
+        } else if (name === 'bloodTypeId') {
+            parsedValue = parseInt(value, 10); // Parse to integer for bloodTypeId
         }
         setEditData(prevData => ({
             ...prevData,
@@ -211,7 +233,17 @@ const DonationProcessDetail = () => {
                 const requiredFields = ['heartRate', 'temperature', 'weight', 'height', 'hemoglobin', 'bloodPressure'];
                 const missing = requiredFields.filter(f => payload[f] === null || payload[f] === '');
                 if (missing.length > 0) {
-                    throw new Error(`Vui lòng điền đầy đủ các trường sàng lọc bắt buộc cho trạng thái "Đạt": ${missing.join(', ')}.`);
+                    throw new Error(`Vui lòng điền đầy đủ các trường sàng lọc bắt buộc cho trạng thái "Đạt": ${missing.map(f => {
+                        switch(f) {
+                            case 'heartRate': return 'Nhịp tim';
+                            case 'temperature': return 'Nhiệt độ';
+                            case 'weight': return 'Cân nặng';
+                            case 'height': return 'Chiều cao';
+                            case 'hemoglobin': return 'Hemoglobin';
+                            case 'bloodPressure': return 'Huyết áp';
+                            default: return f;
+                        }
+                    }).join(', ')}.`);
                 }
             }
 
@@ -265,7 +297,13 @@ const DonationProcessDetail = () => {
                 const requiredFields = ['quantity', 'type'];
                 const missing = requiredFields.filter(f => payload[f] === null || payload[f] === 0 || (f === 'type' && payload[f] === ''));
                 if (missing.length > 0) {
-                    throw new Error(`Vui lòng điền đầy đủ các trường hiến máu bắt buộc cho trạng thái "Hoàn thành": ${missing.join(', ')}.`);
+                    throw new Error(`Vui lòng điền đầy đủ các trường hiến máu bắt buộc cho trạng thái "Hoàn thành": ${missing.map(f => {
+                        switch(f) {
+                            case 'quantity': return 'Thể tích máu';
+                            case 'type': return 'Loại hiến';
+                            default: return f;
+                        }
+                    }).join(', ')}.`);
                 }
             }
             if (payload.process === 'FAILED' && (!payload.notes || payload.notes.trim() === '')) {
@@ -373,12 +411,32 @@ const DonationProcessDetail = () => {
                         <strong>Ngày sinh Người hiến:</strong>
                         <span>{processView.donorBirthDate ? formatDateTime(processView.donorBirthDate) : 'N/A'}</span>
                     </div>
+                    {/* NEW BLOOD TYPE SELECTION */}
                     <div className={styles.infoGroup}>
                         <strong>Nhóm máu ĐK:</strong>
-                        <span>
-                            {processView.donorBloodType ? `${processView.donorBloodType.type}${processView.donorBloodType.rhFactor}` : 'Chưa cập nhật'}
-                        </span>
+                        {canEditScreening || canEditDonation ? ( // Allow editing if in screening or donation step
+                            <select
+                                id="bloodTypeId"
+                                name="bloodTypeId"
+                                value={editData.bloodTypeId || ''}
+                                onChange={handleInputChange}
+                                className={styles.selectInput}
+                                disabled={!canEditScreening && !canEditDonation} // Disable if not in an editable step
+                            >
+                                <option value="">Chọn nhóm máu</option>
+                                {bloodTypesOptions.map(bt => (
+                                    <option key={bt.id} value={bt.id}>
+                                        {bt.displayName}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <span>
+                                {getBloodTypeDisplayName(processView.donorBloodType?.id)}
+                            </span>
+                        )}
                     </div>
+                    {/* END NEW BLOOD TYPE SELECTION */}
                     <div className={styles.infoGroup}>
                         <strong>Giới tính:</strong>
                         <span>{genderMap[processView.donorGender] || 'N/A'}</span>
@@ -503,7 +561,7 @@ const DonationProcessDetail = () => {
                                         <label htmlFor="failureReason">Lý do thất bại sàng lọc:</label>
                                         <textarea id="failureReason" name="failureReason"
                                             value={editData.failureReason} onChange={handleInputChange}
-                                            rows="3" placeholder="Ghi rõ lý do sàng lọc không đạt"
+                                            rows="3" placeholder="Ghi rõ lý do không đạt"
                                             disabled={!canEditScreening} className={styles.textarea} />
                                     </div>
                                 )}
@@ -511,7 +569,7 @@ const DonationProcessDetail = () => {
                                     <label htmlFor="notes">Ghi chú của nhân viên:</label>
                                     <textarea id="notes" name="notes"
                                         value={editData.notes} onChange={handleInputChange}
-                                        rows="3" placeholder="Ghi chú thêm về quá trình"
+                                        rows="3" placeholder="Ghi chú thêm về ngày tái khám"
                                         disabled={!canEditScreening} className={styles.textarea} />
                                 </div>
                                 <div className={styles.actionButtons}>
@@ -561,6 +619,15 @@ const DonationProcessDetail = () => {
                                         <option value="FAILED">Thất bại</option>
                                     </select>
                                 </div>
+                                {editData.process === 'COMPLETED' && (
+                                    <div className={styles.formGroup}>
+                                        <label htmlFor="notes">Ghi chú:</label>
+                                        <textarea id="notes" name="notes"
+                                            value={editData.notes} onChange={handleInputChange}
+                                            rows="3" placeholder="Ghi chú cho người hiến."
+                                            disabled={!canEditDonation} className={styles.textarea} />
+                                    </div>
+                                )}
                                 {editData.process === 'FAILED' && (
                                     <div className={styles.formGroup}>
                                         <label htmlFor="notes">Ghi chú (Lý do thất bại hiến máu):</label>
