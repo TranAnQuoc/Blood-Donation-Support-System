@@ -1,14 +1,21 @@
 /* General container and text styles */
 .listContainer {
     padding: 20px;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif; /* Changed to Inter for consistency */
     color: #333;
+    max-width: 1200px; /* Added max-width for better layout */
+    margin: 40px auto; /* Centered container */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .listTitle {
     color: #0056b3;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* Increased margin */
+    font-size: 2.2em; /* Larger title */
+    font-weight: 700;
 }
 
 .loading, .error, .noProcesses {
@@ -27,34 +34,38 @@
 .tableWrapper {
     overflow-x: auto; /* Allow horizontal scrolling if table is too wide */
     margin-top: 20px;
+    border-radius: 8px; /* Added border-radius to table wrapper */
+    overflow: hidden; /* Hide overflow for rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Soft shadow for table */
 }
 
 .processTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 0; /* Adjusted margin as wrapper has it */
 }
 
 .processTable th, .processTable td {
-    border: 1px solid #ddd;
-    padding: 12px 15px;
+    border: 1px solid #eee; /* Lighter border */
+    padding: 15px; /* Increased padding */
     text-align: left;
-    white-space: nowrap; /* Prevent content from wrapping in table cells */
+    white-space: nowrap;
 }
 
 .processTable th {
-    background-color: #f2f2f2;
-    color: #333;
-    font-weight: bold;
+    background-color: #f8f9fa; /* Lighter header background */
+    color: #555; /* Darker text for headers */
+    font-weight: 600; /* Slightly bolder */
+    text-transform: uppercase; /* Uppercase headers */
+    font-size: 0.9em;
 }
 
 .processTable tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #fefefe; /* Very light alternate row */
 }
 
 .processTable tbody tr:hover {
-    background-color: #e9e9e9;
+    background-color: #f2f2f2; /* Hover effect */
 }
 
 .editButton {
@@ -65,11 +76,12 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .editButton:hover {
     background-color: #0056b3;
+    transform: translateY(-1px);
 }
 
 /* Modal styles */
@@ -79,7 +91,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,46 +101,49 @@
 .modalContent {
     background: white;
     padding: 30px;
-    border-radius: 8px;
+    border-radius: 10px; /* More rounded corners */
     width: 90%;
-    max-width: 800px; /* Max width for larger screens */
+    max-width: 900px; /* Increased max-width for more form fields */
     position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Stronger shadow */
     animation: fadeIn 0.3s ease-out;
-    max-height: 90vh; /* Limit modal height */
-    overflow-y: auto; /* Add scrollbar if content is too long */
+    max-height: 95vh; /* Slightly more height */
+    overflow-y: auto;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
+    from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
 }
 
 .closeModalButton {
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 15px;
+    right: 20px;
     background: none;
     border: none;
-    font-size: 2em;
+    font-size: 2.2em; /* Larger close button */
     cursor: pointer;
-    color: #aaa;
+    color: #888; /* Softer color */
+    transition: color 0.2s ease;
 }
 
 .closeModalButton:hover {
-    color: #666;
+    color: #555;
 }
 
 .modalContent h3 {
     text-align: center;
-    margin-bottom: 20px;
-    color: #0056b3;
+    margin-bottom: 25px; /* Increased margin */
+    color: #333; /* Darker title color */
+    font-size: 1.8em; /* Larger title */
+    font-weight: 600;
 }
 
 .editForm {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns layout */
-    gap: 15px 25px; /* Row and column gap */
+    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+    gap: 20px; /* Increased gap */
 }
 
 .formGroup {
@@ -137,58 +152,62 @@
 }
 
 .formGroup label {
-    margin-bottom: 8px;
-    font-weight: bold;
+    margin-bottom: 10px; /* Increased margin */
+    font-weight: 600; /* Bolder labels */
     color: #555;
-    display: flex; /* To keep asterisk on the same line */
+    display: flex;
     align-items: center;
+    font-size: 0.95em;
 }
 
 .formGroup input[type="text"],
 .formGroup input[type="number"],
 .formGroup select,
 .formGroup textarea {
-    padding: 10px;
-    border: 1px solid #dcdcdc;
-    border-radius: 5px;
+    padding: 12px; /* Increased padding */
+    border: 1px solid #ccc; /* Softer border */
+    border-radius: 8px; /* More rounded inputs */
     font-size: 1em;
     width: 100%;
-    box-sizing: border-box; /* Ensures padding does not increase width */
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .formGroup input[type="checkbox"] {
-    width: auto; /* Checkbox should not take 100% width */
+    width: auto;
     margin-top: 5px;
-    transform: scale(1.2); /* Slightly enlarge checkbox */
+    transform: scale(1.3); /* Slightly larger checkbox */
+    accent-color: #007bff; /* Custom color for checkbox */
 }
 
 .formGroup input:focus,
 .formGroup select:focus,
 .formGroup textarea:focus {
     border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2); /* Stronger shadow on focus */
     outline: none;
 }
 
 .formGroup textarea {
-    resize: vertical; /* Allow vertical resizing */
-    min-height: 60px;
+    resize: vertical;
+    min-height: 80px; /* Slightly taller textarea */
 }
 
 .modalActions {
-    grid-column: 1 / -1; /* Spans full width of the grid */
+    grid-column: 1 / -1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; /* Align buttons to the right */
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 25px; /* Increased margin */
 }
 
 .actionButton {
-    padding: 10px 20px;
+    padding: 10px 25px; /* More padding for buttons */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* More rounded buttons */
     cursor: pointer;
     font-size: 1em;
+    font-weight: 500;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -203,112 +222,101 @@
 }
 
 .cancelButton {
-    background-color: #dc3545;
+    background-color: #6c757d; /* Muted color for cancel */
     color: white;
 }
 
 .cancelButton:hover {
-    background-color: #c82333;
+    background-color: #5a6268;
     transform: translateY(-2px);
 }
 
+/* Overall error message (e.g., from backend or general form error) */
 .errorText {
-    grid-column: 1 / -1; /* Spans full width for error messages */
+    grid-column: 1 / -1;
     color: #dc3545;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 15px;
     font-weight: bold;
+    font-size: 0.9em;
 }
+
+/* Specific field error message */
+.fieldError {
+    color: #dc3545; /* Red for errors */
+    font-size: 0.85em; /* Slightly smaller font for field-specific errors */
+    margin-top: 5px; /* Space from input */
+    margin-bottom: 0; /* No extra space at bottom */
+    font-weight: 500;
+}
+
 
 /* Styles for required fields asterisk */
 .required {
-    color: #dc3545; /* Red color */
-    margin-left: 5px; /* Spacing from label */
-    font-size: 1.2em; /* Larger size */
-    line-height: 1; /* Ensure proper alignment */
+    color: #dc3545;
+    margin-left: 5px;
+    font-size: 1.1em;
+    line-height: 1;
 }
 
 /* Full width for specific form groups */
 .fullWidth {
-    grid-column: 1 / -1; /* Occupies both columns */
-}
-
-/* Styles for file upload section */
-.currentFile, .newFile {
-    margin-top: 5px;
-    font-size: 0.85em;
-    color: #555;
-}
-
-.viewFileLink {
-    margin-left: 5px;
-    color: #007bff;
-    text-decoration: none;
-}
-
-.viewFileLink:hover {
-    text-decoration: underline;
-}
-
-.formGroup input[type="file"] {
-    padding: 8px; /* Slightly reduced padding for file input */
-    height: auto; /* Auto height */
-    border: 1px solid #dcdcdc;
-    border-radius: 4px;
-    font-size: 0.95em;
-    width: 100%;
-    box-sizing: border-box;
-    background-color: #f8f8f8; /* Light background */
-}
-
-.formGroup input[type="file"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-    outline: none;
+    grid-column: 1 / -1;
 }
 
 /* Styles for the Vital Signs group */
 .vitalSignsGroup {
     border: 1px solid #e0e0e0;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 20px; /* More padding */
+    border-radius: 10px; /* More rounded */
     background-color: #fcfcfc;
-    margin-bottom: 15px; /* Spacing from other groups */
-    grid-column: 1 / -1; /* Make the group span full width */
+    margin-bottom: 20px;
+    grid-column: 1 / -1;
 }
 
 .vitalSignsGroup .groupLabel {
-    font-size: 1.1em;
+    font-size: 1.2em; /* Larger group label */
     color: #0056b3;
-    margin-bottom: 10px;
-    display: block; /* Make label occupy its own line */
+    margin-bottom: 15px; /* More spacing */
+    display: block;
     text-align: center;
-    font-weight: bold; /* Make the group label bold */
+    font-weight: bold;
 }
 
 .vitalSignsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 2 or more columns based on space */
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusted min-width for better fit */
+    gap: 20px; /* Increased gap */
 }
 
 /* Ensure inputs within vitalSignsGrid have normal padding and border */
 .vitalSignsGrid .formGroup input {
-    width: 100%; /* Ensure inputs in the grid are also full width of their cell */
+    width: 100%;
 }
 
 /* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 900px) { /* Adjusted breakpoint */
     .editForm {
-        grid-template-columns: 1fr; /* Revert to 1 column on small screens */
+        grid-template-columns: 1fr; /* Revert to 1 column on smaller screens */
     }
 
     .modalContent {
         width: 95%;
-        padding: 20px;
+        padding: 25px; /* Adjusted padding */
     }
-    
+
     .vitalSignsGrid {
-        grid-template-columns: 1fr; /* 1 column on small screens */
+        grid-template-columns: 1fr; /* 1 column on smaller screens */
+    }
+}
+
+/* Table scroll on small screens */
+@media (max-width: 768px) {
+    .tableWrapper {
+        margin: 0 -20px; /* Negative margin to extend to screen edges */
+        border-radius: 0;
+    }
+    .processTable th, .processTable td {
+        padding: 10px; /* Smaller padding for table cells */
     }
 }

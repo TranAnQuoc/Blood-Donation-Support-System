@@ -36,6 +36,8 @@ const EmergencyRequestForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [modalMessage, setModalMessage] = useState(""); // State for modal message
 
   // Effect to handle location auto-fill based on emergencyPlace
   useEffect(() => {
@@ -46,12 +48,16 @@ const EmergencyRequestForm = () => {
       }));
     } else if (formData.emergencyPlace === "TRANSFER") {
       // Clear location if previously set to "Tại cơ sở" and now "TRANSFER"
-      if (prevData => prevData.location === "Tại cơ sở") { // Use prevData here for safety
-        setFormData((prevData) => ({
-          ...prevData,
-          location: "",
-        }));
-      }
+      // Use a functional update for prevData to ensure latest state
+      setFormData((prevData) => {
+        if (prevData.location === "Tại cơ sở") {
+          return {
+            ...prevData,
+            location: "",
+          };
+        }
+        return prevData;
+      });
     }
   }, [formData.emergencyPlace]);
 
@@ -84,13 +90,15 @@ const EmergencyRequestForm = () => {
     }
 
     // Validate Blood Type ID
-    if (!formData.bloodTypeId) {
+    // Ensure that the selected ID is not the default "Choose blood type" option if you add one
+    if (!formData.bloodTypeId || formData.bloodTypeId === "") { // Added check for empty string if default option is value=""
       tempErrors.bloodTypeId = "Vui lòng chọn nhóm máu.";
       isValid = false;
     }
 
     // Validate Blood Component ID
-    if (!formData.bloodComponentId) {
+    // Ensure that the selected ID is not the default "Choose blood component" option if you add one
+    if (!formData.bloodComponentId || formData.bloodComponentId === "") { // Added check for empty string if default option is value=""
       tempErrors.bloodComponentId = "Vui lòng chọn thành phần máu.";
       isValid = false;
     }
@@ -146,7 +154,7 @@ const EmergencyRequestForm = () => {
         delete newErrors[name];
         // Special handling for emergencyPlace/location errors
         if (name === "emergencyPlace") {
-          delete newErrors.location;
+          delete newErrors.location; // Clear location error if emergencyPlace changes
         }
         return newErrors;
       });
@@ -155,12 +163,24 @@ const EmergencyRequestForm = () => {
     });
   };
 
+  // Function to show the custom modal
+  const handleShowModal = (message) => {
+    setModalMessage(message);
+    setShowModal(true);
+  };
+
+  // Function to close the custom modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setModalMessage("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) {
       console.error("Form validation failed", errors);
-      alert("Vui lòng kiểm tra lại thông tin đã nhập.");
+      handleShowModal("Vui lòng kiểm tra lại thông tin đã nhập.");
       return;
     }
 
@@ -189,14 +209,14 @@ const EmergencyRequestForm = () => {
         }
       );
       console.log("Yêu cầu khẩn cấp đã được gửi:", response.data);
-      alert("Yêu cầu khẩn cấp đã được gửi thành công!");
+      handleShowModal("Yêu cầu khẩn cấp đã được gửi thành công!");
       // Reset form after successful submission
       setFormData({
         fullName: "",
         phone: "",
         cccd: "",
-        bloodTypeId: FIXED_BLOOD_TYPES[0].id,
-        bloodComponentId: FIXED_BLOOD_COMPONENTS[0].id,
+        bloodTypeId: FIXED_BLOOD_TYPES[0].id, // Reset to first valid option
+        bloodComponentId: FIXED_BLOOD_COMPONENTS[0].id, // Reset to first valid option
         quantity: "",
         location: "",
         emergencyProof: "",
@@ -206,7 +226,7 @@ const EmergencyRequestForm = () => {
       setErrors({}); // Clear all errors
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu khẩn cấp:", error);
-      alert("Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.");
+      handleShowModal("Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.");
     }
   };
 
@@ -299,6 +319,7 @@ const EmergencyRequestForm = () => {
             }`}
             required
           >
+            {/* Added a default "Chọn nhóm máu" option with an empty value */}
             <option value="">Chọn nhóm máu</option>
             {FIXED_BLOOD_TYPES.map((type) => (
               <option key={type.id} value={type.id}>
@@ -326,6 +347,8 @@ const EmergencyRequestForm = () => {
             }`}
             required
           >
+            {/* Added a default "Chọn thành phần máu" option with an empty value */}
+            <option value="">Chọn thành phần máu</option>
             {FIXED_BLOOD_COMPONENTS.map((component) => (
               <option key={component.id} value={component.id}>
                 {component.name}
@@ -464,6 +487,21 @@ const EmergencyRequestForm = () => {
           Gửi Yêu Cầu
         </button>
       </form>
+
+      {/* Custom Modal Popup */}
+      {showModal && (
+        <div className={styles.modalOverlay} onClick={handleCloseModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.closeModalButton} onClick={handleCloseModal}>
+              &times;
+            </button>
+            <p className={styles.modalMessage}>{modalMessage}</p>
+            <button className={styles.modalButton} onClick={handleCloseModal}>
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

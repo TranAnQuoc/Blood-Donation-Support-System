@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import styles from './EmergencyTransfusionProcess.module.css';
 
 // Cập nhật EMERGENCY_STATUS_OPTIONS với label hiển thị
 const EMERGENCY_STATUS_OPTIONS = [
-    {value: 'IN_PROCESS', lable:'Đang xử lý'},
+    { value: 'IN_PROCESS', label:'Đang xử lý'},
     { value: 'COMPLETED', label: 'Hoàn thành' },
     { value: 'CANCELED', label: 'Hủy bỏ' }
 ];
@@ -26,10 +28,6 @@ const BLOOD_TYPES = [
     { id: 7, type: "AB", rhFactor: "-", label: "AB-" },
     { id: 8, type: "O", rhFactor: "+", label: "O+" },
     { id: 9, type: "O", rhFactor: "-", label: "O-" }
-    // Lưu ý: ID ở đây là giả định. Trong thực tế, bạn cần lấy ID chính xác từ DB
-    // hoặc đảm bảo rằng mapping giữa front-end và back-end là nhất quán.
-    // Nếu bạn không muốn gọi API, bạn phải biết ID mà backend sẽ tạo ra cho các giá trị này.
-    // Ví dụ, nếu UNKNOWN luôn là ID 1, A+ luôn là ID 2, v.v.
 ];
 
 // Dữ liệu tĩnh cho Blood Components dựa trên initBloodComponents của backend
@@ -39,7 +37,6 @@ const BLOOD_COMPONENTS = [
     { id: 4, name: "Hồng cầu" },
     { id: 5, name: "Tiểu cầu" },
     { id: 6, name: "Bạch cầu" }
-    // Tương tự như Blood Types, ID ở đây là giả định và cần nhất quán với backend.
 ];
 
 
@@ -52,8 +49,8 @@ const EmergencyProcessList = () => {
     // State cho modal chỉnh sửa
     const [showEditModal, setShowEditModal] = useState(false);
     const [currentProcess, setCurrentProcess] = useState(null); // Đối tượng process đang chỉnh sửa
-    const [editFormData, setEditFormData] = useState({ // Dữ liệu form chỉnh sửa (các trường text/number/boolean)
-        status: 'PENDING', // Giá trị mặc định
+    const [editFormData, setEditFormData] = useState({ // Dữ liệu form chỉnh sửa
+        status: 'IN_PROCESS',
         symptoms: '',
         hemoglobinLevel: 0.0,
         bloodGroupConfirmed: false,
@@ -61,18 +58,19 @@ const EmergencyProcessList = () => {
         crossmatchResult: 'PENDING',
         needComponent: '',
         reasonForTransfusion: '',
-        healthCheckSummary: '', // Dành cho tóm tắt TEXT
+        healthCheckSummary: '',
         bloodPressure: '',
         pulse: 0,
         respiratoryRate: 0,
         temperature: 0.0,
-        bloodtypeId: null, // Giá trị mặc định là null hoặc ID của 'UNKNOWN'
-        componentId: null, // Giá trị mặc định là null hoặc ID của 'Unknow'
+        bloodtypeId: null,
+        componentId: null,
     });
-    // Removed healthFile state as we are no longer uploading a new file here
     const [currentHealthCheckFileUrl, setCurrentHealthCheckFileUrl] = useState('');
 
-    const [editError, setEditError] = useState(null);
+    // State mới để lưu lỗi validation cho từng trường
+    const [validationErrors, setValidationErrors] = useState({});
+    const [overallError, setOverallError] = useState(null); // Lỗi tổng thể không liên quan đến từng trường
 
     const fetchEmergencyProcesses = async () => {
         try {
@@ -86,8 +84,10 @@ const EmergencyProcessList = () => {
             console.error("Error fetching emergency processes:", err);
             if (err.response && (err.response.status === 401 || err.response.status === 403)) {
                 setError("Phiên đăng nhập hết hạn hoặc không có quyền. Vui lòng đăng nhập lại.");
+                toast.error("Phiên đăng nhập hết hạn hoặc không có quyền. Vui lòng đăng nhập lại.");
             } else {
                 setError("Không thể tải danh sách quy trình khẩn cấp. Vui lòng thử lại.");
+                toast.error("Không thể tải danh sách quy trình khẩn cấp. Vui lòng thử lại.");
             }
         } finally {
             setLoading(false);
@@ -101,7 +101,7 @@ const EmergencyProcessList = () => {
     const handleEditClick = (process) => {
         setCurrentProcess(process);
         setEditFormData({
-            status: process.status || 'PENDING',
+            status: process.status || 'IN_PROCESS',
             symptoms: process.symptoms || '',
             hemoglobinLevel: process.hemoglobinLevel || 0.0,
             bloodGroupConfirmed: process.bloodGroupConfirmed || false,
@@ -114,21 +114,20 @@ const EmergencyProcessList = () => {
             pulse: process.pulse || 0,
             respiratoryRate: process.respiratoryRate || 0,
             temperature: process.temperature || 0.0,
-            // Đảm bảo rằng ID được lấy đúng, chuyển đổi sang number nếu cần
             bloodtypeId: process.bloodtypeId ? Number(process.bloodtypeId) : null,
             componentId: process.componentId ? Number(process.componentId) : null,
         });
         setCurrentHealthCheckFileUrl(process.healthFileUrl || '');
-        // setHealthFile(null); // Removed this as we are no longer managing file state for upload
-        setEditError(null);
+        setValidationErrors({}); // Reset errors when opening modal
+        setOverallError(null); // Reset overall error
         setShowEditModal(true);
     };
 
     const handleCloseEditModal = () => {
         setShowEditModal(false);
         setCurrentProcess(null);
-        setEditError(null);
-        // setHealthFile(null); // Removed this
+        setValidationErrors({}); // Clear errors on close
+        setOverallError(null);
         setCurrentHealthCheckFileUrl('');
     };
 
@@ -136,42 +135,158 @@ const EmergencyProcessList = () => {
         const { name, value, type, checked } = e.target;
         setEditFormData(prevState => ({
             ...prevState,
-            // Chuyển đổi giá trị sang kiểu số (Integer/Double) hoặc Boolean nếu cần
             [name]: type === 'checkbox' ? checked : (
                 type === 'number' || name === 'bloodtypeId' || name === 'componentId'
-                    ? (value === '' ? null : parseFloat(value)) // Sử dụng parseFloat để xử lý cả số nguyên và số thập phân, hoặc null nếu rỗng
+                    ? (value === '' ? null : parseFloat(value))
                     : value
             )
         }));
+        // Clear specific error when user starts typing/changing
+        if (validationErrors[name]) {
+            setValidationErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: null
+            }));
+        }
     };
 
-    // Removed handleFileChange as file upload is no longer part of this form
+    const validateForm = () => {
+        const errors = {};
+        let isValid = true;
+
+        // healthCheckSummary validation
+        if (!editFormData.healthCheckSummary || editFormData.healthCheckSummary.trim() === '') {
+            errors.healthCheckSummary = "Tóm tắt hồ sơ sức khỏe không được để trống.";
+            isValid = false;
+        } else if (editFormData.healthCheckSummary.length > 1000) {
+            errors.healthCheckSummary = "Tóm tắt hồ sơ sức khỏe tối đa 1000 ký tự.";
+            isValid = false;
+        }
+
+        // status validation
+        if (!editFormData.status) {
+            errors.status = "Trạng thái quy trình là bắt buộc.";
+            isValid = false;
+        }
+
+        // symptoms validation
+        if (editFormData.symptoms && editFormData.symptoms.length > 500) {
+            errors.symptoms = "Triệu chứng tối đa 500 ký tự.";
+            isValid = false;
+        }
+
+        // bloodPressure validation
+        if (editFormData.bloodPressure && editFormData.bloodPressure.length > 50) {
+            errors.bloodPressure = "Huyết áp tối đa 50 ký tự.";
+            isValid = false;
+        }
+
+        // pulse validation
+        if (editFormData.pulse !== null && editFormData.pulse < 0) {
+            errors.pulse = "Mạch phải lớn hơn hoặc bằng 0.";
+            isValid = false;
+        }
+
+        // respiratoryRate validation
+        if (editFormData.respiratoryRate !== null && editFormData.respiratoryRate < 0) {
+            errors.respiratoryRate = "Nhịp thở phải lớn hơn hoặc bằng 0.";
+            isValid = false;
+        }
+
+        // temperature validation
+        if (editFormData.temperature !== null) {
+            if (editFormData.temperature < 30.0 || editFormData.temperature > 45.0) {
+                errors.temperature = "Nhiệt độ không hợp lệ (30.0 - 45.0 °C).";
+                isValid = false;
+            }
+        }
+
+        // hemoglobinLevel validation
+        if (editFormData.hemoglobinLevel === null || editFormData.hemoglobinLevel === '') {
+             errors.hemoglobinLevel = "Nồng độ Hemoglobin không được để trống.";
+             isValid = false;
+        } else if (editFormData.hemoglobinLevel < 0.0) {
+            errors.hemoglobinLevel = "Nồng độ Hemoglobin không hợp lệ (phải lớn hơn hoặc bằng 0.0).";
+            isValid = false;
+        }
+
+        // quantity validation
+        if (editFormData.quantity === null || editFormData.quantity === '') {
+            errors.quantity = "Số lượng máu không được để trống.";
+            isValid = false;
+        } else if (editFormData.quantity < 1) {
+            errors.quantity = "Số lượng máu phải lớn hơn 0.";
+            isValid = false;
+        }
+
+        // needComponent validation
+        if (editFormData.needComponent && editFormData.needComponent.length > 200) {
+            errors.needComponent = "Thành phần máu cần thiết tối đa 200 ký tự.";
+            isValid = false;
+        }
+
+        // reasonForTransfusion validation
+        if (editFormData.reasonForTransfusion && editFormData.reasonForTransfusion.length > 500) {
+            errors.reasonForTransfusion = "Lý do truyền máu tối đa 500 ký tự.";
+            isValid = false;
+        }
+
+        // bloodtypeId and componentId are nullable in DTO, so no required validation here
+        // However, if you want to validate against your static lists:
+        if (editFormData.bloodtypeId !== null && !BLOOD_TYPES.some(bt => bt.id === editFormData.bloodtypeId)) {
+            errors.bloodtypeId = "Nhóm máu không hợp lệ.";
+            isValid = false;
+        }
+        if (editFormData.componentId !== null && !BLOOD_COMPONENTS.some(bc => bc.id === editFormData.componentId)) {
+            errors.componentId = "Thành phần máu không hợp lệ.";
+            isValid = false;
+        }
+
+
+        setValidationErrors(errors);
+        return isValid;
+    };
 
     const handleSubmitEdit = async (e) => {
         e.preventDefault();
-        setEditError(null);
+        setOverallError(null); // Clear overall error before submission
 
         if (!currentProcess || !currentProcess.id) {
-            setEditError("Không tìm thấy ID quy trình để cập nhật.");
+            setOverallError("Không tìm thấy ID quy trình để cập nhật.");
+            toast.error("Không tìm thấy ID quy trình để cập nhật.");
             return;
+        }
+
+        if (!validateForm()) {
+            toast.error("Vui lòng kiểm tra lại các thông tin lỗi trong biểu mẫu.");
+            return; // Stop submission if validation fails
         }
 
         const formData = new FormData();
 
         for (const key in editFormData) {
-            // Kiểm tra và bỏ qua các trường có giá trị null hoặc undefined
-            // Đặc biệt quan trọng cho các trường số (như ID) nếu chúng có thể là null
             if (editFormData[key] === null || editFormData[key] === undefined) {
-                continue; // Không thêm trường này vào formData nếu giá trị là null/undefined
-            }
-            if (typeof editFormData[key] === 'boolean') {
+                // If the DTO field can be null/optional, don't append it if its value is null/undefined
+                // However, for fields like 'quantity', 'hemoglobinLevel' where 0 is a valid number,
+                // ensure they are appended unless you specifically want to omit them when 0.
+                // Based on your DTO annotations, they seem to be required or have min values.
+                if (key === 'quantity' || key === 'hemoglobinLevel' || key === 'pulse' || key === 'respiratoryRate' || key === 'temperature') {
+                    // For numeric fields with min/not-null requirements, if they are null here
+                    // it means they failed validateForm() already.
+                    // If they are 0 and valid, they will be appended.
+                    formData.append(key, editFormData[key]);
+                } else if (key === 'bloodGroupConfirmed') {
+                     formData.append(key, editFormData[key].toString());
+                }
+                else {
+                    continue; // Skip appending truly optional null fields
+                }
+            } else if (typeof editFormData[key] === 'boolean') {
                 formData.append(key, editFormData[key].toString());
             } else {
                 formData.append(key, editFormData[key]);
             }
         }
-
-        // Removed logic for appending healthFile to formData
 
         try {
             await axios.put(
@@ -180,23 +295,39 @@ const EmergencyProcessList = () => {
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        // Content-Type is automatically set to multipart/form-data when using FormData
                     },
                 }
             );
-            alert("Cập nhật quy trình thành công!");
+            toast.success("Cập nhật quy trình thành công!");
             handleCloseEditModal();
-            fetchEmergencyProcesses();
+            fetchEmergencyProcesses(); // Refresh data
         } catch (err) {
             console.error("Lỗi khi cập nhật quy trình:", err);
-            if (err.response && err.response.data && err.response.data.message) {
-                setEditError(err.response.data.message);
-            } else if (err.response && err.response.data && Array.isArray(err.response.data.errors)) {
-                const errorMessages = err.response.data.errors.map(error => error.defaultMessage || error.message).join("; ");
-                setEditError(`Lỗi validate: ${errorMessages}`);
-            } else {
-                setEditError("Có lỗi xảy ra khi cập nhật quy trình. Vui lòng thử lại.");
+            let errorMessage = "Có lỗi xảy ra khi cập nhật quy trình. Vui lòng thử lại.";
+            if (err.response && err.response.data) {
+                if (err.response.data.message) {
+                    errorMessage = err.response.data.message;
+                } else if (Array.isArray(err.response.data.errors)) {
+                    // Try to map backend validation errors to frontend fields
+                    const backendErrors = {};
+                    err.response.data.errors.forEach(error => {
+                        if (error.field) {
+                            backendErrors[error.field] = error.defaultMessage || error.message;
+                        } else {
+                            // If no specific field, add to overall error
+                            errorMessage = error.defaultMessage || error.message || errorMessage;
+                        }
+                    });
+                    setValidationErrors(prev => ({...prev, ...backendErrors}));
+                    if (Object.keys(backendErrors).length > 0) {
+                        errorMessage = "Vui lòng kiểm tra các lỗi trong biểu mẫu.";
+                    }
+                }
+            } else if (err.message) {
+                errorMessage = err.message;
             }
+            setOverallError(errorMessage);
+            toast.error(errorMessage);
         }
     };
 
@@ -222,15 +353,13 @@ const EmergencyProcessList = () => {
                                 <th>Mã YC</th>
                                 <th>Trạng thái</th>
                                 <th>Số lượng</th>
-                                <th>Nhóm máu</th> {/* Đổi tên cột để hiển thị tên */}
-                                <th>Thành phần máu</th> {/* Đổi tên cột để hiển thị tên */}
+                                <th>Nhóm máu</th>
+                                <th>Thành phần máu</th>
                                 <th>Hành Động</th>
                             </tr>
                         </thead>
                         <tbody>
                             {processes.map((process) => {
-                                const bloodType = BLOOD_TYPES.find(bt => bt.id === process.bloodtypeId);
-                                const bloodComponentName = BLOOD_COMPONENTS.find(bc => bc.id === process.componentId);
                                 return (
                                     <tr key={process.id}>
                                         <td>{process.id || 'N/A'}</td>
@@ -238,7 +367,7 @@ const EmergencyProcessList = () => {
                                         <td>
                                             {EMERGENCY_STATUS_OPTIONS.find(opt => opt.value === process.status)?.label || process.status || 'N/A'}
                                         </td>
-                                
+
                                         <td>{process.quantity !== null ? `${process.quantity} ml` : 'N/A'}</td>
                                         <td>{process.bloodType || 'N/A' }</td>
                                         <td>{process.bloodComponent || 'N/A'}</td>
@@ -268,17 +397,17 @@ const EmergencyProcessList = () => {
                         <h3>Chỉnh sửa Quy trình Khẩn cấp (ID: {currentProcess.id})</h3>
                         <form onSubmit={handleSubmitEdit} className={styles.editForm}>
 
-                            {/* 1. Triệu chứng - Required, full width */}
+                            {/* 1. Triệu chứng - Size max 500 */}
                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label htmlFor="symptoms">Triệu chứng:<span className={styles.required}>*</span></label>
+                                <label htmlFor="symptoms">Triệu chứng:</label>
                                 <textarea
                                     id="symptoms"
                                     name="symptoms"
                                     value={editFormData.symptoms}
                                     onChange={handleChange}
                                     rows="3"
-                                    required
                                 ></textarea>
+                                {validationErrors.symptoms && <p className={styles.fieldError}>{validationErrors.symptoms}</p>}
                             </div>
 
                             {/* Dấu hiệu sinh tồn (Nhóm các trường mới) */}
@@ -294,6 +423,7 @@ const EmergencyProcessList = () => {
                                             value={editFormData.bloodPressure}
                                             onChange={handleChange}
                                         />
+                                        {validationErrors.bloodPressure && <p className={styles.fieldError}>{validationErrors.bloodPressure}</p>}
                                     </div>
                                     <div className={styles.formGroup}>
                                         <label htmlFor="pulse">Mạch:</label>
@@ -301,9 +431,10 @@ const EmergencyProcessList = () => {
                                             type="number"
                                             id="pulse"
                                             name="pulse"
-                                            value={editFormData.pulse !== null ? editFormData.pulse : ''} // Display empty string if null
+                                            value={editFormData.pulse !== null ? editFormData.pulse : ''}
                                             onChange={handleChange}
                                         />
+                                        {validationErrors.pulse && <p className={styles.fieldError}>{validationErrors.pulse}</p>}
                                     </div>
                                     <div className={styles.formGroup}>
                                         <label htmlFor="respiratoryRate">Nhịp thở:</label>
@@ -314,6 +445,7 @@ const EmergencyProcessList = () => {
                                             value={editFormData.respiratoryRate !== null ? editFormData.respiratoryRate : ''}
                                             onChange={handleChange}
                                         />
+                                        {validationErrors.respiratoryRate && <p className={styles.fieldError}>{validationErrors.respiratoryRate}</p>}
                                     </div>
                                     <div className={styles.formGroup}>
                                         <label htmlFor="temperature">Nhiệt độ (°C):</label>
@@ -325,11 +457,12 @@ const EmergencyProcessList = () => {
                                             onChange={handleChange}
                                             step="0.1"
                                         />
+                                        {validationErrors.temperature && <p className={styles.fieldError}>{validationErrors.temperature}</p>}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* 3. Mức Hemoglobin (g/dL) - Required, single column */}
+                            {/* 3. Mức Hemoglobin (g/dL) - Required, Min 0.0 */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="hemoglobinLevel">Mức Hemoglobin (g/dL):<span className={styles.required}>*</span></label>
                                 <input
@@ -339,11 +472,11 @@ const EmergencyProcessList = () => {
                                     value={editFormData.hemoglobinLevel}
                                     onChange={handleChange}
                                     step="0.01"
-                                    required
                                 />
+                                {validationErrors.hemoglobinLevel && <p className={styles.fieldError}>{validationErrors.hemoglobinLevel}</p>}
                             </div>
 
-                            {/* 4. Tóm tắt Hồ sơ sức khỏe (Text) - Required by DTO, full width */}
+                            {/* 4. Tóm tắt Hồ sơ sức khỏe (Text) - Required, Max 1000 */}
                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                                 <label htmlFor="healthCheckSummary">Tóm tắt hồ sơ sức khỏe:<span className={styles.required}>*</span></label>
                                 <textarea
@@ -352,12 +485,11 @@ const EmergencyProcessList = () => {
                                     value={editFormData.healthCheckSummary}
                                     onChange={handleChange}
                                     rows="3"
-                                    required
                                 ></textarea>
+                                {validationErrors.healthCheckSummary && <p className={styles.fieldError}>{validationErrors.healthCheckSummary}</p>}
                             </div>
 
-                           
-                            {/* 6. Xác nhận nhóm máu - Không bắt buộc, single column */}
+                            {/* 6. Xác nhận nhóm máu - Boolean, no validation from DTO */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="bloodGroupConfirmed">Xác nhận nhóm máu:</label>
                                 <input
@@ -369,7 +501,7 @@ const EmergencyProcessList = () => {
                                 />
                             </div>
 
-                            {/* 7. Kết quả Crossmatch - DROPDOWN - Không bắt buộc, single column */}
+                            {/* 7. Kết quả Crossmatch - DROPDOWN - No required validation from DTO, but check if valid option if ID exists*/}
                             <div className={styles.formGroup}>
                                 <label htmlFor="crossmatchResult">Kết quả Crossmatch:</label>
                                 <select
@@ -382,9 +514,10 @@ const EmergencyProcessList = () => {
                                         <option key={option.value} value={option.value}>{option.label}</option>
                                     ))}
                                 </select>
+                                {validationErrors.crossmatchResult && <p className={styles.fieldError}>{validationErrors.crossmatchResult}</p>}
                             </div>
 
-                            {/* 9. Số lượng máu (ml) - Required, single column */}
+                            {/* 9. Số lượng máu (ml) - Required, Min 1 */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="quantity">Số lượng máu (ml):<span className={styles.required}>*</span></label>
                                 <input
@@ -393,12 +526,45 @@ const EmergencyProcessList = () => {
                                     name="quantity"
                                     value={editFormData.quantity}
                                     onChange={handleChange}
-                                    required
                                 />
+                                {validationErrors.quantity && <p className={styles.fieldError}>{validationErrors.quantity}</p>}
                             </div>
 
+                            {/* bloodtypeId - Long, nullable. Added client-side check if value exists, is valid ID */}
+                             <div className={styles.formGroup}>
+                                <label htmlFor="bloodtypeId">Nhóm máu:</label>
+                                <select
+                                    id="bloodtypeId"
+                                    name="bloodtypeId"
+                                    value={editFormData.bloodtypeId || ''} // Use empty string for null to allow placeholder
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Chọn nhóm máu</option> {/* Placeholder option */}
+                                    {BLOOD_TYPES.map(type => (
+                                        <option key={type.id} value={type.id}>{type.label}</option>
+                                    ))}
+                                </select>
+                                {validationErrors.bloodtypeId && <p className={styles.fieldError}>{validationErrors.bloodtypeId}</p>}
+                            </div>
 
-                            {/* 11. Trạng thái xử lý - Required, single column */}
+                            {/* componentId - Long, nullable. Added client-side check if value exists, is valid ID */}
+                            <div className={styles.formGroup}>
+                                <label htmlFor="componentId">Thành phần máu:</label>
+                                <select
+                                    id="componentId"
+                                    name="componentId"
+                                    value={editFormData.componentId || ''}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Chọn thành phần máu</option>
+                                    {BLOOD_COMPONENTS.map(component => (
+                                        <option key={component.id} value={component.id}>{component.name}</option>
+                                    ))}
+                                </select>
+                                {validationErrors.componentId && <p className={styles.fieldError}>{validationErrors.componentId}</p>}
+                            </div>
+
+                            {/* 11. Trạng thái xử lý - Required */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="status">Trạng thái:<span className={styles.required}>*</span></label>
                                 <select
@@ -406,16 +572,16 @@ const EmergencyProcessList = () => {
                                     name="status"
                                     value={editFormData.status}
                                     onChange={handleChange}
-                                    required
                                 >
-                                    {/* Sử dụng option.value và option.label từ mảng đối tượng mới */}
                                     {EMERGENCY_STATUS_OPTIONS.map(option => (
                                         <option key={option.value} value={option.value}>{option.label}</option>
                                     ))}
                                 </select>
+                                {validationErrors.status && <p className={styles.fieldError}>{validationErrors.status}</p>}
                             </div>
 
-                            {editError && <p className={styles.errorText}>{editError}</p>}
+
+                            {overallError && <p className={styles.errorText}>{overallError}</p>}
 
                             <div className={styles.modalActions}>
                                 <button type="submit" className={`${styles.actionButton} ${styles.confirmButton}`}>Cập nhật</button>
@@ -425,6 +591,7 @@ const EmergencyProcessList = () => {
                     </div>
                 </div>
             )}
+            <ToastContainer />
         </div>
     );
 };

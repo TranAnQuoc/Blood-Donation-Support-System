@@ -255,3 +255,220 @@
   font-size: 0.875rem;
   margin-top: 4px;
 }
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure modal is on top of other content */
+}
+
+/* Modal Content Box */
+.modalContent {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-width: 400px; /* Max width for the modal */
+  width: 90%; /* Responsive width */
+  text-align: center;
+  animation: fadeInScale 0.3s ease-out; /* Simple animation */
+}
+
+/* Close Button */
+.closeModalButton {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2em;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.closeModalButton:hover {
+  color: #777;
+}
+
+/* Modal Message */
+.modalMessage {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Modal Action Button */
+.modalButton {
+  background-color: #007bff; /* Blue button */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.modalButton:hover {
+  background-color: #0056b3;
+}
+
+/* Keyframe animation for modal */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Existing form styles (ensure they are present and correctly applied) */
+.formContainer {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+}
+
+.formTitle {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.input,
+.textarea,
+.select { /* Added .select for consistency */
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box; /* Include padding in width */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.textarea {
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.inputError {
+  border-color: #dc3545 !important; /* Red border for errors */
+}
+
+.errorText {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 5px;
+  display: block;
+}
+
+.fileInputWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.fileInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.fileInput::file-selector-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.fileInput::file-selector-button:hover {
+  background-color: #e0e0e0;
+}
+
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px; /* Increased gap for better spacing */
+  margin-top: 8px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1em;
+  color: #333;
+}
+
+.radioOption input[type="radio"] {
+  margin-right: 10px; /* Space between radio button and label */
+  transform: scale(1.1); /* Slightly larger radio button */
+  cursor: pointer;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 15px;
+  background-color: #28a745; /* Green submit button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 20px;
+}
+
+.submitButton:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
