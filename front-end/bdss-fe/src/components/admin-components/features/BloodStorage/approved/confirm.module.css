@@ -1,5 +1,3 @@
-/* components/ConfirmationModal.module.css */
-
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -10,7 +8,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Đảm bảo modal hiển thị trên cùng */
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 }
 
 .modalContent {
@@ -49,13 +49,12 @@
 }
 
 .confirmButton {
-    background-color: #007bff; /* Blue */
+    background-color: #007bff;
     color: white;
 }
 
 .confirmButton:hover {
     background-color: #0056b3;
-    transform: translateY(-1px);
 }
 
 .confirmButton:disabled {
@@ -66,13 +65,12 @@
 }
 
 .cancelButton {
-    background-color: #6c757d; /* Grey */
+    background-color: #6c757d;
     color: white;
 }
 
 .cancelButton:hover {
     background-color: #5a6268;
-    transform: translateY(-1px);
 }
 
 .cancelButton:disabled {

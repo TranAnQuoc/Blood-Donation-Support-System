@@ -1,22 +1,26 @@
 .donationProcessDetailContainer {
-    padding: 30px;
+    padding: 20px;
     background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 1000px;
-    margin: 30px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .pageTitle {
+    font-size: 2.2em;
+    color: #007A64;
+    margin-bottom: 30px;
     text-align: center;
-    color: #2c3e50;
-    margin-bottom: 35px;
-    font-size: 2.5em;
-    font-weight: 700;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
 }
 
-/* Messages (loading, error, no data) */
+/* Messages */
 .loadingMessage, .errorMessage, .noDataMessage {
     text-align: center;
     padding: 20px;
@@ -43,12 +47,12 @@
 .formLayout {
     display: flex;
     gap: 30px;
-    flex-wrap: wrap; /* Allows columns to stack on small screens */
+    flex-wrap: wrap;
 }
 
 .readOnlySection, .editableSection {
     flex: 1;
-    min-width: 350px; /* Ensure minimum width before wrapping */
+    min-width: 350px;
     background-color: #ffffff;
     padding: 28px;
     border-radius: 8px;
@@ -56,11 +60,11 @@
 }
 
 .readOnlySection h3, .editableSection h3 {
-    color: #34495e;
+    color: #007A64;
     margin-top: 0;
     margin-bottom: 25px;
     font-size: 1.6em;
-    border-bottom: 2px solid #ecf0f1;
+    border-bottom: 2px solid #BDA25C;
     padding-bottom: 12px;
     font-weight: 600;
 }
@@ -72,22 +76,22 @@
 }
 
 .infoGroup strong {
-    color: #7f8c8d;
+    color: #007A64;
     font-size: 0.9em;
     margin-bottom: 6px;
     text-transform: uppercase;
 }
 
-.infoGroup span {
+.infoGroup span:not(.statusBadge) {
     font-size: 1.08em;
-    color: #333;
+    color: #000000;
     word-wrap: break-word;
 }
 
 .summaryDetails p {
     margin-bottom: 15px;
     font-size: 1.05em;
-    color: #333;
+    color: #000000;
 }
 
 .summaryDetails p strong {
@@ -103,7 +107,7 @@
 .formGroup label {
     display: block;
     margin-bottom: 8px;
-    color: #34495e;
+    color: #007A64;
     font-weight: 600;
     font-size: 0.95em;
 }
@@ -114,7 +118,7 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1em;
-    color: #333;
+    color: #000000;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -144,25 +148,54 @@
     border-radius: 20px;
     font-weight: bold;
     font-size: 0.85em;
-    color: white;
     text-align: center;
     min-width: 110px;
     margin-top: 5px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-transform: uppercase;
 }
 
-/* Colors for general process status */
-.waiting { background-color: #f1c40f; }
-.in_process { background-color: #3498db; }
-.screening_failed { background-color: #e74c3c; }
-.completed { background-color: #27ae60; }
-.failed { background-color: #c0392b; }
-.donor_cancel { background-color: #95a5a6; }
+/* Colors process status */
+.waiting {
+    background-color: #fff3cd;
+    color: #bd9829;
+    border: 1px solid #bd9829;
+}
+.in_process {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #004085;
+}
+.screening_failed {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #721c24;
+}
+.completed {
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
+}
+.failed {
+    background-color: #f8d7da;
+    color: #af2d3a;
+    border: 1px solid #af2d3a;
+}
+.donor_cancel {
+    background-color: #e2e3e5;
+    color: #51585e;
+    border: 1px solid #51585e;
+}
 
-/* Colors for StatusHealthCheck */
-.pass { background-color: #28a745; } /* Bootstrap success green */
-.fail { background-color: #dc3545; } /* Bootstrap danger red */
-
+.pass { background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
+}
+.fail {
+    background-color: #f8d7da;
+    color: #af2d3a;
+    border: 1px solid #af2d3a; 
+}
 
 /* Action Buttons */
 .actionButtons {
@@ -187,23 +220,28 @@
 }
 
 .backButton {
-    background-color: #6c757d; /* Grey */
+    background-color: #6c757d;
     color: white;
 }
 .backButton:hover {
     background-color: #5a6268;
-    transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .saveButton {
-    background-color: #007bff; /* Blue */
+    background-color: #007bff;
     color: white;
 }
 .saveButton:hover {
     background-color: #0056b3;
-    transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.validationText {
+    color: #cc071b;
+    font-size: 0.85em;
+    margin-top: 4px;
+    font-weight: 500;
 }
 
 /* Responsive adjustments */
@@ -215,7 +253,7 @@
 
     .readOnlySection, .editableSection {
         padding: 20px;
-        min-width: unset; /* Allow full width */
+        min-width: unset;
     }
 
     .actionButtons {

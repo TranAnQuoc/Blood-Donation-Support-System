@@ -22,7 +22,7 @@ import {
     faBox,
     // faCalendarCheck,
     // faNewspaper,
-    faChartBar,
+    // faChartBar,
     // faHeadset
     faPhoneVolume
 } from '@fortawesome/free-solid-svg-icons';
@@ -92,12 +92,12 @@ const LeftPanel = () => {
         { id: 'requestManagement', icon: faClipboardList, label: 'Giám Sát Yêu Cầu', hasDropdown: true },
         { id: 'process', icon: faBook, label: 'Giám Sát Quá Trình', hasDropdown: true },
         { id: 'history', icon: faHistory, label: 'Giám Sát Lịch Sử', hasDropdown: true },
-        { id: 'eventManagement', icon: faCalendarAlt, label: 'Giám Sát Sự Kiện Hiến Máu', fullPath: '/admin-dashboard/event-management' },
+        { id: 'eventListAdmin', icon: faCalendarAlt, label: 'Giám Sát Sự Kiện Hiến Máu', fullPath: '/admin-dashboard/event-list-admin' },
         { id: 'bloodStock', icon: faBox, label: 'Giám Sát Kho Máu', fullPath: '/admin-dashboard/blood-storage' },
         { id: 'bloodStorageHistory', icon: faHistory, label: 'Giám Sát Lịch Sử Kho Máu', fullPath: '/admin-dashboard/blood-storage-history' },
         // { id: 'recoveryReminders', icon: faCalendarCheck, label: 'Nhắc Nhở Hồi Phục', fullPath: '/admin-dashboard/recovery-reminders' },
         // { id: 'communityPosts', icon: faNewspaper, label: 'Bài Viết Cộng Đồng', fullPath: '/admin-dashboard/community-posts' },
-        { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/admin-dashboard/reports' },
+        // { id: 'reports', icon: faChartBar, label: 'Báo Cáo', fullPath: '/admin-dashboard/reports' },
         { id: 'emergencyCall', icon: faPhoneVolume, label: 'Liên Lạc Khẩn Cấp', fullPath: '/admin-dashboard/emergencyCall'}
         // { id: 'supportCenter', icon: faHeadset, label: 'Trung Tâm Hỗ Trợ', fullPath: '/admin-dashboard/support-center' },
     ];

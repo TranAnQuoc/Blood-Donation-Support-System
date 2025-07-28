@@ -159,7 +159,7 @@ const StaffProfile = () => {
 
     return (
         <div className={styles.profileContainer}>
-            <h2>Thông tin cá nhân của Staff</h2>
+            <h2 className={styles.sectionTitle}>HỒ SƠ CÁ NHÂN CỦA NHÂN VIÊN</h2>
             {!isEditing ? (
                 <div className={styles.profileDetails}>
                     <p><strong>Email:</strong> {profile.email || 'Chưa cập nhật'}</p>

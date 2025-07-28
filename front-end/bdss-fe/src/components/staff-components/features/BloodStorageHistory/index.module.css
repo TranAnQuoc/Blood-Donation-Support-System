@@ -7,6 +7,7 @@
     max-width: 1550px;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .pageTitle {
@@ -21,8 +22,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
-    gap: 15px; /* Spacing between elements */
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .filterSection {
@@ -35,7 +36,7 @@
 .label {
     font-weight: bold;
     color: #555;
-    white-space: nowrap; /* Prevents text wrapping */
+    white-space: nowrap;
 }
 
 .selectField {
@@ -120,21 +121,49 @@
     margin-top: 5px;
 }
 
-/* Status specific colors for BloodStorageHistory */
-.in_used { background-color: #007bff; } /* Purple */
-.transferred { background-color: #fd7e14; } /* Teal */
-.stored { background-color: #28a745; } /* Green */
-.pending { background-color: #ffc107; } /* Yellow */
-.expired { background-color: #850512; } /* Gray */
-.rejected { background-color: #dc3545; } /* Red */
+.in_used {
+    background-color: #bacaff;
+    color: #2b66be;
+    border: 1px solid #2b66be;
+}
+.transferred {
+    background-color: #fadcae;
+    color: #d38e33;
+    border: 1px solid #d38e33;
+}
+.stored {
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
+}
+.pending {
+    background-color: #fff3cd;
+    color: #bd9829;
+    border: 1px solid #bd9829;
+}
+.expired {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #721c24;
+}
+.rejected {
+    background-color: #f8d7da;
+    color: #af2d3a;
+    border: 1px solid #af2d3a;
+}
 
 
-/* For verified status if needed (e.g., in modal) */
-.success { background-color: #28a745; }
-.failed { background-color: #dc3545; }
-.pending { background-color: #ffc107; }
-.confirmed { background-color: #007bff; }
+.success {
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
+}
 
+.confirmed {
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
+}
 
 .cardCreated, .cardArchived {
     font-size: 0.85em;
@@ -145,7 +174,6 @@
 }
 
 /* Modal specific styles */
-/* Modal Overlay - (if you use the basic Modal component structure) */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -166,9 +194,9 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 600px;
     margin: 20px auto;
-    overflow-y: unset; /* Enable scrolling for long content */
+    overflow-y: unset;
     /* max-height: 90vh; */
-    position: relative; /* For positioning close button if needed */
+    position: relative;
 }
 
 .modalContent h3 {
@@ -204,7 +232,7 @@
 }
 
 .detailRow strong {
-    min-width: 120px; /* Align labels */
+    min-width: 120px;
     color: #222;
 }
 
@@ -229,7 +257,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .cardGrid {
-        grid-template-columns: 1fr; /* Stack cards on small screens */
+        grid-template-columns: 1fr;
     }
     .topControls {
         flex-direction: column;

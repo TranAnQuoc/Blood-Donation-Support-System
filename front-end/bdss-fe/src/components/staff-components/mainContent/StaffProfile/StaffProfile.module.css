@@ -8,11 +8,11 @@
     text-align: center;
 }
 
-h2 {
+.sectionTitle {
     font-size: 2.2em;
-    color: #34495e;
+    color: #007A64;
     margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid #BDA25C;
     padding-bottom: 15px;
 }
 
@@ -139,7 +139,6 @@ h2 {
 
 .editButton:hover {
     background-color: #0056b3;
-    transform: translateY(-1px);
 }
 
 .saveButton {
@@ -149,7 +148,6 @@ h2 {
 
 .saveButton:hover {
     background-color: #218838;
-    transform: translateY(-1px);
 }
 
 .cancelButton {
@@ -159,7 +157,6 @@ h2 {
 
 .cancelButton:hover {
     background-color: #5a6268;
-    transform: translateY(-1px);
 }
 
 /* Responsive Adjustments */
@@ -167,11 +164,6 @@ h2 {
     .profileContainer {
         padding: 20px;
         margin: 20px;
-    }
-
-    h2 {
-        font-size: 1.8em;
-        margin-bottom: 20px;
     }
 
     .profileDetails p {

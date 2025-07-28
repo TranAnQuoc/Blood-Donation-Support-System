@@ -15,7 +15,7 @@ const RegisterDonation = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Used for button disabled state during navigation
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -38,7 +38,6 @@ const RegisterDonation = () => {
                 });
                 setDonationEvents(activeEvents);
 
-                // If eventId is in URL, pre-select it
                 if (eventIdFromUrl && activeEvents.length > 0) {
                     const matchedEvent = activeEvents.find(e => e.id.toString() === eventIdFromUrl);
                     if (matchedEvent) {
@@ -57,7 +56,7 @@ const RegisterDonation = () => {
             }
         };
         fetchEvents();
-    }, [eventIdFromUrl]); // Depend on eventIdFromUrl to re-fetch if it changes
+    }, [eventIdFromUrl]);
 
     const handleProceedToSurvey = async (e) => {
         e.preventDefault();
@@ -67,18 +66,15 @@ const RegisterDonation = () => {
             return;
         }
 
-        // Set submitting state while navigating
         setIsSubmitting(true);
 
         try {
-            // Navigate to the survey page, passing the selected event ID
             navigate(`/member/donate/survey/${selectedEvent.value}`);
         } catch (err) {
-            // This catch block might not be hit for navigation errors but good practice
             console.error('Lỗi khi chuyển hướng đến trang khảo sát:', err);
             toast.error('Không thể chuyển hướng đến trang khảo sát. Vui lòng thử lại.');
         } finally {
-            setIsSubmitting(false); // Reset submitting state
+            setIsSubmitting(false);
         }
     };
 
@@ -93,8 +89,6 @@ const RegisterDonation = () => {
     return (
         <div className={styles.container}>
             <h2 className={styles.heading}>Đăng Ký Hiến Máu</h2>
-            {/* Warning banners for 'hasRegisteredBefore' and 'hasRecentDonation' are now handled
-                by the backend and displayed on the DonationSurvey page if an error occurs during submission. */}
             <form onSubmit={handleProceedToSurvey} className={styles.form}>
                 <div>
                     <label htmlFor="event" className={styles.label}>Chọn Sự kiện Hiến Máu:</label>
@@ -114,9 +108,6 @@ const RegisterDonation = () => {
                         <p className={styles.noScheduleMessage}>Hiện không có sự kiện hiến máu nào khả dụng.</p>
                     )}
                 </div>
-
-                {/* Removed Blood Type selection - assumed fetched by backend based on current user */}
-                {/* Removed Reason for Donation - assumed not part of the new API payload or handled differently */}
 
                 <button
                     type="submit"

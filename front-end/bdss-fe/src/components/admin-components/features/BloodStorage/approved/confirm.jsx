@@ -1,4 +1,3 @@
-// components/ConfirmationModal.jsx
 import React from 'react';
 import styles from './confirm.module.css';
 

@@ -8,6 +8,7 @@
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .pageTitle {
@@ -140,19 +141,24 @@
     border-radius: 20px;
     font-size: 0.85em;
     font-weight: bold;
-    color: #fff;
 }
 
 .active {
-    background-color: #28a745;
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
 }
 
 .available {
-    background-color: #17a2b8;
+    background-color: #bacaff;
+    color: #2b66be;
+    border: 1px solid #2b66be;
 }
 
 .inactive {
-    background-color: #6c757d;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #721c24;
 }
 
 /* Responsive adjustments */

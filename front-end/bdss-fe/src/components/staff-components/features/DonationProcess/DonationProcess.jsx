@@ -1,38 +1,36 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axiosInstance from '../../../../configs/axios'; // Make sure this path is correct for your axios setup
+import axiosInstance from '../../../../configs/axios';
 import styles from './DonationProcess.module.css';
 import { useNavigate } from 'react-router-dom';
-import { useWebSocket } from '../../../../hooks/useWebSocket'; // Assuming you have a WebSocket hook
-import { toast } from 'react-toastify'; // For notifications
-
+import { useWebSocket } from '../../../../hooks/useWebSocket';
+import { toast } from 'react-toastify';
 
 const getStatusName = (status) => {
     switch (status) {
         case 'WAITING': return 'Đang chờ';
-        case 'SCREENING': return 'Đang sàng lọc'; // This status might be unused if 'IN_PROCESS' covers it
+        case 'SCREENING': return 'Đang sàng lọc';
         case 'SCREENING_FAILED': return 'Sàng lọc thất bại';
-        case 'IN_PROCESS': return 'Đang tiến hành'; // Covers both screening and donation process
+        case 'IN_PROCESS': return 'Đang tiến hành';
         case 'COMPLETED': return 'Hoàn thành';
         case 'FAILED': return 'Thất bại';
         case 'DONOR_CANCEL': return 'Người hiến hủy bỏ';
         default: return 'Không xác định';
     }
 };
-// --- End Utility Functions ---
-
 
 const DonationProcessList = () => {
-    const { notifications } = useWebSocket(); // Assuming this hook provides notifications
+    const { notifications } = useWebSocket();
     const navigate = useNavigate();
     const [processes, setProcesses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [selectedProcessId, setSelectedProcessId] = useState(null);
 
     const fetchProcesses = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
-            // Adjust this API endpoint if needed to fetch donation processes
             const response = await axiosInstance.get('/donation-processes/list');
             setProcesses(response.data);
             console.log("Fetched donation processes:", response.data);
@@ -49,7 +47,6 @@ const DonationProcessList = () => {
     }, [fetchProcesses]);
 
     useEffect(() => {
-        // Refetch if there's a relevant notification (e.g., process updated or new request approved)
         const hasProcessUpdate = notifications.some(n =>
             n.type === 'DONATION_PROCESS_UPDATED' || n.type === 'DONATION_REQUEST_APPROVED'
         );
@@ -58,41 +55,47 @@ const DonationProcessList = () => {
         }
     }, [notifications, fetchProcesses]);
 
-    const handleConfirmArrival = async (processId) => {
-        if (window.confirm('Xác nhận người hiến đã tới và bắt đầu quy trình hiến máu?')) {
-            try {
-                // Get performerId from localStorage or wherever it's stored
-                const storedUser = localStorage.getItem('user');
-                let performerId = null;
-                if (storedUser) {
-                    try {
-                        const userObject = JSON.parse(storedUser);
-                        performerId = userObject.id;
-                    } catch (parseError) {
-                        console.error("Error parsing user from localStorage:", parseError);
-                    }
+    const openConfirmModal = (processId) => {
+        setSelectedProcessId(processId);
+        setShowConfirmModal(true);
+    };
+
+    const confirmArrival = async () => {
+        if (!selectedProcessId) return;
+
+        try {
+            const storedUser = localStorage.getItem('user');
+            let performerId = null;
+            if (storedUser) {
+                try {
+                    const userObject = JSON.parse(storedUser);
+                    performerId = userObject.id;
+                } catch (parseError) {
+                    console.error("Error parsing user from localStorage:", parseError);
                 }
-
-                if (!performerId) {
-                    toast.error('Could not identify performer. Please log in again.');
-                    return;
-                }
-
-                // Update the process status to IN_PROCESS when confirmed arrival
-                const payload = {
-                    process: 'IN_PROCESS', // This is the StatusProcess enum
-                    performerId: performerId,
-                    date: new Date().toISOString().split('T')[0], // Set current date for process start
-                };
-
-                await axiosInstance.put(`/donation-processes/edit/${processId}`, payload);
-                toast.success('Donor arrival confirmed! Process status updated to "In Process".');
-                fetchProcesses(); // Refresh the list
-            } catch (err) {
-                console.error('Error confirming arrival:', err);
-                const errorMessage = err.response?.data?.message || 'Failed to confirm. Please try again.';
-                toast.error(errorMessage);
             }
+
+            if (!performerId) {
+                toast.error('Không xác định được người thực hiện. Vui lòng đăng nhập lại.');
+                return;
+            }
+
+            const payload = {
+                process: 'IN_PROCESS',
+                performerId: performerId,
+                date: new Date().toISOString().split('T')[0],
+            };
+
+            await axiosInstance.put(`/donation-processes/edit/${selectedProcessId}`, payload);
+            toast.success('Đã xác nhận người hiến và chuyển sang trạng thái "Đang tiến hành".');
+            fetchProcesses();
+        } catch (err) {
+            console.error('Error confirming arrival:', err);
+            const errorMessage = err.response?.data?.message || 'Lỗi xác nhận. Vui lòng thử lại.';
+            toast.error(errorMessage);
+        } finally {
+            setShowConfirmModal(false);
+            setSelectedProcessId(null);
         }
     };
 
@@ -100,17 +103,15 @@ const DonationProcessList = () => {
         const { id, process: status, statusHealthCheck } = process;
 
         if (status === 'WAITING') {
-            handleConfirmArrival(id);
+            openConfirmModal(id);
         } else if (status === 'IN_PROCESS') {
-            // If IN_PROCESS, determine if health check has passed or not
             if (statusHealthCheck === 'PASS') {
-                navigate(`/staff-dashboard/donation-process/${id}?step=donation`); // Go to donation step
+                navigate(`/staff-dashboard/donation-process/${id}?step=donation`);
             } else {
-                navigate(`/staff-dashboard/donation-process/${id}?step=screening`); // Go to screening step
+                navigate(`/staff-dashboard/donation-process/${id}?step=screening`);
             }
         } else {
-            // For SCREENING_FAILED, COMPLETED, FAILED, DONOR_CANCEL, etc.
-            navigate(`/staff-dashboard/donation-process/${id}?step=detail`); // Go to detail view
+            navigate(`/staff-dashboard/donation-process/${id}?step=detail`);
         }
     };
 
@@ -119,11 +120,7 @@ const DonationProcessList = () => {
             case 'WAITING':
                 return 'Xác nhận đã tới';
             case 'IN_PROCESS':
-                // If it's IN_PROCESS and health check is already PASS, next step is donation
-                if (statusHealthCheck === 'PASS') {
-                    return 'Tiến hành truyền máu';
-                }
-                return 'Khảo sát sức khỏe'; // Otherwise, it's still about screening
+                return statusHealthCheck === 'PASS' ? 'Tiến hành truyền máu' : 'Khảo sát sức khỏe';
             case 'SCREENING_FAILED':
             case 'COMPLETED':
             case 'FAILED':
@@ -143,7 +140,7 @@ const DonationProcessList = () => {
 
     return (
         <div className={styles.donationProcessListContainer}>
-            <h2>Danh Sách Quy Trình Hiến Máu</h2>
+            <h2>Danh Sách Quá Trình Hiến Máu</h2>
 
             {processes.length === 0 ? (
                 <div className={styles.noDataMessage}>Không có quy trình hiến máu nào để hiển thị.</div>
@@ -174,6 +171,19 @@ const DonationProcessList = () => {
                         </li>
                     ))}
                 </ul>
+            )}
+
+            {showConfirmModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <h3 className={styles.modalTitle}>XÁC NHẬN</h3>
+                        <p>Bạn có chắc chắn xác nhận người hiến đã tới và bắt đầu quá trình hiến máu?</p>
+                        <div className={styles.modalActions}>
+                            <button className={styles.confirmButton} onClick={confirmArrival}>Xác nhận</button>
+                            <button className={styles.cancelButton} onClick={() => setShowConfirmModal(false)}>Hủy</button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

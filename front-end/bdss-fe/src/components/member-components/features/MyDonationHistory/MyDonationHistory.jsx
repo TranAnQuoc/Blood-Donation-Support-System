@@ -35,6 +35,9 @@ const MyDonationHistory = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [selectedHistory, setSelectedHistory] = useState(null);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+
 
     const donationTypeMap = {
         WHOLE_BLOOD: 'Toàn phần',
@@ -82,15 +85,20 @@ const MyDonationHistory = () => {
 
     return (
         <div className={styles.myDonationHistoryContainer}>
-            <h2 className={styles.pageTitle}>LỊCH SỬ HIẾN MÁU</h2>
+            <h2 className={styles.pageTitle}>LỊCH SỬ HIẾN MÁU CỦA TÔI</h2>
 
             {histories.length === 0 ? (
-                <div className={styles.noHistoryMessage}>
-                    <p>Bạn chưa có lịch sử hiến máu nào được ghi nhận.</p>
-                    <button className={styles.backButton} onClick={handleGoBack}>
-                        Quay lại
-                    </button>
-                </div>
+                <>
+                    <div className={styles.noHistoryMessage}>
+                        <p>Bạn chưa có lịch sử hiến máu nào được ghi nhận.</p>
+                    </div>
+                    
+                    <div>
+                        <button className={styles.backButton} onClick={handleGoBack}>
+                            Quay lại
+                        </button>
+                    </div>
+                </>
             ) : (
                 <div className={styles.tableWrapper}>
                     <table className={styles.historyTable}>
@@ -105,6 +113,7 @@ const MyDonationHistory = () => {
                                 <th>Ghi chú</th>
                                 <th>Trạng thái</th>
                                 <th>Nhân viên xử lý</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,6 +133,17 @@ const MyDonationHistory = () => {
                                         </span>
                                     </td>
                                     <td>{history.staff?.fullName || 'N/A'}</td>
+                                    <td>
+                                        <button
+                                            className={styles.detailButton}
+                                            onClick={() => {
+                                                setSelectedHistory(history);
+                                                setShowDetailModal(true);
+                                            }}
+                                        >
+                                            Xem chi tiết
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -132,6 +152,86 @@ const MyDonationHistory = () => {
                         <button className={styles.backButton} onClick={handleGoBack}>
                             Quay lại
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {showDetailModal && selectedHistory && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContentLarge}>
+                        <h3 className={styles.modalTitle}>Chi tiết lịch sử hiến máu</h3>
+                        <div className={styles.detailGrid}>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>ID:</span>
+                                <span className={styles.value}>{selectedHistory.id}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Ngày hiến:</span>
+                                <span className={styles.value}>{formatDateTime(selectedHistory.donationDate)}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Loại hiến:</span>
+                                <span className={styles.value}>{translateDonationType(selectedHistory.donationType)}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Số lượng:</span>
+                                <span className={styles.value}>{selectedHistory.quantity} ml</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Địa chỉ:</span>
+                                <span className={styles.value}>{selectedHistory.address}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Ghi chú:</span>
+                                <span className={styles.value}>{selectedHistory.note || 'Không có'}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Trạng thái:</span>
+                                <span className={styles.value}>
+                                    {selectedHistory.status === 'COMPLETED' ? 'Hoàn thành' : 'Thất bại'}
+                                </span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Nhân viên xử lý:</span>
+                                <span className={styles.value}>{selectedHistory.staff?.fullName || 'N/A'}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Huyết áp:</span>
+                                <span className={styles.value}>{selectedHistory.bloodPressure || 'N/A'}</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Nhiệt độ:</span>
+                                <span className={styles.value}>{selectedHistory.temperature || 'N/A'} °C</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Nhịp tim:</span>
+                                <span className={styles.value}>{selectedHistory.heartRate || 'N/A'} bpm</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Cân nặng:</span>
+                                <span className={styles.value}>{selectedHistory.weight || 'N/A'} kg</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Chiều cao:</span>
+                                <span className={styles.value}>{selectedHistory.height || 'N/A'} cm</span>
+                            </div>
+                            <div className={styles.infoGroup}>
+                                <span className={styles.label}>Hemoglobin:</span>
+                                <span className={styles.value}>{selectedHistory.hemoglobin || 'N/A'} g/L</span>
+                            </div>
+                        </div>
+
+                        <div className={styles.modalActions}>
+                            <button
+                                className={styles.closeButton}
+                                onClick={() => {
+                                    setShowDetailModal(false);
+                                    setSelectedHistory(null);
+                                }}
+                            >
+                                Đóng
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

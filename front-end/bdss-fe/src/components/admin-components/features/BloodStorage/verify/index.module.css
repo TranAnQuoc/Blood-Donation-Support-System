@@ -1,6 +1,5 @@
-
 .verifyContainer {
-    background-color: #f0f8ff; /* Light blue background */
+    background-color: #f0f8ff;
     border: 1px solid #b0e0e6;
     border-radius: 8px;
     padding: 20px;
@@ -34,7 +33,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1em;
-    box-sizing: border-box; /* Ensures padding doesn't increase width */
+    box-sizing: border-box;
 }
 
 .selectField:focus,
@@ -45,12 +44,12 @@
 }
 
 .textareaField {
-    resize: vertical; /* Allow vertical resizing */
+    resize: vertical;
     min-height: 80px;
 }
 
 .submitButton {
-    background-color: #28a745; /* Green for success/submit */
+    background-color: #28a745;
     color: white;
     padding: 10px 20px;
     border: none;

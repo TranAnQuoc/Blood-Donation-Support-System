@@ -65,7 +65,7 @@ const MemberService = () => {
                     <div className={styles.iconWrapper}>
                         <FontAwesomeIcon icon={faClipboardList} className={styles.featureIcon} />
                     </div>
-                    <h3 className={styles.cardTitle}>Đơn Đăng Ký Của Tôi</h3>
+                    <h3 className={styles.cardTitle}>Đơn Đăng Ký Hiến Máu Của Tôi</h3>
                     <p className={styles.cardDescription}>Xem lại trạng thái và chi tiết các đơn đăng ký hiến máu của bạn.</p>
                     <Link to="/member/my-donation-request" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +91,7 @@ const MemberService = () => {
                     <div className={styles.iconWrapper}>
                         <FontAwesomeIcon icon={faHistory} className={styles.featureIcon} />
                     </div>
-                    <h3 className={styles.cardTitle}>Lịch Sử Hiến Máu</h3>
+                    <h3 className={styles.cardTitle}>Lịch Sử Hiến Máu Của Tôi</h3>
                     <p className={styles.cardDescription}>Xem lại lịch sử các lần hiến máu đã hoàn thành của bạn.</p>
                     <Link to="/member/my-donation-history" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -6,9 +6,9 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     max-width: 1550px;
     text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ===== TITLE ===== */
 .listTitle {
     font-size: 2.2em;
     font-weight: 700;
@@ -19,7 +19,6 @@
     position: relative;
 }
 
-/* ===== TABLE WRAPPER ===== */
 .tableWrapper {
     border: 1px solid #e0e0e0;
     overflow-x: auto;
@@ -27,7 +26,6 @@
     border-radius: 8px;
 }
 
-/* ===== TABLE ===== */
 .donationHistoryTable {
     width: 100%;
     border-collapse: collapse;
@@ -65,7 +63,6 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-/* ===== STATUS BADGES ===== */
 .statusBadge {
     display: inline-block;
     padding: 6px 12px;
@@ -75,11 +72,13 @@
     text-transform: uppercase;
     white-space: nowrap;
     letter-spacing: 0.5px;
-    color: white;
 }
 
 .statusBadge.waiting {
-    background-color: #ffc107;
+    background-color: #fff3cd;
+    color: #bd9829;
+    border: 1px solid #bd9829;
+
 }
 
 .statusBadge.screening {
@@ -95,15 +94,21 @@
 }
 
 .statusBadge.completed {
-    background-color: #28a745;
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
 }
 
 .statusBadge.failed {
-    background-color: #dc3545;
+    background-color: #f8d7da;
+    color: #af2d3a;
+    border: 1px solid #af2d3a;
 }
 
 .statusBadge.donor_cancel {
-    background-color: #6c757d;
+    background-color: #e2e3e5;
+    color: #51585e;
+    border: 1px solid #51585e;
 }
 
 /* ===== SYSTEM MESSAGES ===== */

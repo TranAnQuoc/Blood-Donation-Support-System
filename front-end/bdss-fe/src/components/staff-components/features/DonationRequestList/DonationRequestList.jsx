@@ -35,7 +35,7 @@ const DonationRequestList = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axiosInstance.get("/donation-requests/pending");
+      const response = await axiosInstance.get("/donation-requests/search");
       setRequests(response.data);
     } catch (err) {
       console.error("Lỗi khi lấy yêu cầu hiến máu:", err);

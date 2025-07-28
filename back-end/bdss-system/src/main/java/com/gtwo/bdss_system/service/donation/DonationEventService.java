@@ -16,4 +16,5 @@ public interface DonationEventService {
     void delete(Long id);
     void restore(Long id);
     List<DonationEvent> searchByName(String keyword);
+    void autoExpirePastEvents();
 }
