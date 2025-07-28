@@ -37,6 +37,7 @@ import DonationSurvey from "../components/member-components/features/DonationSur
 import TransfusionRequestView from "../components/member-components/features/TransfusionRequestView/index.jsx"
 
 //STAFF
+import StaffDashboard from "../components/staff-components/features/StaffDashboard/StaffDashboard.jsx"
 import StaffProfile from "../components/staff-components/mainContent/StaffProfile/StaffProfile.jsx";
 import MemberList from "../components/staff-components/features/MemberList/MemberList.jsx";
 import DonationRequestList from "../components/staff-components/features/DonationRequestList/DonationRequestList.jsx";
@@ -58,6 +59,7 @@ import EmergencyCallStaff from "../components/staff-components/features/Emergenc
 
 
 //ADMIN
+import AdminDashboard from "../components/admin-components/features/AdminDashboard/AdminDashboard.jsx"
 import AdminProfile from "../components/admin-components/mainContent/AdminProfile/AdminProfile.jsx";
 import AdminList from "../components/admin-components/features/UserManagement/AdminList.jsx";
 import StaffList from "../components/admin-components/features/UserManagement/StaffList.jsx";
@@ -72,6 +74,7 @@ import DonationProcessAdmin from "../components/admin-components/features/Donati
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
 // import DonationRequest from "../components/admin-components/features/DonationRequest/..."
+import EventListAdmin from "../components/admin-components/features/EventListAdmin/EventListAdmin.jsx"
 import BloodStorageAdmin from "../components/admin-components/features/BloodStorage/view/BloodStorage.jsx";
 import BloodStorageHistoryAdmin from "../components/admin-components/features/BloodStorageHistory/index.jsx";
 import EmergencyTransfusionProcessAdmin from "../components/admin-components/features/EmergencyTransfusionProcess/EmergencyTransfusionProcess.jsx"
@@ -114,15 +117,13 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      //Home Page Dashboard Admin
-      { index: true, element: <div>Trang chủ Bảng điều khiển Admin</div> },
+      //Admin Dashboard
+      { index: true, element: <AdminDashboard /> },
 
       //ADMIN CUSTOME
       { path: "admin-profile", element: <AdminProfile /> },
       { path: "settings", element: <div>Admin Settings Page</div> },
 
-      //NAVIGATE
-      //NAVIGATE
       //User Management
       { path: "user-management/create-account", element: <CreateAccountForm /> },
       { path: "user-management/admin-list", element: <AdminList /> },
@@ -148,7 +149,7 @@ const router = createBrowserRouter([
       { path: "blood-storage-history", element: <BloodStorageHistoryAdmin /> },
 
       //OTHER
-      { path: "event-management", element: <EventManagement /> },
+      { path: "event-list-admin", element: <EventListAdmin /> },
       { path: "emergencyCall", element: <EmergencyCall /> },
       // { path: "recovery-reminders", element: <RecoveryReminder/> },
       // { path: "community-posts", element: <CommunityPost/> },
@@ -165,14 +166,12 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      //HOME PAGE STAFF DASHBOARD
-      { index: true, element: <div>Trang chủ Bảng điều khiển Staff</div> },
+      //STAFF DASHBOARD
+      { index: true, element: <StaffDashboard /> },
 
       //STAFF CUSTOME
       { path: "staff-profile", element: <StaffProfile/> },
       // { path: "staff-setting", element: <StaffSetting/> },
-
-      //NAVIGATE
 
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },

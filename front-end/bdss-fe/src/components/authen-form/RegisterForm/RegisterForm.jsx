@@ -106,7 +106,7 @@ function RegisterForm() {
         if (!address) return 'Địa chỉ là bắt buộc.';
         const lowerCaseAddress = address.toLowerCase();
         if (!lowerCaseAddress.includes('hồ chí minh') && !lowerCaseAddress.includes('hcm')) {
-            return 'Địa chỉ phải thuộc Thành phố Hồ Chí Minh.';
+            return 'Địa chỉ phải gồm Thành phố Hồ Chí Minh.';
         }
         return '';
     };

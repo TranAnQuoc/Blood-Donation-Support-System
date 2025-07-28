@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axiosInstance from "../../../../configs/axios"; // Sử dụng axiosInstance
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import axiosInstance from "../../../../configs/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import styles from "./index.module.css";
 
-// API base URLs
-const API_MY_PROCESS_URL = "/donation-processes/my-process"; // Đường dẫn tương đối nếu dùng axiosInstance
-const API_START_PROCESS_URL_BASE = "/donation-processes/start"; // Đường dẫn tương đối nếu dùng axiosInstance
+const API_MY_PROCESS_URL = "/donation-processes/my-process";
+const API_START_PROCESS_URL_BASE = "/donation-processes/start";
 
-// Utility function to get auth data
 const getAuthData = () => {
     const userString = localStorage.getItem('user');
     let token = null;
@@ -30,11 +28,10 @@ const getAuthData = () => {
     return { token, userRole };
 };
 
-// Utility function to format date and time (handles both LocalDate and LocalDateTime)
 const formatDateTime = (isoString) => {
     if (!isoString) return "N/A";
     try {
-        if (isoString.includes('T')) { // Likely LocalDateTime
+        if (isoString.includes('T')) {
             const date = new Date(isoString);
             const options = {
                 year: 'numeric',
@@ -46,7 +43,7 @@ const formatDateTime = (isoString) => {
                 hour12: false
             };
             return date.toLocaleString('vi-VN', options);
-        } else { // Likely LocalDate (YYYY-MM-DD)
+        } else {
             const [year, month, day] = isoString.split('-');
             return `${day}/${month}/${year}`;
         }
@@ -56,7 +53,6 @@ const formatDateTime = (isoString) => {
     }
 };
 
-// Utility functions for enum to display text
 const getStatusProcessName = (status) => {
     switch (status) {
         case 'WAITING': return 'Đang chờ';
@@ -100,6 +96,7 @@ const MyDonationProcess = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const hasShownSuccessToast = useRef(false);
 
     const { token } = getAuthData();
 
@@ -130,7 +127,10 @@ const MyDonationProcess = () => {
                 toast.info("Bạn chưa có tiến trình hiến máu nào.", { position: "top-right" });
             } else if (response.status === 200 && response.data) {
                 setProcessData(response.data);
-                toast.success("Tải thông tin tiến trình hiến máu của bạn thành công!", { position: "top-right" });
+                if (!hasShownSuccessToast.current) {
+                    toast.success("Tải thông tin tiến trình hiến máu của bạn thành công!", { position: "top-right" });
+                    hasShownSuccessToast.current = true;
+                }
             } else {
                 setProcessData(null);
                 setError("Không thể tải thông tin tiến trình hiến máu của bạn.");
@@ -174,7 +174,7 @@ const MyDonationProcess = () => {
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.pageTitle}>Tiến Trình Hiến Máu Gần Nhất Của Bạn</h2>
+            <h2 className={styles.pageTitle}>Quá Trình Hiến Máu Gần Nhất Của Bạn</h2>
 
             {loading && (
                 <div className={styles.loadingMessage}>Đang tải tiến trình hiến máu...</div>
@@ -186,7 +186,7 @@ const MyDonationProcess = () => {
 
             {!loading && !processData && !error && (
                 <div className={styles.noDataMessage}>
-                    <p>Bạn chưa có tiến trình hiến máu nào.</p>
+                    <p>Bạn chưa có quá trình hiến máu nào.</p>
                 </div>
             )}
 
@@ -204,12 +204,12 @@ const MyDonationProcess = () => {
                         <div className={styles.detailGrid}>
                             <p><strong>Người hiến:</strong> {processData.donorFullName || 'N/A'}</p>
                             <p><strong>Ngày sinh:</strong> {formatDateTime(processData.donorBirthDate)}</p>
-                            <p><strong>SĐT:</strong> {processData.donorPhone || 'N/A'}</p>
+                            <p><strong>Số điện thoại:</strong> {processData.donorPhone || 'N/A'}</p>
                             <p><strong>Giới tính:</strong> {getGenderName(processData.donorGender)}</p>
-                            <p><strong>Nhóm máu ĐK:</strong> {processData.donorBloodType ? `${processData.donorBloodType.type}${processData.donorBloodType.rhFactor}` : 'N/A'}</p>
-                            <p><strong>Sự kiện:</strong> {processData.eventName || 'N/A'}</p>
+                            <p><strong>Nhóm máu đăng ký:</strong> {processData.donorBloodType ? `${processData.donorBloodType.type}${processData.donorBloodType.rhFactor}` : 'N/A'}</p>
+                            <p><strong>Tên sự kiện:</strong> {processData.eventName || 'N/A'}</p>
                             <p><strong>Thời gian bắt đầu:</strong> {formatDateTime(processData.startTime)}</p>
-                            <p><strong>Người thực hiện:</strong> {processData.performerFullName || 'N/A'}</p>
+                            <p><strong>Người thực hiện quá trình:</strong> {processData.performerFullName || 'N/A'}</p>
                             <p><strong>Thời gian kết thúc:</strong> {processData.endTime ? formatDateTime(processData.endTime) : 'Chưa kết thúc'}</p>
                         </div>
                     </div>
@@ -245,17 +245,6 @@ const MyDonationProcess = () => {
                 </div>
             )}
 
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
             <div className={styles.backSection}>
                 <button className={styles.backButton} onClick={() => navigate(-1)}>
                     Quay lại

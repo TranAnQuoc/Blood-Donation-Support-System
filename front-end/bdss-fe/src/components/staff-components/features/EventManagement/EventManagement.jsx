@@ -20,6 +20,8 @@ const EventManagement = () => {
         maxSlot: '',
     });
     const [editingEvent, setEditingEvent] = useState(null);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [eventIdToDelete, setEventIdToDelete] = useState(null);
 
     const formatTime = (timeString) => {
         if (!timeString) return '';
@@ -151,22 +153,34 @@ const EventManagement = () => {
         setShowForm(true);
     };
 
-    const handleDeleteClick = async (eventId) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa sự kiện này không?')) {
-            try {
-                await axiosInstance.delete(`/event/${eventId}`);
-                toast.success('Sự kiện đã được xóa thành công!');
-                fetchEvents();
-            } catch (error) {
-                console.error('Lỗi khi xóa sự kiện:', error);
-                if (error.response) {
-                    toast.error(`Lỗi khi xóa sự kiện: ${error.response.data.message || error.response.statusText}`);
-                } else {
-                    toast.error('Không thể xóa sự kiện. Vui lòng thử lại.');
-                }
+    const handleDeleteClick = (eventId) => {
+        setEventIdToDelete(eventId);
+        setShowConfirmModal(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await axiosInstance.delete(`/event/${eventIdToDelete}`);
+            toast.success('Sự kiện đã được chuyển thành Đã kết thúc!');
+            fetchEvents();
+        } catch (error) {
+            console.error('Lỗi khi xóa sự kiện:', error);
+            if (error.response) {
+                toast.error(`Lỗi khi xóa sự kiện: ${error.response.data.message || error.response.statusText}`);
+            } else {
+                toast.error('Không thể xóa sự kiện. Vui lòng thử lại.');
             }
+        } finally {
+            setShowConfirmModal(false);
+            setEventIdToDelete(null);
         }
     };
+
+    const cancelDelete = () => {
+        setShowConfirmModal(false);
+        setEventIdToDelete(null);
+    };
+
 
     const handleCancelEdit = () => {
         setEditingEvent(null);
@@ -177,7 +191,33 @@ const EventManagement = () => {
     const eventColumns = [
         { header: 'ID', accessor: 'id' },
         { header: 'Tên Sự kiện', accessor: 'name' },
-        { header: 'Ngày', accessor: 'date' },
+        {
+            header: 'Ngày',
+            accessor: 'date',
+            render: (row) => {
+                if (!row.date) return 'N/A';
+                
+                try {
+                    const date = new Date(row.date);
+                    if (isNaN(date.getTime())) {
+                        const [year, month, day] = row.date.split('-');
+                        if (year && month && day) {
+                            return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+                        }
+                        return 'Ngày không hợp lệ';
+                    }
+
+                    return date.toLocaleDateString('vi-VN', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    console.error('Lỗi định dạng ngày:', row.date, e);
+                    return 'Ngày không hợp lệ';
+                }
+            }
+        },
         {
             header: 'Thời gian',
             accessor: 'timeRange',
@@ -188,11 +228,11 @@ const EventManagement = () => {
             }
         },
         { header: 'Địa điểm', accessor: 'address' },
-        {
-            header: 'ID Cơ sở',
-            accessor: 'facilityId',
-            render: (row) => row.facilityId || 'N/A'
-        },
+        // {
+        //     header: 'ID Cơ sở',
+        //     accessor: 'facilityId',
+        //     render: (row) => row.facilityId || 'N/A'
+        // },
         {
             header: 'SL Hiện tại/Tối đa',
             accessor: 'slots',
@@ -214,25 +254,31 @@ const EventManagement = () => {
             accessor: 'actions',
             render: (row) => {
                 const isOverdue = isEventOverdue(row.date, row.endTime);
-                const canDelete = row.status === 'INACTIVE' || (row.status === 'ACTIVE' && isOverdue);
+                const isActive = row.status === 'ACTIVE';
+                const isInactive = row.status === 'INACTIVE';
 
                 return (
                     <div className={styles.actionButtons}>
-                        <button 
-                            className={styles.editButton} 
-                            onClick={() => handleEditClick(row)}
-                        >
-                            Chỉnh sửa
-                        </button>
-                        {canDelete ? (
-                            <button 
-                                className={styles.deleteButton} 
-                                onClick={() => handleDeleteClick(row.id)}
+                        {isActive ? (
+                            <button
+                                className={styles.editButton}
+                                onClick={() => handleEditClick(row)}
                             >
-                                Xóa
+                                Chỉnh sửa
                             </button>
                         ) : (
-                            <span className={styles.disabledAction}>Không thể xóa</span>
+                            <span className={styles.disabledAction}>Không thể chỉnh sửa</span>
+                        )}
+
+                        {isActive || (isOverdue && !isInactive) ? (
+                            <button
+                                className={styles.deleteButton}
+                                onClick={() => handleDeleteClick(row.id)}
+                            >
+                                Kết thúc
+                            </button>
+                        ) : (
+                            <span className={styles.disabledAction}>Không thể kết thúc</span>
                         )}
                     </div>
                 );
@@ -368,6 +414,19 @@ const EventManagement = () => {
                     <p>Chưa có sự kiện hiến máu nào được tạo.</p>
                 )}
             </div>
+
+            {showConfirmModal && (
+                <div className={styles.modalBackdrop}>
+                    <div className={styles.confirmModal}>
+                        <p>Bạn có chắc chắn muốn <strong>KẾT THÚC</strong> sự kiện này không?</p>
+                        <div className={styles.modalActions}>
+                            <button className={styles.confirmButton} onClick={confirmDelete}>Kết thúc</button>
+                            <button className={styles.cancelButton} onClick={cancelDelete}>Hủy</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

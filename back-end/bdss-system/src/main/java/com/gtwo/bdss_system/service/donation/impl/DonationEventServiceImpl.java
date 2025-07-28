@@ -126,4 +126,20 @@ public class DonationEventServiceImpl implements DonationEventService {
     public List<DonationEvent> searchByName(String keyword) {
         return repository.findByNameContainingIgnoreCaseOrderByNameAsc(keyword);
     }
+
+    @Override
+    public void autoExpirePastEvents() {
+        List<DonationEvent> activeEvents = repository.findAllByStatus(Status.ACTIVE);
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        for (DonationEvent event : activeEvents) {
+            if (event.getDate().isBefore(today) ||
+                    (event.getDate().isEqual(today) && event.getEndTime().toLocalTime().isBefore(now))) {
+                event.setStatus(Status.INACTIVE);
+                repository.save(event);
+            }
+        }
+    }
+
 }

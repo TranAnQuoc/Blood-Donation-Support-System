@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "./index.module.css";
-import ConfirmationModal from "./confirm"; // <-- Import component Modal xác nhận
+import ConfirmationModal from "./confirm";
 
 const API_BASE_URL = "http://localhost:8080/api/blood-storage";
 
-// Enum cho trạng thái kho máu (phải khớp với backend)
 const StatusBloodStorage = {
     PENDING: "PENDING",
     REJECTED: "REJECTED",
@@ -16,7 +15,6 @@ const StatusBloodStorage = {
     EXPIRED: "EXPIRED",
 };
 
-// Hàm hỗ trợ để lấy token từ localStorage
 const getAuthToken = () => {
     try {
         const userString = localStorage.getItem("user");
@@ -33,7 +31,7 @@ const getAuthToken = () => {
 const ApprovalAction = ({ storageId, onActionSuccess, currentStatus, userRole }) => {
     const [note, setNote] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showConfirmModal, setShowConfirmModal] = useState(false); // State cho modal xác nhận
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [actionTypePending, setActionTypePending] = useState(null); // Lưu trữ hành động đang chờ xác nhận (STORED/REJECTED)
 
     // Hàm thực sự gửi yêu cầu API sau khi xác nhận
@@ -58,7 +56,9 @@ const ApprovalAction = ({ storageId, onActionSuccess, currentStatus, userRole })
             if (response.status === 200) {
                 const actionMessage = actionStatus === StatusBloodStorage.STORED ? "duyệt" : "từ chối";
                 toast.success(`Kho máu ID: ${storageId} đã được ${actionMessage} thành công!`);
-                onActionSuccess();
+                if (typeof onActionSuccess === 'function') {
+                    onActionSuccess();
+                }
             } else {
                 toast.warn("Không thể thực hiện hành động này.");
             }
@@ -179,7 +179,6 @@ const ApprovalAction = ({ storageId, onActionSuccess, currentStatus, userRole })
                 </button>
             </div>
 
-            {/* Modal xác nhận */}
             {showConfirmModal && (
                 <ConfirmationModal
                     message={confirmMessage}

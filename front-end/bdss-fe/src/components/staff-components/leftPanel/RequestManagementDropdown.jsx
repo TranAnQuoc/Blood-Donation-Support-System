@@ -10,7 +10,7 @@ const RequestManagementDropdown = () => {
     };
 
     const subItems = [
-        { id: 'donation-requests', label: 'Yêu Cầu Hiến Máu', path: 'donation-requests' },
+        // { id: 'donation-requests', label: 'Yêu Cầu Hiến Máu', path: 'donation-requests' },
         { id: 'transfusion-requests-management', label: 'Yêu Cầu Nhận Máu', path: 'transfusion-requests-management' },
         { id: 'emergency-transfusion-requests', label: 'Yêu Cầu Nhận Máu Khẩn Cấp', path: 'emergency-transfusion-requests' },
     ];

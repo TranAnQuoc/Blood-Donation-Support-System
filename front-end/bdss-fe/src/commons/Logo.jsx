@@ -1,4 +1,3 @@
-// src/components/Common/Logo.jsx
 import React from 'react';
 import styles from './Logo.module.css';
 

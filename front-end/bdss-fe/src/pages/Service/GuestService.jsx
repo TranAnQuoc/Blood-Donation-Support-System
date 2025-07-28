@@ -34,9 +34,9 @@ const GuestService = () => {
                     </Link>
                 </div>
 
-                {/* <div className={styles.featureCard}>
+                <div className={styles.featureCard}>
                     <div className={styles.iconWrapper}>
-                        <FontAwesomeIcon icon={faSyringe} className={styles.featureIcon} />
+                        <FontAwesomeIcon icon={faHeartbeat} className={styles.featureIcon} />
                     </div>
                     <h3 className={styles.cardTitle}>Yêu cầu Nhận máu</h3>
                     <p className={styles.cardDescription}>Gửi yêu cầu nhận máu cho bản thân hoặc người thân.</p>
@@ -45,13 +45,13 @@ const GuestService = () => {
                             <path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/>
                         </svg>
                     </Link>
-                </div> */}
+                </div>
 
                 <div className={styles.featureCard}>
                     <div className={styles.iconWrapper}>
                         <FontAwesomeIcon icon={faClipboardList} className={styles.featureIcon} />
                     </div>
-                    <h3 className={styles.cardTitle}>Đơn Đăng Ký Của Tôi</h3>
+                    <h3 className={styles.cardTitle}>Đơn Đăng Ký Hiến Máu Của Tôi</h3>
                     <p className={styles.cardDescription}>Xem lại trạng thái và chi tiết các đơn đăng ký hiến máu của bạn.</p>
                     <Link to="/login" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +64,7 @@ const GuestService = () => {
                     <div className={styles.iconWrapper}>
                         <FontAwesomeIcon icon={faTasks} className={styles.featureIcon} />
                     </div>
-                    <h3 className={styles.cardTitle}>Quá Trình Hiến Của Tôi</h3>
+                    <h3 className={styles.cardTitle}>Quá Trình Hiến Máu Của Tôi</h3>
                     <p className={styles.cardDescription}>Theo dõi quá trình hiến máu hiện tại của bạn.</p>
                     <Link to="/login" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,7 +77,7 @@ const GuestService = () => {
                     <div className={styles.iconWrapper}>
                         <FontAwesomeIcon icon={faHistory} className={styles.featureIcon} />
                     </div>
-                    <h3 className={styles.cardTitle}>Lịch Sử Hiến Máu</h3>
+                    <h3 className={styles.cardTitle}>Lịch Sử Hiến Máu Của Tôi</h3>
                     <p className={styles.cardDescription}>Xem lại lịch sử các lần hiến máu đã hoàn thành của bạn.</p>
                     <Link to="/login" className={styles.actionButton}>
                         <svg className={styles.arrowIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

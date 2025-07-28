@@ -88,8 +88,7 @@ public class DonationHistoryServiceImpl implements DonationHistoryService {
         if (history == null || history.getDonationDate() == null) {
             return LocalDate.now();
         }
-        LocalDate lastDate = history.getDonationDate()
-                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate lastDate = history.getDonationDate().toLocalDate();
         return lastDate.plusDays(84);
     }
 }

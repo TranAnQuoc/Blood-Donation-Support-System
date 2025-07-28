@@ -159,7 +159,7 @@ const AdminProfile = () => {
 
     return (
         <div className={styles.profileContainer}>
-            <h2>Thông tin cá nhân của Admin</h2>
+            <h2 className={styles.sectionTitle}>HỒ SƠ CÁ NHÂN CỦA QUẢN TRỊ VIÊN</h2>
             {!isEditing ? (
                 <div className={styles.profileDetails}>
                     <p><strong>Email:</strong> {profile.email || 'Chưa cập nhật'}</p>

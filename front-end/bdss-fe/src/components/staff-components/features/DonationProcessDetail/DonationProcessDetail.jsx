@@ -54,6 +54,8 @@ const DonationProcessDetail = () => {
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(initialStepParam || 'detail');
 
+    const [validationErrors, setValidationErrors] = useState({});
+
     const genderMap = {
         'MALE': 'Nam',
         'FEMALE': 'Nữ',
@@ -72,7 +74,6 @@ const DonationProcessDetail = () => {
         'UNKNOWN': 'Chưa xác định'
     };
 
-    // Define blood types directly in the frontend, mapping IDs to display names
     const bloodTypesOptions = [
         { id: 1, type: 'Unknow', rhFactor: 'Unknow', displayName: 'Chưa xác định' },
         { id: 2, type: 'A', rhFactor: '+', displayName: 'A+' },
@@ -117,7 +118,7 @@ const DonationProcessDetail = () => {
                 type: fetchedProcessView.typeDonation || '',
                 notes: fetchedProcessView.notes || '',
                 process: fetchedProcessView.process,
-                bloodTypeId: fetchedProcessView.donorBloodType?.id || null, // Capture the bloodTypeId
+                bloodTypeId: fetchedProcessView.donorBloodType?.id || null,
                 date: fetchedProcessView.startTime ? new Date(fetchedProcessView.startTime).toISOString().split('T')[0] : null
             });
 
@@ -168,10 +169,10 @@ const DonationProcessDetail = () => {
             parsedValue = null;
         } else if (name === 'type' && value === '') {
             parsedValue = null;
-        } else if (name === 'bloodTypeId' && value === '') { // Handle bloodTypeId specifically
+        } else if (name === 'bloodTypeId' && value === '') {
             parsedValue = null;
         } else if (name === 'bloodTypeId') {
-            parsedValue = parseInt(value, 10); // Parse to integer for bloodTypeId
+            parsedValue = parseInt(value, 10);
         }
         setEditData(prevData => ({
             ...prevData,
@@ -354,14 +355,14 @@ const DonationProcessDetail = () => {
             };
 
             await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
-            toast.success('Quy trình đã được đặt lại để tái kiểm tra sức khỏe.');
+            toast.success('Quá trình đã được đặt lại để tái kiểm tra sức khỏe.');
 
             navigate(`/staff-dashboard/donation-processes/${id}?step=screening`);
             await fetchProcessDetail();
 
         } catch (err) {
             console.error('Error initiating re-screening:', err);
-            const errorMessage = err.response?.data?.message || 'Không thể đặt lại quy trình để tái kiểm tra. Vui lòng thử lại.';
+            const errorMessage = err.response?.data?.message || 'Không thể đặt lại quá trình để tái kiểm tra. Vui lòng thử lại.';
             setError(errorMessage);
             toast.error(errorMessage);
         } finally {
@@ -375,6 +376,52 @@ const DonationProcessDetail = () => {
     const canEditDonation = currentStep === 'donation' && processView?.process === 'IN_PROCESS' && processView?.statusHealthCheck === 'PASS' && !isFinalState;
 
     const canRescreen = processView?.process === 'FAILED' && processView?.statusHealthCheck === 'FAIL';
+
+    const validateField = (name, value) => {
+    let error = '';
+
+    switch (name) {
+        case 'weight':
+            if (value < 45 || value > 150) {
+                error = 'CẢNH BÁO: Cân nặng tối thiểu là 42 kg đối với nữ và 45 kg đối với nam';
+            }
+            break;
+        case 'temperature':
+            if (value < 35 || value > 42) {
+                error = 'CẢNH BÁO: Nhiệt độ cơ thể phải từ 35°C đến 42°C.';
+            }
+            break;
+        case 'heartRate':
+            if (value < 60 || value > 90) {
+                error = 'CẢNH BÁO: Nhịp tim ổn định phải trong khoảng từ 60 lần đến 90 lần/phút.';
+            }
+            break;
+        case 'hemoglobin':
+            if (value < 120 || value > 180) {
+                error = 'CẢNH BÁO: Nồng độ hemoglobin phải ≥ 120 g/L; nếu hiến máu với thể tích trên 350 mL, nồng độ hemoglobin cần đạt ≥ 125 g/L.';
+            }
+            break;
+        case 'bloodPressure':
+            if (!/^\d{2,3}\/\d{2,3}$/.test(value)) {
+                error = 'CẢNH BÁO: Định dạng huyết áp phải là Huyết áp tâm thu/Huyết áp tâm trương (VD: 120/80).';
+            } else {
+                const [sys, dia] = value.split('/').map(Number); //Systolic/Diastolic
+                if (sys < 90 || sys > 129 || dia < 60 || dia > 84) {
+                    error = 'CẢNH BÁO: Huyết áp ở mức bình thường có chỉ số tâm thu từ 90-129 mmHg và tâm trương từ 60-84 mmHg.';
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    setValidationErrors((prev) => ({
+        ...prev,
+        [name]: error,
+    }));
+
+};
+
 
     if (loading) {
         return <div className={styles.loadingMessage}>Đang tải chi tiết quy trình...</div>;
@@ -390,13 +437,13 @@ const DonationProcessDetail = () => {
 
     return (
         <div className={styles.donationProcessDetailContainer}>
-            <h2 className={styles.pageTitle}>Chi Tiết Quy Trình Hiến Máu</h2>
+            <h2 className={styles.pageTitle}>Chi Tiết Quá Trình Hiến Máu</h2>
 
             <div className={styles.formLayout}>
                 <div className={styles.readOnlySection}>
                     <h3>Thông tin Yêu cầu Hiến máu</h3>
                     <div className={styles.infoGroup}>
-                        <strong>Mã QT:</strong>
+                        <strong>Mã quá trình:</strong>
                         <span>{processView.id || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
@@ -404,24 +451,24 @@ const DonationProcessDetail = () => {
                         <span>{processView.donorFullName || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <strong>SĐT Người hiến:</strong>
+                        <strong>Số điện thoại Người hiến:</strong>
                         <span>{processView.donorPhone || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
                         <strong>Ngày sinh Người hiến:</strong>
                         <span>{processView.donorBirthDate ? formatDateTime(processView.donorBirthDate) : 'N/A'}</span>
                     </div>
-                    {/* NEW BLOOD TYPE SELECTION */}
+                    
                     <div className={styles.infoGroup}>
-                        <strong>Nhóm máu ĐK:</strong>
-                        {canEditScreening || canEditDonation ? ( // Allow editing if in screening or donation step
+                        <strong>Nhóm máu Đăng Ký:</strong>
+                        {canEditScreening || canEditDonation ? (
                             <select
                                 id="bloodTypeId"
                                 name="bloodTypeId"
                                 value={editData.bloodTypeId || ''}
                                 onChange={handleInputChange}
                                 className={styles.selectInput}
-                                disabled={!canEditScreening && !canEditDonation} // Disable if not in an editable step
+                                disabled={!canEditScreening && !canEditDonation}
                             >
                                 <option value="">Chọn nhóm máu</option>
                                 {bloodTypesOptions.map(bt => (
@@ -436,21 +483,21 @@ const DonationProcessDetail = () => {
                             </span>
                         )}
                     </div>
-                    {/* END NEW BLOOD TYPE SELECTION */}
+
                     <div className={styles.infoGroup}>
                         <strong>Giới tính:</strong>
                         <span>{genderMap[processView.donorGender] || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <strong>Sự kiện hiến máu:</strong>
+                        <strong>Tên Sự kiện hiến máu:</strong>
                         <span>{processView.eventName || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <strong>Thời gian sự kiện:</strong>
+                        <strong>Thời gian đăng ký sự kiện:</strong>
                         <span>{processView.startTime ? formatDateTime(processView.startTime) : 'N/A'} - {processView.endTime ? formatDateTime(processView.endTime) : 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
-                        <strong>Người thực hiện:</strong>
+                        <strong>Người thực hiện quá trình:</strong>
                         <span>{processView.performerFullName || 'N/A'}</span>
                     </div>
                     <div className={styles.infoGroup}>
@@ -478,17 +525,17 @@ const DonationProcessDetail = () => {
                 <div className={styles.editableSection}>
                     {isDetailView && (
                         <>
-                            <h3>Thông tin Chi tiết Quy trình</h3>
+                            <h3>Thông tin Chi tiết Quá trình</h3>
                             <div className={styles.summaryDetails}>
                                 <p><strong>Nhịp tim:</strong> {processView.heartRate || 'N/A'} bpm</p>
                                 <p><strong>Nhiệt độ:</strong> {processView.temperature || 'N/A'} °C</p>
                                 <p><strong>Cân nặng:</strong> {processView.weight || 'N/A'} kg</p>
                                 <p><strong>Chiều cao:</strong> {processView.height || 'N/A'} cm</p>
-                                <p><strong>Hemoglobin:</strong> {processView.hemoglobin || 'N/A'} g/dL</p>
+                                <p><strong>Hemoglobin:</strong> {processView.hemoglobin || 'N/A'} g/L</p>
                                 <p><strong>Huyết áp:</strong> {processView.bloodPressure || 'N/A'}</p>
                                 <p><strong>Lượng máu hiến:</strong> {processView.quantity || 'N/A'} ml</p>
                                 <p><strong>Loại hiến:</strong> {donationTypeMap[processView.typeDonation] || 'N/A'}</p>
-                                <p><strong>Ghi chú quy trình:</strong> {processView.notes || 'Không có'}</p>
+                                <p><strong>Ghi chú quá trình:</strong> {processView.notes || 'Không có'}</p>
                             </div>
                             <div className={styles.actionButtons}>
                                 <button className={`${styles.button} ${styles.backButton}`} onClick={() => navigate('/staff-dashboard/donation-processes')}>Quay lại danh sách</button>
@@ -512,21 +559,55 @@ const DonationProcessDetail = () => {
                             <form>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="heartRate">Nhịp tim (bpm):</label>
-                                    <input type="number" id="heartRate" name="heartRate"
-                                        value={editData.heartRate} onChange={handleInputChange}
-                                        placeholder="Ví dụ: 75" disabled={!canEditScreening} className={styles.input} />
+                                    <input
+                                        type="number"
+                                        id="heartRate"
+                                        name="heartRate"
+                                        value={editData.heartRate}
+                                        onChange={handleInputChange}
+                                        onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                        placeholder="Ví dụ: 75"
+                                        disabled={!canEditScreening}
+                                        className={styles.input}
+                                    />
+                                    {validationErrors.heartRate && (
+                                        <div className={styles.validationText}>{validationErrors.heartRate}</div>
+                                    )}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="temperature">Nhiệt độ (°C):</label>
-                                    <input type="number" step="0.1" id="temperature" name="temperature"
-                                        value={editData.temperature} onChange={handleInputChange}
-                                        placeholder="Ví dụ: 37.0" disabled={!canEditScreening} className={styles.input} />
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        id="temperature"
+                                        name="temperature"
+                                        value={editData.temperature}
+                                        onChange={handleInputChange}
+                                        onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                        placeholder="Ví dụ: 37.0"
+                                        disabled={!canEditScreening}
+                                        className={styles.input}
+                                    />
+                                    {validationErrors.temperature && (
+                                        <div className={styles.validationText}>{validationErrors.temperature}</div>
+                                    )}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="weight">Cân nặng (kg):</label>
-                                    <input type="number" step="0.1" id="weight" name="weight"
-                                        value={editData.weight} onChange={handleInputChange}
-                                        placeholder="Ví dụ: 60.5" disabled={!canEditScreening} className={styles.input} />
+                                    <input
+                                        type="number"
+                                        id="weight"
+                                        name="weight"
+                                        value={editData.weight}
+                                        onChange={handleInputChange}
+                                        onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                        placeholder="Ví dụ: 60.5"
+                                        disabled={!canEditScreening}
+                                        className={styles.input}
+                                    />
+                                    {validationErrors.weight && (
+                                        <div className={styles.validationText}>{validationErrors.weight}</div>
+                                    )}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="height">Chiều cao (cm):</label>
@@ -535,16 +616,39 @@ const DonationProcessDetail = () => {
                                         placeholder="Ví dụ: 170.0" disabled={!canEditScreening} className={styles.input} />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label htmlFor="hemoglobin">Hemoglobin (g/dL):</label>
-                                    <input type="number" step="0.1" id="hemoglobin" name="hemoglobin"
-                                        value={editData.hemoglobin} onChange={handleInputChange}
-                                        placeholder="Ví dụ: 13.5" disabled={!canEditScreening} className={styles.input} />
+                                    <label htmlFor="hemoglobin">Hemoglobin (g/L):</label>
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        id="hemoglobin"
+                                        name="hemoglobin"
+                                        value={editData.hemoglobin}
+                                        onChange={handleInputChange}
+                                        onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                        placeholder="Ví dụ: 130"
+                                        disabled={!canEditScreening}
+                                        className={styles.input}
+                                    />
+                                    {validationErrors.hemoglobin && (
+                                        <div className={styles.validationText}>{validationErrors.hemoglobin}</div>
+                                    )}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="bloodPressure">Huyết áp (VD: 120/80):</label>
-                                    <input type="text" id="bloodPressure" name="bloodPressure"
-                                        value={editData.bloodPressure} onChange={handleInputChange}
-                                        placeholder="Ví dụ: 120/80" disabled={!canEditScreening} className={styles.input} />
+                                    <input
+                                        type="text"
+                                        id="bloodPressure"
+                                        name="bloodPressure"
+                                        value={editData.bloodPressure}
+                                        onChange={handleInputChange}
+                                        onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                        placeholder="Ví dụ: 120/80"
+                                        disabled={!canEditScreening}
+                                        className={styles.input}
+                                    />
+                                    {validationErrors.bloodPressure && (
+                                        <div className={styles.validationText}>{validationErrors.bloodPressure}</div>
+                                    )}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="statusHealthCheck">Kết quả sàng lọc:</label>

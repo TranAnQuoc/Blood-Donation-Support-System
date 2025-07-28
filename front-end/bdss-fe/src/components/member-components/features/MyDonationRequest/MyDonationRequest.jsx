@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import styles from './MyDonationRequest.module.css'; // Ensure this path is correct
+import styles from './MyDonationRequest.module.css';
 
-// Helper function to format date and time
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';
     try {
@@ -23,7 +22,6 @@ const formatDateTime = (isoString) => {
     }
 };
 
-// Helper function to get readable boolean string
 const formatBoolean = (value) => {
     if (value === true) return 'Có';
     if (value === false) return 'Không';
@@ -31,13 +29,13 @@ const formatBoolean = (value) => {
 };
 
 const MyDonationRequests = () => {
-    const [myRequests, setMyRequests] = useState([]); // Changed to an array
+    const [myRequests, setMyRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showConfirmCancelModal, setShowConfirmCancelModal] = useState(false); // For cancel confirmation
-    const [selectedRequestToCancel, setSelectedRequestToCancel] = useState(null); // To store which request is being cancelled
-    const [showDetailModal, setShowDetailModal] = useState(false); // For showing request details
-    const [selectedRequestDetail, setSelectedRequestDetail] = useState(null); // To store data for detail modal
+    const [showConfirmCancelModal, setShowConfirmCancelModal] = useState(false);
+    const [selectedRequestToCancel, setSelectedRequestToCancel] = useState(null);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedRequestDetail, setSelectedRequestDetail] = useState(null);
     const navigate = useNavigate();
 
     const fetchMyDonationRequests = async () => {
@@ -45,7 +43,6 @@ const MyDonationRequests = () => {
         setError(null);
         try {
             const res = await axiosInstance.get('/donation-requests/my-requests');
-            // Assuming res.data is already a List<DonationRequestDetailDTO>
             setMyRequests(res.data || []);
         } catch (err) {
             console.error("Lỗi khi tải yêu cầu hiến máu:", err);
@@ -68,7 +65,7 @@ const MyDonationRequests = () => {
             toast.success('Đơn đăng ký đã được hủy thành công!');
             setShowConfirmCancelModal(false);
             setSelectedRequestToCancel(null);
-            fetchMyDonationRequests(); // Refresh the list
+            fetchMyDonationRequests();
         } catch (err) {
             const errorMsg = err.response?.data?.message || 'Không thể hủy đơn. Vui lòng thử lại.';
             toast.error(`Lỗi: ${errorMsg}`);
@@ -105,25 +102,24 @@ const MyDonationRequests = () => {
             <h2 className={styles.pageTitle}>Đơn Đăng Ký Hiến Máu Của Tôi</h2>
 
             {myRequests.length === 0 ? (
-                <div className={styles.noRequestsMessage}>
-                    <p>Bạn chưa có đơn đăng ký hiến máu nào.</p>
-                    <button className={styles.backButton} onClick={handleGoBack}>
-                        Quay lại
-                    </button>
-                </div>
+                <>
+                    <div className={styles.noRequestsMessage}>
+                        <p>Bạn chưa có đơn đăng ký hiến máu nào.</p>
+                    </div>
+
+                    <div className={styles.backSection}>
+                        <button className={styles.backButton} onClick={handleGoBack}>
+                            Quay lại
+                        </button>
+                    </div>
+                </>
             ) : (
                 <div className={styles.requestList}>
                     {myRequests.map((request) => (
                         <div key={request.id} className={styles.requestCard}>
                             <div className={styles.cardHeader}>
-                                <h3>Sự kiện: {request.eventName || 'N/A'}</h3>
-                                <span className={`${styles.statusBadge} ${styles[request.statusRequest?.toLowerCase()]}`}>
-                                    {request.statusRequest === 'PENDING' ? 'Đang chờ' :
-                                     request.statusRequest === 'APPROVED' ? 'Đã duyệt' :
-                                     request.statusRequest === 'REJECTED' ? 'Đã từ chối' :
-                                     request.statusRequest === 'CANCELED' ? 'Đã hủy' :
-                                     request.statusRequest || 'N/A'}
-                                </span>
+                                <h3>Tên sự kiện: {request.eventName || 'N/A'}</h3>
+                                
                             </div>
                             <div className={styles.cardBody}>
                                 <div className={styles.infoGroup}>
@@ -131,12 +127,22 @@ const MyDonationRequests = () => {
                                     <span className={styles.value}>{formatDateTime(request.requestTime)}</span>
                                 </div>
                                 <div className={styles.infoGroup}>
-                                    <span className={styles.label}>Nhóm máu ĐK:</span>
+                                    <span className={styles.label}>Nhóm máu đăng Ký:</span>
                                     <span className={styles.value}>
                                         {request.donorBloodType
                                             ? `${request.donorBloodType.type}${request.donorBloodType.rhFactor}`
                                             : 'N/A'}
                                     </span>
+                                </div>
+                                <div className={styles.infoGroup}>
+                                    <span className={styles.label}>Trạng thái:</span>
+                                    <span className={`${styles.statusBadge} ${styles[request.statusRequest?.toLowerCase()]}`}>
+                                    {request.statusRequest === 'PENDING' ? 'Đang chờ' :
+                                     request.statusRequest === 'APPROVED' ? 'Đã duyệt' :
+                                     request.statusRequest === 'REJECTED' ? 'Đã từ chối' :
+                                     request.statusRequest === 'CANCELED' ? 'Đã hủy' :
+                                     request.statusRequest || 'N/A'}
+                                </span>
                                 </div>
                             </div>
                             <div className={styles.cardActions}>
@@ -161,9 +167,10 @@ const MyDonationRequests = () => {
                         Quay lại
                     </button>
                 </div>
+
+                
             )}
 
-            {/* Confirmation Cancel Modal */}
             {showConfirmCancelModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -180,10 +187,9 @@ const MyDonationRequests = () => {
                 </div>
             )}
 
-            {/* Detail Modal */}
             {showDetailModal && selectedRequestDetail && (
                 <div className={styles.modalOverlay}>
-                    <div className={styles.modalContentLarge}> {/* Added a new class for potentially larger modal */}
+                    <div className={styles.modalContentLarge}>
                         <h3 className={styles.modalTitle}>Chi Tiết Đơn Đăng Ký Hiến Máu</h3>
                         <div className={styles.detailGrid}>
                             <div className={styles.infoGroup}>
@@ -237,7 +243,6 @@ const MyDonationRequests = () => {
                                 <span className={styles.value}>{selectedRequestDetail.note || 'Không có'}</span>
                             </div>
 
-                            {/* Survey Details Section */}
                             <h4 className={styles.surveyTitle}>Kết Quả Khảo Sát Sức Khỏe</h4>
                             <div className={styles.surveyGrid}>
                                 <div className={styles.infoGroup}>

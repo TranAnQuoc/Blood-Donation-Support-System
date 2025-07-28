@@ -3,6 +3,7 @@ import axiosInstance from '../../../../configs/axios';
 import DataTable from '../../../common/Table/DataTable';
 import styles from './EventSearchAndList.module.css';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 
 const EventSearchAndList = () => {
@@ -67,7 +68,11 @@ const EventSearchAndList = () => {
                     setHasSearched(false);
                     return;
                 }
-                if (searchParams.startDate && searchParams.endDate && dayjs(searchParams.startDate).isAfter(dayjs(searchParams.endDate))) {
+                if (
+                    searchParams.startDate &&
+                    searchParams.endDate &&
+                    dayjs(searchParams.startDate).isAfter(dayjs(searchParams.endDate))
+                ) {
                     setDateError('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
                     setEvents([]);
                     setHasSearched(false);
@@ -75,28 +80,27 @@ const EventSearchAndList = () => {
                 }
 
                 url = '/event/by-date';
-                if (searchParams.startDate) {
-                    params.from = searchParams.startDate;
-                } else {
-                    params.from = '2000-01-01';
-                }
-                if (searchParams.endDate) {
-                    params.to = searchParams.endDate;
-                } else {
-                    params.to = '2100-01-01';
-                }
+                params.from = searchParams.startDate || '2000-01-01';
+                params.to = searchParams.endDate || '2100-01-01';
             }
 
             const response = await axiosInstance.get(url, { params });
-            setEvents(response.data);
-            console.log('Kết quả tìm kiếm sự kiện:', response.data);
+
+            let filtered = response.data;
+
+            if (searchParams.type === 'keyword') {
+                filtered = filtered.filter((e) => e.status === 'ACTIVE');
+            }
+
+            setEvents(filtered);
+            console.log('Kết quả tìm kiếm sự kiện:', filtered);
         } catch (error) {
             console.error('Lỗi khi tải sự kiện hiến máu:', error);
             setEvents([]);
-            if (error.response && error.response.data && error.response.data.message) {
-                alert(`Lỗi từ máy chủ: ${error.response.data.message}`);
+            if (error.response?.data?.message) {
+                toast.error(`Lỗi từ máy chủ: ${error.response.data.message}`);
             } else {
-                alert('Không thể tải sự kiện hiến máu. Vui lòng thử lại.');
+                toast.error('Không thể tải sự kiện hiến máu. Vui lòng thử lại.');
             }
         } finally {
             setLoading(false);
@@ -126,7 +130,7 @@ const EventSearchAndList = () => {
     };
 
     const handleRegisterClick = (eventId) => {
-        navigate(`/member/register-donation?eventId=${eventId}`); 
+        navigate(`/member/register-donation?eventId=${eventId}`);
     };
 
     const eventColumns = [

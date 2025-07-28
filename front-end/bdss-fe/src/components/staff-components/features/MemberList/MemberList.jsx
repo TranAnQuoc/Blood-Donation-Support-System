@@ -37,6 +37,22 @@ const getDonationStatusName = (statusDonation) => {
     }
 };
 
+const memberRoleMap = {
+    MEMBER: 'Thành Viên',
+};
+
+const bloodTypeMap = {
+    'A+': 'A+',
+    'A-': 'A-',
+    'B+': 'B+',
+    'B-': 'B-',
+    'AB+': 'AB+',
+    'AB-': 'AB-',
+    'O+': 'O+',
+    'O-': 'O-',
+    'UNKNOWNUNKNOWN': 'Không xác định',
+};
+
 const MemberList = () => {
     const { notifications } = useWebSocket();
 
@@ -70,7 +86,6 @@ const MemberList = () => {
         const latest = notifications[notifications.length - 1];
         console.log("Notification mới:", latest);
 
-        // Nếu thông báo có chứa từ "khẩn cấp" thì gọi lại danh sách thành viên
         if (latest.message && latest.message.toLowerCase().includes("khẩn cấp")) {
             fetchMembers();
         }
@@ -135,12 +150,12 @@ const MemberList = () => {
                                     <td>{member.fullName || 'N/A'}</td>
                                     <td>{member.email || 'N/A'}</td>
                                     <td>{member.phone || 'N/A'}</td>
-                                    <td>{member.role || 'N/A'}</td>
+                                    <td>{memberRoleMap[member.role] || 'N/A'}</td>
                                     <td>{member.gender === 'MALE' ? 'Nam' : (member.gender === 'FEMALE' ? 'Nữ' : 'Khác')}</td>
                                     <td>{formatDateTime(member.dateOfBirth) || 'N/A'}</td>
                                     <td>
                                         {member.bloodType
-                                            ? `${member.bloodType.type}${member.bloodType.rhFactor}`
+                                            ? bloodTypeMap[`${member.bloodType.type}${member.bloodType.rhFactor}`] || 'Chưa rõ'
                                             : 'N/A'}
                                     </td>
                                     <td>{member.address || 'N/A'}</td>

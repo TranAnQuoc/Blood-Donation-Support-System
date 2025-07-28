@@ -2,9 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './index.module.css'; // Đảm bảo tạo file CSS này
+import styles from './index.module.css';
 
-// Giả định trạng thái của hotline (dù STAFF chỉ xem, vẫn giữ để hiển thị đúng)
 const HotlineStatus = {
     ACTIVE: "ACTIVE",
     DELETED: "DELETED",
@@ -16,18 +15,15 @@ const EmergencyHotlineListForStaff = () => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Hàm fetch cho STAFF: ưu tiên getForStaff, nếu có searchTerm thì dùng getByAddress
     const fetchHotlines = useCallback(async (address = '') => {
         setLoading(true);
         setError(null);
         try {
             let url;
             if (address) {
-                // API getByAddress có quyền STAFF và ADMIN
-                url = `/hotlines/address?address=${encodeURIComponent(address)}`; // Đảm bảo đúng base URL của API
+                url = `/hotlines/address?address=${encodeURIComponent(address)}`;
             } else {
-                // API getForStaff chỉ có quyền STAFF
-                url = '/hotlines/staff'; // Đảm bảo đúng base URL của API
+                url = '/hotlines/staff';
             }
             const response = await axiosInstance.get(url);
             setHotlines(response.data);
@@ -51,7 +47,7 @@ const EmergencyHotlineListForStaff = () => {
 
     const handleClearSearch = () => {
         setSearchTerm('');
-        fetchHotlines(); // Tải lại tất cả cho STAFF
+        fetchHotlines();
     };
 
     if (loading) {
@@ -68,7 +64,6 @@ const EmergencyHotlineListForStaff = () => {
                 Thông Tin Đường Dây Nóng Khẩn Cấp
             </h2>
 
-            {/* Search Bar - Không có nút thêm mới */}
             <div className={styles.topActions}>
                 <div className={styles.searchBar}>
                     <input
@@ -84,7 +79,6 @@ const EmergencyHotlineListForStaff = () => {
                         <button className={styles.clearSearchButton} onClick={handleClearSearch}>Xóa tìm kiếm</button>
                     )}
                 </div>
-                {/* Không có nút "Thêm mới" cho STAFF */}
             </div>
 
             {hotlines.length === 0 ? (
@@ -98,7 +92,6 @@ const EmergencyHotlineListForStaff = () => {
                                 <th>Tên Đơn vị</th>
                                 <th>Địa chỉ</th>
                                 <th>Số điện thoại</th>
-                                {/* Không có cột "Hành động" cho STAFF */}
                             </tr>
                         </thead>
                         <tbody>

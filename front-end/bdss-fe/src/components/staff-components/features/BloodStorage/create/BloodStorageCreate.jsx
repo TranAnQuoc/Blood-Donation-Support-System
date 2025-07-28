@@ -55,9 +55,7 @@ const staticBloodComponents = [
     // { id: 1, name: "Unknow" }, // ID 1 là "Không xác định"
     { id: 2, name: "Toàn phần" },
     { id: 3, name: "Huyết tương" },
-    { id: 4, name: "Hồng cầu" },
-    { id: 5, name: "Tiểu cầu" },
-    { id: 6, name: "Bạch cầu" },
+    { id: 4, name: "Tiểu cầu" },
 ];
 // ==========================================================
 

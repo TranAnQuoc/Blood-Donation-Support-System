@@ -142,13 +142,16 @@ const DonationSurvey = () => {
       
       navigate("/member/my-donation-request");
     } catch (err) {
-      const backendMessage = err.response?.data?.message;
-      let errorMsg = "Không thể gửi khảo sát. Vui lòng thử lại.";
+      console.log("API Error:", err.response);
 
-      if (backendMessage) {
+      let errorMsg = "Không thể gửi khảo sát. Vui lòng thử lại.";
+      const backendMessage = err.response?.data;
+
+      if (typeof backendMessage === "string") {
         if (backendMessage.includes("đã đăng ký hiến máu và đang chờ xử lý")) {
-          errorMsg =
-            "Bạn đã đăng ký hiến máu và đang chờ xử lý. Vui lòng kiểm tra lại trạng thái đăng ký của bạn.";
+          errorMsg = "Bạn đã đăng ký hiến máu và đang chờ xử lý. Vui lòng kiểm tra lại trạng thái đăng ký của bạn.";
+        } else if (backendMessage.includes("Bạn cần chờ ít nhất 12 tuần")) {
+          errorMsg = "Bạn chưa đủ thời gian nghỉ giữa các lần hiến máu. Vui lòng chờ đủ 12 tuần kể từ lần hiến máu trước.";
         } else if (
           backendMessage.includes("cần chờ ít nhất") &&
           backendMessage.includes("sau khi hiến máu để đăng ký lại")
@@ -158,10 +161,9 @@ const DonationSurvey = () => {
           backendMessage.includes("không tìm thấy lịch hiến máu") ||
           backendMessage.includes("không hợp lệ")
         ) {
-          errorMsg =
-            "Lịch hiến máu không tồn tại hoặc không hợp lệ. Vui lòng kiểm tra lại URL.";
+          errorMsg = "Lịch hiến máu không tồn tại hoặc không hợp lệ. Vui lòng kiểm tra lại URL.";
         } else {
-          errorMsg = `Lỗi: ${backendMessage}`;
+          errorMsg = backendMessage;
         }
       }
       toast.error(errorMsg);

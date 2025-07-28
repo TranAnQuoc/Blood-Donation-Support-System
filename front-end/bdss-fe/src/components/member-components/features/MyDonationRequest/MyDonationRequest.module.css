@@ -11,10 +11,11 @@
 
 .pageTitle {
     text-align: center;
-    color: #c0392b;
+    color: #031B4E;
     margin-bottom: 30px;
     font-size: 2.2em;
     font-weight: 700;
+    border-bottom: 2px solid #031B4E;
 }
 
 .loadingMessage, .errorMessage, .noRequestsMessage {
@@ -26,6 +27,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     color: #555;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .errorMessage {
@@ -52,13 +54,13 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    /* transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; */
 }
 
-.requestCard:hover {
+/* .requestCard:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .cardHeader {
     display: flex;
@@ -72,7 +74,7 @@
 .cardHeader h3 {
     margin: 0;
     font-size: 1.4em;
-    color: #2c3e50;
+    color: #a01a38;
 }
 
 .cardBody {
@@ -106,31 +108,40 @@
     border-radius: 5px;
     font-weight: bold;
     font-size: 0.9em;
-    color: #fff;
+    /* color: #fff; */
     text-transform: uppercase;
 }
 
 .statusBadge.pending {
-    background-color: #f39c12;
+    background-color: #fff3cd;
+    color: #bd9829;
+    border: 1px solid #bd9829;
 }
 
 .statusBadge.approved {
-    background-color: #27ae60;
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
+
 }
 
 .statusBadge.rejected {
-    background-color: #e74c3c;
+    background-color: #f8d7da;
+    color: #af2d3a;
+    border: 1px solid #af2d3a;
 }
 
 .statusBadge.canceled {
-    background-color: #95a5a6;
+    background-color: #e2e3e5;
+    color: #51585e;
+    border: 1px solid #51585e;
 }
 
 .cardActions {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-top: auto; 
+    margin-top: auto;
 }
 
 .detailButton, .cancelButton, .backButton, .confirmButton {
@@ -145,12 +156,12 @@
 }
 
 .detailButton {
-    background-color: #3498db;
+    background-color: #20a0c0;
     color: white;
 }
 
 .detailButton:hover {
-    background-color: #2980b9;
+    background-color: #1686a3;
 }
 
 .cancelButton {
@@ -163,14 +174,15 @@
 }
 
 .backButton {
-    background-color: #95a5a6;
-    color: white;
-    margin-top: 20px;
+    background-color: #fff;
+    color: #031B4E;
     width: 100%;
+    border: 1px solid #031B4E;
 }
 
 .backButton:hover {
-    background-color: #7f8c8d;
+    background-color: #031B4E;
+    color: #fff;
 }
 
 /* Modal styles */
@@ -216,9 +228,10 @@
 .modalTitle {
     color: #c0392b;
     margin-bottom: 25px;
-    font-size: 1.8em;
-    border-bottom: 2px solid #eee;
+    font-size: 2em;
+    border-bottom: 2px solid #bb6868;
     padding-bottom: 10px;
+    text-align: center;
 }
 
 .detailGrid {
@@ -236,14 +249,15 @@
 
 .detailGrid .infoGroup .label {
     font-size: 0.9em;
-    color: #666;
+    color: #C02044;
     margin-bottom: 5px;
     flex-basis: auto;
+    font-weight: bold;
 }
 
 .detailGrid .infoGroup .value {
     font-size: 1em;
-    color: #333;
+    color: #000000;
     text-align: left;
     flex-basis: auto;
 }
@@ -270,12 +284,12 @@
 .surveyTitle {
     grid-column: 1 / -1;
     text-align: center;
-    color: #2980b9;
+    color: #031B4E;
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 1.6em;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
+    border-bottom: 1px solid #031B4E;
+    padding-bottom: 20px;
 }
 
 .surveyGrid {
@@ -293,13 +307,14 @@
 
 .surveyGrid .infoGroup .label {
     font-size: 0.9em;
-    color: #666;
+    color: #1686a3;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .surveyGrid .infoGroup .value {
     font-size: 1em;
-    color: #333;
+    color: #000000;
     text-align: left;
 }
 

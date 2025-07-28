@@ -59,13 +59,12 @@
 }
 
 .useButton {
-    background-color: #007bff; /* Blue */
+    background-color: #007bff;
     color: white;
 }
 
 .useButton:hover {
     background-color: #0056b3;
-    transform: translateY(-1px);
 }
 
 .useButton:disabled {
@@ -76,13 +75,12 @@
 }
 
 .transferButton {
-    background-color: #ffc107; /* Yellow/Orange */
-    color: #333; /* Darker text for contrast */
+    background-color: #ffc107;
+    color: #333;
 }
 
 .transferButton:hover {
     background-color: #e0a800;
-    transform: translateY(-1px);
 }
 
 .transferButton:disabled {

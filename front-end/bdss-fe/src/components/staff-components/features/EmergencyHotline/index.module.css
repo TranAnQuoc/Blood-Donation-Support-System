@@ -1,21 +1,20 @@
-/* src/components/staff-components/EmergencyHotlineListForStaff/EmergencyHotlineListForStaff.module.css */
-
 .container {
     padding: 30px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    max-width: 1000px; /* Có thể nhỏ hơn một chút vì ít cột hơn */
+    max-width: 1000px;
     margin: 40px auto;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container h2 {
-    color: #007bff; /* Màu xanh cho STAFF */
+    color: #c0392b;
     text-align: center;
     margin-bottom: 35px;
     font-size: 2.2em;
     font-weight: 700;
+    border-bottom: 1px solid #c0392b;
 }
 
 .loadingMessage,
@@ -39,7 +38,7 @@
 
 .topActions {
     display: flex;
-    justify-content: center; /* Căn giữa search bar */
+    justify-content: center;
     align-items: center;
     margin-bottom: 30px;
     flex-wrap: wrap;
@@ -50,7 +49,7 @@
     display: flex;
     gap: 10px;
     flex-grow: 1;
-    max-width: 600px; /* Giới hạn độ rộng của search bar */
+    max-width: 600px;
     flex-wrap: wrap;
 }
 
@@ -60,7 +59,7 @@
     border: 1px solid #ced4da;
     border-radius: 8px;
     font-size: 1em;
-    min-width: 180px; /* Đảm bảo đủ rộng */
+    min-width: 180px;
 }
 
 .searchButton,
@@ -95,7 +94,6 @@
     transform: translateY(-1px);
 }
 
-/* Không có nút .addButton */
 
 .tableWrapper {
     overflow-x: auto;
@@ -121,7 +119,7 @@
 }
 
 .table th {
-    background-color: #e9ecef; /* Màu nền tiêu đề cho STAFF */
+    background-color: #e9ecef;
     color: #495057;
     font-weight: 600;
     text-transform: uppercase;
@@ -135,7 +133,7 @@
 }
 
 .table tbody tr:hover {
-    background-color: #e2f2ff; /* Màu hover nhẹ nhàng */
+    background-color: #e2f2ff;
 }
 
 /* Status Badges */
@@ -150,13 +148,15 @@
 }
 
 .statusBadge.active {
-    background-color: #28a745; /* Green */
-    color: white;
+    background-color: #d4edda;
+    color: #27b849;
+    border: 1px solid #27b849;
 }
 
 .statusBadge.deleted {
-    background-color: #6c757d; /* Gray */
-    color: white;
+    background-color: #f8d7da;
+    color: #af2d3a;
+    border: 1px solid #af2d3a;
 }
 
 /* Responsive adjustments */

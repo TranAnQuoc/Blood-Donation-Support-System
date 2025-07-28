@@ -145,15 +145,48 @@
   color: #fff;
 }
 
-.pending { background-color: #ffc107; }
-.rejected { background-color: #dc3545; }
-.stored { background-color: #28a745; }
-.in_used { background-color: #007bff; }
-.transferred { background-color: #fd7e14; }
-.expired { background-color: #850512; }
+.pending {
+  background-color: #fff3cd;
+  color: #bd9829;
+  border: 1px solid #bd9829;
+}
+.rejected {
+  background-color: #f8d7da;
+  color: #af2d3a;
+  border: 1px solid #af2d3a;
+}
+.stored {
+  background-color: #d4edda;
+  color: #27b849;
+  border: 1px solid #27b849;
+}
+.in_used {
+  background-color: #bacaff;
+  color: #2b66be;
+  border: 1px solid #2b66be;
+}
+.transferred {
+  background-color: #fadcae;
+  color: #d38e33;
+  border: 1px solid #d38e33;
+}
 
-.confirmed { background-color: #28a745; }
-.unconfirmed {background-color: #dc3545;}
+.expired {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #721c24;
+}
+
+.confirmed {
+  background-color: #d4edda;
+  color: #27b849;
+  border: 1px solid #27b849;
+}
+.unconfirmed {
+  background-color: #f8d7da;
+  color: #af2d3a;
+  border: 1px solid #af2d3a;
+}
 
 /* Modal */
 .modalContent {

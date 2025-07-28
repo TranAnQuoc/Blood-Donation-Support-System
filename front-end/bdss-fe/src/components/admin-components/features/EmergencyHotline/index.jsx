@@ -2,9 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './index.module.css'; // Giữ nguyên tên file CSS bạn đã cung cấp
+import styles from './index.module.css';
 
-// Giả định trạng thái của hotline
 const HotlineStatus = {
     ACTIVE: "ACTIVE",
     DELETED: "DELETED",
@@ -17,21 +16,20 @@ const EmergencyHotlineManagement = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [currentHotline, setCurrentHotline] = useState(null); // Hotline đang được chỉnh sửa
+    const [currentHotline, setCurrentHotline] = useState(null);
     
-    // State cho form tạo/sửa
     const [formData, setFormData] = useState({
         name: '',
-        number: '', // Đã đổi từ phoneNumber thành number
+        number: '',
         address: '',
-        status: HotlineStatus.ACTIVE, // Mặc định khi tạo mới
+        status: HotlineStatus.ACTIVE,
     });
 
     const fetchHotlines = useCallback(async (address = '') => {
         setLoading(true);
         setError(null);
         try {
-            let url = '/hotlines'; // Đảm bảo đúng base URL của API
+            let url = '/hotlines';
             if (address) {
                 url = `/hotlines/address?address=${encodeURIComponent(address)}`;
             }
@@ -57,7 +55,7 @@ const EmergencyHotlineManagement = () => {
 
     const handleClearSearch = () => {
         setSearchTerm('');
-        fetchHotlines(); // Tải lại tất cả
+        fetchHotlines();
     };
 
     const handleFormChange = (e) => {
@@ -66,17 +64,17 @@ const EmergencyHotlineManagement = () => {
     };
 
     const handleCreateHotline = async () => {
-        if (!formData.name || !formData.number || !formData.address) { // Đã đổi từ phoneNumber thành number
+        if (!formData.name || !formData.number || !formData.address) {
             toast.error("Vui lòng điền đầy đủ các trường: Tên, Số điện thoại, Địa chỉ.");
             return;
         }
         setLoading(true);
         try {
-            await axiosInstance.post('/hotlines', formData); // Đảm bảo đúng base URL của API
+            await axiosInstance.post('/hotlines', formData);
             toast.success('Tạo đường dây nóng thành công!');
             setShowCreateModal(false);
-            setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE }); // Đã đổi từ phoneNumber thành number
-            fetchHotlines(); // Tải lại danh sách
+            setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE });
+            fetchHotlines();
         } catch (err) {
             console.error('Lỗi khi tạo đường dây nóng:', err);
             toast.error(`Lỗi khi tạo: ${err.response?.data?.message || err.message}`);
@@ -89,7 +87,7 @@ const EmergencyHotlineManagement = () => {
         setCurrentHotline(hotline);
         setFormData({
             name: hotline.name || '',
-            number: hotline.number || '', // Đã đổi từ phoneNumber thành number
+            number: hotline.number || '',
             address: hotline.address || '',
             status: hotline.status || HotlineStatus.ACTIVE,
         });
@@ -97,18 +95,18 @@ const EmergencyHotlineManagement = () => {
     };
 
     const handleUpdateHotline = async () => {
-        if (!currentHotline || !formData.name || !formData.number || !formData.address) { // Đã đổi từ phoneNumber thành number
+        if (!currentHotline || !formData.name || !formData.number || !formData.address) {
             toast.error("Vui lòng điền đầy đủ các trường: Tên, Số điện thoại, Địa chỉ.");
             return;
         }
         setLoading(true);
         try {
-            await axiosInstance.put(`/hotlines/${currentHotline.id}`, formData); // Đảm bảo đúng base URL của API
+            await axiosInstance.put(`/hotlines/${currentHotline.id}`, formData);
             toast.success('Cập nhật đường dây nóng thành công!');
             setShowEditModal(false);
             setCurrentHotline(null);
-            setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE }); // Đã đổi từ phoneNumber thành number
-            fetchHotlines(); // Tải lại danh sách
+            setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE });
+            fetchHotlines();
         } catch (err) {
             console.error('Lỗi khi cập nhật đường dây nóng:', err);
             toast.error(`Lỗi khi cập nhật: ${err.response?.data?.message || err.message}`);
@@ -123,9 +121,9 @@ const EmergencyHotlineManagement = () => {
         }
         setLoading(true);
         try {
-            await axiosInstance.delete(`/hotlines/${id}`); // Đảm bảo đúng base URL của API
+            await axiosInstance.delete(`/hotlines/${id}`);
             toast.success('Đường dây nóng đã được xóa thành công!');
-            fetchHotlines(); // Tải lại danh sách
+            fetchHotlines();
         } catch (err) {
             console.error('Lỗi khi xóa đường dây nóng:', err);
             toast.error(`Lỗi khi xóa: ${err.response?.data?.message || err.message}`);
@@ -140,9 +138,9 @@ const EmergencyHotlineManagement = () => {
         }
         setLoading(true);
         try {
-            await axiosInstance.put(`/hotlines/restore/${id}`); // Đảm bảo đúng base URL của API
+            await axiosInstance.put(`/hotlines/restore/${id}`);
             toast.success('Đường dây nóng đã được khôi phục thành công!');
-            fetchHotlines(); // Tải lại danh sách
+            fetchHotlines();
         } catch (err) {
             console.error('Lỗi khi khôi phục đường dây nóng:', err);
             toast.error(`Lỗi khi khôi phục: ${err.response?.data?.message || err.message}`);
@@ -165,7 +163,6 @@ const EmergencyHotlineManagement = () => {
                 Quản Lý Đường Dây Nóng Khẩn Cấp
             </h2>
 
-            {/* Search and Add Button */}
             <div className={styles.topActions}>
                 <div className={styles.searchBar}>
                     <input
@@ -181,7 +178,7 @@ const EmergencyHotlineManagement = () => {
                         <button className={styles.clearSearchButton} onClick={handleClearSearch}>Xóa tìm kiếm</button>
                     )}
                 </div>
-                <button className={styles.addButton} onClick={() => setShowCreateModal(true)}>+ Thêm mới</button>
+                <button className={styles.addButton} onClick={() => setShowCreateModal(true)}>Thêm mới</button>
             </div>
 
             {hotlines.length === 0 ? (
@@ -193,7 +190,7 @@ const EmergencyHotlineManagement = () => {
                             <tr>
                                 <th>ID</th>
                                 <th>Tên Đơn vị</th>
-                                <th>Số điện thoại</th> {/* Đã đổi label */}
+                                <th>Số điện thoại</th>
                                 <th>Địa chỉ</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
@@ -204,7 +201,7 @@ const EmergencyHotlineManagement = () => {
                                 <tr key={hotline.id}>
                                     <td data-label="ID">{hotline.id}</td>
                                     <td data-label="Tên Đơn vị">{hotline.name}</td>
-                                    <td data-label="Số điện thoại">{hotline.number}</td> {/* Đã đổi hotline.phoneNumber thành hotline.number */}
+                                    <td data-label="Số điện thoại">{hotline.number}</td>
                                     <td data-label="Địa chỉ">{hotline.address}</td>
                                     <td data-label="Trạng thái">
                                         <span className={`${styles.statusBadge} ${styles[hotline.status?.toLowerCase()]}`}>
@@ -244,7 +241,6 @@ const EmergencyHotlineManagement = () => {
                 </div>
             )}
 
-            {/* Create Modal */}
             {showCreateModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -261,11 +257,11 @@ const EmergencyHotlineManagement = () => {
                             />
                         </div>
                         <div className={styles.formGroup}>
-                            <label>Số điện thoại:</label> {/* Đã đổi label */}
+                            <label>Số điện thoại:</label>
                             <input
                                 type="text"
-                                name="number" // Đã đổi name
-                                value={formData.number} // Đã đổi value
+                                name="number"
+                                value={formData.number}
                                 onChange={handleFormChange}
                                 className={styles.modalInput}
                                 required
@@ -286,14 +282,13 @@ const EmergencyHotlineManagement = () => {
                             <button className={styles.saveButton} onClick={handleCreateHotline} disabled={loading}>Lưu</button>
                             <button className={styles.cancelButton} onClick={() => {
                                 setShowCreateModal(false);
-                                setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE }); // Đã đổi từ phoneNumber thành number
+                                setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE });
                             }}>Hủy</button>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Edit Modal */}
             {showEditModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -316,11 +311,11 @@ const EmergencyHotlineManagement = () => {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Số điện thoại:</label> {/* Đã đổi label */}
+                                    <label>Số điện thoại:</label>
                                     <input
                                         type="text"
-                                        name="number" // Đã đổi name
-                                        value={formData.number} // Đã đổi value
+                                        name="number"
+                                        value={formData.number}
                                         onChange={handleFormChange}
                                         className={styles.modalInput}
                                         required
@@ -354,7 +349,7 @@ const EmergencyHotlineManagement = () => {
                                     <button className={styles.cancelButton} onClick={() => {
                                         setShowEditModal(false);
                                         setCurrentHotline(null);
-                                        setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE }); // Đã đổi từ phoneNumber thành number
+                                        setFormData({ name: '', number: '', address: '', status: HotlineStatus.ACTIVE });
                                     }}>Hủy</button>
                                 </div>
                             </>
