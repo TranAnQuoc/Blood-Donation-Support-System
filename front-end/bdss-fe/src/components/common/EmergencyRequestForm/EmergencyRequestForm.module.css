@@ -223,3 +223,35 @@
     border-color: #dc3545 !important; /* Quan trọng để ghi đè border-color: #dcdcdc */
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2) !important;
 }
+
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  gap: 20px; /* Space between radio options */
+  margin-top: 8px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+}
+
+.radioOption input[type="radio"] {
+  margin-right: 8px;
+  transform: scale(1.2); /* Make radio buttons slightly larger */
+  cursor: pointer;
+}
+
+/* Add or adjust existing styles like inputError, errorText, etc. */
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorText {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}

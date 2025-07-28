@@ -50,23 +50,6 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy quy trình xử lý"));
 
         Optional<EmergencyRequest> request = requestRepo.findById(process.getEmergencyRequest().getId());
-
-        // Lưu file nếu có
-//        if (form.getHealthFile() != null && !form.getHealthFile().isEmpty()) {
-//            String originalFileName = form.getHealthFile().getOriginalFilename();
-//            String savedName = System.currentTimeMillis() + "_" + originalFileName;
-//            Path path = Paths.get("uploads", savedName);
-//
-//            try {
-//                Files.createDirectories(path.getParent());
-//                Files.write(path, form.getHealthFile().getBytes());
-//                process.setHealthFileUrl("/uploads/" + savedName);
-//            } catch (IOException e) {
-//                throw new RuntimeException("Không thể lưu file hồ sơ sức khỏe", e);
-//            }
-//        }
-
-        // Gán thông tin form vào entity
         process.setHealthCheckSummary(form.getHealthCheckSummary());
         process.setAssignedStaff(staff);
         process.setSymptoms(form.getSymptoms());
@@ -77,8 +60,6 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setHemoglobinLevel(form.getHemoglobinLevel());
         process.setBloodGroupConfirmed(form.getBloodGroupConfirmed());
         process.setCrossmatchResult(form.getCrossmatchResult());
-        process.setNeedComponent(form.getNeedComponent());
-        process.setReasonForTransfusion(form.getReasonForTransfusion());
         process.setQuantity(form.getQuantity());
         process.setStatus(form.getStatus());
         process.setCompletedAt(LocalDateTime.now());
@@ -91,30 +72,6 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         System.out.println("HealthFileUrl length = " + process.getHealthFileUrl().length());
 
         EmergencyProcess saved = processRepo.save(process);
-
-        // Chuyển vào history nếu hoàn tất
-//        if (saved.getStatus() == EmergencyStatus.COMPLETED || saved.getStatus() == EmergencyStatus.CANCELED) {
-//            boolean alreadyExists = historyRepo.findByDeleteFalse().stream()
-//                    .anyMatch(h -> h.getEmergencyRequest().getId().equals(request.get().getId()));
-//            if (!alreadyExists) {
-//                EmergencyHistory history = new EmergencyHistory();
-//                history.setEmergencyRequest(saved.getEmergencyRequest());
-//                history.setResolvedAt(LocalDateTime.now());
-//                history.setFullNameSnapshot(request.get().getFullName());
-//                history.setBloodType(request.get().getBloodType());
-//                history.setComponent(request.get().getBloodComponent());
-//                history.setQuantity(request.get().getQuantity());
-//                if (process.getStatus() == EmergencyStatus.COMPLETED) {
-//                    history.setResult(EmergencyResult.FULLFILLED);
-//                } else {
-//                    history.setResult(EmergencyResult.UNFULLFILLED);
-//                }
-//
-//                history.setNotes(saved.getHealthCheckSummary());
-//                history.setDelete(false);
-//                historyRepo.save(history);
-//            }
-//        }
         historyService.autoCreateFromProcess(saved);
     }
 
@@ -153,8 +110,13 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         process.setEmergencyRequest(request);
         process.setStartedAt(LocalDateTime.now());
         process.setStatus(EmergencyStatus.IN_PROCESS);
+        process.setEmergencyPlace(request.getEmergencyPlace());
         process.setAssignedStaff(request.getVerifiedBy());
         process.setStatusAvailable(Status.ACTIVE);
+        process.setBloodComponent(request.getBloodComponent());
+        process.setBloodType(request.getBloodType());
+        process.setQuantity(request.getQuantity());
+
         processRepo.save(process);
     }
 
@@ -167,13 +129,13 @@ public class EmergencyProcessServiceImpl implements EmergencyProcessService {
         dto.setHemoglobinLevel(entity.getHemoglobinLevel());
         dto.setBloodGroupConfirmed(entity.getBloodGroupConfirmed());
         dto.setCrossmatchResult(entity.getCrossmatchResult());
-        dto.setNeedComponent(entity.getNeedComponent());
-        dto.setReasonForTransfusion(entity.getReasonForTransfusion());
         dto.setStatus(entity.getStatus());
         dto.setBloodPressure(entity.getBloodPressure());
         dto.setPulse(entity.getPulse());
         dto.setRespiratoryRate(entity.getRespiratoryRate());
         dto.setTemperature(entity.getTemperature());
+        dto.setBloodComponent(entity.getBloodComponent().getName());
+        dto.setBloodType(entity.getBloodType().getType() + entity.getBloodType().getRhFactor());
         return dto;
     }
 }

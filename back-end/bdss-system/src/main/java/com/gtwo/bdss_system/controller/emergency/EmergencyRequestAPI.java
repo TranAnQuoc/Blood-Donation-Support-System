@@ -39,10 +39,11 @@ public class EmergencyRequestAPI {
         dto.setLocation(form.getLocation());
         dto.setEmergencyProof(form.getEmergencyProof());
         dto.setStatusRequest(StatusRequest.PENDING);
-
+        dto.setEmergencyPlace(form.getEmergencyPlace());
         service.createEmergencyRequest(dto, form.getProofImage(), account);
         return ResponseEntity.ok("Yêu cầu khẩn cấp đã được gửi.");
     }
+
     @GetMapping
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<List<EmergencyRequestDTO>> getAllRequests() {

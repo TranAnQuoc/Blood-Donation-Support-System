@@ -142,8 +142,8 @@ const EmergencyRequestList = () => {
               <th>Họ Tên</th>
               <th>SĐT</th>
               <th>CCCD</th>
-              <th>Nhóm Máu ID</th>
-              <th>TP Máu ID</th>
+              <th>Nhóm Máu </th>
+              <th>Thành Phần Máu </th>
               <th>Số Lượng (ml)</th>
               <th>Địa Điểm</th>
               <th>Minh Chứng</th>
@@ -156,8 +156,8 @@ const EmergencyRequestList = () => {
                 <td>{request.fullName}</td>
                 <td>{request.phone}</td>
                 <td>{request.cccd}</td>
-                <td>{request.bloodTypeId}</td>
-                <td>{request.bloodComponentId}</td>
+                <td>{request.bloodT}</td>
+                <td>{request.bloodC}</td>
                 <td>{request.quantity || "N/A"}</td>
                 <td>{request.location}</td>
                 <td>

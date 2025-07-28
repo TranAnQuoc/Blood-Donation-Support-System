@@ -1,5 +1,6 @@
 package com.gtwo.bdss_system.dto.emergency;
 
+import com.gtwo.bdss_system.enums.EmergencyPlace;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +34,7 @@ public class EmergencyRequestFormDTO {
 
     @Schema(type = "string", format = "binary", description = "Ảnh minh chứng khẩn cấp")
     private MultipartFile proofImage;
+
+    private EmergencyPlace emergencyPlace;
+
 }

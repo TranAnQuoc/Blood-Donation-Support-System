@@ -1,6 +1,7 @@
 package com.gtwo.bdss_system.dto.emergency;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
+import com.gtwo.bdss_system.enums.EmergencyPlace;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -45,6 +46,9 @@ public class EmergencyRequestDTO {
 
     private BloodType bloodType;
     private BloodComponent bloodComponent;
+    private String bloodT;
+    private String bloodC;
+    private EmergencyPlace emergencyPlace;
 }
 
 

@@ -2,6 +2,7 @@ package com.gtwo.bdss_system.dto.emergency;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gtwo.bdss_system.enums.CrossmatchResult;
+import com.gtwo.bdss_system.enums.EmergencyPlace;
 import com.gtwo.bdss_system.enums.EmergencyResult;
 import jakarta.mail.Multipart;
 import lombok.Data;
@@ -32,7 +33,7 @@ public class EmergencyHistoryDTO {
     private String bloodPressure;
     private String symptoms;
     private String healthFile;
-
+    private EmergencyPlace emergencyPlace;
     @JsonIgnore
     private Boolean deleted;
 }

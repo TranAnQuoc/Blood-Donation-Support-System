@@ -4,10 +4,9 @@ import styles from './EmergencyTransfusionProcess.module.css';
 
 // Cập nhật EMERGENCY_STATUS_OPTIONS với label hiển thị
 const EMERGENCY_STATUS_OPTIONS = [
-    { value: 'PENDING', label: 'Đang chờ xử lý' },
-    { value: 'IN_PROCESS', label: 'Đang xử lý' },
-    { value: 'COMPLETED', label: 'Đã hoàn thành' },
-    { value: 'CANCELED', label: 'Đã hủy bỏ' }
+    {value: 'IN_PROCESS', lable:'Đang xử lý'},
+    { value: 'COMPLETED', label: 'Hoàn thành' },
+    { value: 'CANCELED', label: 'Hủy bỏ' }
 ];
 
 // Định nghĩa các tùy chọn cho kết quả Crossmatch
@@ -221,20 +220,8 @@ const EmergencyProcessList = () => {
                             <tr>
                                 <th>ID Process</th>
                                 <th>Mã YC</th>
-                                <th>Tóm tắt SK</th>
-                                <th>URL File SK</th>
                                 <th>Trạng thái</th>
-                                <th>Triệu chứng</th>
-                                <th>Huyết áp</th>
-                                <th>Mạch</th>
-                                <th>Nhịp thở</th>
-                                <th>Nhiệt độ</th>
-                                <th>Mức Hemoglobin</th>
-                                <th>Xác nhận nhóm máu</th>
-                                <th>SL máu</th>
-                                <th>Kết quả Crossmatch</th>
-                                <th>Thành phần cần</th>
-                                <th>Lý do truyền máu</th>
+                                <th>Số lượng</th>
                                 <th>Nhóm máu</th> {/* Đổi tên cột để hiển thị tên */}
                                 <th>Thành phần máu</th> {/* Đổi tên cột để hiển thị tên */}
                                 <th>Hành Động</th>
@@ -248,30 +235,13 @@ const EmergencyProcessList = () => {
                                     <tr key={process.id}>
                                         <td>{process.id || 'N/A'}</td>
                                         <td>{process.idRequest || 'N/A'}</td>
-                                        <td>{process.healthCheckSummary || 'N/A'}</td>
-                                        <td>
-                                            {process.healthFileUrl ? (
-                                                <a href={`http://localhost:8080${process.healthFileUrl}`} target="_blank" rel="noopener noreferrer">Xem File</a>
-                                            ) : 'N/A'}
-                                        </td>
                                         <td>
                                             {EMERGENCY_STATUS_OPTIONS.find(opt => opt.value === process.status)?.label || process.status || 'N/A'}
                                         </td>
-                                        <td>{process.symptoms || 'N/A'}</td>
-                                        <td>{process.bloodPressure || 'N/A'}</td>
-                                        <td>{process.pulse !== null ? process.pulse : 'N/A'}</td>
-                                        <td>{process.respiratoryRate !== null ? process.respiratoryRate : 'N/A'}</td>
-                                        <td>{process.temperature !== null ? `${process.temperature}°C` : 'N/A'}</td>
-                                        <td>{process.hemoglobinLevel !== null ? `${process.hemoglobinLevel} g/dL` : 'N/A'}</td>
-                                        <td>{process.bloodGroupConfirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}</td>
+                                
                                         <td>{process.quantity !== null ? `${process.quantity} ml` : 'N/A'}</td>
-                                        <td>
-                                            {CROSSMATCH_OPTIONS.find(opt => opt.value === process.crossmatchResult)?.label || process.crossmatchResult || 'N/A'}
-                                        </td>
-                                        <td>{process.needComponent || 'N/A'}</td>
-                                        <td>{process.reasonForTransfusion || 'N/A'}</td>
-                                        <td>{bloodType ? bloodType.label : 'N/A'}</td> {/* Hiển thị label nhóm máu */}
-                                        <td>{bloodComponentName ? bloodComponentName.name : 'N/A'}</td> {/* Hiển thị tên thành phần máu */}
+                                        <td>{process.bloodType || 'N/A' }</td>
+                                        <td>{process.bloodComponent || 'N/A'}</td>
                                         <td>
                                             <button
                                                 className={styles.editButton}
@@ -414,18 +384,6 @@ const EmergencyProcessList = () => {
                                 </select>
                             </div>
 
-                            {/* 8. Thành phần cần truyền - Không bắt buộc, single column */}
-                            <div className={styles.formGroup}>
-                                <label htmlFor="needComponent">Thành phần cần:</label>
-                                <input
-                                    type="text"
-                                    id="needComponent"
-                                    name="needComponent"
-                                    value={editFormData.needComponent}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
                             {/* 9. Số lượng máu (ml) - Required, single column */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="quantity">Số lượng máu (ml):<span className={styles.required}>*</span></label>
@@ -437,54 +395,6 @@ const EmergencyProcessList = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                            </div>
-
-                            {/* 10. Lý do truyền máu - Không bắt buộc, full width */}
-                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label htmlFor="reasonForTransfusion">Lý do truyền máu:</label>
-                                <textarea
-                                    id="reasonForTransfusion"
-                                    name="reasonForTransfusion"
-                                    value={editFormData.reasonForTransfusion}
-                                    onChange={handleChange}
-                                    rows="3"
-                                ></textarea>
-                            </div>
-
-                            {/* Trường chọn Blood Type (Select) */}
-                            <div className={styles.formGroup}>
-                                <label htmlFor="bloodtypeId">Nhóm máu:</label>
-                                <select
-                                    id="bloodtypeId"
-                                    name="bloodtypeId"
-                                    value={editFormData.bloodtypeId !== null ? editFormData.bloodtypeId : ''}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">-- Chọn nhóm máu --</option>
-                                    {BLOOD_TYPES.map(type => (
-                                        <option key={type.id} value={type.id}>
-                                            {type.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Trường chọn Blood Component (Select) */}
-                            <div className={styles.formGroup}>
-                                <label htmlFor="componentId">Thành phần máu:</label>
-                                <select
-                                    id="componentId"
-                                    name="componentId"
-                                    value={editFormData.componentId !== null ? editFormData.componentId : ''}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">-- Chọn thành phần máu --</option>
-                                    {BLOOD_COMPONENTS.map(component => (
-                                        <option key={component.id} value={component.id}>
-                                            {component.name}
-                                        </option>
-                                    ))}
-                                </select>
                             </div>
 
 

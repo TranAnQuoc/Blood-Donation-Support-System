@@ -66,8 +66,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         history.setNotes(process.getHealthCheckSummary());
 
         // 🟢 Các trường lấy từ process
-        history.setReasonForTransfusion(process.getReasonForTransfusion());
-        history.setNeedComponent(process.getNeedComponent());
+
         history.setCrossmatchResult(process.getCrossmatchResult());
         history.setHemoglobinLevel(process.getHemoglobinLevel());
         history.setBloodGroupConfirmed(process.getBloodGroupConfirmed());
@@ -80,6 +79,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         history.setComponent(process.getBloodComponent());
         history.setDelete(false);
         history.setHealthFileUrl(process.getHealthFileUrl());
+        history.setEmergencyPlace(process.getEmergencyPlace());
         historyRepo.save(history);
     }
 
@@ -116,6 +116,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
         dto.setSymptoms(entity.getSymptoms());
         dto.setHealthFile(entity.getHealthFileUrl());
         dto.setDeleted(entity.getDelete());
+        dto.setEmergencyPlace(entity.getEmergencyPlace());
         return dto;
     }
 

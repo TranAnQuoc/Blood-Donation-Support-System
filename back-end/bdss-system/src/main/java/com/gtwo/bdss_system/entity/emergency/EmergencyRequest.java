@@ -3,6 +3,7 @@ package com.gtwo.bdss_system.entity.emergency;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
+import com.gtwo.bdss_system.enums.EmergencyPlace;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusRequest;
 import jakarta.persistence.*;
@@ -44,6 +45,10 @@ public class EmergencyRequest {
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name ="emergency_place")
+    @Enumerated(EnumType.STRING)
+    private EmergencyPlace emergencyPlace;
 
     @Column(name = "location")
     @Nationalized
