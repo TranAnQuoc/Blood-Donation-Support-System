@@ -33,12 +33,6 @@ public class EmergencyProcessDTO {
     @NotBlank(message = "Crossmatch result is required.")
     private CrossmatchResult crossmatchResult;
 
-    @NotBlank(message = "Component need must be specified.")
-    private String needComponent;
-
-    @NotBlank(message = "Reason for transfusion is required.")
-    private String reasonForTransfusion;
-
     @NotBlank(message = "Blood pressure is required.")
     private String bloodPressure;
 
@@ -53,5 +47,8 @@ public class EmergencyProcessDTO {
     @NotNull(message = "Temperature is required.")
     @DecimalMin(value = "25.0", message = "Temperature must be reasonable.")
     private Double temperature;
+
+    private String bloodType;
+    private String bloodComponent;
 }
 

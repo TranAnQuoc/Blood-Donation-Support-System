@@ -14,11 +14,15 @@ const RESULT_OPTIONS = [
     { value: 'FULFILLED', label: 'Đã hoàn thành' },
     { value: 'UNFULFILLED', label: 'Chưa hoàn thành' },
     { value: 'PARTIAL', label: 'Hoàn thành một phần' }
-    // Thêm các giá trị khác nếu có trong tương lai
+];
+
+// Định nghĩa các tùy chọn cho EmergencyPlace
+const EMERGENCY_PLACE_OPTIONS = [
+    { value: 'AT_CENTER', label: 'Tại cơ sở' },
+    { value: 'TRANSFER', label: 'Chuyển đến nơi khác' }
 ];
 
 // Dữ liệu tĩnh cho Blood Types dựa trên initBloodTypes của backend
-// Đảm bảo ID này khớp với ID được tạo trong cơ sở dữ liệu của bạn
 const BLOOD_TYPES = [
     { id: 1, type: "UNKNOWN", rhFactor: "UNKNOWN", label: "UNKNOWN - UNKNOWN" },
     { id: 2, type: "A", rhFactor: "+", label: "A+" },
@@ -32,7 +36,6 @@ const BLOOD_TYPES = [
 ];
 
 // Dữ liệu tĩnh cho Blood Components dựa trên initBloodComponents của backend
-// Đảm bảo ID này khớp với ID được tạo trong cơ sở dữ liệu của bạn
 const BLOOD_COMPONENTS = [
     { id: 1, name: "Unknow" },
     { id: 2, name: "Toàn phần" },
@@ -50,11 +53,13 @@ const EmergencyTransfusionHistory = () => {
 
     const token = localStorage.getItem('token');
 
-    // State cho Modal hiển thị ảnh (thêm vào đây)
+    // State cho Modal hiển thị ảnh (từ cột "Ảnh Minh Chứng")
     const [showImageModal, setShowImageModal] = useState(false);
-    const [currentImageBase64, setCurrentImageBase64] = useState(''); // Thay vì URL, giờ là base64
-    const [currentHistoryDetails, setCurrentHistoryDetails] = useState(null); // Lưu chi tiết mục lịch sử
+    const [currentHealthFileBase64, setCurrentHealthFileBase64] = useState('');
 
+    // State cho Modal hiển thị chi tiết đầy đủ
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [selectedItemDetails, setSelectedItemDetails] = useState(null);
 
     useEffect(() => {
         const fetchEmergencyHistory = async () => {
@@ -97,19 +102,65 @@ const EmergencyTransfusionHistory = () => {
         }
     }, [token]);
 
-    // Hàm xử lý khi bấm nút "Xem File"
-    // Giả sử item.healthFileBase64 là trường chứa chuỗi base64 từ backend
-    const handleViewHealthFile = (base64String, historyDetails) => {
-        setCurrentImageBase64(base64String);
-        setCurrentHistoryDetails(historyDetails);
+    // Hàm xử lý khi bấm nút "Xem File" (cho cột Ảnh Minh Chứng)
+    const handleViewHealthFile = (base64String) => {
+        setCurrentHealthFileBase64(base64String);
         setShowImageModal(true);
     };
 
-    // Hàm đóng modal
+    // Hàm đóng modal hiển thị ảnh
     const handleCloseImageModal = () => {
         setShowImageModal(false);
-        setCurrentImageBase64('');
-        setCurrentHistoryDetails(null);
+        setCurrentHealthFileBase64('');
+    };
+
+    // Hàm xử lý khi bấm nút "Xem Chi Tiết" (cho modal chi tiết đầy đủ)
+    const handleViewDetails = (item) => {
+        setSelectedItemDetails(item);
+        setShowDetailsModal(true);
+    };
+
+    // Hàm đóng modal hiển thị chi tiết đầy đủ
+    const handleCloseDetailsModal = () => {
+        setShowDetailsModal(false);
+        setSelectedItemDetails(null);
+    };
+
+    // Helper function to get display label from options
+    const getOptionLabel = (options, value) => {
+        return options.find(opt => opt.value === value)?.label || value || 'N/A';
+    };
+
+    // Helper function to render a detail field conditionally
+    const renderDetailField = (label, value, options = null) => {
+        // Check for null, undefined, empty string, or 'N/A' string
+        if (value === null || value === undefined || value === '' || (typeof value === 'string' && value.trim().toUpperCase() === 'N/A')) {
+            return null; // Don't render if value is not significant
+        }
+
+        let displayValue = value;
+
+        // Apply specific formatting based on label or type
+        if (label === 'Thời Gian Giải Quyết' && value) {
+            displayValue = new Date(value).toLocaleString();
+        } else if (label === 'Nhiệt Độ' && typeof value === 'number') {
+            displayValue = `${value}°C`;
+        } else if (label === 'Mức Hemoglobin' && typeof value === 'number') {
+            displayValue = `${value} g/dL`;
+        } else if (label === 'Số Lượng Máu' && typeof value === 'number') {
+            displayValue = `${value} ml`;
+        } else if (label === 'Xác Nhận Nhóm Máu' && typeof value === 'boolean') {
+            displayValue = value ? 'Đã xác nhận' : 'Chưa xác nhận';
+        } else if (options) { // For fields using predefined options (enums)
+            displayValue = getOptionLabel(options, value);
+        }
+
+        return (
+            <p className={styles.detailItem}>
+                <span className={styles.detailLabel}>{label}:</span>{" "}
+                <span className={styles.detailValue}>{displayValue}</span>
+            </p>
+        );
     };
 
     if (loading) {
@@ -135,74 +186,46 @@ const EmergencyTransfusionHistory = () => {
                     <table className={styles.emergencyHistoryTable}>
                         <thead>
                             <tr>
-                                <th>ID Yêu Cầu</th>
-                                <th>Thời Gian Giải Quyết</th>
                                 <th>Họ Tên</th>
                                 <th>SĐT</th>
-                                <th>Triệu chứng</th>
-                                <th>File SK</th> {/* Cột hiển thị nút xem ảnh */}
-                                <th>Huyết áp</th>
-                                <th>Mạch</th>
-                                <th>Nhịp thở</th>
-                                <th>Nhiệt độ</th>
-                                <th>Mức Hemoglobin</th>
-                                <th>Xác nhận nhóm máu</th>
-                                <th>Nhóm Máu</th>
-                                <th>Thành Phần Máu</th>
-                                <th>Số Lượng (ml)</th>
-                                <th>Kết quả Crossmatch</th>
-                                <th>Thành phần cần</th>
-                                <th>Lý do truyền máu</th>
-                                <th>Kết Quả</th>
-                                <th>Ghi Chú</th>
+                                <th>Ảnh Minh Chứng</th> {/* Renamed from File SK */}
+                                <th>Trạng thái (Emergency Place)</th> {/* New Column */}
+                                <th>Thao tác</th> {/* New Column for View Details button */}
                             </tr>
                         </thead>
                         <tbody>
                             {history.map((item) => {
-                                // Tìm label tiếng Việt cho Blood Type và Blood Component
-                                const bloodType = BLOOD_TYPES.find(bt => bt.id === item.bloodTypeId);
-                                const bloodComponentName = BLOOD_COMPONENTS.find(bc => bc.id === item.componentId);
+                                // Tìm label tiếng Việt cho EmergencyPlace
+                                const emergencyPlaceLabel = EMERGENCY_PLACE_OPTIONS.find(
+                                    (opt) => opt.value === item.emergencyPlace
+                                )?.label || item.emergencyPlace || 'N/A';
 
                                 return (
                                     <tr key={item.id || `row-${item.requestId}-${Math.random()}`}>
-                                        <td>{item.requestId || 'N/A'}</td>
-                                        <td>{item.resolvedAt ? new Date(item.resolvedAt).toLocaleString() : 'N/A'}</td>
                                         <td>{item.fullNameSnapshot || 'N/A'}</td>
                                         <td>{item.phoneSnapshot || 'N/A'}</td>
-                                        <td>{item.symptoms || 'N/A'}</td>
-                                    
                                         <td>
-                                            {/* Gọi handleViewHealthFile với dữ liệu base64 từ item.healthFileBase64 */}
-                                            {/* Giả sử backend trả về trường healthFileBase64 */}
+                                            {/* Button to view the image (healthFile) */}
                                             {item.healthFile ? (
                                                 <button
-                                                    className={styles.viewProofButton} // Bạn có thể tái sử dụng hoặc định nghĩa style mới
-                                                    onClick={() => handleViewHealthFile(item.healthFile, item)}
+                                                    className={styles.viewProofButton}
+                                                    onClick={() => handleViewHealthFile(item.healthFile)}
                                                 >
-                                                    Xem File
+                                                    Xem Ảnh
                                                 </button>
                                             ) : (
                                                 "Không có"
                                             )}
                                         </td>
-                                        <td>{item.bloodPressure || 'N/A'}</td>
-                                        <td>{item.pulse !== null ? item.pulse : 'N/A'}</td>
-                                        <td>{item.respiratoryRate !== null ? item.respiratoryRate : 'N/A'}</td>
-                                        <td>{item.temperature !== null ? `${item.temperature}°C` : 'N/A'}</td>
-                                        <td>{item.hemoglobinLevel !== null ? `${item.hemoglobinLevel} g/dL` : 'N/A'}</td>
-                                        <td>{item.bloodGroupConfirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}</td>
-                                        <td>{bloodType ? bloodType.label : 'N/A'}</td>
-                                        <td>{bloodComponentName ? bloodComponentName.name : 'N/A'}</td>
-                                        <td>{item.quantity !== null ? `${item.quantity} ml` : 'N/A'}</td>
+                                        <td>{emergencyPlaceLabel}</td> {/* Display Emergency Place */}
                                         <td>
-                                            {CROSSMATCH_OPTIONS.find(opt => opt.value === item.crossmatchResult)?.label || item.crossmatchResult || 'N/A'}
+                                            <button
+                                                className={styles.viewDetailsButton} // Add a new style for this button
+                                                onClick={() => handleViewDetails(item)}
+                                            >
+                                                Xem Chi Tiết
+                                            </button>
                                         </td>
-                                        <td>{item.needComponent || 'N/A'}</td>
-                                        <td>{item.reasonForTransfusion || 'N/A'}</td>
-                                        <td>
-                                            {RESULT_OPTIONS.find(opt => opt.value === item.result)?.label || item.result || 'N/A'}
-                                        </td>
-                                        <td>{item.notes || 'N/A'}</td>
                                     </tr>
                                 );
                             })}
@@ -211,22 +234,16 @@ const EmergencyTransfusionHistory = () => {
                 </div>
             )}
 
-            {/* Modal hiển thị ảnh - giống hệt với EmergencyTransfusionRequestList */}
+            {/* Modal hiển thị ảnh (cho cột Ảnh Minh Chứng) */}
             {showImageModal && (
                 <div className={styles.modalOverlay} onClick={handleCloseImageModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <button className={styles.closeModalButton} onClick={handleCloseImageModal}>
                             &times;
                         </button>
-                        {currentHistoryDetails && (
-                            <div className={styles.modalHeader}>
-                                <h3>File sức khỏe của: {currentHistoryDetails.fullNameSnapshot}</h3>
-                                {/* Giả sử có một trường text khác trong History DTO để hiển thị lý do nếu có */}
-                                {/* {currentHistoryDetails.healthFileText && <p>Chi tiết: {currentHistoryDetails.healthFileText}</p>} */}
-                            </div>
-                        )}
-                        {currentImageBase64 ? (
-                            <img src={`data:image/jpeg;base64,${currentImageBase64}`} alt="File sức khỏe" className={styles.modalImage} />
+                        <h3 className={styles.modalTitle}>Ảnh Minh Chứng Sức Khỏe</h3>
+                        {currentHealthFileBase64 ? (
+                            <img src={`data:image/jpeg;base64,${currentHealthFileBase64}`} alt="File sức khỏe" className={styles.modalImage} />
                         ) : (
                             <p>Không tìm thấy ảnh.</p>
                         )}
@@ -234,7 +251,51 @@ const EmergencyTransfusionHistory = () => {
                 </div>
             )}
 
-            {/* Không có modal duyệt/từ chối ở đây vì đây là lịch sử */}
+            {/* Modal hiển thị chi tiết đầy đủ */}
+            {showDetailsModal && selectedItemDetails && (
+                <div className={styles.modalOverlay} onClick={handleCloseDetailsModal}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <button className={styles.closeModalButton} onClick={handleCloseDetailsModal}>
+                            &times;
+                        </button>
+                        <h3 className={styles.modalTitle}>Chi Tiết Yêu Cầu Khẩn Cấp</h3>
+                        <div className={styles.detailsGrid}>
+                            {renderDetailField('ID Lịch Sử', selectedItemDetails.id)}
+                            {renderDetailField('ID Yêu Cầu', selectedItemDetails.requestId)}
+                            {renderDetailField('Thời Gian Giải Quyết', selectedItemDetails.resolvedAt)}
+                            {renderDetailField('Họ Tên Người Cần Máu', selectedItemDetails.fullNameSnapshot)}
+                            {renderDetailField('Số Điện Thoại', selectedItemDetails.phoneSnapshot)}
+                            {renderDetailField('Trạng Thái Khẩn Cấp', selectedItemDetails.emergencyPlace, EMERGENCY_PLACE_OPTIONS)}
+
+                            {/* Blood Type and Component mapping */}
+                            {renderDetailField('Nhóm Máu', BLOOD_TYPES.find(bt => bt.id === selectedItemDetails.bloodTypeId)?.label)}
+                            {renderDetailField('Thành Phần Máu', BLOOD_COMPONENTS.find(bc => bc.id === selectedItemDetails.componentId)?.name)}
+
+                            {renderDetailField('Số Lượng Máu', selectedItemDetails.quantity)}
+                            {renderDetailField('Kết Quả Yêu Cầu', selectedItemDetails.result, RESULT_OPTIONS)}
+                            {renderDetailField('Ghi Chú', selectedItemDetails.notes)}
+                            {renderDetailField('Lý Do Truyền Máu', selectedItemDetails.reasonForTransfusion)}
+                            {renderDetailField('Thành Phần Máu Cần', selectedItemDetails.needComponent)}
+                            {renderDetailField('Kết Quả Crossmatch', selectedItemDetails.crossmatchResult, CROSSMATCH_OPTIONS)}
+                            {renderDetailField('Mức Hemoglobin', selectedItemDetails.hemoglobinLevel)}
+                            {renderDetailField('Xác Nhận Nhóm Máu', selectedItemDetails.bloodGroupConfirmed)}
+                            {renderDetailField('Mạch', selectedItemDetails.pulse)}
+                            {renderDetailField('Nhiệt Độ', selectedItemDetails.temperature)}
+                            {renderDetailField('Nhịp Thở', selectedItemDetails.respiratoryRate)}
+                            {renderDetailField('Huyết Áp', selectedItemDetails.bloodPressure)}
+                            {renderDetailField('Triệu Chứng', selectedItemDetails.symptoms)}
+                            
+                            {/* Display Health File Image within details modal */}
+                            {selectedItemDetails.healthFile && (
+                                <div className={styles.detailItemImage}>
+                                    <span className={styles.detailLabel}>Ảnh Minh Chứng Sức Khỏe:</span>
+                                    <img src={`data:image/jpeg;base64,${selectedItemDetails.healthFile}`} alt="Ảnh minh chứng sức khỏe" className={styles.modalImageSmall} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

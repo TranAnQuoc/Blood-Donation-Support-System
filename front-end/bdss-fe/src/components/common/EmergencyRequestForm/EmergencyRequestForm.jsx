@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "./EmergencyRequestForm.module.css";
+import styles from "./EmergencyRequestForm.module.css"; // Ensure this path is correct
 
 const EmergencyRequestForm = () => {
   const FIXED_BLOOD_TYPES = [
-    { id: 1, type: "Unknow", rhFactor: " " },
     { id: 2, type: "A", rhFactor: "+" },
     { id: 3, type: "A", rhFactor: "-" },
     { id: 4, type: "B", rhFactor: "+" },
@@ -16,7 +15,6 @@ const EmergencyRequestForm = () => {
   ];
 
   const FIXED_BLOOD_COMPONENTS = [
-    { id: 1, name: "Unknow" },
     { id: 2, name: "Toàn phần" },
     { id: 3, name: "Huyết tương" },
     { id: 4, name: "Hồng cầu" },
@@ -34,9 +32,28 @@ const EmergencyRequestForm = () => {
     location: "",
     emergencyProof: "",
     proofImage: null,
+    emergencyPlace: "", // New field for At Center/Transfer
   });
 
   const [errors, setErrors] = useState({});
+
+  // Effect to handle location auto-fill based on emergencyPlace
+  useEffect(() => {
+    if (formData.emergencyPlace === "AT_CENTER") {
+      setFormData((prevData) => ({
+        ...prevData,
+        location: "Tại cơ sở",
+      }));
+    } else if (formData.emergencyPlace === "TRANSFER") {
+      // Clear location if previously set to "Tại cơ sở" and now "TRANSFER"
+      if (prevData => prevData.location === "Tại cơ sở") { // Use prevData here for safety
+        setFormData((prevData) => ({
+          ...prevData,
+          location: "",
+        }));
+      }
+    }
+  }, [formData.emergencyPlace]);
 
   const validate = () => {
     let tempErrors = {};
@@ -68,21 +85,18 @@ const EmergencyRequestForm = () => {
 
     // Validate Blood Type ID
     if (!formData.bloodTypeId) {
-      // Kiểm tra nếu người dùng vô tình chọn trống
       tempErrors.bloodTypeId = "Vui lòng chọn nhóm máu.";
       isValid = false;
     }
 
     // Validate Blood Component ID
     if (!formData.bloodComponentId) {
-      // Kiểm tra nếu người dùng vô tình chọn trống
       tempErrors.bloodComponentId = "Vui lòng chọn thành phần máu.";
       isValid = false;
     }
 
     // Validate Quantity
     if (formData.quantity !== "") {
-      // Nếu có nhập giá trị
       const quantityValue = parseInt(formData.quantity);
       if (isNaN(quantityValue) || quantityValue < 250) {
         tempErrors.quantity = "Số lượng máu phải là số và ít nhất 250 ml.";
@@ -90,8 +104,14 @@ const EmergencyRequestForm = () => {
       }
     }
 
-    // Validate Location
-    if (!formData.location.trim()) {
+    // Validate Emergency Place
+    if (!formData.emergencyPlace) {
+      tempErrors.emergencyPlace = "Vui lòng chọn địa điểm khẩn cấp.";
+      isValid = false;
+    }
+
+    // Validate Location based on emergencyPlace
+    if (formData.emergencyPlace === "TRANSFER" && !formData.location.trim()) {
       tempErrors.location = "Địa điểm cần máu không được để trống.";
       isValid = false;
     }
@@ -121,10 +141,13 @@ const EmergencyRequestForm = () => {
         [name]: files ? files[0] : value,
       };
 
-      
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
-        delete newErrors[name]; 
+        delete newErrors[name];
+        // Special handling for emergencyPlace/location errors
+        if (name === "emergencyPlace") {
+          delete newErrors.location;
+        }
         return newErrors;
       });
 
@@ -136,7 +159,6 @@ const EmergencyRequestForm = () => {
     e.preventDefault();
 
     if (!validate()) {
-      // Gọi hàm validate trước khi gửi form
       console.error("Form validation failed", errors);
       alert("Vui lòng kiểm tra lại thông tin đã nhập.");
       return;
@@ -149,7 +171,6 @@ const EmergencyRequestForm = () => {
         if (formData[key] !== "") {
           data.append(key, parseInt(formData[key]));
         }
-        // Nếu rỗng, không append vào FormData
       } else if (key === "bloodTypeId" || key === "bloodComponentId") {
         data.append(key, parseInt(formData[key]));
       } else {
@@ -169,7 +190,7 @@ const EmergencyRequestForm = () => {
       );
       console.log("Yêu cầu khẩn cấp đã được gửi:", response.data);
       alert("Yêu cầu khẩn cấp đã được gửi thành công!");
-      // Reset form sau khi gửi thành công
+      // Reset form after successful submission
       setFormData({
         fullName: "",
         phone: "",
@@ -180,8 +201,9 @@ const EmergencyRequestForm = () => {
         location: "",
         emergencyProof: "",
         proofImage: null,
+        emergencyPlace: "", // Reset emergencyPlace as well
       });
-      setErrors({}); 
+      setErrors({}); // Clear all errors
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu khẩn cấp:", error);
       alert("Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại.");
@@ -192,6 +214,7 @@ const EmergencyRequestForm = () => {
     <div className={styles.formContainer}>
       <h2 className={styles.formTitle}>Phiếu Yêu Cầu Máu Khẩn Cấp</h2>
       <form onSubmit={handleSubmit} className={styles.emergencyForm}>
+        {/* Full Name */}
         <div className={styles.formGroup}>
           <label htmlFor="fullName" className={styles.label}>
             Họ tên người cần máu:
@@ -202,7 +225,9 @@ const EmergencyRequestForm = () => {
             name="fullName"
             value={formData.fullName}
             onChange={handleChange}
-            className={styles.input}
+            className={`${styles.input} ${
+              errors.fullName ? styles.inputError : ""
+            }`}
             placeholder="Ví dụ: Nguyễn Văn A"
             required
           />
@@ -211,6 +236,7 @@ const EmergencyRequestForm = () => {
           )}
         </div>
 
+        {/* Phone */}
         <div className={styles.formGroup}>
           <label htmlFor="phone" className={styles.label}>
             Số điện thoại:
@@ -221,7 +247,9 @@ const EmergencyRequestForm = () => {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className={styles.input}
+            className={`${styles.input} ${
+              errors.phone ? styles.inputError : ""
+            }`}
             pattern="[0-9]{10}"
             title="Số điện thoại phải có 10 chữ số"
             placeholder="Ví dụ: 0912345678"
@@ -232,6 +260,7 @@ const EmergencyRequestForm = () => {
           )}
         </div>
 
+        {/* CCCD */}
         <div className={styles.formGroup}>
           <label htmlFor="cccd" className={styles.label}>
             CCCD:
@@ -242,7 +271,9 @@ const EmergencyRequestForm = () => {
             name="cccd"
             value={formData.cccd}
             onChange={handleChange}
-            className={styles.input}
+            className={`${styles.input} ${
+              errors.cccd ? styles.inputError : ""
+            }`}
             pattern="[0-9]{12}"
             title="CCCD phải có 12 chữ số"
             placeholder="Ví dụ: 012345678912"
@@ -263,9 +294,12 @@ const EmergencyRequestForm = () => {
             name="bloodTypeId"
             value={formData.bloodTypeId}
             onChange={handleChange}
-            className={styles.input}
+            className={`${styles.input} ${
+              errors.bloodTypeId ? styles.inputError : ""
+            }`}
             required
           >
+            <option value="">Chọn nhóm máu</option>
             {FIXED_BLOOD_TYPES.map((type) => (
               <option key={type.id} value={type.id}>
                 {type.type} {type.rhFactor}
@@ -287,7 +321,9 @@ const EmergencyRequestForm = () => {
             name="bloodComponentId"
             value={formData.bloodComponentId}
             onChange={handleChange}
-            className={styles.input}
+            className={`${styles.input} ${
+              errors.bloodComponentId ? styles.inputError : ""
+            }`}
             required
           >
             {FIXED_BLOOD_COMPONENTS.map((component) => (
@@ -301,6 +337,7 @@ const EmergencyRequestForm = () => {
           )}
         </div>
 
+        {/* Quantity */}
         <div className={styles.formGroup}>
           <label htmlFor="quantity" className={styles.label}>
             Số lượng máu cần (ml):
@@ -314,32 +351,71 @@ const EmergencyRequestForm = () => {
             className={`${styles.input} ${
               errors.quantity ? styles.inputError : ""
             }`}
-            placeholder="Ví dụ: 350 (có thể bỏ qua nếu không )"
+            placeholder="Ví dụ: 350 (có thể bỏ qua nếu không yêu cầu số lượng cụ thể)"
+            // Not required by HTML, validation handles if input exists
           />
           {errors.quantity && (
             <span className={styles.errorText}>{errors.quantity}</span>
           )}
         </div>
 
+        {/* Emergency Place - Radio Buttons */}
         <div className={styles.formGroup}>
-          <label htmlFor="location" className={styles.label}>
-            Địa điểm cần máu:
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            className={styles.input}
-            placeholder="Ví dụ: Bệnh viện Chợ Rẫy, Thành phố Hồ Chí Minh"
-            required
-          />
-          {errors.location && (
-            <span className={styles.errorText}>{errors.location}</span>
+          <label className={styles.label}>Địa điểm khẩn cấp:</label>
+          <div className={styles.radioGroup}>
+            <label className={styles.radioOption}>
+              <input
+                type="radio"
+                name="emergencyPlace"
+                value="AT_CENTER"
+                checked={formData.emergencyPlace === "AT_CENTER"}
+                onChange={handleChange}
+                required // Make sure one option is selected
+              />{" "}
+              Tại cơ sở
+            </label>
+            <label className={styles.radioOption}>
+              <input
+                type="radio"
+                name="emergencyPlace"
+                value="TRANSFER"
+                checked={formData.emergencyPlace === "TRANSFER"}
+                onChange={handleChange}
+                required // Make sure one option is selected
+              />{" "}
+              Chuyển đến nơi khác
+            </label>
+          </div>
+          {errors.emergencyPlace && (
+            <span className={styles.errorText}>{errors.emergencyPlace}</span>
           )}
         </div>
 
+        {/* Location (conditional based on emergencyPlace) */}
+        {formData.emergencyPlace === "TRANSFER" && (
+          <div className={styles.formGroup}>
+            <label htmlFor="location" className={styles.label}>
+              Địa điểm cần máu:
+            </label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className={`${styles.input} ${
+                errors.location ? styles.inputError : ""
+              }`}
+              placeholder="Ví dụ: Bệnh viện Chợ Rẫy, Thành phố Hồ Chí Minh"
+              required // Only required when 'TRANSFER' is selected
+            />
+            {errors.location && (
+              <span className={styles.errorText}>{errors.location}</span>
+            )}
+          </div>
+        )}
+
+        {/* Emergency Proof */}
         <div className={styles.formGroup}>
           <label htmlFor="emergencyProof" className={styles.label}>
             Lý do khẩn cấp:
@@ -349,7 +425,9 @@ const EmergencyRequestForm = () => {
             name="emergencyProof"
             value={formData.emergencyProof}
             onChange={handleChange}
-            className={styles.textarea}
+            className={`${styles.textarea} ${
+              errors.emergencyProof ? styles.inputError : ""
+            }`}
             rows="4"
             placeholder="Ví dụ: Tai nạn giao thông cấp cứu, cần truyền máu gấp."
             required
@@ -359,6 +437,7 @@ const EmergencyRequestForm = () => {
           )}
         </div>
 
+        {/* Proof Image */}
         <div className={styles.formGroup}>
           <label htmlFor="proofImage" className={styles.label}>
             Ảnh minh chứng khẩn cấp:
@@ -370,7 +449,9 @@ const EmergencyRequestForm = () => {
               name="proofImage"
               accept="image/*"
               onChange={handleChange}
-              className={styles.fileInput}
+              className={`${styles.fileInput} ${
+                errors.proofImage ? styles.inputError : ""
+              }`}
               required
             />
           </div>

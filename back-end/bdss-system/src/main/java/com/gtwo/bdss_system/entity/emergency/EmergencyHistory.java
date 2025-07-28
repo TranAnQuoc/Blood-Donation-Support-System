@@ -3,6 +3,7 @@ package com.gtwo.bdss_system.entity.emergency;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.enums.CrossmatchResult;
+import com.gtwo.bdss_system.enums.EmergencyPlace;
 import com.gtwo.bdss_system.enums.EmergencyResult;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -89,4 +90,8 @@ public class EmergencyHistory {
 
     @Column(name = "health_file_url", columnDefinition = "NVARCHAR(MAX)")
     private String healthFileUrl;
+
+    @Column(name= "emergency_place")
+    @Enumerated(EnumType.STRING)
+    private EmergencyPlace emergencyPlace;
 }

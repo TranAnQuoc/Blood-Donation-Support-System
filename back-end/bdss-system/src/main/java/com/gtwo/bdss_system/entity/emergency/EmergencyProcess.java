@@ -3,10 +3,7 @@ package com.gtwo.bdss_system.entity.emergency;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
-import com.gtwo.bdss_system.enums.CrossmatchResult;
-import com.gtwo.bdss_system.enums.EmergencyStatus;
-import com.gtwo.bdss_system.enums.Status;
-import com.gtwo.bdss_system.enums.StatusProcess;
+import com.gtwo.bdss_system.enums.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Nationalized;
@@ -62,16 +59,8 @@ public class EmergencyProcess {
     @Column(name = "crossmatch_result")
     private CrossmatchResult crossmatchResult;
 
-    @Column(name = "need_component")
-    @Nationalized
-    private String needComponent;
-
     @Column(name ="blood_quantity")
     private Integer quantity;
-
-    @Column(name = "reason_for_transfusion")
-    @Nationalized
-    private String reasonForTransfusion;
 
     @Column(name = "blood_pressure")
     @Nationalized
@@ -97,5 +86,8 @@ public class EmergencyProcess {
     @JoinColumn(name = "component_id")
     private BloodComponent bloodComponent;
 
+    @Column(name = "emergency_place")
+    @Enumerated(EnumType.STRING)
+    private EmergencyPlace emergencyPlace;
 
 }
