@@ -42,9 +42,7 @@ public class EmergencyHistoryServiceImpl implements EmergencyHistoryService {
 
     @Override
     public void autoCreateFromProcess(EmergencyProcess process) {
-        if (process.getStatus() != EmergencyStatus.COMPLETED) {
-            throw new IllegalStateException("Không thể tạo lịch sử nếu quy trình chưa hoàn tất");
-        }
+       
 
         if (historyRepo.findByEmergencyRequest_IdAndDeleteFalse(process.getEmergencyRequest().getId()).isPresent()) {
             throw new IllegalStateException("Lịch sử đã tồn tại cho yêu cầu này");

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css'; // Import toast CSS
 import styles from "./EmergencyTransfusionRequestList.module.css";
 
 const EmergencyRequestList = () => {
@@ -33,9 +35,11 @@ const EmergencyRequestList = () => {
         console.error("Error fetching emergency requests:", err);
         if (err.response && (err.response.status === 401 || err.response.status === 403)) {
             setError("Phiên đăng nhập hết hạn hoặc không có quyền. Vui lòng đăng nhập lại.");
+            toast.error("Phiên đăng nhập hết hạn hoặc không có quyền. Vui lòng đăng nhập lại."); // Toast notification
             // window.location.href = '/login'; // Có thể uncomment để chuyển hướng
         } else {
             setError("Không thể tải danh sách yêu cầu khẩn cấp. Vui lòng thử lại.");
+            toast.error("Không thể tải danh sách yêu cầu khẩn cấp. Vui lòng thử lại."); // Toast notification
         }
       } finally {
         setLoading(false);
@@ -101,7 +105,7 @@ const EmergencyRequestList = () => {
           },
         }
       );
-      alert(`Yêu cầu đã được ${isAccepting ? 'duyệt' : 'từ chối'} thành công!`);
+      toast.success(`Yêu cầu đã được ${isAccepting ? 'duyệt' : 'từ chối'} thành công!`); // Toast notification
       closeDecisionModal();
       // Sau khi cập nhật thành công, fetch lại danh sách để cập nhật UI
       setLoading(true); // Đặt lại loading để hiển thị trạng thái tải
@@ -115,8 +119,10 @@ const EmergencyRequestList = () => {
       console.error("Lỗi khi cập nhật yêu cầu:", err);
       if (err.response && err.response.data && err.response.data.message) {
           setDecisionError(err.response.data.message); // Hiển thị lỗi từ BE
+          toast.error(err.response.data.message); // Toast notification for BE errors
       } else {
           setDecisionError("Có lỗi xảy ra khi cập nhật trạng thái. Vui lòng thử lại.");
+          toast.error("Có lỗi xảy ra khi cập nhật trạng thái. Vui lòng thử lại."); // Generic toast for other errors
       }
     }
   };
@@ -263,6 +269,7 @@ const EmergencyRequestList = () => {
           </div>
         </div>
       )}
+      <ToastContainer /> {/* Add ToastContainer here */}
     </div>
   );
 };
