@@ -56,8 +56,9 @@ const MyDonationHistory = () => {
             const response = await axiosInstance.get('/donation-histories/my-history');
             console.log("Dữ liệu lịch sử hiến máu của tôi:", response.data);
             
-            const completedHistories = response.data.filter(history => history.status === "COMPLETED");
-            setHistories(completedHistories);
+            // const completedHistories = response.data.filter(history => history.status === "COMPLETED");
+            // setHistories(completedHistories);
+            setHistories(response.data);
         } catch (err) {
             console.error("Lỗi khi tải lịch sử hiến máu của tôi:", err);
             setError('Không thể tải lịch sử hiến máu của bạn. Vui lòng thử lại sau.');

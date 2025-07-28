@@ -106,12 +106,12 @@ const DonationProcessList = () => {
             openConfirmModal(id);
         } else if (status === 'IN_PROCESS') {
             if (statusHealthCheck === 'PASS') {
-                navigate(`/staff-dashboard/donation-process/${id}?step=donation`);
+                navigate(`/staff-dashboard/donation-processes/${id}?step=donation`);
             } else {
-                navigate(`/staff-dashboard/donation-process/${id}?step=screening`);
+                navigate(`/staff-dashboard/donation-processes/${id}?step=screening`);
             }
         } else {
-            navigate(`/staff-dashboard/donation-process/${id}?step=detail`);
+            navigate(`/staff-dashboard/donation-processes/${id}?step=detail`);
         }
     };
 

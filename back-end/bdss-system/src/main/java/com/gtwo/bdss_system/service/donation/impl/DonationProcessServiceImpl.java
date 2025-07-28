@@ -62,6 +62,15 @@ public class DonationProcessServiceImpl implements DonationProcessService {
     @Override
     public DonationProcess update(Long processId, DonationProcessDTO dto, Account performer) {
         DonationProcess existing = getById(processId);
+        if (existing.getProcess() == StatusProcess.FAILED
+                && dto.getProcess() == StatusProcess.IN_PROCESS
+                && dto.getStatusHealthCheck() == null) {
+            existing.setProcess(StatusProcess.IN_PROCESS);
+            existing.setStatusHealthCheck(null);
+            existing.setFailureReason(null);
+            existing.setNotes(null);
+            return processRepository.save(existing);
+        }
         if (existing.getProcess() == StatusProcess.WAITING && existing.getDate() != null) {
             if (existing.getDate().isAfter(LocalDate.now())) {
                 throw new IllegalStateException("Chưa đến ngày thực hiện, không thể chỉnh sửa quy trình hiến máu.");
@@ -260,7 +269,11 @@ public class DonationProcessServiceImpl implements DonationProcessService {
             history.setBloodType("Unknown");
         }
         history.setDonationDate(java.sql.Date.valueOf(process.getEndTime().toLocalDate()));
-        history.setDonationType(process.getType().toString());
+        if (process.getType() != null) {
+            history.setDonationType(process.getType().toString());
+        } else {
+            history.setDonationType(null);
+        }
         history.setQuantity(process.getQuantity());
         history.setNote(process.getNotes());
         history.setStatus(p);
