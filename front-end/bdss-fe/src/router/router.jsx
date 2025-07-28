@@ -176,7 +176,7 @@ const router = createBrowserRouter([
       //Donation
       { path: "donation-requests", element: <DonationRequestList /> },
       { path: "donation-processes", element: <DonationProcess /> },
-      { path: "donation-process/:id", element: <DonationProcessDetail /> },
+      { path: "donation-processes/:id", element: <DonationProcessDetail /> },
       { path: "donation-histories", element: <DonationHistoryList /> },
       //Transfusion
       { path: "transfusion-requests-management", element: <TransfusionRequestList /> },

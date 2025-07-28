@@ -115,7 +115,7 @@ const DonationProcessDetail = () => {
                 statusHealthCheck: fetchedProcessView.statusHealthCheck || '',
                 failureReason: fetchedProcessView.failureReason || '',
                 quantity: fetchedProcessView.quantity !== null ? fetchedProcessView.quantity : '',
-                type: fetchedProcessView.typeDonation || '',
+                type: fetchedProcessView.type || '',
                 notes: fetchedProcessView.notes || '',
                 process: fetchedProcessView.process,
                 bloodTypeId: fetchedProcessView.donorBloodType?.id || null,
@@ -276,7 +276,7 @@ const DonationProcessDetail = () => {
             const payload = {
                 id: editData.id,
                 quantity: editData.process === 'COMPLETED' ? editData.quantity : 0,
-                type: editData.process === 'COMPLETED' ? (editData.type || null) : null,
+                type: editData.type || null,
                 notes: editData.notes,
                 process: editData.process,
                 heartRate: editData.heartRate,
@@ -292,33 +292,40 @@ const DonationProcessDetail = () => {
             };
 
             if (!payload.process) {
-                throw new Error('Vui lòng chọn trạng thái cuối cùng của Quy trình (Hoàn thành/Thất bại).');
+                toast.error('Vui lòng chọn trạng thái cuối cùng của Quá trình (Hoàn thành/Thất bại).');
+                setLoading(false);
+                return;
             }
+
             if (payload.process === 'COMPLETED') {
-                const requiredFields = ['quantity', 'type'];
-                const missing = requiredFields.filter(f => payload[f] === null || payload[f] === 0 || (f === 'type' && payload[f] === ''));
-                if (missing.length > 0) {
-                    throw new Error(`Vui lòng điền đầy đủ các trường hiến máu bắt buộc cho trạng thái "Hoàn thành": ${missing.map(f => {
-                        switch(f) {
-                            case 'quantity': return 'Thể tích máu';
-                            case 'type': return 'Loại hiến';
-                            default: return f;
-                        }
-                    }).join(', ')}.`);
+                const quantity = Number(payload.quantity);
+                const type = payload.type;
+
+                if (!quantity || quantity <= 0 || !type || type.trim() === '') {
+                    toast.error('Vui lòng nhập đầy đủ Thể tích máu và chọn Loại hiến máu.');
+                    setLoading(false);
+                    return;
                 }
             }
-            if (payload.process === 'FAILED' && (!payload.notes || payload.notes.trim() === '')) {
-                throw new Error('Vui lòng nhập ghi chú cho lý do thất bại hiến máu.');
+
+            if (payload.process === 'FAILED') {
+                if (!payload.notes || payload.notes.trim() === '') {
+                    toast.error('Vui lòng nhập ghi chú cho lý do thất bại hiến máu.');
+                    setLoading(false);
+                    return;
+                }
             }
 
             await axiosInstance.put(`/donation-processes/edit/${id}`, payload);
-            toast.success(`Quy trình hiến máu đã được ${payload.process === 'COMPLETED' ? 'hoàn thành' : 'cập nhật thất bại'}!`);
+            toast.success(`Quá trình hiến máu đã được ${payload.process === 'COMPLETED' ? 'hoàn thành' : 'cập nhật thất bại'}!`);
 
-            navigate('/staff-dashboard/donation-processes');
+            // navigate('/staff-dashboard/donation-processes');
+            navigate(`/staff-dashboard/donation-processes/${id}?step=donation`);
+
 
         } catch (err) {
-            console.error('Error saving donation data:', err);
-            const errorMessage = err.message || err.response?.data?.message || 'Không thể cập nhật dữ liệu hiến máu. Vui lòng thử lại.';
+            console.error('Lỗi khi lưu dữ liệu hiến máu:', err);
+            const errorMessage = err.response?.data?.message || err.message || 'Không thể cập nhật dữ liệu hiến máu. Vui lòng thử lại.';
             setError(errorMessage);
             toast.error(errorMessage);
         } finally {
@@ -375,7 +382,8 @@ const DonationProcessDetail = () => {
     const canEditScreening = currentStep === 'screening' && processView?.process === 'IN_PROCESS' && !isFinalState;
     const canEditDonation = currentStep === 'donation' && processView?.process === 'IN_PROCESS' && processView?.statusHealthCheck === 'PASS' && !isFinalState;
 
-    const canRescreen = processView?.process === 'FAILED' && processView?.statusHealthCheck === 'FAIL';
+    // const canRescreen = processView?.process === 'FAILED' && processView?.statusHealthCheck === 'FAIL';
+    const canRescreen = processView?.process === 'FAILED' && processView?.statusHealthCheck === 'PASS';
 
     const validateField = (name, value) => {
     let error = '';
@@ -424,7 +432,7 @@ const DonationProcessDetail = () => {
 
 
     if (loading) {
-        return <div className={styles.loadingMessage}>Đang tải chi tiết quy trình...</div>;
+        return <div className={styles.loadingMessage}>Đang tải chi tiết quá trình...</div>;
     }
 
     if (error) {
@@ -432,7 +440,7 @@ const DonationProcessDetail = () => {
     }
 
     if (!processView) {
-        return <div className={styles.noDataMessage}>Không tìm thấy chi tiết quy trình.</div>;
+        return <div className={styles.noDataMessage}>Không tìm thấy chi tiết quá trình.</div>;
     }
 
     return (
@@ -681,8 +689,12 @@ const DonationProcessDetail = () => {
                                         Quay lại
                                     </button>
                                     {canEditScreening && (
-                                        <button type="button" className={`${styles.button} ${styles.saveButton}`} onClick={handleSaveScreening}>
-                                            Lưu kết quả sàng lọc
+                                        <button
+                                            type="button"
+                                            className={`${styles.button} ${styles.saveButton}`}
+                                            onClick={handleSaveScreening}
+                                        >
+                                            {editData.statusHealthCheck === 'PASS' ? 'Tiến hành truyền máu' : 'Lưu thay đổi'}
                                         </button>
                                     )}
                                 </div>
@@ -714,7 +726,7 @@ const DonationProcessDetail = () => {
                                     </select>
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label htmlFor="process">Trạng thái cuối cùng của Quy trình:</label>
+                                    <label htmlFor="process">Trạng thái cuối cùng của Quá trình:</label>
                                     <select id="process" name="process"
                                         value={editData.process} onChange={handleInputChange}
                                         disabled={!canEditDonation} className={styles.selectInput}>
@@ -737,7 +749,7 @@ const DonationProcessDetail = () => {
                                         <label htmlFor="notes">Ghi chú (Lý do thất bại hiến máu):</label>
                                         <textarea id="notes" name="notes"
                                             value={editData.notes} onChange={handleInputChange}
-                                            rows="3" placeholder="Ghi chú lý do quy trình thất bại"
+                                            rows="3" placeholder="Ghi chú lý do quá trình thất bại"
                                             disabled={!canEditDonation} className={styles.textarea} />
                                     </div>
                                 )}
@@ -747,7 +759,7 @@ const DonationProcessDetail = () => {
                                     </button>
                                     {canEditDonation && (
                                         <button type="button" className={`${styles.button} ${styles.saveButton}`} onClick={handleSaveDonation}>
-                                            Lưu kết quả hiến máu
+                                            Lưu kết quả truyền máu
                                         </button>
                                     )}
                                 </div>
