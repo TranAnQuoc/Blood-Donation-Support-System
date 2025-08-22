@@ -1,6 +1,21 @@
 # Blood-Donation-Support-System
-Full-stack system for scheduling, tracking, and managing blood donations and blood transfutions between donors/recievers and healthcare facility.
+A full-stack system for scheduling, tracking, and managing blood donations and transfusions between donors, recipients, and healthcare facilities.
 
-1. Folder ui store sample of user interface for actors.
-2. Folder Front-end stores source code for UI/UX, API to back-end
-3. Folder Back-end stores source code to manage data and send API to front-end 
+Folder ui: Contains sample user interface designs for different actors.
+
+Folder Front-end: Contains the source code for the UI/UX and the API calls to the back-end.
+
+Folder Back-end: Contains the source code for data management and APIs for the front-end.
+
+How to run the project
+
+Follow these steps to try out the website:
+Step 1: Open IntelliJ IDEA, open the project bdss-system inside the Back-end folder, and run the main file.
+(Make sure you already have JDK 21 installed.)
+
+Step 2: Open Visual Studio Code and open the bdss-fe folder. Then, open the terminal in VS Code and run the following commands:
+npm i
+npm run dev
+
+Step 3: Click the link provided in the terminal (e.g., http://localhost...).
+(Make sure Node.js is already installed on your device.)
