@@ -1,8 +1,6 @@
 # Blood-Donation-Support-System
 A full-stack system for scheduling, tracking, and managing blood donations and transfusions between donors, recipients, and healthcare facilities.
 
-Folder ui: Contains sample user interface designs for different actors.
-
 Folder Front-end: Contains the source code for the UI/UX and the API calls to the back-end.
 
 Folder Back-end: Contains the source code for data management and APIs for the front-end.
