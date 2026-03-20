@@ -1,0 +1,474 @@
+/* General Form Styling */
+.formContainer {
+    max-width: 500px; /* Adjust max-width for a slightly narrower form */
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 10px; /* Slightly more rounded corners */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Modern font stack */
+    color: #333;
+    line-height: 1.6;
+}
+
+.formTitle {
+    text-align: center;
+    color: #C02044; /* Darker, more prominent title color */
+    margin-bottom: 35px;
+    font-size: 2.2em; /* Slightly larger title */
+    font-weight: 700; /* Bolder */
+    letter-spacing: -0.5px; /* Tighter letter spacing */
+}
+
+.emergencyForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Consistent spacing between form groups */
+}
+
+/* Form Group Styling */
+.formGroup {
+    margin-bottom: 0; /* No extra margin, rely on gap in .emergencyForm */
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600; /* Bolder labels */
+    color: #34495e; /* Slightly darker label color */
+    font-size: 1em; /* Standard font size */
+    cursor: pointer; /* Indicate interactivity */
+}
+
+/* Input and Textarea Styling */
+.input,
+.textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dcdcdc; /* Lighter border color */
+    border-radius: 6px;
+    font-size: 1em;
+    color: #333;
+    background-color: #f8f8f8; /* Light gray background for inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: #ff7878; /* Blue focus border */
+    box-shadow: 0 0 5px #ffe5ea; /* Softer blue glow */
+    background-color: #ffffff; /* White background on focus */
+    outline: none;
+}
+
+.textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 120px; /* Taller textarea */
+}
+
+/* File Input Specific Styling */
+.fileInput {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center;
+    gap: 10px; /* Space between button and file name */
+    border: 1px solid #dcdcdc; /* Match other inputs */
+    border-radius: 6px;
+    padding: 8px; /* Padding around the whole file input area */
+    background-color: #f8f8f8;
+}
+
+.fileInput::-webkit-file-upload-button { /* For Webkit browsers */
+    visibility: hidden;
+    width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.fileInput::before { /* Custom button styling using ::before */
+    content: 'Choose File';
+    display: inline-block;
+    background-color: #e8305e; /* Blue button */
+    color: white;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.fileInput:hover::before {
+    background-color: #e8305e;
+    transform: translateY(-1px);
+}
+
+.fileInput:active::before {
+    background-color: #C02044;
+    transform: translateY(0);
+}
+
+/* To show the selected file name */
+.fileInput {
+    /* Existing styles for fileInput */
+    position: relative;
+    overflow: hidden; /* Hide default input text */
+}
+
+.fileInput::after {
+    content: attr(data-file-name); /* Use a data attribute to display file name */
+    position: absolute;
+    left: calc(18px + 10px + 10px); /* Adjust based on button width + gap + padding */
+    right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #555;
+    font-style: italic;
+    pointer-events: none; /* Make sure it doesn't block clicks */
+}
+
+.submitButton {
+    background-color: #C02044; /* Green button */
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.15em; /* Slightly larger text */
+    font-weight: 600; /* Bolder text */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    align-self: center; /* Center the button */
+    margin-top: 25px;
+    width: 80%; /* Wider button */
+    max-width: 300px; /* Max width for consistency */
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 5px #ffe5ea; /* Subtle shadow for button */
+}
+
+.submitButton:hover {
+    background-color: #DA5E5A;
+    transform: translateY(-2px);
+    box-shadow: 0 0 5px #ffe5ea;
+}
+
+.submitButton:active {
+    background-color: #DA5E5A;
+    transform: translateY(0);
+    box-shadow: 0 0 5px #ffe5ea;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .formContainer {
+        margin: 20px;
+        padding: 25px;
+    }
+
+    .formTitle {
+        font-size: 2em;
+    }
+
+    .submitButton {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .formContainer {
+        margin: 15px;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .formTitle {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .input,
+    .textarea {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+
+    .label {
+        font-size: 0.95em;
+        margin-bottom: 6px;
+    }
+
+    .fileInput::before {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .submitButton {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 1.05em;
+        margin-top: 20px;
+    }
+}
+
+
+.errorText {
+    color: #dc3545;
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: block; 
+}
+
+.inputError {
+    border-color: #dc3545 !important; /* Quan trọng để ghi đè border-color: #dcdcdc */
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2) !important;
+}
+
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  gap: 20px; /* Space between radio options */
+  margin-top: 8px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+}
+
+.radioOption input[type="radio"] {
+  margin-right: 8px;
+  transform: scale(1.2); /* Make radio buttons slightly larger */
+  cursor: pointer;
+}
+
+/* Add or adjust existing styles like inputError, errorText, etc. */
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorText {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure modal is on top of other content */
+}
+
+/* Modal Content Box */
+.modalContent {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-width: 400px; /* Max width for the modal */
+  width: 90%; /* Responsive width */
+  text-align: center;
+  animation: fadeInScale 0.3s ease-out; /* Simple animation */
+}
+
+/* Close Button */
+.closeModalButton {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2em;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.closeModalButton:hover {
+  color: #777;
+}
+
+/* Modal Message */
+.modalMessage {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Modal Action Button */
+.modalButton {
+  background-color: #007bff; /* Blue button */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.modalButton:hover {
+  background-color: #0056b3;
+}
+
+/* Keyframe animation for modal */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Existing form styles (ensure they are present and correctly applied) */
+.formContainer {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+}
+
+.formTitle {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.input,
+.textarea,
+.select { /* Added .select for consistency */
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box; /* Include padding in width */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.textarea {
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.inputError {
+  border-color: #dc3545 !important; /* Red border for errors */
+}
+
+.errorText {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 5px;
+  display: block;
+}
+
+.fileInputWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.fileInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.fileInput::file-selector-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.fileInput::file-selector-button:hover {
+  background-color: #e0e0e0;
+}
+
+.radioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px; /* Increased gap for better spacing */
+  margin-top: 8px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1em;
+  color: #333;
+}
+
+.radioOption input[type="radio"] {
+  margin-right: 10px; /* Space between radio button and label */
+  transform: scale(1.1); /* Slightly larger radio button */
+  cursor: pointer;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 15px;
+  background-color: #28a745; /* Green submit button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 20px;
+}
+
+.submitButton:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}

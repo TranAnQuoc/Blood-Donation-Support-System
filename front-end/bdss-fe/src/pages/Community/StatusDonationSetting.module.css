@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* Container chính */
+.settingsContainer {
+    padding: 30px;
+    max-width: 640px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+/* Tiêu đề */
+.pageTitle {
+    text-align: center;
+    color: #C02044;
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+}
+
+/* Mô tả giới thiệu */
+.introText {
+    text-align: center;
+    color: #666;
+    font-size: 1.05em;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* Form cài đặt */
+.settingsForm {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Nhóm input */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 1em;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+/* Select dropdown */
+.selectField {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.05em;
+    background-color: #f9f9f9;
+    background-image: url("data:image/svg+xml,%3Csvg fill='gray' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 14px;
+    appearance: none;
+    cursor: pointer;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.selectField:focus {
+    border-color: #C02044;
+    box-shadow: 0 0 0 3px rgba(192, 32, 68, 0.1);
+    outline: none;
+}
+
+.selectField:disabled {
+    background-color: #eee;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Nút lưu */
+.saveButton {
+    padding: 14px 24px;
+    background-color: #20a0c0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+.saveButton:hover {
+    background-color: #1686A3;
+    /* transform: translateY(-1px); */
+}
+
+.saveButton:disabled {
+    background-color: #bbb;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Thông báo lỗi */
+.errorMessage {
+    color: #dc3545;
+    background-color: #ffe6e6;
+    border: 1px solid #dc3545;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 20px;
+    font-size: 0.95em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settingsContainer {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    .pageTitle {
+        font-size: 1.9em;
+    }
+
+    .introText {
+        font-size: 1em;
+    }
+
+    .selectField {
+        font-size: 1em;
+        padding: 10px 12px;
+        background-position: right 12px center;
+    }
+
+    .saveButton {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageTitle {
+        font-size: 1.6em;
+    }
+
+    .selectField {
+        font-size: 0.95em;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    .saveButton {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+}

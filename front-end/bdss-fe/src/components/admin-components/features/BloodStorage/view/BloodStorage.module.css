@@ -1,0 +1,332 @@
+.container {
+    padding: 30px;
+    max-width: 1550px; /* Mở rộng hơn để chứa lưới thẻ */
+    margin: 40px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tiêu đề trang */
+.pageTitle {
+    font-size: 2.2em;
+    color: #007A64;
+    margin-bottom: 30px;
+    text-align: center;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
+}
+
+/* Phần lọc */
+.filterSection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.label {
+    font-weight: bold;
+    color: #444;
+    font-size: 1em;
+}
+
+.selectField {
+    padding: 10px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fcfcfc;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%233498db%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.7L146.2%20224.2%2018.9%2075.1a17.6%2017.6%200%200%200-22.7%2022.7l136.9%20136.9c6.7%206.7%2017.7%206.7%2024.4%200l136.9-136.9a17.6%2017.6%200%200%200-5.7-22.7z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.selectField:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52,152,219,.25);
+    outline: none;
+}
+
+/* Thông báo */
+.loadingMessage, .errorMessage, .noDataMessage {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.loadingMessage {
+    background-color: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+}
+
+.errorMessage {
+    background-color: #fff1f0;
+    color: #ff4d4f;
+    border: 1px solid #ffa39e;
+}
+
+.noDataMessage {
+    background-color: #fafafa;
+    color: #555;
+    border: 1px solid #d9d9d9;
+}
+
+/* Lưới thẻ kho máu */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.bloodStorageCard {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  text-align: justify;
+}
+
+.bloodStorageCard:hover {
+  border-color: #007A64;
+  box-shadow: 0 5px 15px rgba(47, 184, 12, 0.15);
+  transform: translateY(-3px);
+}
+
+.cardId {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.bloodStorageCard p {
+  margin: 6px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.cardCreated {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #777;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+/* Badge trạng thái */
+.statusBadge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-top: 8px;
+  color: #fff;
+}
+
+.pending {
+  background-color: #fff3cd;
+  color: #bd9829;
+  border: 1px solid #bd9829;
+}
+.rejected {
+  background-color: #f8d7da;
+  color: #af2d3a;
+  border: 1px solid #af2d3a;
+}
+.stored {
+  background-color: #d4edda;
+  color: #27b849;
+  border: 1px solid #27b849;
+}
+.in_used {
+  background-color: #bacaff;
+  color: #2b66be;
+  border: 1px solid #2b66be;
+}
+.transferred {
+  background-color: #fadcae;
+  color: #d38e33;
+  border: 1px solid #d38e33;
+}
+
+.expired {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #721c24;
+}
+
+.confirmed {
+  background-color: #d4edda;
+  color: #27b849;
+  border: 1px solid #27b849;
+}
+.unconfirmed {
+  background-color: #f8d7da;
+  color: #af2d3a;
+  border: 1px solid #af2d3a;
+}
+
+/* Modal */
+.modalContent {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modalContent h3 {
+  font-size: 2rem;
+  color: #007A64;
+  margin-bottom: 15px;
+}
+
+.modalContent h4 {
+  color: #0077cc;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted #ddd;
+  padding: 8px 0;
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.detailRow p {
+  margin: 0;
+  font-size: 0.95rem;
+  flex-basis: 48%;
+}
+
+.detailRow p:first-child {
+  font-weight: 600;
+  color: #444;
+}
+
+/* Nút đóng modal */
+.closeModalButton {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  border: 1px solid #031B4E;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #031B4E;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeModalButton:hover {
+  background-color: #031B4E;
+  color: #fff
+}
+
+/* === Responsive: Tablet trở xuống (≤ 992px) === */
+@media (max-width: 992px) {
+  .topControls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .filterSection {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filterGroup {
+    width: 100%;
+  }
+
+  .selectField {
+    width: 100%;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .modalContent {
+    padding: 25px;
+    max-width: 90%;
+  }
+}
+
+/* === Responsive: Điện thoại nhỏ (≤ 576px) === */
+@media (max-width: 576px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .createButton {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .bloodStorageCard {
+    padding: 15px;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .modalContent h3 {
+    font-size: 1.5rem;
+  }
+
+  .modalContent h4 {
+    font-size: 1.1rem;
+  }
+
+  .detailRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detailRow p {
+    flex-basis: 100%;
+    font-size: 0.95rem;
+  }
+
+  .closeModalButton {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}

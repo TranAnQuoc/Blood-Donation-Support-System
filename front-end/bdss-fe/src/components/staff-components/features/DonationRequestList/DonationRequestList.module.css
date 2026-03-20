@@ -1,0 +1,130 @@
+.donationRequestListContainer {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.donationRequestListContainer h2 {
+    text-align: center;
+    color: #007A64;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.donationRequestTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.wideColumn {
+    min-width: 150px;
+}
+
+
+.donationRequestTable th,
+.donationRequestTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    
+}
+
+.donationRequestTable th {
+    background-color: #007A64;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.donationRequestTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.donationRequestTable tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.loadingMessage,
+.errorMessage,
+.noRequestsMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.errorMessage {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+}
+
+.statusBadge.pending { 
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.statusBadge.approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.statusBadge.cancelled {
+    background-color: #6c757d;
+    color: white;
+}
+
+.approveButton,
+.cancelButton {
+    padding: 8px 12px;
+    margin-top: 3px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease-in-out;
+    min-width: 100px;
+    text-align: center;
+}
+
+.approveButton {
+    background-color: #20a0c0;
+    color: white;
+}
+
+.approveButton:hover {
+    background-color: #1686a3;
+}
+
+.cancelButton {
+    background-color: #C02044;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #a01a38;
+}

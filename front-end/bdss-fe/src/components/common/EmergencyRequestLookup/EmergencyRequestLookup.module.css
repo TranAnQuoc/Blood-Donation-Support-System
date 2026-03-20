@@ -1,0 +1,237 @@
+/* src/components/common/EmergencyRequestLookup/EmergencyRequestLookup.module.css */
+
+.lookupContainer { /* Đổi tên class */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+    text-align: left;
+    max-width: 450px; /* Điều chỉnh chiều rộng cho form tra cứu */
+    margin: 0 auto; /* Căn giữa form */
+    height: fit-content;
+}
+
+.lookupTitle { /* Đổi tên class */
+    text-align: center;
+    color: #C02044; /* Màu đỏ đậm cho tiêu đề */
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.lookupForm { /* Style cho form */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Khoảng cách giữa các formGroup */
+}
+
+/* Form Group Styling */
+.formGroup {
+    margin-bottom: 0;
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #34495e;
+    font-size: 1em;
+}
+
+/* Input Styling */
+.input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 1em;
+    color: #333;
+    background-color: #f8f8f8;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    border-color: #ff7878;
+    box-shadow: 0 0 5px #ffe5ea;
+    background-color: #ffffff;
+    outline: none;
+}
+
+.inputError { /* Class cho input khi có lỗi */
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2) !important;
+}
+
+.errorText { /* Text lỗi (ít dùng với toast nhưng vẫn để phòng hờ) */
+    color: #dc3545;
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Lookup Button Styling */
+.lookupButton { /* Style cho nút tra cứu */
+    background-color: #C02044;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center;
+    margin-top: 15px;
+    width: 100%;
+    max-width: 180px; /* Giới hạn chiều rộng nút */
+}
+
+.lookupButton:hover {
+    background-color: #DA5E5A;
+    transform: translateY(-1px);
+}
+
+.lookupButton:active {
+    background-color: #C02044;
+    transform: translateY(0);
+}
+
+/* Lookup Result Styling */
+.lookupResult { /* Style cho phần hiển thị kết quả */
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 0.95em;
+    line-height: 1.8;
+}
+
+.lookupResult h4 {
+    color: #C02044;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.lookupResult p {
+    margin-bottom: 8px;
+}
+
+.lookupResult strong {
+    color: #34495e;
+}
+
+/* Status Colors */
+.statusPending {
+    color: #ffc107; /* Vàng */
+    font-weight: bold;
+}
+
+.statusApproved {
+    color: #28a745; /* Xanh lá */
+    font-weight: bold;
+}
+
+.statusRejected {
+    color: #dc3545; /* Đỏ */
+    font-weight: bold;
+}
+
+/* Nút xem ảnh */
+.viewProofButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.viewProofButton:hover {
+    background-color: #0056b3;
+}
+
+/* Modal xem ảnh */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modalImage {
+    max-width: 100%;
+    max-height: 70vh;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.closeModalButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s ease;
+}
+
+.closeModalButton:hover {
+    color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .lookupContainer {
+        padding: 20px;
+    }
+    .lookupTitle {
+        font-size: 1.6em;
+    }
+    .input {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+    .label {
+        font-size: 0.9em;
+    }
+    .lookupButton {
+        padding: 10px 20px;
+        font-size: 1em;
+        max-width: 150px;
+    }
+    .lookupResult {
+        padding: 15px;
+        font-size: 0.9em;
+    }
+}

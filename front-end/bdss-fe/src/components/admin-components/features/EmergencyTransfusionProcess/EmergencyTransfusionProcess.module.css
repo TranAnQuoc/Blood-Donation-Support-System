@@ -1,0 +1,107 @@
+/* Container chính của toàn bộ component */
+.container {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 1400px; /* Tăng chiều rộng để chứa nhiều cột hơn */
+    font-family: Arial, sans-serif;
+}
+
+/* Tiêu đề danh sách/bảng */
+.listTitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+/* Wrapper cho bảng để xử lý cuộn ngang nếu cần */
+.tableWrapper {
+    overflow-x: auto; /* Cho phép cuộn ngang nếu nội dung bảng quá rộng */
+    width: 100%;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Bảng */
+.table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp các đường viền của ô */
+    margin-top: 0;
+    font-size: 0.9em; /* Kích thước chữ nhỏ hơn để hiển thị nhiều thông tin */
+    border: 1px solid #e0e0e0; /* Viền cho toàn bộ bảng */
+    border-radius: 8px; /* Làm tròn góc cho bảng */
+    overflow: hidden; /* Quan trọng để border-radius hoạt động với border-collapse */
+}
+
+/* Tiêu đề cột */
+.table thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 10px; /* Điều chỉnh padding */
+    text-align: center;
+    white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
+    border: 1px solid #0056b3; /* Viền riêng cho từng ô tiêu đề */
+}
+
+/* Các ô dữ liệu */
+.table tbody td {
+    padding: 12px 10px; /* Điều chỉnh padding */
+    text-align: center;
+    vertical-align: middle;
+    white-space: normal; /* Cho phép chữ xuống dòng */
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0; /* Viền riêng cho từng ô dữ liệu */
+}
+
+/* Hiệu ứng xen kẽ hàng */
+.table tbody tr:nth-child(even) td {
+    background-color: #f8f8f8;
+}
+
+/* Hiệu ứng khi hover qua hàng (có thể bỏ nếu không cần tương tác) */
+.table tbody tr:hover td {
+    background-color: #e6f7ff;
+    /* cursor: pointer; */ /* Bỏ nếu không có hành động click vào hàng */
+}
+
+/* Kiểu chữ khi không có dữ liệu */
+.noDataMessage {
+    text-align: center;
+    padding: 25px;
+    color: #555;
+    font-size: 1.2em;
+    font-weight: 500;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Kiểu cho thông báo lỗi */
+.errorMessage {
+    color: #d9534f;
+    font-weight: bold;
+    border: 1px solid #d9534f;
+    background-color: #fdedee;
+    padding: 18px;
+    border-radius: 6px;
+    margin: 25px auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* Kiểu cho thông báo tải */
+.loadingMessage {
+    text-align: center;
+    padding: 25px;
+    color: #007bff;
+    font-size: 1.2em;
+    font-weight: 500;
+    background-color: #e9f5ff;
+    border-radius: 8px;
+    margin-top: 20px;
+}

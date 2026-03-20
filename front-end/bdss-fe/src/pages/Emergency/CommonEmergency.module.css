@@ -1,0 +1,118 @@
+.dashboardContainer {
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 800px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.pageTitle {
+    font-size: 2.2em;
+    color: #34495e;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.introText {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.featureGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    justify-content: center;
+}
+
+.featureCard {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featureCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cardTitle {
+    font-size: 1.8em;
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.cardDescription {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.actionButton {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.actionButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .dashboardContainer {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .pageTitle {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .introText {
+        font-size: 1em;
+        margin-bottom: 30px;
+    }
+
+    .featureCard {
+        padding: 20px;
+    }
+
+    .cardTitle {
+        font-size: 1.5em;
+    }
+
+    .cardDescription {
+        font-size: 0.95em;
+    }
+
+    .actionButton {
+        padding: 10px 20px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboardContainer {
+        padding: 15px;
+        margin: 15px;
+    }
+}

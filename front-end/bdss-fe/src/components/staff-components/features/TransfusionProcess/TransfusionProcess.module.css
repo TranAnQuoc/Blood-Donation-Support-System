@@ -1,0 +1,163 @@
+/* src/components/staff-components/TransfusionProcessList/TransfusionProcessList.module.css */
+
+.container {
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px; /* Có thể rộng hơn để chứa nhiều cột */
+    margin: 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container h2 {
+    color: #007bff; /* Thay đổi màu cho phù hợp với chủ đề quá trình truyền máu */
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+.loadingMessage,
+.errorMessage,
+.noDataMessage {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.tableWrapper {
+    overflow-x: auto; /* Cho phép cuộn ngang trên màn hình nhỏ */
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 0.95em;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden; /* Đảm bảo border-radius hoạt động */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table th,
+.table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 1; /* Để tiêu đề không bị cuộn cùng */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #e2f2ff; /* Màu hover nhẹ nhàng */
+}
+
+/* Responsive Table */
+@media screen and (max-width: 992px) {
+    .table thead {
+        display: none; /* Ẩn tiêu đề cột */
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .table td {
+        text-align: right;
+        padding-left: 50%; /* Tạo không gian cho label */
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label); /* Hiển thị label từ data-label */
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #6c757d;
+    }
+}
+
+/* Status Badges - Tái sử dụng từ TransfusionRequestDetail */
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Trạng thái quá trình truyền máu (TransfusionStatus) */
+.statusBadge.in-progress { /* Dùng gạch nối cho CSS class */
+    background-color: #17a2b8; /* Info blue */
+    color: white;
+}
+.statusBadge.completed {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+.statusBadge.interrupted {
+    background-color: #ffc107; /* Orange */
+    color: #343a40;
+}
+
+.viewButton {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    display: inline-block; /* Để nút không chiếm hết chiều rộng td */
+}
+
+.viewButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}

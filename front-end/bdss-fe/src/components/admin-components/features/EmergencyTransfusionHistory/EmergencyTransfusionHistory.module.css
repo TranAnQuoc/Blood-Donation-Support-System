@@ -1,0 +1,207 @@
+/* Container chính của toàn bộ component */
+.emergencyHistoryContainer {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 1200px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+}
+
+/* Tiêu đề bảng */
+.listTitle {
+    text-align: center;
+    color: #2c3e50; /* Slightly darker for better contrast */
+    margin-bottom: 30px;
+    font-size: 2.5em; /* Slightly larger */
+    font-weight: 700;
+    letter-spacing: 0.5px; /* Add some letter spacing */
+}
+
+/* Wrapper cho bảng để xử lý cuộn ngang */
+.tableWrapper {
+    overflow-x: auto; /* Enables horizontal scrolling if content overflows */
+    width: 100%;
+    /* No padding here, the table handles its own internal spacing */
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1); /* Slightly more prominent shadow */
+}
+
+/* Bảng */
+.emergencyHistoryTable {
+    width: 100%;
+    border-collapse: collapse; /* IMPORTANT: Merges cell borders */
+    margin-top: 0;
+    font-size: 0.9em; /* Slightly smaller for more content in view */
+    border: 1px solid #dcdcdc; /* Lighter border for the whole table */
+    border-radius: 8px;
+    overflow: hidden; /* Crucial for border-radius to work with border-collapse */
+}
+
+/* Tiêu đề cột */
+.emergencyHistoryTable thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 12px; /* Adjusted padding */
+    text-align: center;
+    white-space: nowrap; /* Prevents text from wrapping in headers */
+    border: 1px solid #0056b3; /* Darker border for header cells */
+    font-weight: 600;
+}
+
+/* Các ô dữ liệu */
+.emergencyHistoryTable tbody td {
+    padding: 12px 12px; /* Adjusted padding */
+    text-align: center;
+    vertical-align: middle; /* Centers content vertically */
+    white-space: normal; /* Allows text to wrap */
+    background-color: #ffffff;
+    border: 1px solid #e9ecef; /* Lighter border for data cells */
+    line-height: 1.4; /* Improve readability of wrapped text */
+}
+
+/* Hiệu ứng xen kẽ hàng */
+.emergencyHistoryTable tbody tr:nth-child(even) td {
+    background-color: #f2f2f2; /* A subtle grey for even rows */
+}
+
+/* Hiệu ứng khi hover qua hàng */
+.emergencyHistoryTable tbody tr:hover td {
+    background-color: #e0f2f7; /* A soft blue on hover */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out; /* Smooth transition */
+}
+
+/* Kiểu chữ khi không có dữ liệu */
+.noDataMessage {
+    text-align: center;
+    padding: 40px; /* More padding for emphasis */
+    color: #6c757d; /* Muted color */
+    font-size: 1.3em;
+    font-weight: 500;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Kiểu cho thông báo lỗi */
+.errorMessage {
+    color: #dc3545; /* Bootstrap danger red */
+    font-weight: bold;
+    border: 1px solid #dc3545;
+    background-color: #f8d7da; /* Light red background */
+    padding: 20px;
+    border-radius: 6px;
+    margin: 25px auto;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Kiểu cho thông báo tải */
+.loadingMessage {
+    text-align: center;
+    padding: 40px; /* More padding for emphasis */
+    color: #007bff;
+    font-size: 1.3em;
+    font-weight: 500;
+    background-color: #e9f5ff; /* Light blue background */
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* --- New Styles for Modal (from JSX) --- */
+
+.viewProofButton {
+    background-color: #28a745; /* Green color for view button */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.viewProofButton:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensures it's on top of other content */
+    backdrop-filter: blur(3px); /* Optional: blur background */
+}
+
+.modalContent {
+    background-color: #fff;
+    padding: 30px; /* Increased padding */
+    border-radius: 10px; /* More rounded corners */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+    position: relative;
+    max-width: 90%; /* Max width relative to viewport */
+    max-height: 90%; /* Max height relative to viewport */
+    overflow-y: auto; /* Enable scrolling for modal content if it's too tall */
+    animation: fadeIn 0.3s ease-out; /* Simple fade-in animation */
+}
+
+.closeModalButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2em; /* Larger 'x' */
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.closeModalButton:hover {
+    color: #000;
+}
+
+.modalHeader {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.modalHeader h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.8em;
+}
+
+.modalImage {
+    max-width: 100%; /* Ensures image fits within modal width */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Removes extra space below image */
+    margin: 0 auto; /* Center the image */
+    border-radius: 5px; /* Slightly rounded corners for the image */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+}
+
+/* Keyframe for fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

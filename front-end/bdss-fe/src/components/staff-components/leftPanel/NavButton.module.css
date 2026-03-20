@@ -1,0 +1,32 @@
+.navButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  background-color: transparent;
+  border: none;
+  color: #7e7b7b;
+  text-align: left;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 550;
+}
+
+.navButton:hover,
+.navButton.active {
+  background-color: rgba(233, 233, 233, 0.363);
+  border-left: 5px solid #007A64;
+  padding-left: 15px;
+  color: #007A64;
+}
+
+.icon {
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+.label {
+  flex-grow: 1;
+  margin-left: 10px;
+}

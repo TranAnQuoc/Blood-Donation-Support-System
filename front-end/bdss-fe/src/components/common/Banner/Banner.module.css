@@ -1,0 +1,86 @@
+.bannerContainer {
+    position: relative; /* Để overlay có thể căn chỉnh theo container */
+    width: 100%;
+    height: 400px; /* Chiều cao cố định cho banner */
+    overflow: hidden; /* Đảm bảo hình ảnh không tràn ra ngoài */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #13232F; /* Màu nền dự phòng */
+}
+
+.bannerImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo hình ảnh bao phủ toàn bộ container */
+    filter: brightness(60%); /* Làm tối hình ảnh để chữ dễ đọc hơn */
+}
+
+.bannerOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff; /* Màu chữ trắng */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .bannerTitle {
+        font-size: 2.8em;
+    }
+    .bannerDescription {
+        font-size: 1.2em;
+        max-width: 700px;
+    }
+    .bannerButton {
+        padding: 12px 25px;
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .bannerContainer {
+        height: 450px; /* Giảm chiều cao trên tablet */
+    }
+    .bannerTitle {
+        font-size: 2.2em;
+        margin-bottom: 15px;
+    }
+    .bannerDescription {
+        font-size: 1em;
+        max-width: 90%;
+        margin-bottom: 20px;
+    }
+    .bannerButton {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .bannerContainer {
+        height: 350px; /* Giảm chiều cao trên mobile */
+    }
+    .bannerTitle {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+    }
+    .bannerDescription {
+        font-size: 0.9em;
+        max-width: 95%;
+        margin-bottom: 15px;
+    }
+    .bannerButton {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+}

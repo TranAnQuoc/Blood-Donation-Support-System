@@ -1,0 +1,16 @@
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.mainContentArea {
+    display: flex;
+    flex: 1;
+}
+
+.outletContainer {
+    flex: 1;
+    background-color: #f0f2f5;
+    overflow-y: auto;
+}

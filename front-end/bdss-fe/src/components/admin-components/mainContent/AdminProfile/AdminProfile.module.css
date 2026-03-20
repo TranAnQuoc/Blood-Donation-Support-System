@@ -1,0 +1,209 @@
+.profileContainer {
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 800px;
+    margin: 30px auto; 
+    text-align: center;
+}
+
+.sectionTitle {
+    font-size: 2.2em;
+    color: #007A64;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
+}
+
+.loadingMessage,
+.errorMessage,
+.noProfileMessage {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.1em;
+    color: #777;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.profileDetails,
+.editForm {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    text-align: left; 
+}
+
+.profileDetails p {
+    margin-bottom: 12px;
+    font-size: 1.05em;
+    color: #333;
+}
+
+.profileDetails p strong {
+    color: #495057;
+    display: inline-block; 
+    min-width: 150px;
+    margin-right: 10px;
+}
+
+.formGroup {
+    margin-bottom: 18px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup input[type="number"],
+.formGroup input[type="date"],
+.formGroup select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; 
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.disabledInput {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    color: #6c757d;
+    opacity: 0.8;
+}
+
+.formGroup select.disabledInput {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none;
+    padding-right: 12px;
+}
+
+.actionButtonsViewMode {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.editButton,
+.saveButton,
+.cancelButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.editButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.editButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.saveButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.saveButton:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.cancelButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .profileContainer {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .profileDetails p {
+        font-size: 1em;
+    }
+
+    .profileDetails p strong {
+        min-width: 100px;
+        margin-right: 5px;
+    }
+
+    .editForm {
+        padding: 20px;
+    }
+
+    .formGroup {
+        margin-bottom: 15px;
+    }
+
+    .formGroup label {
+        margin-bottom: 5px;
+    }
+
+    .actionButtonsViewMode,
+    .formActions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .editButton,
+    .saveButton,
+    .cancelButton {
+        width: 100%;
+    }
+}

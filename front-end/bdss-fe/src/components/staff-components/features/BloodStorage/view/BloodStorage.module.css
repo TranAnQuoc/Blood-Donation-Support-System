@@ -1,0 +1,345 @@
+.container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pageTitle {
+    text-align: center;
+    color: #007A64;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
+}
+
+.topControls {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.filterSection {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.selectField {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.selectField:focus {
+  border-color: #0077cc;
+  box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.2);
+  background-color: #fff;
+}
+
+.createButton {
+  padding: 2px 8px;
+  background-color: #BDA25C;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  min-width: unset;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 119, 204, 0.2);
+}
+
+.createButton:hover {
+  background-color: #9b813f;
+}
+
+/* Thông báo */
+.loadingMessage, .errorMessage, .noDataMessage {
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 15px;
+}
+
+.loadingMessage {
+  background-color: #e6f7ff;
+  color: #0077cc;
+  border-left: 5px solid #0077cc;
+}
+
+.errorMessage {
+  background-color: #ffecec;
+  color: #d32f2f;
+  border-left: 5px solid #d32f2f;
+}
+
+.noDataMessage {
+  background-color: #f0f0f0;
+  color: #555;
+  border-left: 5px solid #999;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.bloodStorageCard {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  text-align: justify;
+}
+
+.bloodStorageCard:hover {
+  border-color: #007A64;
+  box-shadow: 0 5px 15px rgba(47, 184, 12, 0.15);
+  transform: translateY(-3px);
+}
+
+.cardId {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.bloodStorageCard p {
+  margin: 6px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.cardCreated {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #777;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.statusBadge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-top: 8px;
+  color: #fff;
+}
+
+.pending {
+  background-color: #fff3cd;
+  color: #bd9829;
+  border: 1px solid #bd9829;
+}
+.rejected {
+  background-color: #f8d7da;
+  color: #af2d3a;
+  border: 1px solid #af2d3a;
+}
+.stored {
+  background-color: #d4edda;
+  color: #27b849;
+  border: 1px solid #27b849;
+}
+.in_used {
+  background-color: #bacaff;
+  color: #2b66be;
+  border: 1px solid #2b66be;
+}
+.transferred {
+  background-color: #fadcae;
+  color: #d38e33;
+  border: 1px solid #d38e33;
+}
+
+.expired {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #721c24;
+}
+
+.confirmed {
+  background-color: #d4edda;
+  color: #27b849;
+  border: 1px solid #27b849;
+}
+.unconfirmed {
+  background-color: #f8d7da;
+  color: #af2d3a;
+  border: 1px solid #af2d3a;
+}
+
+.modalContent {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.modalContent h3 {
+  font-size: 2rem;
+  color: #1d3557;
+  margin-bottom: 15px;
+}
+
+.modalContent h4 {
+  color: #0077cc;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted #ddd;
+  padding: 8px 0;
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.detailRow p {
+  margin: 0;
+  font-size: 0.95rem;
+  flex-basis: 48%;
+}
+
+.detailRow p:first-child {
+  font-weight: 600;
+  color: #444;
+}
+
+.closeModalButton {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  border: 1px solid #031B4E;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #031B4E;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeModalButton:hover {
+  background-color: #031B4E;
+  color: #fff
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .topControls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .filterSection {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filterGroup {
+    width: 100%;
+  }
+
+  .selectField {
+    width: 100%;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .modalContent {
+    padding: 25px;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .createButton {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .bloodStorageCard {
+    padding: 15px;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .modalContent h3 {
+    font-size: 1.5rem;
+  }
+
+  .modalContent h4 {
+    font-size: 1.1rem;
+  }
+
+  .detailRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detailRow p {
+    flex-basis: 100%;
+    font-size: 0.95rem;
+  }
+
+  .closeModalButton {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}

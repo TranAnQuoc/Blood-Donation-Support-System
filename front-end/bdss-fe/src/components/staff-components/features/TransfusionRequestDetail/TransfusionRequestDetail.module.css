@@ -1,0 +1,251 @@
+/* src/components/staff-components/TransfusionRequestDetail.module.css */
+.container {
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container h2 {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+.errorText {
+    color: #dc3545;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: 1fr; /* Mặc định 1 cột */
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+@media (min-width: 600px) {
+    .detailGrid {
+        grid-template-columns: repeat(2, 1fr); /* 2 cột trên màn hình lớn hơn */
+    }
+}
+
+.detailItem {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+}
+
+.detailItem strong {
+    color: #333;
+    font-size: 1.05em;
+    margin-bottom: 5px;
+}
+
+.detailItem span {
+    color: #555;
+    font-size: 1em;
+    word-wrap: break-word; /* Đảm bảo nội dung không tràn */
+}
+
+/* Status Badges - Đồng bộ với DonationRequestList */
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    align-self: flex-start; /* Để badge không chiếm hết chiều rộng */
+    margin-top: 5px; /* Khoảng cách với tiêu đề strong */
+    white-space: nowrap; /* Ngăn ngắt dòng chữ trong badge */
+}
+
+/* Trạng thái yêu cầu (StatusRequest) */
+.statusBadge.pending {
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.statusBadge.approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.statusBadge.rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+.statusBadge.cancelled {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Trạng thái hệ thống (Status) */
+.statusBadge.active {
+    background-color: #007bff; /* Ví dụ: màu xanh cho active */
+    color: white;
+}
+
+.statusBadge.deleted {
+    background-color: #6c757d; /* Ví dụ: màu xám cho deleted */
+    color: white;
+}
+
+
+.actions {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Khoảng cách giữa các nút */
+}
+
+.backButton,
+.editButton,
+.deleteButton,
+.saveButton,
+.cancelButton,
+.actionButton { /* Thêm .actionButton để dùng chung style */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap; /* Ngăn ngắt dòng chữ trên nút */
+}
+
+.backButton {
+    background-color: #6c757d;
+    color: white;
+}
+
+.backButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+.editButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.editButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.editInput {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px; /* Khoảng cách với label/strong */
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+}
+
+.editInput:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.saveButton {
+    background-color: #28a745; /* Xanh lá cây */
+    color: white;
+}
+
+.saveButton:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.cancelButton {
+    background-color: #6c757d; /* Xám */
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* New: Styles for Approve/Reject buttons */
+.approveButton {
+    background-color: #28a745; /* Màu xanh lá cây */
+    color: white;
+}
+.approveButton:hover {
+    background-color: #218838;
+}
+
+.rejectButton {
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}
+.rejectButton:hover {
+    background-color: #c82333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+    .container h2 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+    .detailGrid {
+        gap: 15px;
+    }
+    .detailItem {
+        padding: 12px 15px;
+    }
+    .detailItem strong {
+        font-size: 1em;
+    }
+    .detailItem span {
+        font-size: 0.9em;
+    }
+    .actions {
+        flex-direction: column;
+        gap: 10px; /* Giảm khoảng cách giữa các nút trên mobile */
+    }
+    .backButton,
+    .editButton,
+    .deleteButton,
+    .saveButton,
+    .cancelButton,
+    .actionButton {
+        width: 100%; /* Các nút chiếm toàn bộ chiều rộng */
+        margin: 0; /* Bỏ margin ngang */
+    }
+}

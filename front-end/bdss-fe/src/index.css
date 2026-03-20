@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f0f2f5;
+}
+
+
+
+.react-select-container {
+    width: 100%;
+}
+
+.react-select__control {
+    border-color: #d1d5db !important;
+    box-shadow: none !important;
+    min-height: 40px;
+    border-radius: 0.25rem;
+}
+
+.react-select__control--is-focused {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 1px #ef4444 !important;
+}
+
+.react-select__placeholder {
+    color: #6b7280 !important;
+}
+
+.react-select__single-value {
+    color: #1f2937 !important;
+}
+
+.react-select__indicator-separator {
+    background-color: #e5e7eb !important;
+}
+
+.react-select__indicator {
+    color: #6b7280 !important;
+}
+
+.react-select__menu {
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 100;
+}
+
+.react-select__option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    background-color: transparent;
+    color: #374151;
+    transition: background-color 0.2s ease;
+}
+
+.react-select__option--is-focused {
+    background-color: #f3f4f6;
+}
+
+.react-select__option--is-selected {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    font-weight: 500;
+}
+
+
+.react-select__clear-indicator {
+    color: #9ca3af !important;
+    cursor: pointer;
+}
+
+.react-select__clear-indicator:hover {
+    color: #ef4444 !important;
+}
+
+.react-select__menu-notice--no-options {
+    color: #9ca3af;
+    padding: 0.75rem 1rem;
+}

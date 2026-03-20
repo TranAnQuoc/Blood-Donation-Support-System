@@ -1,0 +1,272 @@
+/* General container for the list */
+.listContainer {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+/* Title of the list */
+.listTitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+/* Table styling */
+.requestTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Ensures rounded corners apply to table content */
+}
+
+.requestTable th,
+.requestTable td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.requestTable th {
+    background-color: #f8f9fa;
+    color: #555;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.requestTable tr:hover {
+    background-color: #f2f2f2;
+}
+
+.requestTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Buttons for actions */
+.viewProofButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.viewProofButton:hover {
+    background-color: #0056b3;
+}
+
+.actionButton {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin: 0 5px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.approveButton {
+    background-color: #28a745;
+    color: white;
+}
+
+.approveButton:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.rejectButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.rejectButton:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.statusText {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+/* Loading and error messages */
+.loading, .error, .noRequests {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* --- Modal Styles --- */
+
+/* Modal Overlay (for both image and decision modals) */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* Darker overlay for focus */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; /* Higher z-index for modals */
+}
+
+/* Modal Content Box (for both image and decision modals) */
+.modalContent {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    position: relative;
+    max-width: 600px; /* Wider for image and decision details */
+    width: 90%;
+    text-align: center;
+    animation: fadeInScale 0.3s ease-out;
+}
+
+/* Close button for modals */
+.closeModalButton {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2.2em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.closeModalButton:hover {
+    color: #555;
+}
+
+/* Image Modal Specific Styles */
+.modalHeader {
+    margin-bottom: 20px;
+}
+
+.modalHeader h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.modalHeader p {
+    font-size: 1em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.modalImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block; /* Remove extra space below image */
+    margin: 0 auto; /* Center image */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Decision Modal Specific Styles */
+.modalContent h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    color: #333;
+}
+
+.formGroup { /* Reusing formGroup style for modal input */
+    margin-bottom: 20px;
+    text-align: left; /* Align label/textarea within modal */
+}
+
+.label { /* Reusing label style for modal input */
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.textarea { /* Reusing textarea style for modal input */
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    min-height: 100px;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.decisionErrorText { /* Specific error text for decision modal */
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 5px;
+    display: block;
+    text-align: center;
+}
+
+.modalActions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+}
+
+.confirmButton {
+    background-color: #007bff; /* Primary action for confirm */
+    color: white;
+}
+
+.confirmButton:hover {
+    background-color: #0056b3;
+}
+
+.cancelButton {
+    background-color: #6c757d; /* Secondary action for cancel */
+    color: white;
+}
+
+.cancelButton:hover {
+    background-color: #5a6268;
+}
+
+/* Keyframe animation for modals */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

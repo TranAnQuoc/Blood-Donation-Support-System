@@ -1,0 +1,174 @@
+.memberListContainer {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.pageTitle {
+    font-size: 2.2em;
+    color: #007A64;
+    margin-bottom: 30px;
+    text-align: center;
+    border-bottom: 2px solid #BDA25C;
+    padding-bottom: 15px;
+}
+
+.loadingMessage,
+.errorMessage,
+.noMembersMessage {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.1em;
+    color: #777;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.memberTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.memberTable th,
+.memberTable td {
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.memberTable th {
+    background-color: #007A64;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.memberTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.memberTable tbody tr:hover {
+    background-color: #e2e6ea;
+    cursor: default;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+}
+
+.viewButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.viewButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.active {
+    background-color: #28a745;
+}
+
+.inactive {
+    background-color: #6c757d;
+}
+
+.available {
+    background-color: #17a2b8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .memberListContainer {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .pageTitle {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .memberTable th,
+    .memberTable td {
+        padding: 10px;
+        font-size: 0.85em;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+        align-items: stretch;
+    }
+
+    .button {
+        width: 100%;
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .memberTable th,
+    .memberTable td {
+        font-size: 0.75em;
+    }
+}
