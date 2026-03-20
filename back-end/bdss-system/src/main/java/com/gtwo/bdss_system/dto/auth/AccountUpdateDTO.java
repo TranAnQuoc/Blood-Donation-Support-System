@@ -30,7 +30,5 @@ public class AccountUpdateDTO {
 
     private Long bloodTypeId;
 
-    @NotNull(message = "Status donation is required")
     private StatusDonation statusDonation;
 }
-

@@ -12,6 +12,8 @@ import com.gtwo.bdss_system.repository.donation.DonationHistoryRepository;
 import com.gtwo.bdss_system.service.auth.AccountService;
 import com.gtwo.bdss_system.service.commons.EmailService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+    private static final Logger log = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     @Autowired
     private AccountRepository accountRepo;
@@ -75,8 +78,12 @@ public class AccountServiceImpl implements AccountService {
         BloodType bloodType = bloodTypeRepo.findById(dto.getBloodTypeId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
         account.setBloodType(bloodType);
-        emailService.sendLoginStaffAccount(dto);
         accountRepo.save(account);
+        try {
+            emailService.sendLoginStaffAccount(dto);
+        } catch (Exception exception) {
+            log.warn("Failed to send staff account email to {}", dto.getEmail(), exception);
+        }
     }
 
     @Override
@@ -91,7 +98,9 @@ public class AccountServiceImpl implements AccountService {
         currentUser.setDateOfBirth(dto.getDateOfBirth());
         currentUser.setPhone(dto.getPhone());
         currentUser.setAddress(dto.getAddress());
-        currentUser.setStatusDonation(dto.getStatusDonation());
+        if (dto.getStatusDonation() != null) {
+            currentUser.setStatusDonation(dto.getStatusDonation());
+        }
         accountRepo.save(currentUser);
     }
 
@@ -143,7 +152,9 @@ public class AccountServiceImpl implements AccountService {
         acc.setDateOfBirth(dto.getDateOfBirth());
         acc.setPhone(dto.getPhone());
         acc.setAddress(dto.getAddress());
-        acc.setStatusDonation(dto.getStatusDonation());
+        if (dto.getStatusDonation() != null) {
+            acc.setStatusDonation(dto.getStatusDonation());
+        }
         if (dto.getBloodTypeId() != null) {
             BloodType bt = bloodTypeRepo.findById(dto.getBloodTypeId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
@@ -266,4 +277,3 @@ public class AccountServiceImpl implements AccountService {
         }).toList();
     }
 }
-

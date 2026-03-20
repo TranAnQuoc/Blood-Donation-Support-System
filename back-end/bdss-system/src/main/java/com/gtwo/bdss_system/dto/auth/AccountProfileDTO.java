@@ -37,6 +37,5 @@ public class AccountProfileDTO {
 
     private Status status;
 
-    @NotNull(message = "Status donation is required")
     private StatusDonation statusDonation;
 }

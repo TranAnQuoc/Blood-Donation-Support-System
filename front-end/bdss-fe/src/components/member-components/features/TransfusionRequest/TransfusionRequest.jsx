@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,7 +17,7 @@ const TransfusionRequestManagement = () => {
     const [editingRequestId, setEditingRequestId] = useState(null);
     const [editData, setEditData] = useState({}); // <--- CORRECTED LINE HERE!
 
-    const getAuthData = () => {
+    const getAuthData = useCallback(() => {
         const token = localStorage.getItem('token');
         const userString = localStorage.getItem('user');
         let userRole = null;
@@ -37,9 +37,9 @@ const TransfusionRequestManagement = () => {
             }
         }
         return { token, userRole };
-    };
+    }, []);
 
-    const fetchMyRequests = async () => {
+    const fetchMyRequests = useCallback(async () => {
         setLoading(true);
         setError(null);
         const { token, userRole } = getAuthData();
@@ -63,11 +63,11 @@ const TransfusionRequestManagement = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [getAuthData]);
 
     useEffect(() => {
         fetchMyRequests();
-    }, []);
+    }, [fetchMyRequests]);
 
     const handleNewRequestChange = (e) => {
         const { name, value } = e.target;
@@ -162,7 +162,7 @@ const TransfusionRequestManagement = () => {
         }
 
         try {
-            await axiosInstance.put(`/transfusion-requests/${id}/delete`);
+            await axiosInstance.delete(`/transfusion-requests/${id}`);
             toast.success('Yêu cầu đã được vô hiệu hóa thành công!');
             fetchMyRequests();
         } catch (err) {
@@ -189,7 +189,7 @@ const TransfusionRequestManagement = () => {
         }
 
         try {
-            await axiosInstance.put(`/transfusion-requests/${id}/restore`);
+            await axiosInstance.post(`/transfusion-requests/${id}/restore`);
             toast.success('Yêu cầu đã được khôi phục thành công!');
             fetchMyRequests();
         } catch (err) {

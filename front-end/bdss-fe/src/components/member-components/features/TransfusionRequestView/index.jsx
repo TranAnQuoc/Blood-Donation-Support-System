@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios'; // Adjust path if necessary
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,7 +10,7 @@ const ViewTransfusionRequests = () => {
     const [error, setError] = useState(null);
 
     // Helper to get auth data (assuming 'MEMBER' role is still checked on frontend)
-    const getAuthData = () => {
+    const getAuthData = useCallback(() => {
         const token = localStorage.getItem('token');
         const userString = localStorage.getItem('user');
         let userRole = null;
@@ -30,9 +30,9 @@ const ViewTransfusionRequests = () => {
             }
         }
         return { token, userRole };
-    };
+    }, []);
 
-    const fetchAllRequests = async () => {
+    const fetchAllRequests = useCallback(async () => {
         setLoading(true);
         setError(null);
         const { token, userRole } = getAuthData();
@@ -60,11 +60,11 @@ const ViewTransfusionRequests = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [getAuthData]);
 
     useEffect(() => {
         fetchAllRequests();
-    }, []);
+    }, [fetchAllRequests]);
 
     return (
         <div className={styles.container}>

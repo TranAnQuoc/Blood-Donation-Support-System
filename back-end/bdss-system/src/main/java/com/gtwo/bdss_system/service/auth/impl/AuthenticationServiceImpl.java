@@ -18,6 +18,8 @@ import com.gtwo.bdss_system.service.auth.TokenService;
 import com.gtwo.bdss_system.service.commons.BloodTypeService;
 import com.gtwo.bdss_system.service.commons.EmailService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+
     @Autowired
     AuthenticationRepository authenticationRepository;
 
@@ -79,11 +83,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             BloodType bloodType = bloodTypeService.findById(dto.getBloodTypeId());
             account.setBloodType(bloodType);
         }
+        Account savedAccount = authenticationRepository.save(account);
         EmailDetailForRegister emailDetailForRegister = new EmailDetailForRegister();
         emailDetailForRegister.setToEmail(dto.getEmail());
         emailDetailForRegister.setSubject("Welcome to BDS System");
-        emailService.sendRegisterSuccessEmail(emailDetailForRegister);
-        return authenticationRepository.save(account);
+        try {
+            emailService.sendRegisterSuccessEmail(emailDetailForRegister);
+        } catch (Exception exception) {
+            log.warn("Failed to send registration email to {}", dto.getEmail(), exception);
+        }
+        return savedAccount;
     }
 
     public AccountResponse login(LoginRequest loginRequest){

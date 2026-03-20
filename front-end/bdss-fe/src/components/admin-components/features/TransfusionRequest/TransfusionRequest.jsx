@@ -1,5 +1,5 @@
 // TransfusionRequestList.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios'; // Adjust path if necessary
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,7 +10,7 @@ const TransfusionRequestListForAdmin = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const getAuthData = () => {
+    const getAuthData = useCallback(() => {
         const token = localStorage.getItem('token');
         const userString = localStorage.getItem('user');
         let userRole = null;
@@ -30,9 +30,9 @@ const TransfusionRequestListForAdmin = () => {
             }
         }
         return { token, userRole };
-    };
+    }, []);
 
-    const fetchAllRequests = async () => {
+    const fetchAllRequests = useCallback(async () => {
         setLoading(true);
         setError(null);
         const { token, userRole } = getAuthData();
@@ -57,11 +57,11 @@ const TransfusionRequestListForAdmin = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [getAuthData]);
 
     useEffect(() => {
         fetchAllRequests();
-    }, []);
+    }, [fetchAllRequests]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Bạn có chắc chắn muốn xóa yêu cầu này không? Hành động này không thể hoàn tác.')) {
@@ -72,7 +72,7 @@ const TransfusionRequestListForAdmin = () => {
         setError(null);
         const { token, userRole } = getAuthData();
 
-        if (!token || (!userRole || (userRole.toUpperCase() !== 'STAFF' && userRole.toUpperCase() !== 'MEMBER'))) {
+        if (!token || (!userRole || (userRole.toUpperCase() !== 'STAFF' && userRole.toUpperCase() !== 'ADMIN'))) {
             toast.error("Bạn không có quyền xóa yêu cầu này. Vui lòng đăng nhập với vai trò hợp lệ.");
             setLoading(false);
             return;

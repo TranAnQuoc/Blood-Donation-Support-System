@@ -1,5 +1,5 @@
 // BloodStorageList.jsx (Cập nhật - Component cha của Admin)
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -117,7 +117,7 @@ const BloodStorageList = () => {
     const { token, userRole } = getAuthData();
 
     // Hàm tải danh sách kho máu, có thêm tham số filter
-    const fetchBloodStorages = async () => {
+    const fetchBloodStorages = useCallback(async () => {
         setLoading(true);
         setError(null);
         setBloodStorages([]);
@@ -188,7 +188,7 @@ const BloodStorageList = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedBloodComponentId, selectedBloodTypeId, selectedStatus, token]);
 
     // Bỏ các hàm fetchBloodTypes và fetchBloodComponents vì không còn dùng API
     // const fetchBloodTypes = async () => { ... }
@@ -203,7 +203,7 @@ const BloodStorageList = () => {
     useEffect(() => {
         // Tải dữ liệu kho máu mỗi khi filter thay đổi
         fetchBloodStorages();
-    }, [selectedStatus, selectedBloodTypeId, selectedBloodComponentId, token]);
+    }, [fetchBloodStorages]);
 
     const handleStatusChange = (e) => {
         setSelectedStatus(e.target.value);
@@ -264,9 +264,9 @@ const BloodStorageList = () => {
                         disabled={loading}
                     >
                         <option value="">Tất cả</option>
-                        {Object.values(BloodStorageStatus).map((status) => (
-                            <option key={status} value={status}>
-                                {status.replace(/_/g, " ")}{" "}
+                        {Object.entries(BloodStorageStatus).map(([statusKey, statusLabel]) => (
+                            <option key={statusKey} value={statusKey}>
+                                {statusLabel}
                             </option>
                         ))}
                     </select>

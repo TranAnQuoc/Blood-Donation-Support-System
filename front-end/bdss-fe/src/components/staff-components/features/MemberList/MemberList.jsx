@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
 import styles from './MemberList.module.css';
-import { useWebSocket } from '../../../../hooks/useWebSocket';
+import { useWebSocket } from '../../../../hooks/webSocketContext';
 
 const formatDateTime = (isoString) => {
     if (!isoString) return 'N/A';

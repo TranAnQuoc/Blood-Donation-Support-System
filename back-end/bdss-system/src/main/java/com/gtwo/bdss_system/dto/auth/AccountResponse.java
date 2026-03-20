@@ -19,6 +19,7 @@ public class AccountResponse {
     private Date dateOfBirth;
     private String phone;
     private String address;
+    private String cccd;
     private Date createAt;
     private Status status;
     private StatusDonation statusDonation;

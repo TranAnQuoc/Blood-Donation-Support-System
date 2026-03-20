@@ -81,7 +81,6 @@ const BloodStorageHistoryList = () => {
 
     const { token } = getAuthData();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchHistoryRecords = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -178,9 +177,9 @@ const BloodStorageHistoryList = () => {
                     >
                         <option value="">Tất cả</option>
                         {/* Only show IN_USED and TRANSFERRED as per backend API restriction */}
-                        {Object.values(BloodStorageHistoryStatus).map((status) => (
-                            <option key={status} value={status}>
-                                {status.replace(/_/g, " ")}
+                        {Object.entries(BloodStorageHistoryStatus).map(([statusKey, statusLabel]) => (
+                            <option key={statusKey} value={statusKey}>
+                                {statusLabel}
                             </option>
                         ))}
                     </select>

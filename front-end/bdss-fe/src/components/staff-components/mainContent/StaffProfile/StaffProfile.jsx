@@ -101,6 +101,15 @@ const StaffProfile = () => {
     const handleSave = async () => {
         setLoading(true);
         setError(null);
+
+        if (!editData.fullName?.trim() || !editData.gender || !editData.dateOfBirth || !editData.phone?.trim() || !editData.address?.trim()) {
+            const validationMessage = 'Vui long dien day du ho ten, gioi tinh, ngay sinh, so dien thoai va dia chi.';
+            setError(validationMessage);
+            toast.error(validationMessage);
+            setLoading(false);
+            return;
+        }
+
         try {
             const dataToSend = {
                 fullName: editData.fullName,
@@ -109,8 +118,7 @@ const StaffProfile = () => {
                 phone: editData.phone,
                 address: editData.address,
                 bloodTypeId: editData.bloodTypeId ? parseInt(editData.bloodTypeId, 10) : null,
-                statusDonation: editData.statusDonation || null,
-                cccd: profile.cccd || null 
+                statusDonation: editData.statusDonation || profile.statusDonation || 'INACTIVE',
             };
 
             await axiosInstance.put('/account/manager/profile', dataToSend);

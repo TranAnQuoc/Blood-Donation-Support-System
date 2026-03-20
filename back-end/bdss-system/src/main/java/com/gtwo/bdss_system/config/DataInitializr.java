@@ -4,6 +4,8 @@ import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.commons.BloodComponent;
 import com.gtwo.bdss_system.entity.commons.BloodType;
 import com.gtwo.bdss_system.entity.commons.CompatibilityRule;
+import com.gtwo.bdss_system.enums.Gender;
+import com.gtwo.bdss_system.enums.PhoneVisibility;
 import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.enums.StatusDonation;
@@ -16,12 +18,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class DataInitializr implements CommandLineRunner {
+
+    private static final String DEFAULT_ADMIN_EMAIL = "admin@system.com";
+    private static final String DEFAULT_ADMIN_PASSWORD = "123456";
+    private static final LocalDate DEFAULT_ADMIN_BIRTH_DATE = LocalDate.of(1990, 1, 1);
 
     @Autowired
     private BloodTypeRepository bloodTypeRepository;
@@ -47,28 +55,84 @@ public class DataInitializr implements CommandLineRunner {
     }
 
     private void initAdminAccount() {
-        if (!authenticationRepository.existsByRole(Role.ADMIN)) {
-            Account admin = new Account();
-            admin.setEmail("admin@system.com");
-            admin.setPassword(passwordEncoder.encode("123456"));
+        Account admin = authenticationRepository.findByEmail(DEFAULT_ADMIN_EMAIL).orElse(null);
+        boolean created = admin == null;
+
+        if (created) {
+            admin = new Account();
+            admin.setEmail(DEFAULT_ADMIN_EMAIL);
+            admin.setPassword(passwordEncoder.encode(DEFAULT_ADMIN_PASSWORD));
             admin.setRole(Role.ADMIN);
-            admin.setFullName("Admin System");
-            admin.setStatus(Status.ACTIVE);
-            admin.setStatusDonation(StatusDonation.INACTIVE);
             admin.setPhone("0000000000");
             admin.setCCCD("000000000000");
-            admin.setAddress("System Default Address");
             admin.setCreateAt(LocalDateTime.now());
-            admin.setBloodType(bloodTypeRepository.findById(1L).orElseThrow());
+        }
+
+        boolean updated = false;
+        BloodType defaultBloodType = bloodTypeRepository.findById(1L)
+                .orElseGet(() -> bloodTypeRepository.findAll().stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No blood types available for admin seed")));
+
+        if (admin.getRole() == null) {
+            admin.setRole(Role.ADMIN);
+            updated = true;
+        }
+        if (admin.getFullName() == null || admin.getFullName().isBlank()) {
+            admin.setFullName("Admin System");
+            updated = true;
+        }
+        if (admin.getStatus() == null) {
+            admin.setStatus(Status.ACTIVE);
+            updated = true;
+        }
+        if (admin.getStatusDonation() == null) {
+            admin.setStatusDonation(StatusDonation.INACTIVE);
+            updated = true;
+        }
+        if (admin.getGender() == null) {
+            admin.setGender(Gender.MALE);
+            updated = true;
+        }
+        if (admin.getDateOfBirth() == null) {
+            admin.setDateOfBirth(Date.valueOf(DEFAULT_ADMIN_BIRTH_DATE));
+            updated = true;
+        }
+        if (admin.getPhoneVisibility() == null) {
+            admin.setPhoneVisibility(PhoneVisibility.PRIVATE);
+            updated = true;
+        }
+        if (admin.getPhone() == null || admin.getPhone().isBlank()) {
+            admin.setPhone("0000000000");
+            updated = true;
+        }
+        if (admin.getCCCD() == null || admin.getCCCD().isBlank()) {
+            admin.setCCCD("000000000000");
+            updated = true;
+        }
+        if (admin.getAddress() == null || admin.getAddress().isBlank()) {
+            admin.setAddress("System Default Address");
+            updated = true;
+        }
+        if (admin.getBloodType() == null) {
+            admin.setBloodType(defaultBloodType);
+            updated = true;
+        }
+
+        if (created || updated) {
             authenticationRepository.save(admin);
-            System.out.println("✅ Default admin account created: admin@system.com / 123456");
+            System.out.println(
+                    created
+                            ? "Default admin account created: admin@system.com / 123456"
+                            : "Default admin account updated with missing profile fields"
+            );
         }
     }
 
     private void initBloodTypes() {
         if (bloodTypeRepository.count() == 0) {
             List<BloodType> bloodTypes = List.of(
-                    createBloodType("Unknow", "Unknow"),
+                    createBloodType("Unknown", "Unknown"),
                     createBloodType("A", "+"),
                     createBloodType("A", "-"),
                     createBloodType("B", "+"),
@@ -79,7 +143,7 @@ public class DataInitializr implements CommandLineRunner {
                     createBloodType("O", "-")
             );
             bloodTypeRepository.saveAll(bloodTypes);
-            System.out.println("✅ Seeded blood types");
+            System.out.println("Seeded blood types");
         }
     }
 
@@ -93,7 +157,7 @@ public class DataInitializr implements CommandLineRunner {
     private void initBloodComponents() {
         if (bloodComponentRepository.count() == 0) {
             List<BloodComponent> components = List.of(
-                    createBloodComponent("Unknow"),
+                    createBloodComponent("Unknown"),
                     createBloodComponent("Toàn phần"),
                     createBloodComponent("Huyết tương"),
                     createBloodComponent("Hồng cầu"),
@@ -101,7 +165,7 @@ public class DataInitializr implements CommandLineRunner {
                     createBloodComponent("Bạch cầu")
             );
             bloodComponentRepository.saveAll(components);
-            System.out.println("✅ Seeded blood components");
+            System.out.println("Seeded blood components");
         }
     }
 
@@ -120,56 +184,55 @@ public class DataInitializr implements CommandLineRunner {
             for (BloodType donor : bloodTypes) {
                 for (BloodType recipient : bloodTypes) {
                     for (BloodComponent component : components) {
+                        boolean donorUnknown = "Unknown".equalsIgnoreCase(donor.getType());
+                        boolean recipientUnknown = "Unknown".equalsIgnoreCase(recipient.getType());
+                        boolean componentUnknown = "Unknown".equalsIgnoreCase(component.getName());
 
-                        boolean donorUnknown = "UNKNOWN".equalsIgnoreCase(donor.getType());
-                        boolean recipientUnknown = "UNKNOWN".equalsIgnoreCase(recipient.getType());
-                        boolean componentUnknown = "Unknow".equalsIgnoreCase(component.getName());
-
-                        // Nếu tất cả đều UNKNOWN => chỉ thông tin tham khảo
                         if ((donorUnknown || recipientUnknown) && componentUnknown) {
                             CompatibilityRule unknownRule = new CompatibilityRule();
                             unknownRule.setDonorBloodType(donor);
                             unknownRule.setRecipientBloodType(recipient);
                             unknownRule.setComponent(component);
                             unknownRule.setCompatible(true);
-                            unknownRule.setExplanation("Thông tin tham khảo: Cả nhóm máu và thành phần đều chưa xác định.");
+                            unknownRule.setExplanation(
+                                    "Reference only: donor, recipient, and component information are still unknown."
+                            );
                             rules.add(unknownRule);
                             continue;
                         }
 
-                        // Nếu blood type UNKNOWN nhưng component xác định => sinh toàn bộ rule cho component đó
                         if ((donorUnknown || recipientUnknown) && !componentUnknown) {
-                            for (BloodType d : bloodTypes) {
-                                for (BloodType r : bloodTypes) {
-                                    if ("UNKNOWN".equalsIgnoreCase(d.getType()) || "UNKNOWN".equalsIgnoreCase(r.getType())) continue;
-                                    CompatibilityRule rule = createRule(d, r, component);
-                                    rules.add(rule);
+                            for (BloodType resolvedDonor : bloodTypes) {
+                                for (BloodType resolvedRecipient : bloodTypes) {
+                                    if ("Unknown".equalsIgnoreCase(resolvedDonor.getType())
+                                            || "Unknown".equalsIgnoreCase(resolvedRecipient.getType())) {
+                                        continue;
+                                    }
+                                    rules.add(createRule(resolvedDonor, resolvedRecipient, component));
                                 }
                             }
                             continue;
                         }
 
-                        // Nếu component UNKNOWN nhưng blood type xác định => sinh toàn bộ rule cho tất cả components
                         if (!donorUnknown && !recipientUnknown && componentUnknown) {
-                            for (BloodComponent c : components) {
-                                if ("Unknow".equalsIgnoreCase(c.getName())) continue;
-                                CompatibilityRule rule = createRule(donor, recipient, c);
-                                rules.add(rule);
+                            for (BloodComponent resolvedComponent : components) {
+                                if ("Unknown".equalsIgnoreCase(resolvedComponent.getName())) {
+                                    continue;
+                                }
+                                rules.add(createRule(donor, recipient, resolvedComponent));
                             }
                             continue;
                         }
 
-                        // Nếu không có UNKNOWN => logic bình thường
-                        if (!donorUnknown && !recipientUnknown && !componentUnknown) {
-                            CompatibilityRule rule = createRule(donor, recipient, component);
-                            rules.add(rule);
+                        if (!donorUnknown && !recipientUnknown) {
+                            rules.add(createRule(donor, recipient, component));
                         }
                     }
                 }
             }
 
             compatibilityRuleRepository.saveAll(rules);
-            System.out.println("✅ Seeded compatibility rules (new logic for unknown cases handled)");
+            System.out.println("Seeded compatibility rules");
         }
     }
 
@@ -177,81 +240,77 @@ public class DataInitializr implements CommandLineRunner {
         boolean isCompatible = false;
         String explanation = "";
 
-        String dType = donor.getType();
-        String dRh = donor.getRhFactor();
-        String rType = recipient.getType();
-        String rRh = recipient.getRhFactor();
+        String donorType = donor.getType();
+        String donorRh = donor.getRhFactor();
+        String recipientType = recipient.getType();
+        String recipientRh = recipient.getRhFactor();
+        String componentName = component.getName();
 
-        // --- HỒNG CẦU & TOÀN PHẦN ---
-        if ("Hồng cầu".equals(component.getName()) || "Toàn phần".equals(component.getName())) {
-            if ("O".equals(dType) && "-".equals(dRh)) {
+        if ("Hồng cầu".equals(componentName) || "Toàn phần".equals(componentName)) {
+            if ("O".equals(donorType) && "-".equals(donorRh)) {
                 isCompatible = true;
-                explanation = "O- có thể truyền cho tất cả nhóm máu (universal red cell donor)";
-            } else if ("O".equals(dType) && "+".equals(dRh)) {
-                isCompatible = "+".equals(rRh);
-                explanation = isCompatible ? "O+ truyền cho tất cả nhóm Rh+" : "Không phù hợp";
-            } else if ("A".equals(dType) && "-".equals(dRh)) {
-                isCompatible = List.of("A", "AB").contains(rType);
-                explanation = isCompatible ? "A- truyền cho A, AB" : "Không phù hợp";
-            } else if ("A".equals(dType) && "+".equals(dRh)) {
-                isCompatible = List.of("A", "AB").contains(rType) && "+".equals(rRh);
-                explanation = isCompatible ? "A+ truyền cho A+, AB+" : "Không phù hợp";
-            } else if ("B".equals(dType) && "-".equals(dRh)) {
-                isCompatible = List.of("B", "AB").contains(rType);
-                explanation = isCompatible ? "B- truyền cho B, AB" : "Không phù hợp";
-            } else if ("B".equals(dType) && "+".equals(dRh)) {
-                isCompatible = List.of("B", "AB").contains(rType) && "+".equals(rRh);
-                explanation = isCompatible ? "B+ truyền cho B+, AB+" : "Không phù hợp";
-            } else if ("AB".equals(dType) && "-".equals(dRh)) {
-                isCompatible = "AB".equals(rType);
-                explanation = isCompatible ? "AB- truyền cho AB" : "Không phù hợp";
-            } else if ("AB".equals(dType) && "+".equals(dRh)) {
-                isCompatible = "AB".equals(rType) && "+".equals(rRh);
-                explanation = isCompatible ? "AB+ truyền cho AB+" : "Không phù hợp";
+                explanation = "O- can donate red cells to all blood groups.";
+            } else if ("O".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = "+".equals(recipientRh);
+                explanation = isCompatible ? "O+ can donate red cells to Rh+ recipients." : "Not compatible.";
+            } else if ("A".equals(donorType) && "-".equals(donorRh)) {
+                isCompatible = List.of("A", "AB").contains(recipientType);
+                explanation = isCompatible ? "A- can donate red cells to A and AB." : "Not compatible.";
+            } else if ("A".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = List.of("A", "AB").contains(recipientType) && "+".equals(recipientRh);
+                explanation = isCompatible ? "A+ can donate red cells to A+ and AB+." : "Not compatible.";
+            } else if ("B".equals(donorType) && "-".equals(donorRh)) {
+                isCompatible = List.of("B", "AB").contains(recipientType);
+                explanation = isCompatible ? "B- can donate red cells to B and AB." : "Not compatible.";
+            } else if ("B".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = List.of("B", "AB").contains(recipientType) && "+".equals(recipientRh);
+                explanation = isCompatible ? "B+ can donate red cells to B+ and AB+." : "Not compatible.";
+            } else if ("AB".equals(donorType) && "-".equals(donorRh)) {
+                isCompatible = "AB".equals(recipientType);
+                explanation = isCompatible ? "AB- can donate red cells to AB." : "Not compatible.";
+            } else if ("AB".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = "AB".equals(recipientType) && "+".equals(recipientRh);
+                explanation = isCompatible ? "AB+ can donate red cells to AB+." : "Not compatible.";
             }
-        }
-        // --- HUYẾT TƯƠNG ---
-        else if ("Huyết tương".equals(component.getName())) {
-            if ("AB".equals(dType)) {
+        } else if ("Huyết tương".equals(componentName)) {
+            if ("AB".equals(donorType)) {
                 isCompatible = true;
-                explanation = "AB có thể cho tất cả (universal plasma donor)";
-            } else if ("A".equals(dType)) {
-                isCompatible = List.of("A", "O").contains(rType);
-                explanation = isCompatible ? "A cho A và O (plasma)" : "Không phù hợp";
-            } else if ("B".equals(dType)) {
-                isCompatible = List.of("B", "O").contains(rType);
-                explanation = isCompatible ? "B cho B và O (plasma)" : "Không phù hợp";
-            } else if ("O".equals(dType)) {
-                isCompatible = "O".equals(rType);
-                explanation = isCompatible ? "O chỉ cho O (plasma)" : "Không phù hợp";
+                explanation = "AB plasma can be given to all blood groups.";
+            } else if ("A".equals(donorType)) {
+                isCompatible = List.of("A", "O").contains(recipientType);
+                explanation = isCompatible ? "A plasma can be given to A and O." : "Not compatible.";
+            } else if ("B".equals(donorType)) {
+                isCompatible = List.of("B", "O").contains(recipientType);
+                explanation = isCompatible ? "B plasma can be given to B and O." : "Not compatible.";
+            } else if ("O".equals(donorType)) {
+                isCompatible = "O".equals(recipientType);
+                explanation = isCompatible ? "O plasma should only be given to O." : "Not compatible.";
             }
-        }
-        // --- TIỂU CẦU & KHÁC ---
-        else {
-            if ("O".equals(dType) && "-".equals(dRh)) {
+        } else {
+            if ("O".equals(donorType) && "-".equals(donorRh)) {
                 isCompatible = true;
-                explanation = "O- có thể truyền tiểu cầu và các thành phần khác cho tất cả";
-            } else if ("O".equals(dType) && "+".equals(dRh)) {
-                isCompatible = "+".equals(rRh);
-                explanation = isCompatible ? "O+ truyền cho các nhóm Rh+" : "Không phù hợp";
-            } else if ("A".equals(dType) && "-".equals(dRh)) {
-                isCompatible = List.of("A", "AB").contains(rType);
-                explanation = isCompatible ? "A- truyền cho A, AB" : "Không phù hợp";
-            } else if ("A".equals(dType) && "+".equals(dRh)) {
-                isCompatible = List.of("A", "AB").contains(rType) && "+".equals(rRh);
-                explanation = isCompatible ? "A+ truyền cho A+, AB+" : "Không phù hợp";
-            } else if ("B".equals(dType) && "-".equals(dRh)) {
-                isCompatible = List.of("B", "AB").contains(rType);
-                explanation = isCompatible ? "B- truyền cho B, AB" : "Không phù hợp";
-            } else if ("B".equals(dType) && "+".equals(dRh)) {
-                isCompatible = List.of("B", "AB").contains(rType) && "+".equals(rRh);
-                explanation = isCompatible ? "B+ truyền cho B+, AB+" : "Không phù hợp";
-            } else if ("AB".equals(dType) && "-".equals(dRh)) {
-                isCompatible = "AB".equals(rType);
-                explanation = isCompatible ? "AB- truyền cho AB" : "Không phù hợp";
-            } else if ("AB".equals(dType) && "+".equals(dRh)) {
-                isCompatible = "AB".equals(rType) && "+".equals(rRh);
-                explanation = isCompatible ? "AB+ truyền cho AB+" : "Không phù hợp";
+                explanation = "O- is treated as the safest donor for platelets and similar components.";
+            } else if ("O".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = "+".equals(recipientRh);
+                explanation = isCompatible ? "O+ can donate to Rh+ recipients." : "Not compatible.";
+            } else if ("A".equals(donorType) && "-".equals(donorRh)) {
+                isCompatible = List.of("A", "AB").contains(recipientType);
+                explanation = isCompatible ? "A- can donate to A and AB." : "Not compatible.";
+            } else if ("A".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = List.of("A", "AB").contains(recipientType) && "+".equals(recipientRh);
+                explanation = isCompatible ? "A+ can donate to A+ and AB+." : "Not compatible.";
+            } else if ("B".equals(donorType) && "-".equals(donorRh)) {
+                isCompatible = List.of("B", "AB").contains(recipientType);
+                explanation = isCompatible ? "B- can donate to B and AB." : "Not compatible.";
+            } else if ("B".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = List.of("B", "AB").contains(recipientType) && "+".equals(recipientRh);
+                explanation = isCompatible ? "B+ can donate to B+ and AB+." : "Not compatible.";
+            } else if ("AB".equals(donorType) && "-".equals(donorRh)) {
+                isCompatible = "AB".equals(recipientType);
+                explanation = isCompatible ? "AB- can donate to AB." : "Not compatible.";
+            } else if ("AB".equals(donorType) && "+".equals(donorRh)) {
+                isCompatible = "AB".equals(recipientType) && "+".equals(recipientRh);
+                explanation = isCompatible ? "AB+ can donate to AB+." : "Not compatible.";
             }
         }
 

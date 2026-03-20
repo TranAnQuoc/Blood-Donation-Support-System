@@ -3,7 +3,7 @@ import styles from './EventManagement.module.css';
 import DataTableContainer from '../../mainContent/DataTableContainer';
 import axiosInstance from '../../../../configs/axios';
 import { toast } from 'react-toastify';
-import { useWebSocket } from '../../../../hooks/useWebSocket';
+import { useWebSocket } from '../../../../hooks/webSocketContext';
 
 
 const EventManagement = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -72,7 +72,7 @@ const EmergencyProcessList = () => {
     const [validationErrors, setValidationErrors] = useState({});
     const [overallError, setOverallError] = useState(null); // Lỗi tổng thể không liên quan đến từng trường
 
-    const fetchEmergencyProcesses = async () => {
+    const fetchEmergencyProcesses = useCallback(async () => {
         try {
             const response = await axios.get("http://localhost:8080/api/emergency-process", {
                 headers: {
@@ -92,11 +92,11 @@ const EmergencyProcessList = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token]);
 
     useEffect(() => {
         fetchEmergencyProcesses();
-    }, [token]);
+    }, [fetchEmergencyProcesses]);
 
     const handleEditClick = (process) => {
         setCurrentProcess(process);
@@ -487,6 +487,14 @@ const EmergencyProcessList = () => {
                                     rows="3"
                                 ></textarea>
                                 {validationErrors.healthCheckSummary && <p className={styles.fieldError}>{validationErrors.healthCheckSummary}</p>}
+                                {currentHealthCheckFileUrl && (
+                                    <p className={styles.helperText}>
+                                        File hien tai:{' '}
+                                        <a href={currentHealthCheckFileUrl} target="_blank" rel="noreferrer">
+                                            Xem tep dinh kem
+                                        </a>
+                                    </p>
+                                )}
                             </div>
 
                             {/* 6. Xác nhận nhóm máu - Boolean, no validation from DTO */}

@@ -4,6 +4,7 @@ import com.gtwo.bdss_system.dto.transfusion.RequestOwnerDTO;
 import com.gtwo.bdss_system.dto.transfusion.TransfusionRequestDTO;
 import com.gtwo.bdss_system.entity.auth.Account;
 import com.gtwo.bdss_system.entity.transfusion.TransfusionRequest;
+import com.gtwo.bdss_system.enums.Role;
 import com.gtwo.bdss_system.enums.Status;
 import com.gtwo.bdss_system.repository.transfusion.TransfusionRequestRepository;
 import com.gtwo.bdss_system.service.transfusion.TransfusionRequestService;
@@ -11,9 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class TransfusionRequestServiceImpl implements TransfusionRequestService {
@@ -24,6 +25,24 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
     public TransfusionRequestServiceImpl(TransfusionRequestRepository requestRepository, ModelMapper mapper) {
         this.repository = requestRepository;
         this.modelMapper = mapper;
+    }
+
+    @Override
+    public List<RequestOwnerDTO> getAll() {
+        return repository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(TransfusionRequest::getRequestedAt).reversed())
+                .map(this::toRequestOwnerDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RequestOwnerDTO getById(Long id, Account currentUser) {
+        TransfusionRequest request = getRequest(id);
+        if (currentUser.getRole() == Role.MEMBER && !request.getOwner().getId().equals(currentUser.getId())) {
+            throw new IllegalArgumentException("Báº¡n khÃ´ng cÃ³ quyá»n truy cáº­p yÃªu cáº§u nÃ y");
+        }
+        return toRequestOwnerDTO(request);
     }
 
     @Override
@@ -53,7 +72,9 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
 
     @Override
     public void delete(Long id, Account currentUser) {
-        TransfusionRequest request = getOwnedRequest(id, currentUser);
+        TransfusionRequest request = currentUser.getRole() == Role.MEMBER
+                ? getOwnedRequest(id, currentUser)
+                : getRequest(id);
         request.setStatus(Status.INACTIVE);
         repository.save(request);
     }
@@ -67,8 +88,9 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
 
     @Override
     public List<RequestOwnerDTO> getMyRequests(Account currentUser) {
-        return repository.findByOwnerAndStatus(currentUser, Status.ACTIVE).stream()
-                .map(r -> modelMapper.map(r, RequestOwnerDTO.class))
+        return repository.findByOwner(currentUser).stream()
+                .sorted(Comparator.comparing(TransfusionRequest::getRequestedAt).reversed())
+                .map(this::toRequestOwnerDTO)
                 .collect(Collectors.toList());
     }
 
@@ -80,19 +102,23 @@ public class TransfusionRequestServiceImpl implements TransfusionRequestService 
     }
 
     private TransfusionRequest getOwnedRequest(Long id, Account currentUser) {
-        TransfusionRequest request = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy yêu cầu"));
+        TransfusionRequest request = getRequest(id);
         if (!request.getOwner().getId().equals(currentUser.getId())) {
-            throw new IllegalArgumentException("Bạn không có quyền truy cập yêu cầu này");
+            throw new IllegalArgumentException("Báº¡n khÃ´ng cÃ³ quyá»n truy cáº­p yÃªu cáº§u nÃ y");
         }
         return request;
     }
 
-    @Override
-    public List<RequestOwnerDTO> getAll() {
-        return repository.findAll()
-                .stream()
-                .map(req -> modelMapper.map(req, RequestOwnerDTO.class))
-                .collect(Collectors.toList());
+    private TransfusionRequest getRequest(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("KhÃ´ng tÃ¬m tháº¥y yÃªu cáº§u"));
+    }
+
+    private RequestOwnerDTO toRequestOwnerDTO(TransfusionRequest request) {
+        RequestOwnerDTO dto = modelMapper.map(request, RequestOwnerDTO.class);
+        if (request.getOwner() != null) {
+            dto.setCreaterName(request.getOwner().getFullName());
+        }
+        return dto;
     }
 }

@@ -1,85 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from 'react-router-dom';
-import styles from "./SearchMatchBlood.module.css"; // Đảm bảo file CSS của bạn có tên là index.module.css
+import { useNavigate } from "react-router-dom";
+import styles from "./SearchMatchBlood.module.css";
+
+const BLOOD_TYPES = [
+  { id: 2, groupName: "A", rhFactor: "+" },
+  { id: 3, groupName: "A", rhFactor: "-" },
+  { id: 4, groupName: "B", rhFactor: "+" },
+  { id: 5, groupName: "B", rhFactor: "-" },
+  { id: 6, groupName: "AB", rhFactor: "+" },
+  { id: 7, groupName: "AB", rhFactor: "-" },
+  { id: 8, groupName: "O", rhFactor: "+" },
+  { id: 9, groupName: "O", rhFactor: "-" },
+];
+
+const BLOOD_COMPONENTS = [
+  { id: 2, name: "Toan phan" },
+  { id: 3, name: "Huyet tuong" },
+  { id: 4, name: "Hong cau" },
+  { id: 5, name: "Tieu cau" },
+  { id: 6, name: "Bach cau" },
+];
 
 const CompatibilityChecker = () => {
-  // ==========================================================
-  // Dữ liệu cứng (hardcoded data) cho Blood Types và Blood Components
-  // Đảm bảo `id` ở đây khớp với `id` trong database của bạn
-  // ==========================================================
-  const staticBloodTypes = [
-    // { id: 1, groupName: "Uknow", rhFactor: "" },
-    { id: 2, groupName: "A", rhFactor: "+" },
-    { id: 3, groupName: "A", rhFactor: "-" },
-    { id: 4, groupName: "B", rhFactor: "+" },
-    { id: 5, groupName: "B", rhFactor: "-" },
-    { id: 6, groupName: "AB", rhFactor: "+" },
-    { id: 7, groupName: "AB", rhFactor: "-" },
-    { id: 8, groupName: "O", rhFactor: "+" },
-    { id: 9, groupName: "O", rhFactor: "-" },
-  ];
-
-  const staticBloodComponents = [
-    // { id: 1, name: "Unknow" },
-    { id: 2, name: "Toàn phần" },
-    { id: 3, name: "Huyết tương" },
-    { id: 4, name: "Hồng cầu" },
-    { id: 5, name: "Tiểu cầu" },
-    { id: 6, name: "Bạch cầu" },
-  ];
-  // ==========================================================
-
-  const [bloodTypes, setBloodTypes] = useState([]);
-  const [bloodComponents, setBloodComponents] = useState([]);
-
-  // Sử dụng chuỗi rỗng để không có giá trị nào được chọn ban đầu,
-  // hoặc có thể đặt ID mặc định nếu muốn
-  const [selectedDonorBloodTypeId, setSelectedDonorBloodTypeId] = useState("");
-  const [selectedRecipientBloodTypeId, setSelectedRecipientBloodTypeId] = useState("");
-  const [selectedComponentId, setSelectedComponentId] = useState("");
   const navigate = useNavigate();
-
-  const [compatibilityResult, setCompatibilityResult] = useState(null); // Lưu trữ kết quả từ API
+  const [selectedDonorBloodTypeId, setSelectedDonorBloodTypeId] = useState(
+    BLOOD_TYPES[0]?.id.toString() ?? ""
+  );
+  const [selectedRecipientBloodTypeId, setSelectedRecipientBloodTypeId] = useState(
+    BLOOD_TYPES[0]?.id.toString() ?? ""
+  );
+  const [selectedComponentId, setSelectedComponentId] = useState(
+    BLOOD_COMPONENTS[0]?.id.toString() ?? ""
+  );
+  const [compatibilityResult, setCompatibilityResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ==========================================================
-  // Thiết lập dữ liệu cứng khi component mount
-  // ==========================================================
-  useEffect(() => {
-    setBloodTypes(staticBloodTypes);
-    setBloodComponents(staticBloodComponents);
-
-    // Thiết lập giá trị mặc định cho dropdowns sau khi dữ liệu đã được set
-    // Có thể bỏ qua nếu muốn người dùng phải chọn thủ công
-    if (staticBloodTypes.length > 0) {
-      // Chọn ID đầu tiên của nhóm máu (ví dụ: Uknow)
-      setSelectedDonorBloodTypeId(staticBloodTypes[0].id.toString());
-      setSelectedRecipientBloodTypeId(staticBloodTypes[0].id.toString());
+  const getBloodTypeName = (bloodType) => {
+    if (!bloodType) {
+      return "";
     }
-    if (staticBloodComponents.length > 0) {
-      // Chọn ID đầu tiên của thành phần máu (ví dụ: Unknow)
-      setSelectedComponentId(staticBloodComponents[0].id.toString());
-    }
-  }, []); // Chạy một lần khi component mount
+    return `${bloodType.groupName}${bloodType.rhFactor}`;
+  };
 
-  // ==========================================================
-  // Hàm xử lý kiểm tra tương thích
-  // ==========================================================
-  const handleCheckCompatibility = async (e) => {
-    e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+  const handleCheckCompatibility = async (event) => {
+    event.preventDefault();
     setLoading(true);
     setError(null);
-    setCompatibilityResult(null); // Xóa kết quả cũ trước khi kiểm tra mới
+    setCompatibilityResult(null);
 
-    // Kiểm tra xem người dùng đã chọn đầy đủ các giá trị chưa
     if (!selectedDonorBloodTypeId || !selectedRecipientBloodTypeId || !selectedComponentId) {
-      toast.warn(
-        "Vui lòng chọn đầy đủ Nhóm máu người cho, Nhóm máu người nhận và Thành phần máu."
-      );
+      toast.warn("Vui long chon day du nhom mau va thanh phan mau.");
       setLoading(false);
       return;
     }
@@ -89,98 +63,65 @@ const CompatibilityChecker = () => {
         "http://localhost:8080/compatibility-rule/check-compatibility",
         {
           params: {
-            // Chuyển đổi giá trị string từ select thành Number cho API
             donorBloodTypeId: Number(selectedDonorBloodTypeId),
             recipientBloodTypeId: Number(selectedRecipientBloodTypeId),
             componentId: Number(selectedComponentId),
           },
-          // headers: { /* Endpoint này là public, nên không cần token */ }
         }
       );
 
-      // Log kết quả nhận được từ API để debug
-      console.log("Kết quả API nhận được:", response.data);
-      console.log("isCompatible:", response.data.isCompatible);
-
       if (response.status === 200 && response.data) {
         setCompatibilityResult(response.data);
-        toast.success("Kiểm tra tương thích thành công!");
+        toast.success("Kiem tra tuong thich thanh cong.");
       } else {
-        // Trường hợp response không có data hoặc status không phải 200 nhưng không ném lỗi
-        toast.warn("Không tìm thấy quy tắc tương thích cho lựa chọn này.");
-        setCompatibilityResult(null);
+        toast.warn("Khong tim thay quy tac tuong thich cho lua chon nay.");
       }
-    } catch (err) {
-      console.error("Lỗi khi kiểm tra tương thích:", err);
-      setError("Không thể kiểm tra tương thích. Vui lòng thử lại.");
-      setCompatibilityResult(null); // Đảm bảo kết quả rỗng khi có lỗi
+    } catch (requestError) {
+      console.error("Compatibility check error:", requestError);
+      setCompatibilityResult(null);
 
-      if (err.response) {
-        // Lỗi từ server (có phản hồi HTTP status code)
-        if (err.response.status === 404) {
-          toast.info("Không tìm thấy quy tắc tương thích cho lựa chọn này.");
-          setError("Quy tắc không tìm thấy.");
-        } else if (err.response.status === 400) {
-          toast.error("Yêu cầu không hợp lệ. Vui lòng kiểm tra lại lựa chọn.");
-          setError("Yêu cầu không hợp lệ.");
-        } else {
-          toast.error(
-            `Đã xảy ra lỗi server: ${err.response.data?.message || err.message}`
-          );
-          setError(`Lỗi server: ${err.response.status}`);
-        }
-      } else if (err.request) {
-        // Lỗi không có phản hồi từ server (ví dụ: mất mạng, server down)
-        toast.error(
-          "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối internet của bạn."
-        );
-        setError("Lỗi kết nối.");
+      if (requestError.response?.status === 404) {
+        setError("Khong tim thay quy tac tuong thich.");
+        toast.info("Khong tim thay quy tac tuong thich cho lua chon nay.");
+      } else if (requestError.response?.status === 400) {
+        setError("Yeu cau khong hop le.");
+        toast.error("Yeu cau khong hop le. Vui long kiem tra lai lua chon.");
+      } else if (requestError.request) {
+        setError("Khong the ket noi den may chu.");
+        toast.error("Khong the ket noi den may chu.");
       } else {
-        // Lỗi không xác định khác
-        toast.error("Đã xảy ra lỗi không xác định.");
-        setError("Lỗi không xác định.");
+        setError("Khong the kiem tra tuong thich. Vui long thu lai.");
+        toast.error("Khong the kiem tra tuong thich. Vui long thu lai.");
       }
     } finally {
-      setLoading(false); // Luôn tắt trạng thái loading
+      setLoading(false);
     }
-  };
-
-  // Hàm tạo chuỗi hiển thị cho BloodType (ví dụ: "A+", "O-")
-  const getBloodTypeName = (bloodType) => {
-    if (!bloodType) return "";
-    // Xử lý trường hợp "Uknow" (thay vì UNKNOWNUNKNOWN)
-    if (bloodType.groupName === "Uknow" && bloodType.rhFactor === "") {
-      return "Không xác định";
-    }
-    return `${bloodType.groupName}${bloodType.rhFactor}`;
   };
 
   const handleGoBack = () => {
-        navigate(-1);
-    };
+    navigate(-1);
+  };
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.pageTitle}>Kiểm Tra Tương Thích Nhóm Máu</h2>
+      <h2 className={styles.pageTitle}>Kiem Tra Tuong Thich Nhom Mau</h2>
       <p className={styles.introText}>
-        Chọn nhóm máu người cho, nhóm máu người nhận và thành phần máu để kiểm
-        tra khả năng tương thích.
+        Chon nhom mau nguoi cho, nhom mau nguoi nhan va thanh phan mau de kiem tra.
       </p>
 
       <form onSubmit={handleCheckCompatibility} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="donorBloodType" className={styles.label}>
-            Nhóm máu người cho:
+            Nhom mau nguoi cho:
           </label>
           <select
             id="donorBloodType"
             className={styles.selectField}
             value={selectedDonorBloodTypeId}
-            onChange={(e) => setSelectedDonorBloodTypeId(e.target.value)}
-            disabled={loading} // Disabled khi đang loading
+            onChange={(event) => setSelectedDonorBloodTypeId(event.target.value)}
+            disabled={loading}
           >
-            {/* <option value="">-- Chọn nhóm máu --</option> */}
-            {bloodTypes.map((type) => (
+            {BLOOD_TYPES.map((type) => (
               <option key={type.id} value={type.id}>
                 {getBloodTypeName(type)}
               </option>
@@ -190,17 +131,16 @@ const CompatibilityChecker = () => {
 
         <div className={styles.formGroup}>
           <label htmlFor="recipientBloodType" className={styles.label}>
-            Nhóm máu người nhận:
+            Nhom mau nguoi nhan:
           </label>
           <select
             id="recipientBloodType"
             className={styles.selectField}
             value={selectedRecipientBloodTypeId}
-            onChange={(e) => setSelectedRecipientBloodTypeId(e.target.value)}
+            onChange={(event) => setSelectedRecipientBloodTypeId(event.target.value)}
             disabled={loading}
           >
-            {/* <option value="">-- Chọn nhóm máu --</option> */}
-            {bloodTypes.map((type) => (
+            {BLOOD_TYPES.map((type) => (
               <option key={type.id} value={type.id}>
                 {getBloodTypeName(type)}
               </option>
@@ -210,17 +150,16 @@ const CompatibilityChecker = () => {
 
         <div className={styles.formGroup}>
           <label htmlFor="component" className={styles.label}>
-            Thành phần máu:
+            Thanh phan mau:
           </label>
           <select
             id="component"
             className={styles.selectField}
             value={selectedComponentId}
-            onChange={(e) => setSelectedComponentId(e.target.value)}
+            onChange={(event) => setSelectedComponentId(event.target.value)}
             disabled={loading}
           >
-            <option value="">-- Chọn thành phần --</option>
-            {bloodComponents.map((component) => (
+            {BLOOD_COMPONENTS.map((component) => (
               <option key={component.id} value={component.id}>
                 {component.name}
               </option>
@@ -229,55 +168,56 @@ const CompatibilityChecker = () => {
         </div>
 
         <button type="submit" className={styles.checkButton} disabled={loading}>
-          {loading ? "Đang kiểm tra..." : "Kiểm tra tương thích"}
+          {loading ? "Dang kiem tra..." : "Kiem tra tuong thich"}
         </button>
 
         <div className={styles.actionButtons}>
-                                <button className={styles.backButton} onClick={handleGoBack}>
-                                    Quay lại
-                                </button>
-                            </div>
+          <button type="button" className={styles.backButton} onClick={handleGoBack}>
+            Quay lai
+          </button>
+        </div>
       </form>
 
-      {/* Hiển thị lỗi nếu có */}
       {error && <p className={styles.errorMessage}>{error}</p>}
 
-      {/* Hiển thị kết quả tương thích nếu có */}
       {compatibilityResult && (
         <div
           className={`${styles.resultCard} ${
-            // SỬA ĐỔI: Sử dụng so sánh nghiêm ngặt `=== true` để khắc phục lỗi hiển thị
-            // dù API trả về `true` vẫn hiển thị "Không tương thích".
-            compatibilityResult.compatible === true
-              ? styles.compatible
-              : styles.incompatible
+            compatibilityResult.compatible === true ? styles.compatible : styles.incompatible
           }`}
         >
-          <h3>Kết quả tương thích:</h3>
+          <h3>Ket qua tuong thich:</h3>
           <p>
-            <strong>Khả năng tương thích:</strong>{" "}
+            <strong>Trang thai:</strong>{" "}
             <span
               className={
-                // SỬA ĐỔI: Tương tự, sử dụng so sánh nghiêm ngặt `=== true`
                 compatibilityResult.compatible === true
                   ? styles.compatibleText
                   : styles.incompatibleText
               }
             >
-              {compatibilityResult.compatible === true
-                ? "Tương thích"
-                : "Không tương thích"}
+              {compatibilityResult.compatible === true ? "Tuong thich" : "Khong tuong thich"}
             </span>
           </p>
           {compatibilityResult.explanation && (
             <p>
-              <strong>Giải thích:</strong> {compatibilityResult.explanation}
+              <strong>Giai thich:</strong> {compatibilityResult.explanation}
             </p>
           )}
         </div>
       )}
 
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

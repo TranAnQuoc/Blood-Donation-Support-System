@@ -1,0 +1,14 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.0)
+
+2026-03-18T11:28:42.562+07:00  INFO 21348 --- [bdss-system] [           main] c.g.bdss_system.BdssSystemApplication    : Starting BdssSystemApplication v0.0.1-SNAPSHOT using Java 17.0.9 with PID 21348 (F:\Mar-2026\Blood-Donation-Support-System-main\Blood-Donation-Support-System-main\back-end\bdss-system\target\bdss-system-0.0.1-SNAPSHOT.jar started by Admin in F:\Mar-2026\Blood-Donation-Support-System-main\Blood-Donation-Support-System-main\back-end\bdss-system)
+2026-03-18T11:28:42.568+07:00  INFO 21348 --- [bdss-system] [           main] c.g.bdss_system.BdssSystemApplication    : No active profile set, falling back to 1 default profile: "default"
+2026-03-18T11:28:42.569+07:00 DEBUG 21348 --- [bdss-system] [           main] o.s.boot.SpringApplication               : Loading source class com.gtwo.bdss_system.BdssSystemApplication
+2026-03-18T11:28:42.640+07:00 DEBUG 21348 --- [bdss-system] [           main] ConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@600b90df

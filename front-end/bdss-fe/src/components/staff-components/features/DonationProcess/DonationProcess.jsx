@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../../configs/axios';
 import styles from './DonationProcess.module.css';
 import { useNavigate } from 'react-router-dom';
-import { useWebSocket } from '../../../../hooks/useWebSocket';
+import { useWebSocket } from '../../../../hooks/webSocketContext';
 import { toast } from 'react-toastify';
 
 const getStatusName = (status) => {
