@@ -1,0 +1,261 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationEventServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.service.donation.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationEventServiceImpl (com.gtwo.bdss_system.service.donation.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DonationEventServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/68)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.service.donation.impl;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationEventDTO;
+&nbsp;import com.gtwo.bdss_system.entity.donation.DonationEvent;
+&nbsp;import com.gtwo.bdss_system.enums.Status;
+&nbsp;import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
+&nbsp;import com.gtwo.bdss_system.repository.donation.DonationEventRepository;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationEventService;
+&nbsp;import jakarta.persistence.EntityNotFoundException;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.LocalTime;
+&nbsp;import java.time.temporal.ChronoUnit;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;public class DonationEventServiceImpl implements DonationEventService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationEventRepository repository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationRequestRepository donationRequestRepository;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DonationEvent&gt; getAll() {
+<b class="nc">&nbsp;        List&lt;DonationEvent&gt; schedules = repository.findAllByStatus(Status.ACTIVE);</b>
+<b class="nc">&nbsp;        for (DonationEvent schedule : schedules) {</b>
+<b class="nc">&nbsp;            schedule.setCurrentSlot(donationRequestRepository.countEventIdInRequest(schedule.getId()));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return schedules;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DonationEvent&gt; getAllForStaff() {
+<b class="nc">&nbsp;        List&lt;DonationEvent&gt; schedules = repository.findAll();</b>
+<b class="nc">&nbsp;        for (DonationEvent schedule : schedules) {</b>
+<b class="nc">&nbsp;            schedule.setCurrentSlot(donationRequestRepository.countEventIdInRequest(schedule.getId()));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return schedules;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DonationEvent getById(Long id) {
+<b class="nc">&nbsp;        DonationEvent schedule = repository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Không tìm th?y l?ch hi?n máu v?i ID: &quot; + id));</b>
+<b class="nc">&nbsp;        schedule.setCurrentSlot(donationRequestRepository.countEventIdInRequest(id));</b>
+<b class="nc">&nbsp;        return schedule;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DonationEvent&gt; getByDateRange(LocalDate fromDate, LocalDate toDate) {
+<b class="nc">&nbsp;        List&lt;DonationEvent&gt; schedules = repository.findByDateRangeAndActive(fromDate, toDate);</b>
+<b class="nc">&nbsp;        for (DonationEvent schedule : schedules) {</b>
+<b class="nc">&nbsp;            int approved = donationRequestRepository.countEventIdInRequest(schedule.getId());</b>
+<b class="nc">&nbsp;            schedule.setCurrentSlot(approved);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return schedules;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DonationEvent create(DonationEventDTO dto) {
+<b class="nc">&nbsp;        DonationEvent schedule = new DonationEvent();</b>
+<b class="nc">&nbsp;        LocalTime start = dto.getStartTime().toLocalTime();</b>
+<b class="nc">&nbsp;        LocalTime end = dto.getEndTime().toLocalTime();</b>
+<b class="nc">&nbsp;        long duration = ChronoUnit.MINUTES.between(start, end);</b>
+<b class="nc">&nbsp;        if (duration &lt; 60) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Th?i gian k?t thúc ph?i sau th?i gian b?t ??u ít nh?t 1 ti?ng&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        schedule.setName(dto.getName());</b>
+<b class="nc">&nbsp;        schedule.setDate(dto.getDate());</b>
+<b class="nc">&nbsp;        schedule.setStartTime(dto.getStartTime());</b>
+<b class="nc">&nbsp;        schedule.setEndTime(dto.getEndTime());</b>
+<b class="nc">&nbsp;        schedule.setMaxSlot(dto.getMaxSlot());</b>
+<b class="nc">&nbsp;        schedule.setAddress(dto.getAddress());</b>
+<b class="nc">&nbsp;        schedule.setStatus(Status.ACTIVE);</b>
+<b class="nc">&nbsp;        if (repository.existsByNameAndAddress(dto.getName(), dto.getAddress())) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;L?ch hi?n máu v?i tên và ??a ch? này ?ã t?n t?i&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return repository.save(schedule);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DonationEvent update(Long id, DonationEventDTO updated) {
+<b class="nc">&nbsp;        DonationEvent existing = getById(id);</b>
+<b class="nc">&nbsp;        LocalTime start = updated.getStartTime().toLocalTime();</b>
+<b class="nc">&nbsp;        LocalTime end = updated.getEndTime().toLocalTime();</b>
+<b class="nc">&nbsp;        long duration = ChronoUnit.MINUTES.between(start, end);</b>
+<b class="nc">&nbsp;        if (duration &lt; 60) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Th?i gian k?t thúc ph?i sau th?i gian b?t ??u ít nh?t 1 ti?ng&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        existing.setName(updated.getName());</b>
+<b class="nc">&nbsp;        existing.setDate(updated.getDate());</b>
+<b class="nc">&nbsp;        existing.setStartTime(updated.getStartTime());</b>
+<b class="nc">&nbsp;        existing.setEndTime(updated.getEndTime());</b>
+<b class="nc">&nbsp;        existing.setAddress(updated.getAddress());</b>
+<b class="nc">&nbsp;        existing.setMaxSlot(updated.getMaxSlot());</b>
+<b class="nc">&nbsp;        boolean isDuplicate = repository.existsByNameAndAddress(updated.getName(), updated.getAddress());</b>
+<b class="nc">&nbsp;        if (isDuplicate &amp;&amp;</b>
+<b class="nc">&nbsp;                (!existing.getName().equals(updated.getName()) || !existing.getAddress().equals(updated.getAddress()))) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Tên và ??a ch? ?ã ???c s? d?ng cho l?ch khác&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return repository.save(existing);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void delete(Long id) {
+<b class="nc">&nbsp;        DonationEvent schedule = repository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Schedule not found with id: &quot; + id));</b>
+<b class="nc">&nbsp;        schedule.setStatus(Status.INACTIVE);</b>
+<b class="nc">&nbsp;        repository.save(schedule);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void restore(Long id) {
+<b class="nc">&nbsp;        DonationEvent schedule = repository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Schedule not found with id: &quot; + id));</b>
+<b class="nc">&nbsp;        schedule.setStatus(Status.ACTIVE);</b>
+<b class="nc">&nbsp;        repository.save(schedule);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DonationEvent&gt; searchByName(String keyword) {
+<b class="nc">&nbsp;        return repository.findByNameContainingIgnoreCaseOrderByNameAsc(keyword);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void autoExpirePastEvents() {
+<b class="nc">&nbsp;        List&lt;DonationEvent&gt; activeEvents = repository.findAllByStatus(Status.ACTIVE);</b>
+<b class="nc">&nbsp;        LocalDate today = LocalDate.now();</b>
+<b class="nc">&nbsp;        LocalTime now = LocalTime.now();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (DonationEvent event : activeEvents) {</b>
+<b class="nc">&nbsp;            if (event.getDate().isBefore(today) ||</b>
+<b class="nc">&nbsp;                    (event.getDate().isEqual(today) &amp;&amp; event.getEndTime().toLocalTime().isBefore(now))) {</b>
+<b class="nc">&nbsp;                event.setStatus(Status.INACTIVE);</b>
+<b class="nc">&nbsp;                repository.save(event);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

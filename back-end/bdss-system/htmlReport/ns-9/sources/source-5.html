@@ -1,0 +1,87 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationRequestDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.donation</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationRequestDTO (com.gtwo.bdss_system.dto.donation)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DonationRequestDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.donation;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.commons.BloodType;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class DonationRequestDTO {
+&nbsp;    private Long id;
+&nbsp;    private String donorFullName;
+&nbsp;    private String donorGender;
+&nbsp;    private BloodType donorBloodType;
+&nbsp;    private String eventName;
+&nbsp;    private LocalDateTime requestTime;
+&nbsp;    private String statusRequest;
+&nbsp;    private LocalDateTime approvedTime;
+&nbsp;    private String note;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

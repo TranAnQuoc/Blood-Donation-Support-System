@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmergencyProcessAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.controller.emergency</a>
+</div>
+
+<h1>Coverage Summary for Class: EmergencyProcessAPI (com.gtwo.bdss_system.controller.emergency)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EmergencyProcessAPI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.controller.emergency;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.dto.emergency.EmergencyProcessDTO;
+&nbsp;import com.gtwo.bdss_system.dto.emergency.EmergencyProcessFormDTO;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.service.emergency.EmergencyProcessService;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+&nbsp;import jakarta.annotation.security.PermitAll;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.security.core.annotation.AuthenticationPrincipal;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/emergency-process&quot;)
+&nbsp;@RequiredArgsConstructor
+&nbsp;@SecurityRequirement(name = &quot;api&quot;)
+&nbsp;public class EmergencyProcessAPI {
+&nbsp;
+&nbsp;    private final EmergencyProcessService emergencyProcessService;
+&nbsp;
+&nbsp;    @PutMapping(value = &quot;/{id}&quot;, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+&nbsp;    @Operation(summary = &quot;C?p nh?t quy trình kh?n c?p kèm file h? s? s?c kh?e&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateEmergencyProcess(
+&nbsp;            @PathVariable Long id,
+&nbsp;            @ModelAttribute EmergencyProcessFormDTO form,
+&nbsp;            @AuthenticationPrincipal Account staff
+&nbsp;    ) {
+<b class="nc">&nbsp;        emergencyProcessService.updateWithFile(id, form, staff);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(&quot;C?p nh?t quy trình thành công.&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;EmergencyProcessDTO&gt; getById(@PathVariable Long id) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(emergencyProcessService.getById(id));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/by-staff/{staffId}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;STAFF&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;EmergencyProcessDTO&gt;&gt; getByStaffId(@PathVariable Long staffId) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(emergencyProcessService.getByStaffId(staffId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyRole(&#39;STAFF&#39;,&#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;EmergencyProcessDTO&gt;&gt; getAll() {
+<b class="nc">&nbsp;        return ResponseEntity.ok(emergencyProcessService.getAll());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/emergency-lookup&quot;)
+&nbsp;    @Operation(summary = &quot;Tra c?u ti?n ?? x? lý ??n kh?n c?p theo h? tên và s? ?i?n tho?i&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;EmergencyProcessDTO&gt;&gt; lookupProcessStatus(
+&nbsp;            @RequestParam String fullName,
+&nbsp;            @RequestParam String phone) {
+<b class="nc">&nbsp;        List&lt;EmergencyProcessDTO&gt; result = emergencyProcessService.lookupByNameAndPhone(fullName, phone);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(result);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

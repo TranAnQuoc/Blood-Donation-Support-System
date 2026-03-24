@@ -1,0 +1,98 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationHistoryRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.repository.donation</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationHistoryRepository (com.gtwo.bdss_system.repository.donation)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">DonationHistoryRepository$MockitoMock$88sTJdI8</td>
+  </tr>
+  <tr>
+    <td class="name">DonationHistoryRepository$MockitoMock$88sTJdI8$auxiliary$hscj6KaC</td>
+  </tr>
+  <tr>
+    <td class="name">DonationHistoryRepository$MockitoMock$88sTJdI8$auxiliary$IL6GU26k</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.repository.donation;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.entity.donation.DonationHistory;
+&nbsp;import com.gtwo.bdss_system.enums.StatusProcess;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public interface DonationHistoryRepository extends JpaRepository&lt;DonationHistory, Long&gt; {
+&nbsp;    List&lt;DonationHistory&gt; findAllByDonor_IdOrderByDonationDateDesc(Long donorId);
+&nbsp;    List&lt;DonationHistory&gt; findByStatus(StatusProcess status);;
+&nbsp;    List&lt;DonationHistory&gt; findByDonorAndStatus(Account donor, StatusProcess status);
+&nbsp;    @Query(&quot;SELECT COUNT(h) FROM DonationHistory h &quot; +
+&nbsp;            &quot;WHERE h.donor.id = :accountId &quot; +
+&nbsp;            &quot;AND h.status = :status&quot;)
+&nbsp;    Long countCompletedByAccount(@Param(&quot;accountId&quot;) Long accountId,
+&nbsp;                                 @Param(&quot;status&quot;) StatusProcess status);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

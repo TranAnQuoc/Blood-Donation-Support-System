@@ -1,0 +1,94 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TransfusionRequestDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.transfusion</a>
+</div>
+
+<h1>Coverage Summary for Class: TransfusionRequestDTO (com.gtwo.bdss_system.dto.transfusion)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TransfusionRequestDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.transfusion;
+&nbsp;
+&nbsp;import jakarta.validation.constraints.NotBlank;
+&nbsp;import jakarta.validation.constraints.Pattern;
+&nbsp;import jakarta.validation.constraints.Size;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class TransfusionRequestDTO {
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Tên ngư�?i nhận không được để trống&quot;)
+&nbsp;    @Size(max = 100, message = &quot;Tên ngư�?i nhận tối đa 100 ký tự&quot;)
+&nbsp;    private String recipientName;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Số điện thoại không được để trống&quot;)
+&nbsp;    @Pattern(regexp = &quot;^(0|\\+84)[0-9]{9}$&quot;, message = &quot;Số điện thoại không hợp lệ&quot;)
+&nbsp;    private String recipientPhone;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Mô tả không được để trống&quot;)
+&nbsp;    @Size(max = 500, message = &quot;Mô tả tối đa 500 ký tự&quot;)
+&nbsp;    private String description;
+&nbsp;
+&nbsp;    @Size(max = 255, message = &quot;�?ịa chỉ tối đa 255 ký tự&quot;)
+&nbsp;    private String address;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

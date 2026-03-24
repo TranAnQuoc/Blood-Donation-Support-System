@@ -1,0 +1,221 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Filter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.config</a>
+</div>
+
+<h1>Coverage Summary for Class: Filter (com.gtwo.bdss_system.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Filter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.config;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.exception.exceptions.AuthenticationException;
+&nbsp;import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
+&nbsp;import com.gtwo.bdss_system.service.auth.impl.TokenServiceImpl;
+&nbsp;import io.jsonwebtoken.ExpiredJwtException;
+&nbsp;import io.jsonwebtoken.MalformedJwtException;
+&nbsp;import jakarta.servlet.FilterChain;
+&nbsp;import jakarta.servlet.ServletException;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpServletResponse;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Qualifier;
+&nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.util.AntPathMatcher;
+&nbsp;import org.springframework.web.filter.OncePerRequestFilter;
+&nbsp;import org.springframework.web.servlet.HandlerExceptionResolver;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Component
+<b class="nc">&nbsp;public class Filter extends OncePerRequestFilter {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    @Qualifier(&quot;handlerExceptionResolver&quot;)
+&nbsp;    private HandlerExceptionResolver resolver;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    TokenServiceImpl tokenService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    AuthenticationRepository authenticationRepository;
+&nbsp;
+<b class="nc">&nbsp;    private final List&lt;String&gt; PUBLIC_API = List.of(</b>
+&nbsp;            &quot;POST:/api/register&quot;,
+&nbsp;            &quot;POST:/api/login&quot;,
+&nbsp;            &quot;GET:/swagger-ui/**&quot;,
+&nbsp;            &quot;GET:/v3/api-docs/**&quot;,
+&nbsp;            &quot;GET:/swagger-resources/**&quot;,
+&nbsp;            &quot;GET:/webjars/**&quot;,
+&nbsp;            &quot;GET:/swagger-ui.html&quot;,
+&nbsp;            &quot;POST:/api/emergency-requests&quot;,
+&nbsp;            &quot;POST:/api/reset-password-request&quot;,
+&nbsp;            &quot;GET:/api/event&quot;,
+&nbsp;            &quot;GET:/api/event/by-date&quot;,
+&nbsp;            &quot;GET:/api/event/search&quot;,
+&nbsp;            &quot;GET:/compatibility-rule/check-compatibility&quot;,
+&nbsp;            &quot;GET:/api/search-donor&quot;,
+&nbsp;            &quot;POST:/api/forgot-password-request&quot;,
+&nbsp;            &quot;GET:/ws/**&quot;
+&nbsp;    );
+&nbsp;
+&nbsp;    public boolean isPublicAPI(String uri, String method) {
+<b class="nc">&nbsp;        AntPathMatcher matcher = new AntPathMatcher();</b>
+<b class="nc">&nbsp;        return PUBLIC_API.stream().anyMatch(pattern -&gt; {</b>
+<b class="nc">&nbsp;            String[] parts = pattern.split(&quot;:&quot;, 2);</b>
+<b class="nc">&nbsp;            if (parts.length != 2) return false;</b>
+<b class="nc">&nbsp;            String allowedMethod = parts[0];</b>
+<b class="nc">&nbsp;            String allowedUri = parts[1];</b>
+<b class="nc">&nbsp;            return method.equalsIgnoreCase(allowedMethod) &amp;&amp; matcher.match(allowedUri, uri);</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+<b class="nc">&nbsp;        String uri = request.getRequestURI();</b>
+<b class="nc">&nbsp;        String method = request.getMethod();</b>
+<b class="nc">&nbsp;        if(isPublicAPI(uri,method)){</b>
+<b class="nc">&nbsp;            filterChain.doFilter(request,response);</b>
+&nbsp;        }else {
+<b class="nc">&nbsp;            String token = getToken(request);</b>
+<b class="nc">&nbsp;            if(token == null){</b>
+<b class="nc">&nbsp;                resolver.resolveException(request, response, null, new AuthenticationException(&quot;Empty token!&quot;));</b>
+&nbsp;                return;
+&nbsp;            }
+&nbsp;            Account account;
+&nbsp;            try {
+<b class="nc">&nbsp;                account = tokenService.extractAccount(token);</b>
+<b class="nc">&nbsp;            } catch (ExpiredJwtException expiredJwtException) {</b>
+<b class="nc">&nbsp;                resolver.resolveException(request, response, null, new AuthenticationException(&quot;Expired Token!&quot;));</b>
+&nbsp;                return;
+<b class="nc">&nbsp;            } catch (MalformedJwtException malformedJwtException) {</b>
+<b class="nc">&nbsp;                resolver.resolveException(request, response, null, new AuthenticationException(&quot;Invalid Token!&quot;));</b>
+&nbsp;                return;
+&nbsp;            }
+&nbsp;            UsernamePasswordAuthenticationToken
+<b class="nc">&nbsp;                    authenToken =</b>
+<b class="nc">&nbsp;                    new UsernamePasswordAuthenticationToken(account, token, account.getAuthorities());</b>
+<b class="nc">&nbsp;            authenToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));</b>
+<b class="nc">&nbsp;            SecurityContextHolder.getContext().setAuthentication(authenToken);</b>
+<b class="nc">&nbsp;            filterChain.doFilter(request,response);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getToken(HttpServletRequest request) {
+<b class="nc">&nbsp;        String authHeader = request.getHeader(&quot;Authorization&quot;);</b>
+<b class="nc">&nbsp;        if (authHeader == null) return null;</b>
+<b class="nc">&nbsp;        return authHeader.substring(7);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

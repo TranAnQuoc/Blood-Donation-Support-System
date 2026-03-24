@@ -1,0 +1,151 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > BloodStorageDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.commons</a>
+</div>
+
+<h1>Coverage Summary for Class: BloodStorageDTO (com.gtwo.bdss_system.dto.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BloodStorageDTO</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.commons;
+&nbsp;
+&nbsp;import jakarta.validation.constraints.AssertTrue;
+&nbsp;import jakarta.validation.constraints.Max;
+&nbsp;import jakarta.validation.constraints.Min;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class BloodStorageDTO {
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Ng??i hi?n máu không ???c ?? tr?ng&quot;)
+&nbsp;    private Long donorId;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Nhóm máu không ???c ?? tr?ng&quot;)
+&nbsp;    private Long bloodTypeId;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Thành ph?n máu không ???c ?? tr?ng&quot;)
+&nbsp;    private Long componentId;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;L??ng máu không ???c ?? tr?ng&quot;)
+&nbsp;    @Min(value = 200, message = &quot;L??ng máu t?i thi?u là 200ml&quot;)
+&nbsp;    @Max(value = 500, message = &quot;L??ng máu t?i ?a là 500ml&quot;)
+&nbsp;    private Integer quantity;
+&nbsp;
+&nbsp;    @AssertTrue(message = &quot;Nhóm máu không ???c là &#39;Không xác ??nh&#39;&quot;)
+&nbsp;    public boolean isValidBloodType() {
+<b class="nc">&nbsp;        return bloodTypeId != null &amp;&amp; bloodTypeId != 1;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @AssertTrue(message = &quot;Thành ph?n máu không ???c là &#39;Không xác ??nh&#39;&quot;)
+&nbsp;    public boolean isValidComponent() {
+<b class="nc">&nbsp;        return componentId != null &amp;&amp; componentId != 1;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

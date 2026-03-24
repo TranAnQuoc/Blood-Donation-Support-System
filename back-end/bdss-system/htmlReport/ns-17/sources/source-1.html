@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > AccountCreateDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.auth</a>
+</div>
+
+<h1>Coverage Summary for Class: AccountCreateDTO (com.gtwo.bdss_system.dto.auth)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">AccountCreateDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.auth;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.Gender;
+&nbsp;import com.gtwo.bdss_system.enums.Role;
+&nbsp;import jakarta.validation.constraints.*;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import java.sql.Date;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class AccountCreateDTO {
+&nbsp;
+&nbsp;    private String subject;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Email ng??i t?o là b?t bu?c&quot;)
+&nbsp;    @Email(message = &quot;Email ng??i t?o không ?úng ??nh d?ng&quot;)
+&nbsp;    private String emailOwner;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Email là b?t bu?c&quot;)
+&nbsp;    @Email(message = &quot;Email không ?úng ??nh d?ng&quot;)
+&nbsp;    private String email;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;M?t kh?u là b?t bu?c&quot;)
+&nbsp;    private String password;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;CCCD là b?t bu?c&quot;)
+&nbsp;    @Pattern(regexp = &quot;^\\d{12}$&quot;, message = &quot;CCCD ph?i có ?úng 12 ch? s?&quot;)
+&nbsp;    private String CCCD;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;H? và tên là b?t bu?c&quot;)
+&nbsp;    private String fullName;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Gi?i tính là b?t bu?c&quot;)
+&nbsp;    private Gender gender;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vai trò là b?t bu?c&quot;)
+&nbsp;    private Role role;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Nhóm máu là b?t bu?c&quot;)
+&nbsp;    private Long bloodTypeId;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Ngày sinh là b?t bu?c&quot;)
+&nbsp;    @Past(message = &quot;Ngày sinh ph?i là ngày trong quá kh?&quot;)
+&nbsp;    private Date dateOfBirth;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;S? ?i?n tho?i là b?t bu?c&quot;)
+&nbsp;    @Pattern(regexp = &quot;^(0[0-9]{9})$&quot;, message = &quot;S? ?i?n tho?i ph?i b?t ??u b?ng 0 và có ?úng 10 ch? s?&quot;)
+&nbsp;    private String phone;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;??a ch? là b?t bu?c&quot;)
+&nbsp;    private String address;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 import styles from './CreateAccountForm.module.css';
-import { useSelector } from 'react-redux'; 
+import { useSelector } from 'react-redux';
 
 function CreateAccountForm() {
-    const user = useSelector(state => state.user); 
+    const user = useSelector((state) => state.user);
     const loggedInAdminEmail = user?.email || '';
 
     const [formData, setFormData] = useState({
@@ -22,18 +22,17 @@ function CreateAccountForm() {
         phone: '',
         address: '',
         role: '',
-        bloodTypeId: '', 
+        bloodTypeId: '',
         cccd: '',
-        emailOwner: loggedInAdminEmail
+        emailOwner: loggedInAdminEmail,
     });
 
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    
+
     const staticBloodTypes = [
-        // { id: 1, type: 'UNKNOWN', rhFactor: 'UNKNOWN', displayName: 'Không xác định' },
         { id: 2, type: 'A', rhFactor: '+', displayName: 'A+' },
         { id: 3, type: 'A', rhFactor: '-', displayName: 'A-' },
         { id: 4, type: 'B', rhFactor: '+', displayName: 'B+' },
@@ -49,54 +48,62 @@ function CreateAccountForm() {
     const genders = ['MALE', 'FEMALE', 'OTHER'];
     const formatGender = (gender) => {
         switch (gender) {
-            case 'MALE':return 'Nam';
-            case 'FEMALE':return 'Nữ';
-            case 'OTHER':return 'Khác';
+            case 'MALE':
+                return 'Nam';
+            case 'FEMALE':
+                return 'Nữ';
+            case 'OTHER':
+                return 'Khác';
+            default:
+                return '';
         }
     };
 
     const roles = ['STAFF', 'ADMIN'];
     const formatRole = (role) => {
         switch (role) {
-            case 'ADMIN':return 'Quản trị viên';
-            case 'STAFF':return 'Nhân viên';
+            case 'ADMIN':
+                return 'Quản trị viên';
+            case 'STAFF':
+                return 'Nhân viên';
+            default:
+                return '';
         }
     };
 
     useEffect(() => {
         if (loggedInAdminEmail && formData.emailOwner !== loggedInAdminEmail) {
-            setFormData(prevData => ({
+            setFormData((prevData) => ({
                 ...prevData,
-                emailOwner: loggedInAdminEmail
+                emailOwner: loggedInAdminEmail,
             }));
         }
     }, [loggedInAdminEmail, formData.emailOwner]);
 
-
     const validateEmail = (email) => {
-        if (!email) return 'Email là bắt buộc.';
+        if (!email?.trim()) return 'Email là bắt buộc.';
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Email không đúng định dạng.';
         return '';
     };
 
     const validatePassword = (password) => {
-        if (!password) return 'Mật khẩu là bắt buộc.';
+        if (!password?.trim()) return 'Mật khẩu là bắt buộc.';
         if (password.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự.';
         if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(password)) {
-            return 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (@$!%*?&).';
+            return 'Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).';
         }
         return '';
     };
 
     const validateConfirmPassword = (confirmPassword, password) => {
-        if (!confirmPassword) return 'Xác nhận mật khẩu là bắt buộc.';
+        if (!confirmPassword?.trim()) return 'Xác nhận mật khẩu là bắt buộc.';
         if (confirmPassword !== password) return 'Mật khẩu và xác nhận mật khẩu không khớp.';
         return '';
     };
 
     const validateFullName = (fullName) => {
-        if (!fullName) return 'Họ và tên là bắt buộc.';
-        if (fullName.length < 3) return 'Họ và tên phải có ít nhất 3 ký tự.';
+        if (!fullName?.trim()) return 'Họ và tên là bắt buộc.';
+        if (fullName.trim().length < 3) return 'Họ và tên phải có ít nhất 3 ký tự.';
         return '';
     };
 
@@ -109,19 +116,19 @@ function CreateAccountForm() {
         if (!dateOfBirth) return 'Ngày sinh là bắt buộc.';
         const today = dayjs();
         const birthDate = dayjs(dateOfBirth);
-        if (birthDate.isAfter(today)) return 'Ngày sinh không hợp lệ.';
+        if (!birthDate.isValid() || birthDate.isAfter(today, 'day')) return 'Ngày sinh không hợp lệ.';
         if (today.diff(birthDate, 'year') < 18) return 'Người dùng phải đủ 18 tuổi.';
         return '';
     };
 
     const validatePhone = (phone) => {
-        if (!phone) return 'Số điện thoại là bắt buộc.';
-        if (!/^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(phone)) return 'Số điện thoại không đúng định dạng.';
+        if (!phone?.trim()) return 'Số điện thoại là bắt buộc.';
+        if (!/^(0[0-9]{9})$/.test(phone)) return 'Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số.';
         return '';
     };
 
     const validateAddress = (address) => {
-        if (!address) return 'Địa chỉ là bắt buộc.';
+        if (!address?.trim()) return 'Địa chỉ là bắt buộc.';
         const lowerCaseAddress = address.toLowerCase();
         if (!lowerCaseAddress.includes('hồ chí minh') && !lowerCaseAddress.includes('hcm')) {
             return 'Địa chỉ phải thuộc Thành phố Hồ Chí Minh.';
@@ -140,70 +147,62 @@ function CreateAccountForm() {
     };
 
     const validateCccd = (cccd) => {
-        if (!cccd) return 'CCCD là bắt buộc.';
-        if (!/^\d{12}$/.test(cccd)) return 'CCCD phải có 12 chữ số.'; 
+        if (!cccd?.trim()) return 'CCCD là bắt buộc.';
+        if (!/^\d{12}$/.test(cccd)) return 'CCCD phải có đúng 12 chữ số.';
         return '';
     };
 
-    // MỚI: Validation cho emailOwner
     const validateEmailOwner = (emailOwner) => {
-        if (!emailOwner) return 'Email người tạo là bắt buộc.';
+        if (!emailOwner?.trim()) return 'Email người tạo là bắt buộc.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOwner)) return 'Email người tạo không đúng định dạng.';
         return '';
+    };
+
+    const validateField = (fieldId, value, currentData) => {
+        switch (fieldId) {
+            case 'email':
+                return validateEmail(value);
+            case 'password':
+                return validatePassword(value);
+            case 'confirmPassword':
+                return validateConfirmPassword(value, currentData.password);
+            case 'fullName':
+                return validateFullName(value);
+            case 'gender':
+                return validateGender(value);
+            case 'dateOfBirth':
+                return validateDateOfBirth(value);
+            case 'phone':
+                return validatePhone(value);
+            case 'address':
+                return validateAddress(value);
+            case 'role':
+                return validateRole(value);
+            case 'bloodTypeId':
+                return validateBloodTypeId(value);
+            case 'cccd':
+                return validateCccd(value);
+            case 'emailOwner':
+                return validateEmailOwner(value);
+            default:
+                return '';
+        }
     };
 
     const handleInputChange = (event) => {
         const { id, value } = event.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [id]: value
-        }));
-
-        let errorMessage = '';
-        switch (id) {
-            case 'email':
-                errorMessage = validateEmail(value);
-                break;
-            case 'password':
-                errorMessage = validatePassword(value);
-                setErrors(prev => ({
-                    ...prev,
-                    confirmPassword: validateConfirmPassword(formData.confirmPassword, value)
-                }));
-                break;
-            case 'confirmPassword':
-                errorMessage = validateConfirmPassword(value, formData.password);
-                break;
-            case 'fullName':
-                errorMessage = validateFullName(value);
-                break;
-            case 'gender':
-                errorMessage = validateGender(value);
-                break;
-            case 'dateOfBirth':
-                errorMessage = validateDateOfBirth(value);
-                break;
-            case 'phone':
-                errorMessage = validatePhone(value);
-                break;
-            case 'address':
-                errorMessage = validateAddress(value);
-                break;
-            case 'role':
-                errorMessage = validateRole(value);
-                break;
-            case 'bloodTypeId': 
-                errorMessage = validateBloodTypeId(value);
-                break;
-            case 'cccd': 
-                errorMessage = validateCccd(value);
-                break;
-            // case 'emailOwner': // emailOwner sẽ được tự động điền, không cần validation trên input
-            //     errorMessage = validateEmailOwner(value);
-            //     break;
-            default:
-                break;
-        }
-        setErrors(prev => ({ ...prev, [id]: errorMessage }));
+        const nextData = { ...formData, [id]: value };
+        setFormData(nextData);
+        setErrors((prev) => {
+            const nextErrors = {
+                ...prev,
+                [id]: validateField(id, value, nextData),
+            };
+            if (id === 'password' || id === 'confirmPassword') {
+                nextErrors.confirmPassword = validateConfirmPassword(nextData.confirmPassword, nextData.password);
+            }
+            return nextErrors;
+        });
     };
 
     const handleTogglePasswordVisibility = () => {
@@ -214,10 +213,46 @@ function CreateAccountForm() {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
+    const mapBackendFieldKey = (key) => {
+        const normalized = String(key || '').trim();
+        if (!normalized) return '';
+        if (normalized.toLowerCase() === 'cccd' || normalized === 'CCCD') return 'cccd';
+        return normalized;
+    };
+
+    const parseBackendErrors = (errorData) => {
+        const parsedErrors = {};
+
+        if (!errorData) return parsedErrors;
+
+        if (errorData.errors && typeof errorData.errors === 'object') {
+            Object.entries(errorData.errors).forEach(([key, value]) => {
+                const mappedKey = mapBackendFieldKey(key);
+                if (mappedKey && value) parsedErrors[mappedKey] = String(value);
+            });
+            return parsedErrors;
+        }
+
+        if (typeof errorData.message === 'string') {
+            const lines = errorData.message.split('\n').map((line) => line.trim()).filter(Boolean);
+            lines.forEach((line) => {
+                const separator = line.includes(':') ? ':' : line.includes('|') ? '|' : null;
+                if (!separator) return;
+                const [field, ...rest] = line.split(separator);
+                const mappedKey = mapBackendFieldKey(field);
+                const message = rest.join(separator).trim();
+                if (mappedKey && message) {
+                    parsedErrors[mappedKey] = message;
+                }
+            });
+        }
+
+        return parsedErrors;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
-        setErrors({}); 
 
         const newErrors = {
             email: validateEmail(formData.email),
@@ -229,39 +264,39 @@ function CreateAccountForm() {
             phone: validatePhone(formData.phone),
             address: validateAddress(formData.address),
             role: validateRole(formData.role),
-            bloodTypeId: validateBloodTypeId(formData.bloodTypeId), 
+            bloodTypeId: validateBloodTypeId(formData.bloodTypeId),
             cccd: validateCccd(formData.cccd),
-            emailOwner: validateEmailOwner(formData.emailOwner)
+            emailOwner: validateEmailOwner(formData.emailOwner),
         };
 
         setErrors(newErrors);
 
-        const hasErrors = Object.values(newErrors).some(error => error !== '');
+        const hasErrors = Object.values(newErrors).some((error) => error !== '');
         if (hasErrors) {
-            toast.error('Vui lòng điền đầy đủ và đúng thông tin.');
+            toast.error('Vui lòng kiểm tra lại thông tin đã nhập.');
             setLoading(false);
             return;
         }
 
         try {
             const payload = {
-                email: formData.email,
+                email: formData.email.trim(),
                 password: formData.password,
-                fullName: formData.fullName,
+                fullName: formData.fullName.trim(),
                 gender: formData.gender,
-                dateOfBirth: formData.dateOfBirth, 
-                phone: formData.phone,
-                address: formData.address,
+                dateOfBirth: formData.dateOfBirth,
+                phone: formData.phone.trim(),
+                address: formData.address.trim(),
                 role: formData.role,
-                bloodTypeId: parseInt(formData.bloodTypeId, 10), 
-                cccd: formData.cccd,
-                emailOwner: formData.emailOwner
+                bloodTypeId: parseInt(formData.bloodTypeId, 10),
+                cccd: formData.cccd.trim(),
+                emailOwner: formData.emailOwner.trim(),
             };
 
             const response = await axiosInstance.post('/account/admin/create', payload);
 
             if (response.status === 200 || response.status === 201) {
-                toast.success(`Tạo tài khoản ${formData.role} thành công!`);
+                toast.success(`Tạo tài khoản ${formatRole(formData.role)} thành công!`);
                 setFormData({
                     email: '',
                     password: '',
@@ -272,18 +307,26 @@ function CreateAccountForm() {
                     phone: '',
                     address: '',
                     role: '',
-                    bloodTypeId: '', 
+                    bloodTypeId: '',
                     cccd: '',
-                    emailOwner: loggedInAdminEmail
+                    emailOwner: loggedInAdminEmail,
                 });
-                navigate('/admin-dashboard/user-management/staff-list'); 
+                setErrors({});
+                navigate('/admin-dashboard/user-management/staff-list');
             } else {
-                toast.error('Tạo tài khoản thất bại! Vui lòng kiểm tra lại.');
+                toast.error('Tạo tài khoản thất bại. Vui lòng kiểm tra lại.');
             }
         } catch (error) {
             console.error('Lỗi khi tạo tài khoản:', error);
-            if (error.response?.data?.message) {
-                toast.error(`Lỗi: ${error.response.data.message}`);
+            const backendData = error.response?.data;
+            const backendErrors = parseBackendErrors(backendData);
+            if (Object.keys(backendErrors).length > 0) {
+                setErrors((prev) => ({ ...prev, ...backendErrors }));
+                toast.error('Vui lòng kiểm tra các trường đang báo lỗi.');
+            } else if (typeof backendData === 'string' && backendData.trim()) {
+                toast.error(backendData);
+            } else if (backendData?.message) {
+                toast.error(backendData.message);
             } else {
                 toast.error('Có lỗi xảy ra khi tạo tài khoản. Vui lòng thử lại sau.');
             }
@@ -294,12 +337,10 @@ function CreateAccountForm() {
 
     return (
         <div className={styles.createAccountContainer}>
-            <form onSubmit={handleSubmit} className={styles.createAccountForm}>
+            <form onSubmit={handleSubmit} className={styles.createAccountForm} noValidate>
                 <h2>Tạo Tài Khoản Mới</h2>
-                <p className={styles.requiredFieldsMessage}>
-                    Vui lòng điền vào tất cả các trường bắt buộc.
-                </p>
-                
+                <p className={styles.requiredFieldsMessage}>Vui lòng điền vào tất cả các trường bắt buộc.</p>
+
                 <div className={styles.inputGroup}>
                     <label htmlFor="emailOwner">Email người tạo:</label>
                     <input
@@ -320,12 +361,13 @@ function CreateAccountForm() {
                         className={`${styles.inputField} ${errors.role ? styles.inputError : ''}`}
                         value={formData.role}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     >
                         <option value="">Chọn vai trò</option>
-                        {roles.map(role => (
-                            <option key={role} value={role}>{formatRole(role)}</option>
+                        {roles.map((role) => (
+                            <option key={role} value={role}>
+                                {formatRole(role)}
+                            </option>
                         ))}
                     </select>
                     {errors.role && <p className={styles.errorMessage}>{errors.role}</p>}
@@ -340,7 +382,6 @@ function CreateAccountForm() {
                         placeholder="Địa chỉ email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     {errors.email && <p className={styles.errorMessage}>{errors.email}</p>}
@@ -355,7 +396,6 @@ function CreateAccountForm() {
                         placeholder="Nhập mật khẩu"
                         value={formData.password}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     <button
@@ -378,7 +418,6 @@ function CreateAccountForm() {
                         placeholder="Xác nhận mật khẩu"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     <button
@@ -401,7 +440,6 @@ function CreateAccountForm() {
                         placeholder="Họ và tên"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     {errors.fullName && <p className={styles.errorMessage}>{errors.fullName}</p>}
@@ -414,12 +452,13 @@ function CreateAccountForm() {
                         className={`${styles.inputField} ${errors.gender ? styles.inputError : ''}`}
                         value={formData.gender}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     >
                         <option value="">Chọn giới tính</option>
-                        {genders.map(gender => (
-                            <option key={gender} value={gender}>{formatGender(gender)}</option>
+                        {genders.map((gender) => (
+                            <option key={gender} value={gender}>
+                                {formatGender(gender)}
+                            </option>
                         ))}
                     </select>
                     {errors.gender && <p className={styles.errorMessage}>{errors.gender}</p>}
@@ -433,7 +472,6 @@ function CreateAccountForm() {
                         className={`${styles.inputField} ${errors.dateOfBirth ? styles.inputError : ''}`}
                         value={formData.dateOfBirth}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     {errors.dateOfBirth && <p className={styles.errorMessage}>{errors.dateOfBirth}</p>}
@@ -448,7 +486,6 @@ function CreateAccountForm() {
                         placeholder="Số điện thoại (ví dụ: 0912345678)"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     {errors.phone && <p className={styles.errorMessage}>{errors.phone}</p>}
@@ -463,7 +500,6 @@ function CreateAccountForm() {
                         placeholder="Địa chỉ (phải thuộc TP.HCM)"
                         value={formData.address}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     />
                     {errors.address && <p className={styles.errorMessage}>{errors.address}</p>}
@@ -476,11 +512,10 @@ function CreateAccountForm() {
                         className={`${styles.inputField} ${errors.bloodTypeId ? styles.inputError : ''}`}
                         value={formData.bloodTypeId}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
                     >
                         <option value="">Chọn nhóm máu</option>
-                        {staticBloodTypes.map(type => (
+                        {staticBloodTypes.map((type) => (
                             <option key={type.id} value={type.id}>
                                 {type.displayName}
                             </option>
@@ -498,9 +533,8 @@ function CreateAccountForm() {
                         placeholder="Số CCCD (12 chữ số)"
                         value={formData.cccd}
                         onChange={handleInputChange}
-                        required
                         disabled={loading}
-                        maxLength="12" 
+                        maxLength="12"
                     />
                     {errors.cccd && <p className={styles.errorMessage}>{errors.cccd}</p>}
                 </div>

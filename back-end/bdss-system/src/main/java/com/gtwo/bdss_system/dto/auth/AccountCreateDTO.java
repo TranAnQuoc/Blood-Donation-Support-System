@@ -12,38 +12,41 @@ public class AccountCreateDTO {
 
     private String subject;
 
-    @NotBlank(message = "Email owner is required")
+    @NotBlank(message = "Email người tạo là bắt buộc")
+    @Email(message = "Email người tạo không đúng định dạng")
     private String emailOwner;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Email là bắt buộc")
+    @Email(message = "Email không đúng định dạng")
     private String email;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Mật khẩu là bắt buộc")
     private String password;
 
-    @NotBlank(message = "CCCD is required")
+    @NotBlank(message = "CCCD là bắt buộc")
+    @Pattern(regexp = "^\\d{12}$", message = "CCCD phải có đúng 12 chữ số")
     private String CCCD;
 
-    @NotBlank(message = "Full name is required")
+    @NotBlank(message = "Họ và tên là bắt buộc")
     private String fullName;
 
-    @NotNull(message = "Gender is required")
+    @NotNull(message = "Giới tính là bắt buộc")
     private Gender gender;
 
-    @NotNull(message = "Role is required")
+    @NotNull(message = "Vai trò là bắt buộc")
     private Role role;
 
-    @NotNull(message = "Blood type is required")
+    @NotNull(message = "Nhóm máu là bắt buộc")
     private Long bloodTypeId;
 
-    @NotNull(message = "Date of birth is required")
-    @Past(message = "Date of birth must be in the past")
+    @NotNull(message = "Ngày sinh là bắt buộc")
+    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
     private Date dateOfBirth;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^(0[0-9]{9})$", message = "Phone number must start with 0 and have 10 digits")
+    @NotBlank(message = "Số điện thoại là bắt buộc")
+    @Pattern(regexp = "^(0[0-9]{9})$", message = "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số")
     private String phone;
 
-    @NotBlank(message = "Address is required")
+    @NotBlank(message = "Địa chỉ là bắt buộc")
     private String address;
 }

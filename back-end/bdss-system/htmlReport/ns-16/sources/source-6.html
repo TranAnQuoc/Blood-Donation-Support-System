@@ -1,0 +1,107 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmergencyHistoryDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.emergency</a>
+</div>
+
+<h1>Coverage Summary for Class: EmergencyHistoryDTO (com.gtwo.bdss_system.dto.emergency)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">EmergencyHistoryDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.emergency;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import com.gtwo.bdss_system.enums.CrossmatchResult;
+&nbsp;import com.gtwo.bdss_system.enums.EmergencyPlace;
+&nbsp;import com.gtwo.bdss_system.enums.EmergencyResult;
+&nbsp;import jakarta.mail.Multipart;
+&nbsp;import lombok.Data;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;@Data
+&nbsp;public class EmergencyHistoryDTO {
+&nbsp;    private Long id;
+&nbsp;    private Long requestId;
+&nbsp;    private LocalDateTime resolvedAt;
+&nbsp;    private String fullNameSnapshot;
+&nbsp;    private String phoneSnapshot;
+&nbsp;    private Long bloodTypeId;
+&nbsp;    private Long componentId;
+&nbsp;    private Integer quantity;
+&nbsp;    private EmergencyResult result;
+&nbsp;    private String notes;
+&nbsp;
+&nbsp;    private String reasonForTransfusion;
+&nbsp;    private String needComponent;
+&nbsp;    private CrossmatchResult crossmatchResult;
+&nbsp;    private Double hemoglobinLevel;
+&nbsp;    private Boolean bloodGroupConfirmed;
+&nbsp;    private Integer pulse;
+&nbsp;    private Double temperature;
+&nbsp;    private Integer respiratoryRate;
+&nbsp;    private String bloodPressure;
+&nbsp;    private String symptoms;
+&nbsp;    private String healthFile;
+&nbsp;    private EmergencyPlace emergencyPlace;
+&nbsp;    @JsonIgnore
+&nbsp;    private Boolean deleted;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

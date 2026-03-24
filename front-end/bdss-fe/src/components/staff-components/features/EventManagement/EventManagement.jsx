@@ -22,6 +22,7 @@ const EventManagement = () => {
     const [editingEvent, setEditingEvent] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [eventIdToDelete, setEventIdToDelete] = useState(null);
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const formatTime = (timeString) => {
         if (!timeString) return '';
@@ -87,6 +88,13 @@ const EventManagement = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        setFieldErrors(prevState => {
+            if (!prevState[name]) return prevState;
+            const nextErrors = { ...prevState };
+            delete nextErrors[name];
+            return nextErrors;
+        });
+
         if (editingEvent) {
             setEditingEvent(prevState => ({
                 ...prevState,
@@ -102,17 +110,25 @@ const EventManagement = () => {
 
     const handleSubmitEvent = async (e) => {
         e.preventDefault();
+        setFieldErrors({});
 
         const dataToSubmit = editingEvent || newEvent;
 
-        const startTimeToSend = `${dataToSubmit.startTime}:00`;
-        const endTimeToSend = `${dataToSubmit.endTime}:00`;
+        const parsedMaxSlot = Number.parseInt(dataToSubmit.maxSlot, 10);
+        if (!Number.isNaN(parsedMaxSlot) && parsedMaxSlot < 0) {
+            setFieldErrors({ maxSlot: 'Số lượng tối đa không được là số âm' });
+            return;
+        }
+
+        const startTimeToSend = dataToSubmit.startTime ? `${dataToSubmit.startTime}:00` : null;
+        const endTimeToSend = dataToSubmit.endTime ? `${dataToSubmit.endTime}:00` : null;
         
         const eventDataToSend = {
             ...dataToSubmit,
+            date: dataToSubmit.date || null,
             startTime: startTimeToSend,
             endTime: endTimeToSend,
-            maxSlot: parseInt(dataToSubmit.maxSlot, 10),
+            maxSlot: Number.isNaN(parsedMaxSlot) ? 0 : parsedMaxSlot,
             facilityId: 1
         };
 
@@ -130,11 +146,16 @@ const EventManagement = () => {
             setNewEvent({ name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: '' });
             setEditingEvent(null);
             setShowForm(false);
+            setFieldErrors({});
 
         } catch (error) {
             console.error('Lỗi khi xử lý sự kiện hiến máu:', error);
             if (error.response) {
-                toast.error(`Lỗi: ${error.response.data.message || error.response.statusText}`);
+                const responseData = error.response.data || {};
+                if (responseData.errors && typeof responseData.errors === 'object') {
+                    setFieldErrors(responseData.errors);
+                }
+                toast.error(`Lỗi: ${responseData.message || error.response.statusText}`);
             } else if (error.request) {
                 toast.error('Không nhận được phản hồi từ server. Vui lòng thử lại.');
             } else {
@@ -150,6 +171,7 @@ const EventManagement = () => {
             endTime: event.endTime ? event.endTime.substring(0, 5) : '',
             date: event.date
         });
+        setFieldErrors({});
         setShowForm(true);
     };
 
@@ -185,6 +207,7 @@ const EventManagement = () => {
     const handleCancelEdit = () => {
         setEditingEvent(null);
         setNewEvent({ name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: '' });
+        setFieldErrors({});
         setShowForm(false);
     };
 
@@ -295,6 +318,7 @@ const EventManagement = () => {
                 if (showForm) {
                     setEditingEvent(null);
                     setNewEvent({ name: '', date: '', startTime: '', endTime: '', address: '', maxSlot: '' });
+                    setFieldErrors({});
                 }
             }}>
                 {showForm ? 'Ẩn Form' : 'Tạo Sự kiện Hiến Máu Mới'}
@@ -312,8 +336,8 @@ const EventManagement = () => {
                                 name="name"
                                 value={editingEvent ? editingEvent.name : newEvent.name}
                                 onChange={handleInputChange}
-                                required
                             />
+                            {fieldErrors.name && <p className={styles.fieldError}>{fieldErrors.name}</p>}
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="date">Ngày:</label>
@@ -323,8 +347,8 @@ const EventManagement = () => {
                                 name="date"
                                 value={editingEvent ? editingEvent.date : newEvent.date}
                                 onChange={handleInputChange}
-                                required
                             />
+                            {fieldErrors.date && <p className={styles.fieldError}>{fieldErrors.date}</p>}
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="startTime">Giờ bắt đầu:</label>
@@ -334,8 +358,8 @@ const EventManagement = () => {
                                 name="startTime"
                                 value={editingEvent ? editingEvent.startTime : newEvent.startTime}
                                 onChange={handleInputChange}
-                                required
                             />
+                            {fieldErrors.startTime && <p className={styles.fieldError}>{fieldErrors.startTime}</p>}
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="endTime">Giờ kết thúc:</label>
@@ -345,8 +369,8 @@ const EventManagement = () => {
                                 name="endTime"
                                 value={editingEvent ? editingEvent.endTime : newEvent.endTime}
                                 onChange={handleInputChange}
-                                required
                             />
+                            {fieldErrors.endTime && <p className={styles.fieldError}>{fieldErrors.endTime}</p>}
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="address">Địa chỉ:</label>
@@ -356,8 +380,8 @@ const EventManagement = () => {
                                 name="address"
                                 value={editingEvent ? editingEvent.address : newEvent.address}
                                 onChange={handleInputChange}
-                                required
                             />
+                            {fieldErrors.address && <p className={styles.fieldError}>{fieldErrors.address}</p>}
                         </div>
                         <div className={styles.formGroup}>
                             <label htmlFor="maxSlot">Số lượng tối đa (slots):</label>
@@ -367,9 +391,8 @@ const EventManagement = () => {
                                 name="maxSlot"
                                 value={editingEvent ? editingEvent.maxSlot : newEvent.maxSlot}
                                 onChange={handleInputChange}
-                                min="1"
-                                required
                             />
+                            {fieldErrors.maxSlot && <p className={styles.fieldError}>{fieldErrors.maxSlot}</p>}
                         </div>
                         <div className={styles.formActions}>
                             <button type="submit" className={styles.submitButton}>

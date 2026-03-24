@@ -1,0 +1,116 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TransfusionRequest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.entity.transfusion</a>
+</div>
+
+<h1>Coverage Summary for Class: TransfusionRequest (com.gtwo.bdss_system.entity.transfusion)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TransfusionRequest</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.entity.transfusion;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.entity.commons.BloodType;
+&nbsp;import com.gtwo.bdss_system.enums.Status;
+&nbsp;import com.gtwo.bdss_system.enums.StatusRequest;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.*;
+&nbsp;import org.hibernate.annotations.Nationalized;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;transfusion_request&quot;)
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;public class TransfusionRequest {
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;owner&quot;, nullable = false)
+&nbsp;    private Account owner;
+&nbsp;
+&nbsp;    @Column(name = &quot;recipient_name&quot;, nullable = false)
+&nbsp;    private String recipientName;
+&nbsp;
+&nbsp;    @Column(name = &quot;recipient_phone&quot;, nullable = false)
+&nbsp;    private String recipientPhone;
+&nbsp;
+&nbsp;    @Column(name = &quot;requested_at&quot;, nullable = false)
+&nbsp;    private LocalDateTime requestedAt;
+&nbsp;
+&nbsp;    @Column(name = &quot;description&quot;, nullable = false)
+&nbsp;    @Nationalized
+&nbsp;    private String description;
+&nbsp;
+&nbsp;    @Column(name = &quot;address&quot;)
+&nbsp;    @Nationalized
+&nbsp;    private String address;
+&nbsp;
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    @Column(name = &quot;status&quot;, nullable = false)
+&nbsp;    private Status status;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

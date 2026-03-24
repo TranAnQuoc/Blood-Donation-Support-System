@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,19 +50,19 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void createByAdmin(AccountCreateDTO dto) {
         if (dto.getRole() == Role.MEMBER) {
-            throw new IllegalArgumentException("Admin cannot create MEMBER accounts");
+            throw new IllegalArgumentException("Quản trị viên không được tạo tài khoản MEMBER");
         }
         if (accountRepo.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new IllegalArgumentException("Email đã được sử dụng");
         }
         if (accountRepo.existsByPhone(dto.getPhone())) {
-            throw new IllegalArgumentException("Phone already in use");
+            throw new IllegalArgumentException("Số điện thoại đã được sử dụng");
         }
         if (accountRepo.existsByCCCD(dto.getCCCD())) {
-            throw new IllegalArgumentException("CCCD already in use");
+            throw new IllegalArgumentException("CCCD đã được sử dụng");
         }
-        if (!dto.getCCCD().matches("\\d{12}")) {
-            throw new IllegalArgumentException("CCCD must be exactly 12 digits");
+        if (dto.getCCCD() == null || !dto.getCCCD().matches("\\d{12}")) {
+            throw new IllegalArgumentException("CCCD phải có đúng 12 chữ số");
         }
         Account account = new Account();
         account.setEmail(dto.getEmail());
@@ -76,14 +77,19 @@ public class AccountServiceImpl implements AccountService {
         account.setStatusDonation(StatusDonation.INACTIVE);
         account.setCCCD(dto.getCCCD());
         BloodType bloodType = bloodTypeRepo.findById(dto.getBloodTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
+                .orElseThrow(() -> new IllegalArgumentException("bloodTypeId|Nhóm máu không hợp lệ"));
         account.setBloodType(bloodType);
         accountRepo.save(account);
+        // Tạm thời tắt chức năng gửi mail theo yêu cầu
+        /*
         try {
             emailService.sendLoginStaffAccount(dto);
+        } catch (MailAuthenticationException exception) {
+            log.warn("Không gửi được email tài khoản staff vì sai cấu hình SMTP (email: {})", dto.getEmail());
         } catch (Exception exception) {
             log.warn("Failed to send staff account email to {}", dto.getEmail(), exception);
         }
+        */
     }
 
     @Override
