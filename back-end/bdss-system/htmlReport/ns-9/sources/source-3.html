@@ -1,0 +1,106 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationEventDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.donation</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationEventDTO (com.gtwo.bdss_system.dto.donation)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DonationEventDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.donation;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.Status;
+&nbsp;import jakarta.validation.constraints.FutureOrPresent;
+&nbsp;import jakarta.validation.constraints.Min;
+&nbsp;import jakarta.validation.constraints.NotBlank;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import java.sql.Time;
+&nbsp;import java.time.LocalDate;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class DonationEventDTO {
+&nbsp;    @NotBlank(message = &quot;Tên l?ch hi?n máu không ???c ?? tr?ng&quot;)
+&nbsp;    private String name;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Ngày di?n ra không ???c ?? tr?ng&quot;)
+&nbsp;    @FutureOrPresent(message = &quot;Ngày di?n ra ph?i là hôm nay ho?c t??ng lai&quot;)
+&nbsp;    private LocalDate date;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Th?i gian b?t ??u không ???c ?? tr?ng&quot;)
+&nbsp;    private Time startTime;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Th?i gian k?t thúc không ???c ?? tr?ng&quot;)
+&nbsp;    private Time endTime;
+&nbsp;
+&nbsp;    @Min(value = 0)
+&nbsp;    private int currentSlot;
+&nbsp;
+&nbsp;    @Min(value = 1, message = &quot;S? slot ph?i l?n h?n 0&quot;)
+&nbsp;    private int maxSlot;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;??a ch? không ???c ?? tr?ng&quot;)
+&nbsp;    private String address;
+&nbsp;
+&nbsp;    private Status status;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

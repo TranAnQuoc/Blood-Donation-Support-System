@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > CompatibilityRuleServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.service.commons.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: CompatibilityRuleServiceImpl (com.gtwo.bdss_system.service.commons.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CompatibilityRuleServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.service.commons.impl;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.commons.CompatibilityRule;
+&nbsp;import com.gtwo.bdss_system.repository.commons.CompatibilityRuleRepository;
+&nbsp;import com.gtwo.bdss_system.service.commons.CompatibilityRuleService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;public class CompatibilityRuleServiceImpl implements CompatibilityRuleService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private CompatibilityRuleRepository compatibilityRuleRepository;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public CompatibilityRule getRule(Long donorId, Long recipientId, Long componentId) {
+<b class="nc">&nbsp;        List&lt;CompatibilityRule&gt; rules = compatibilityRuleRepository</b>
+<b class="nc">&nbsp;                .findByDonorBloodType_IdAndRecipientBloodType_IdAndComponent_Id(donorId, recipientId, componentId);</b>
+<b class="nc">&nbsp;        if (rules.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Không tìm th?y quy t?c t??ng thích.&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return rules.get(0);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

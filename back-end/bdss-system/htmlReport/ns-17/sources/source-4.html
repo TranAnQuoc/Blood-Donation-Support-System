@@ -1,0 +1,109 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > AccountProfileDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.auth</a>
+</div>
+
+<h1>Coverage Summary for Class: AccountProfileDTO (com.gtwo.bdss_system.dto.auth)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">AccountProfileDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.auth;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.commons.BloodType;
+&nbsp;import jakarta.validation.constraints.*;
+&nbsp;import com.gtwo.bdss_system.enums.Gender;
+&nbsp;import com.gtwo.bdss_system.enums.Status;
+&nbsp;import com.gtwo.bdss_system.enums.StatusDonation;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import java.sql.Date;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class AccountProfileDTO {
+&nbsp;    @NotBlank(message = &quot;Full name is required&quot;)
+&nbsp;    private String fullName;
+&nbsp;
+&nbsp;    private String email;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Gender is required&quot;)
+&nbsp;    private Gender gender;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Date of birth is required&quot;)
+&nbsp;    @Past(message = &quot;Date of birth must be in the past&quot;)
+&nbsp;    private Date dateOfBirth;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;CCCD is required&quot;)
+&nbsp;    private String cccd;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Phone number is required&quot;)
+&nbsp;    @Pattern(regexp = &quot;^(0[0-9]{9})$&quot;, message = &quot;Phone number must start with 0 and have 10 digits&quot;)
+&nbsp;    private String phone;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Address is required&quot;)
+&nbsp;    private String address;
+&nbsp;
+&nbsp;    private BloodType bloodType;
+&nbsp;
+&nbsp;    private Status status;
+&nbsp;
+&nbsp;    private StatusDonation statusDonation;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,284 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmailServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.service.commons.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: EmailServiceImpl (com.gtwo.bdss_system.service.commons.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EmailServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/50)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.service.commons.impl;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.dto.auth.AccountCreateDTO;
+&nbsp;import com.gtwo.bdss_system.dto.commons.EmailDetailForDonationApproved;
+&nbsp;import com.gtwo.bdss_system.dto.commons.EmailDetailForForgotPassword;
+&nbsp;import com.gtwo.bdss_system.dto.commons.EmailDetailForRegister;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.service.commons.EmailService;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.mail.SimpleMailMessage;
+&nbsp;import org.springframework.mail.javamail.JavaMailSender;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.format.DateTimeFormatter;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;public class EmailServiceImpl implements EmailService {</b>
+&nbsp;
+<b class="nc">&nbsp;    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private JavaMailSender mailSender;
+&nbsp;
+&nbsp;    @Value(&quot;${bdss.mail.enabled:false}&quot;)
+&nbsp;    private boolean mailEnabled;
+&nbsp;
+&nbsp;    @Value(&quot;${spring.mail.username:}&quot;)
+&nbsp;    private String fromEmail;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void sendRegisterSuccessEmail(EmailDetailForRegister emailDetail) {
+<b class="nc">&nbsp;        SimpleMailMessage message = new SimpleMailMessage();</b>
+<b class="nc">&nbsp;        message.setFrom(fromEmail);</b>
+<b class="nc">&nbsp;        message.setTo(emailDetail.getToEmail());</b>
+<b class="nc">&nbsp;        message.setSubject(emailDetail.getSubject());</b>
+<b class="nc">&nbsp;        String loginLink = &quot;http://localhost:5173/login&quot;;</b>
+<b class="nc">&nbsp;        String body = String.format(&quot;&quot;&quot;</b>
+&nbsp;                Xin chào!
+&nbsp;
+&nbsp;                Tài kho?n c?a b?n ?ã ???c ??ng ký thành công v?i ??a ch? email: %s
+&nbsp;
+&nbsp;                Chúng tôi r?t vui khi ???c ??ng hành cùng b?n. Hãy ??ng nh?p vào h? th?ng ?? b?t ??u s? d?ng d?ch v?.
+&nbsp;
+&nbsp;                %s
+&nbsp;
+&nbsp;                Trân tr?ng,
+&nbsp;                H? th?ng h? tr?
+<b class="nc">&nbsp;                &quot;&quot;&quot;, emailDetail.getToEmail(), loginLink);</b>
+<b class="nc">&nbsp;        message.setText(body);</b>
+<b class="nc">&nbsp;        sendIfEnabled(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void sendResetPasswordEmail(EmailDetailForForgotPassword emailDetailForForgotPassword) {
+<b class="nc">&nbsp;        SimpleMailMessage message = new SimpleMailMessage();</b>
+<b class="nc">&nbsp;        message.setFrom(fromEmail);</b>
+<b class="nc">&nbsp;        message.setTo(emailDetailForForgotPassword.getAccount().getEmail());</b>
+<b class="nc">&nbsp;        message.setSubject(emailDetailForForgotPassword.getSubject());</b>
+&nbsp;
+<b class="nc">&nbsp;        String body = String.format(&quot;&quot;&quot;</b>
+&nbsp;                Xin chào %s,
+&nbsp;
+&nbsp;                B?n ?ã yêu c?u ??t l?i m?t kh?u. Vui lòng click vào liên k?t bên d??i ?? ti?p t?c:
+&nbsp;
+&nbsp;                %s
+&nbsp;
+&nbsp;                N?u b?n không yêu c?u, vui lòng b? qua email này.
+&nbsp;
+&nbsp;                Trân tr?ng,
+&nbsp;                H? th?ng h? tr?
+<b class="nc">&nbsp;                &quot;&quot;&quot;, emailDetailForForgotPassword.getAccount().getFullName(), emailDetailForForgotPassword.getLink());</b>
+&nbsp;
+<b class="nc">&nbsp;        message.setText(body);</b>
+<b class="nc">&nbsp;        sendIfEnabled(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void sendLoginStaffAccount(AccountCreateDTO emailDetail) {
+<b class="nc">&nbsp;        SimpleMailMessage message = new SimpleMailMessage();</b>
+<b class="nc">&nbsp;        message.setFrom(fromEmail);</b>
+<b class="nc">&nbsp;        message.setTo(emailDetail.getEmailOwner());</b>
+<b class="nc">&nbsp;        message.setSubject(&quot;Thông tin ??ng nh?p tài kho?n Staff&quot;);</b>
+<b class="nc">&nbsp;        String loginLink = &quot;http://localhost:5173/login&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        String body = String.format(&quot;&quot;&quot;</b>
+&nbsp;                Xin chào %s,
+&nbsp;
+&nbsp;                Tài kho?n staff c?a b?n ?ã ???c t?o thành công.
+&nbsp;
+&nbsp;                Vui lòng s? d?ng thông tin ??ng nh?p sau ?? truy c?p h? th?ng:
+&nbsp;
+&nbsp;                Email ??ng nh?p: %s
+&nbsp;                M?t kh?u: %s
+&nbsp;
+&nbsp;                ???ng d?n ??ng nh?p: %s
+&nbsp;
+&nbsp;                Sau khi ??ng nh?p, b?n nên ??i m?t kh?u ?? ??m b?o b?o m?t.
+&nbsp;
+&nbsp;                Trân tr?ng,
+&nbsp;                H? th?ng h? tr?
+<b class="nc">&nbsp;                &quot;&quot;&quot;, emailDetail.getFullName(), emailDetail.getEmail(), emailDetail.getPassword(), loginLink);</b>
+&nbsp;
+<b class="nc">&nbsp;        message.setText(body);</b>
+<b class="nc">&nbsp;        sendIfEnabled(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void sendReminderEmail(Account donor, LocalDate nextDate) {
+<b class="nc">&nbsp;        String body = String.format(&quot;&quot;&quot;</b>
+&nbsp;                Xin chào %s,
+&nbsp;
+&nbsp;                B?n ?ã ?? ?i?u ki?n ?? hi?n máu ti?p theo k? t? ngày: %s.
+&nbsp;                Vui lòng ??t l?ch h?n ?? ti?p t?c h? tr? c?ng ??ng nhé!
+&nbsp;
+&nbsp;                Trân tr?ng,
+&nbsp;                H? th?ng h? tr?
+<b class="nc">&nbsp;                &quot;&quot;&quot;, donor.getFullName(), nextDate.format(DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;)));</b>
+&nbsp;
+<b class="nc">&nbsp;        SimpleMailMessage message = new SimpleMailMessage();</b>
+<b class="nc">&nbsp;        message.setFrom(fromEmail);</b>
+<b class="nc">&nbsp;        message.setTo(donor.getEmail());</b>
+<b class="nc">&nbsp;        message.setSubject(&quot;Nh?c nh? hi?n máu l?n ti?p theo&quot;);</b>
+<b class="nc">&nbsp;        message.setText(body);</b>
+&nbsp;
+<b class="nc">&nbsp;        sendIfEnabled(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void sendDonationApprovedEmail(EmailDetailForDonationApproved detail) {
+<b class="nc">&nbsp;        SimpleMailMessage message = new SimpleMailMessage();</b>
+<b class="nc">&nbsp;        message.setFrom(fromEmail);</b>
+<b class="nc">&nbsp;        message.setTo(detail.getToEmail());</b>
+<b class="nc">&nbsp;        message.setSubject(detail.getSubject());</b>
+&nbsp;
+<b class="nc">&nbsp;        String formattedDate = detail.getDonationDate().format(DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;));</b>
+<b class="nc">&nbsp;        String formattedStart = detail.getStartTime().toLocalTime().format(DateTimeFormatter.ofPattern(&quot;HH:mm&quot;));</b>
+<b class="nc">&nbsp;        String formattedEnd = detail.getEndTime().toLocalTime().format(DateTimeFormatter.ofPattern(&quot;HH:mm&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        String body = String.format(&quot;&quot;&quot;</b>
+&nbsp;                Xin chào %s,
+&nbsp;
+&nbsp;                ??n ??ng ký hi?n máu c?a b?n t?i s? ki?n &quot;%s&quot; ?ã ???c h? th?ng phê duy?t thành công.
+&nbsp;
+&nbsp;                Th?i gian: %s t? %s ??n %s
+&nbsp;                ??a ?i?m: %s
+&nbsp;
+&nbsp;                Vui lòng ??n ?úng gi? và mang theo gi?y t? tùy thân.
+&nbsp;
+&nbsp;                Trân tr?ng,
+&nbsp;                H? th?ng h? tr?
+<b class="nc">&nbsp;                &quot;&quot;&quot;, detail.getDonorName(), detail.getEventName(), formattedDate, formattedStart, formattedEnd, detail.getLocation());</b>
+&nbsp;
+<b class="nc">&nbsp;        message.setText(body);</b>
+<b class="nc">&nbsp;        sendIfEnabled(message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void sendIfEnabled(SimpleMailMessage message) {
+<b class="nc">&nbsp;        if (!mailEnabled) {</b>
+<b class="nc">&nbsp;            log.info(&quot;B? qua g?i email vì bdss.mail.enabled=false. To={}&quot;, String.join(&quot;,&quot;, message.getTo()));</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        mailSender.send(message);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

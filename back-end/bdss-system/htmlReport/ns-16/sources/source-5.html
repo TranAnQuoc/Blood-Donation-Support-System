@@ -1,0 +1,122 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmergencyProcessDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.emergency</a>
+</div>
+
+<h1>Coverage Summary for Class: EmergencyProcessDTO (com.gtwo.bdss_system.dto.emergency)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">EmergencyProcessDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.emergency;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.CrossmatchResult;
+&nbsp;import com.gtwo.bdss_system.enums.EmergencyStatus;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import jakarta.validation.constraints.*;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class EmergencyProcessDTO {
+&nbsp;
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    private Long idRequest;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Status is required.&quot;)
+&nbsp;    private EmergencyStatus status;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Symptoms must not be blank.&quot;)
+&nbsp;    private String symptoms;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Hemoglobin level is required.&quot;)
+&nbsp;    @DecimalMin(value = &quot;0.0&quot;, inclusive = false, message = &quot;Hemoglobin level must be positive.&quot;)
+&nbsp;    private Double hemoglobinLevel;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Blood group confirmation status is required.&quot;)
+&nbsp;    private Boolean bloodGroupConfirmed;
+&nbsp;
+&nbsp;    @NotNull(message =&quot;blood quantity is required&quot;)
+&nbsp;    private Integer quantity;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Crossmatch result is required.&quot;)
+&nbsp;    private CrossmatchResult crossmatchResult;
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Blood pressure is required.&quot;)
+&nbsp;    private String bloodPressure;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Pulse is required.&quot;)
+&nbsp;    @Positive(message = &quot;Pulse must be a positive number.&quot;)
+&nbsp;    private Integer pulse;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Respiratory rate is required.&quot;)
+&nbsp;    @Positive(message = &quot;Respiratory rate must be a positive number.&quot;)
+&nbsp;    private Integer respiratoryRate;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Temperature is required.&quot;)
+&nbsp;    @DecimalMin(value = &quot;25.0&quot;, message = &quot;Temperature must be reasonable.&quot;)
+&nbsp;    private Double temperature;
+&nbsp;
+&nbsp;    private String bloodType;
+&nbsp;    private String bloodComponent;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

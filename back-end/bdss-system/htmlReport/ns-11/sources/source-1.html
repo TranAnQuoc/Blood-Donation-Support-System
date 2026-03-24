@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > SchedulingServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.service.automatic</a>
+</div>
+
+<h1>Coverage Summary for Class: SchedulingServiceImpl (com.gtwo.bdss_system.service.automatic)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SchedulingServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.service.automatic;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.service.commons.BloodStorageService;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationEventService;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationHistoryService;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationProcessService;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.scheduling.annotation.Scheduled;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;public class SchedulingServiceImpl {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationHistoryService donationHistoryService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationProcessService donationProcessService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationEventService donationEventService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private BloodStorageService bloodStorageService;
+&nbsp;
+&nbsp;    //second minute hour day month dayOfWeek
+&nbsp;//    @Scheduled(cron = &quot;0 00 00 * * ?&quot;)
+&nbsp;    @Scheduled(cron = &quot;0 * * * * ?&quot;)
+&nbsp;    @Transactional
+&nbsp;    public void autoScanAndSendReminder() {
+<b class="nc">&nbsp;        donationHistoryService.scanAndSendReminderToAllEligible();</b>
+<b class="nc">&nbsp;        donationProcessService.autoSetupExpiredProcesses();</b>
+<b class="nc">&nbsp;        donationEventService.autoExpirePastEvents();</b>
+<b class="nc">&nbsp;        bloodStorageService.checkAndExpireStoredBags();</b>
+<b class="nc">&nbsp;        System.out.println(&quot;? ?ã t? ??ng quét và g?i mail reminder cho donor vào 0h m?i ngày!&quot;);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

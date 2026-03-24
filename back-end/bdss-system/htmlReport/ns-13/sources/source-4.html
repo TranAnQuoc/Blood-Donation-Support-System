@@ -1,0 +1,355 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationRequestServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.service.donation.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationRequestServiceImpl (com.gtwo.bdss_system.service.donation.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DonationRequestServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/49)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/112)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DonationRequestServiceImpl$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/49)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/113)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.service.donation.impl;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.dto.commons.EmailDetailForDonationApproved;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationRequestDetailDTO;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationSurveyDTO;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.entity.donation.DonationProcess;
+&nbsp;import com.gtwo.bdss_system.entity.donation.DonationRequest;
+&nbsp;import com.gtwo.bdss_system.entity.donation.DonationEvent;
+&nbsp;import com.gtwo.bdss_system.enums.Role;
+&nbsp;import com.gtwo.bdss_system.enums.Status;
+&nbsp;import com.gtwo.bdss_system.enums.StatusRequest;
+&nbsp;import com.gtwo.bdss_system.repository.donation.DonationRequestRepository;
+&nbsp;import com.gtwo.bdss_system.repository.donation.DonationEventRepository;
+&nbsp;import com.gtwo.bdss_system.service.commons.EmailService;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationProcessService;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationRequestService;
+&nbsp;import jakarta.persistence.EntityNotFoundException;
+&nbsp;import org.modelmapper.ModelMapper;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.time.Period;
+&nbsp;import java.time.temporal.ChronoUnit;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;public class DonationRequestServiceImpl implements DonationRequestService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationRequestRepository repository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationEventRepository scheduleRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationProcessService donationProcessService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ModelMapper modelMapper;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private EmailService emailService;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DonationRequest createRequest(Long scheduleId, Account currentUser, DonationSurveyDTO surveyDTO) {
+<b class="nc">&nbsp;        if (!currentUser.getRole().equals(Role.MEMBER)) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Ch? ng??i dùng v?i vai trò MEMBER m?i ???c ??ng ký hi?n máu.&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (currentUser.getDateOfBirth() == null) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Không có thông tin ngày sinh. Vui lòng c?p nh?t h? s?.&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        LocalDate birthDate = currentUser.getDateOfBirth().toLocalDate();</b>
+<b class="nc">&nbsp;        if (Period.between(birthDate, LocalDate.now()).getYears() &lt; 18) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Ng??i hi?n máu ph?i ?? 18 tu?i ?? ??ng ký hi?n máu.&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        List&lt;DonationRequest&gt; previousRequests = repository.findAllByUserIdOrderByRequestTimeDesc(currentUser.getId());</b>
+<b class="nc">&nbsp;        if (!previousRequests.isEmpty()) {</b>
+<b class="nc">&nbsp;            DonationRequest lastRequest = previousRequests.get(0);</b>
+<b class="nc">&nbsp;            if (lastRequest.getStatusRequest() != StatusRequest.CANCELED &amp;&amp;</b>
+<b class="nc">&nbsp;                    lastRequest.getStatusRequest() != StatusRequest.REJECTED) {</b>
+<b class="nc">&nbsp;                DonationProcess process = lastRequest.getProcess();</b>
+<b class="nc">&nbsp;                if (process != null) {</b>
+<b class="nc">&nbsp;                    switch (process.getProcess()) {</b>
+&nbsp;                        case COMPLETED -&gt; {
+<b class="nc">&nbsp;                            LocalDate completedDate = process.getEndTime().toLocalDate();</b>
+<b class="nc">&nbsp;                            if (ChronoUnit.WEEKS.between(completedDate, LocalDate.now()) &lt; 12) {</b>
+<b class="nc">&nbsp;                                throw new IllegalArgumentException(&quot;B?n c?n ch? ít nh?t 12 tu?n sau khi hi?n máu ?? ??ng ký l?i.&quot;);</b>
+&nbsp;                            }
+&nbsp;                        }
+&nbsp;                        case IN_PROCESS, FAILED -&gt; {
+<b class="nc">&nbsp;                            throw new IllegalArgumentException(&quot;??n hi?n máu tr??c ?ó ?ang trong quá trình x? lý.&quot;);</b>
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                } else {
+<b class="nc">&nbsp;                    throw new IllegalArgumentException(&quot;B?n ?ã ??ng ký hi?n máu và ?ang ch? x? lý.&quot;);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        DonationEvent event = scheduleRepository.findById(scheduleId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Không tìm th?y l?ch hi?n máu.&quot;));</b>
+<b class="nc">&nbsp;        DonationRequest request = new DonationRequest();</b>
+<b class="nc">&nbsp;        request.setDonor(currentUser);</b>
+<b class="nc">&nbsp;        request.setEvent(event);</b>
+<b class="nc">&nbsp;        request.setRequestTime(LocalDateTime.now());</b>
+&nbsp;        // Mapping survey
+<b class="nc">&nbsp;        request.setIsHealthyToday(surveyDTO.getIsHealthyToday());</b>
+<b class="nc">&nbsp;        request.setHasSymptoms(surveyDTO.getHasSymptoms());</b>
+<b class="nc">&nbsp;        request.setHasInfectiousDiseases(surveyDTO.getHasInfectiousDiseases());</b>
+<b class="nc">&nbsp;        request.setUnsafeSex(surveyDTO.getUnsafeSex());</b>
+<b class="nc">&nbsp;        request.setRecentSurgeryTattoo(surveyDTO.getRecentSurgeryTattoo());</b>
+<b class="nc">&nbsp;        request.setRecentVaccination(surveyDTO.getRecentVaccination());</b>
+<b class="nc">&nbsp;        request.setOnMedication(surveyDTO.getOnMedication());</b>
+<b class="nc">&nbsp;        request.setHasChronicDisease(surveyDTO.getHasChronicDisease());</b>
+<b class="nc">&nbsp;        request.setChronicDiseaseNote(surveyDTO.getChronicDiseaseNote());</b>
+<b class="nc">&nbsp;        request.setLastDonationDays(surveyDTO.getLastDonationDays());</b>
+<b class="nc">&nbsp;        request.setHadReactionPreviousDonation(surveyDTO.getHadReactionPreviousDonation());</b>
+<b class="nc">&nbsp;        request.setPreviousReactionNote(surveyDTO.getPreviousReactionNote());</b>
+&nbsp;        // Logic t? ??ng xét duy?t
+<b class="nc">&nbsp;        String autoRejectReason = evaluateSurvey(surveyDTO);</b>
+<b class="nc">&nbsp;        if (autoRejectReason != null) {</b>
+<b class="nc">&nbsp;            request.setStatusRequest(StatusRequest.REJECTED);</b>
+<b class="nc">&nbsp;            request.setNote(autoRejectReason);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            request.setStatusRequest(StatusRequest.APPROVED);</b>
+<b class="nc">&nbsp;            request.setNote(&quot;T? ??ng duy?t d?a trên kh?o sát s?c kh?e.&quot;);</b>
+<b class="nc">&nbsp;            request.setApprovedTime(LocalDateTime.now());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        DonationRequest savedRequest = repository.save(request);</b>
+&nbsp;        // N?u ???c duy?t, t? ??ng t?o DonationProcess
+<b class="nc">&nbsp;        if (savedRequest.getStatusRequest() == StatusRequest.APPROVED) {</b>
+<b class="nc">&nbsp;            donationProcessService.autoCreateByRequest(savedRequest);</b>
+<b class="nc">&nbsp;            int approved = repository.countEventIdInRequest(event.getId());</b>
+<b class="nc">&nbsp;            EmailDetailForDonationApproved mail = new EmailDetailForDonationApproved();</b>
+<b class="nc">&nbsp;            mail.setToEmail(currentUser.getEmail());</b>
+<b class="nc">&nbsp;            mail.setSubject(&quot;Thông báo phê duy?t ??n hi?n máu&quot;);</b>
+<b class="nc">&nbsp;            mail.setDonorName(currentUser.getFullName());</b>
+<b class="nc">&nbsp;            mail.setEventName(event.getName());</b>
+<b class="nc">&nbsp;            mail.setDonationDate(event.getDate());</b>
+<b class="nc">&nbsp;            mail.setStartTime(event.getStartTime());</b>
+<b class="nc">&nbsp;            mail.setEndTime(event.getEndTime());</b>
+<b class="nc">&nbsp;            mail.setLocation(event.getAddress());</b>
+<b class="nc">&nbsp;            emailService.sendDonationApprovedEmail(mail);</b>
+<b class="nc">&nbsp;            if (approved &gt;= event.getMaxSlot()) {</b>
+<b class="nc">&nbsp;                event.setStatus(Status.INACTIVE);</b>
+<b class="nc">&nbsp;                scheduleRepository.save(event);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return savedRequest;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String evaluateSurvey(DonationSurveyDTO dto) {
+<b class="nc">&nbsp;        if (Boolean.FALSE.equals(dto.getIsHealthyToday())) return &quot;B?n không c?m th?y kh?e hôm nay.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getHasSymptoms())) return &quot;B?n ?ang có tri?u ch?ng nghi ng? b?nh.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getHasInfectiousDiseases())) return &quot;B?n có nguy c? m?c b?nh truy?n nhi?m.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getUnsafeSex())) return &quot;L?ch s? quan h? tình d?c không an toàn.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getRecentSurgeryTattoo())) return &quot;B?n v?a tr?i qua ph?u thu?t/x?m.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getRecentVaccination())) return &quot;B?n v?a tiêm vaccine g?n ?ây.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getOnMedication())) return &quot;B?n ?ang dùng thu?c ?i?u tr?.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getHasChronicDisease())) return &quot;B?n có b?nh mãn tính.&quot;;</b>
+<b class="nc">&nbsp;        if (Boolean.TRUE.equals(dto.getHadReactionPreviousDonation())) return &quot;B?n t?ng ph?n ?ng khi hi?n máu tr??c.&quot;;</b>
+<b class="nc">&nbsp;        if (dto.getLastDonationDays() != null &amp;&amp; dto.getLastDonationDays() &lt; 84) return &quot;Ch?a ?? 12 tu?n t? l?n hi?n máu g?n nh?t.&quot;;</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DonationRequest cancelOwnRequest(Long requestId, Account currentUser, String note) {
+<b class="nc">&nbsp;        DonationRequest request = repository.findById(requestId)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Không tìm th?y ??n ??ng ký.&quot;));</b>
+<b class="nc">&nbsp;        if (request.getStatusRequest() != StatusRequest.PENDING) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Ch? có th? h?y ??n khi ?ang ? tr?ng thái PENDING.&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        request.setStatusRequest(StatusRequest.CANCELED);</b>
+<b class="nc">&nbsp;        request.setNote(note);</b>
+<b class="nc">&nbsp;        return repository.save(request);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DonationRequest&gt; getAll() {
+<b class="nc">&nbsp;        return repository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DonationRequest getById(Long id) {
+<b class="nc">&nbsp;        return repository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;DonationRequest not found or inactive&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public DonationRequestDetailDTO requestTable(DonationRequest entity) {
+<b class="nc">&nbsp;        DonationRequestDetailDTO dto = new DonationRequestDetailDTO();</b>
+<b class="nc">&nbsp;        dto.setId(entity.getId());</b>
+<b class="nc">&nbsp;        dto.setDonorFullName(entity.getDonor().getFullName());</b>
+<b class="nc">&nbsp;        dto.setDonorGender(entity.getDonor().getGender().toString());</b>
+<b class="nc">&nbsp;        dto.setDonorBloodType(entity.getDonor().getBloodType());</b>
+<b class="nc">&nbsp;        dto.setEventName(entity.getEvent().getName());</b>
+<b class="nc">&nbsp;        dto.setRequestTime(entity.getRequestTime());</b>
+<b class="nc">&nbsp;        dto.setStatusRequest(entity.getStatusRequest().toString());</b>
+<b class="nc">&nbsp;        dto.setApprovedTime(entity.getApprovedTime());</b>
+<b class="nc">&nbsp;        dto.setNote(entity.getNote());</b>
+<b class="nc">&nbsp;        dto.setIsHealthyToday(entity.getIsHealthyToday());</b>
+<b class="nc">&nbsp;        dto.setHasSymptoms(entity.getHasSymptoms());</b>
+<b class="nc">&nbsp;        dto.setHasInfectiousDiseases(entity.getHasInfectiousDiseases());</b>
+<b class="nc">&nbsp;        dto.setUnsafeSex(entity.getUnsafeSex());</b>
+<b class="nc">&nbsp;        dto.setRecentSurgeryTattoo(entity.getRecentSurgeryTattoo());</b>
+<b class="nc">&nbsp;        dto.setRecentVaccination(entity.getRecentVaccination());</b>
+<b class="nc">&nbsp;        dto.setOnMedication(entity.getOnMedication());</b>
+<b class="nc">&nbsp;        dto.setHasChronicDisease(entity.getHasChronicDisease());</b>
+<b class="nc">&nbsp;        dto.setChronicDiseaseNote(entity.getChronicDiseaseNote());</b>
+<b class="nc">&nbsp;        dto.setLastDonationDays(entity.getLastDonationDays());</b>
+<b class="nc">&nbsp;        dto.setHadReactionPreviousDonation(entity.getHadReactionPreviousDonation());</b>
+<b class="nc">&nbsp;        dto.setPreviousReactionNote(entity.getPreviousReactionNote());</b>
+<b class="nc">&nbsp;        return dto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DonationRequestDetailDTO&gt; getAllRequestsByMember(Long userId) {
+<b class="nc">&nbsp;        List&lt;DonationRequest&gt; requests = repository.findAllByUserIdOrderBySubmittedAtDesc(userId);</b>
+<b class="nc">&nbsp;        return requests.stream()</b>
+<b class="nc">&nbsp;                .map(entity -&gt; modelMapper.map(entity, DonationRequestDetailDTO.class))</b>
+<b class="nc">&nbsp;                .toList();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

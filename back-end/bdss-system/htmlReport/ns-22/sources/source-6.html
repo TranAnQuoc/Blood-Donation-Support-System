@@ -1,0 +1,150 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > BloodStorageHistory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.entity.commons</a>
+</div>
+
+<h1>Coverage Summary for Class: BloodStorageHistory (com.gtwo.bdss_system.entity.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">BloodStorageHistory</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.entity.commons;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.StatusBloodStorage;
+&nbsp;import com.gtwo.bdss_system.enums.StatusVerified;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.Data;
+&nbsp;import org.hibernate.annotations.Nationalized;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Data
+&nbsp;@Table(name = &quot;blood_storage_history&quot;)
+&nbsp;public class BloodStorageHistory {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    @Column(name = &quot;blood_storage_history_id&quot;)
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @Column(name = &quot;original_blood_storage_id&quot;)
+&nbsp;    private Long originalBloodStorageId;
+&nbsp;
+&nbsp;    @Column(name = &quot;donor_full_name&quot;)
+&nbsp;    @Nationalized
+&nbsp;    private String donorFullName;
+&nbsp;
+&nbsp;    @Column(name = &quot;donor_phone&quot;)
+&nbsp;    private String donorPhone;
+&nbsp;
+&nbsp;    @Column(name = &quot;blood_type&quot;)
+&nbsp;    private String bloodType;
+&nbsp;
+&nbsp;    @Column(name = &quot;blood_component&quot;)
+&nbsp;    private String bloodComponent;
+&nbsp;
+&nbsp;    @Column(name = &quot;quantity&quot;)
+&nbsp;    private Integer quantity;
+&nbsp;
+&nbsp;    @Column(name = &quot;blood_status&quot;)
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private StatusBloodStorage bloodStatus;
+&nbsp;
+&nbsp;    @Column(name = &quot;create_at&quot;)
+&nbsp;    private LocalDateTime createAt;
+&nbsp;
+&nbsp;    @Column(name = &quot;created_by_id&quot;)
+&nbsp;    private Long createdById;
+&nbsp;
+&nbsp;    @Column(name = &quot;approved_at&quot;)
+&nbsp;    private LocalDateTime approvedAt;
+&nbsp;
+&nbsp;    @Column(name = &quot;approved_by_id&quot;)
+&nbsp;    private Long approvedById;
+&nbsp;
+&nbsp;    @Column(name = &quot;usage_reason&quot;)
+&nbsp;    @Nationalized
+&nbsp;    private String usageReason;
+&nbsp;
+&nbsp;    @Column(name = &quot;take_at&quot;)
+&nbsp;    private LocalDateTime takeAt;
+&nbsp;
+&nbsp;    @Column(name = &quot;take_by_id&quot;)
+&nbsp;    private Long takeById;
+&nbsp;
+&nbsp;    @Column(name = &quot;verified_at&quot;)
+&nbsp;    private LocalDateTime verifiedAt;
+&nbsp;
+&nbsp;    @Column(name = &quot;verified_by_id&quot;)
+&nbsp;    private Long verifiedById;
+&nbsp;
+&nbsp;    @Column(name = &quot;verified_status&quot;)
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private StatusVerified verifiedStatus;
+&nbsp;
+&nbsp;    @Column(name = &quot;note&quot;)
+&nbsp;    @Nationalized
+&nbsp;    private String note;
+&nbsp;
+&nbsp;    @Column(name = &quot;archived_at&quot;)
+&nbsp;    private LocalDateTime archivedAt;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

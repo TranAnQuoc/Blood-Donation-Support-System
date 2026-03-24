@@ -1,0 +1,124 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmergencyProcessFormDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.emergency</a>
+</div>
+
+<h1>Coverage Summary for Class: EmergencyProcessFormDTO (com.gtwo.bdss_system.dto.emergency)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">EmergencyProcessFormDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.emergency;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.CrossmatchResult;
+&nbsp;import com.gtwo.bdss_system.enums.EmergencyStatus;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import jakarta.validation.constraints.*;
+&nbsp;import lombok.Data;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class EmergencyProcessFormDTO {
+&nbsp;
+&nbsp;    @NotBlank(message = &quot;Tóm t?t h? s? s?c kh?e không ???c ?? tr?ng&quot;)
+&nbsp;    @Size(max = 1000, message = &quot;Tóm t?t h? s? s?c kh?e t?i ?a 1000 ký t?&quot;)
+&nbsp;    private String healthCheckSummary;
+&nbsp;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Tr?ng thái quy trình là b?t bu?c&quot;)
+&nbsp;    private EmergencyStatus status;
+&nbsp;
+&nbsp;    @Size(max = 500, message = &quot;Tri?u ch?ng t?i ?a 500 ký t?&quot;)
+&nbsp;    private String symptoms;
+&nbsp;
+&nbsp;    @Size(max = 50, message = &quot;Huy?t áp t?i ?a 50 ký t?&quot;)
+&nbsp;    private String bloodPressure;
+&nbsp;
+&nbsp;    @Min(value = 0, message = &quot;M?ch ph?i l?n h?n ho?c b?ng 0&quot;)
+&nbsp;    private Integer pulse;
+&nbsp;
+&nbsp;    @Min(value = 0, message = &quot;Nh?p th? ph?i l?n h?n ho?c b?ng 0&quot;)
+&nbsp;    private Integer respiratoryRate;
+&nbsp;
+&nbsp;    @DecimalMin(value = &quot;30.0&quot;, message = &quot;Nhi?t ?? không h?p l?&quot;, inclusive = true)
+&nbsp;    @DecimalMax(value = &quot;45.0&quot;, message = &quot;Nhi?t ?? không h?p l?&quot;, inclusive = true)
+&nbsp;    private Double temperature;
+&nbsp;
+&nbsp;    @DecimalMin(value = &quot;0.0&quot;, message = &quot;N?ng ?? Hemoglobin không h?p l?&quot;)
+&nbsp;    private Double hemoglobinLevel;
+&nbsp;
+&nbsp;    private Boolean bloodGroupConfirmed;
+&nbsp;
+&nbsp;    @Min(value = 1, message = &quot;S? l??ng máu ph?i l?n h?n 0&quot;)
+&nbsp;    private Integer quantity;
+&nbsp;
+&nbsp;    @Schema(description = &quot;K?t qu? crossmatch&quot;, example = &quot;COMPATIBLE&quot;)
+&nbsp;    private CrossmatchResult crossmatchResult;
+&nbsp;
+&nbsp;    @Size(max = 200, message = &quot;Thành ph?n máu c?n thi?t t?i ?a 200 ký t?&quot;)
+&nbsp;    private String needComponent;
+&nbsp;
+&nbsp;    @Size(max = 500, message = &quot;Lý do truy?n máu t?i ?a 500 ký t?&quot;)
+&nbsp;    private String reasonForTransfusion;
+&nbsp;
+&nbsp;    private Long bloodtypeId;
+&nbsp;    private Long componentId;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TokenServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.service.auth.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: TokenServiceImpl (com.gtwo.bdss_system.service.auth.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TokenServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.service.auth.impl;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.repository.auth.AuthenticationRepository;
+&nbsp;import com.gtwo.bdss_system.service.auth.TokenService;
+&nbsp;import io.jsonwebtoken.Claims;
+&nbsp;import io.jsonwebtoken.Jwts;
+&nbsp;import io.jsonwebtoken.io.Decoders;
+&nbsp;import io.jsonwebtoken.security.Keys;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import javax.crypto.SecretKey;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.function.Function;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;public class TokenServiceImpl implements TokenService {</b>
+&nbsp;    @Autowired
+&nbsp;    AuthenticationRepository authenticationRepository;
+&nbsp;
+<b class="nc">&nbsp;    private final String SECRET_KEY = &quot;4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407c&quot;;</b>
+&nbsp;
+&nbsp;    private SecretKey getSigninKey(){
+<b class="nc">&nbsp;        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);</b>
+<b class="nc">&nbsp;        return Keys.hmacShaKeyFor(keyBytes);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String generateToken(Account account) {
+&nbsp;        String token =
+<b class="nc">&nbsp;                Jwts.builder().</b>
+<b class="nc">&nbsp;                        subject(account.getEmail()).</b>
+<b class="nc">&nbsp;                        issuedAt(new Date(System.currentTimeMillis()))</b>
+<b class="nc">&nbsp;                        .expiration(new Date(System.currentTimeMillis()+24*60*60*1000))</b>
+<b class="nc">&nbsp;                        .signWith(getSigninKey())</b>
+<b class="nc">&nbsp;                        .compact();</b>
+<b class="nc">&nbsp;        return token;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Claims extractAllClaims(String token) {
+<b class="nc">&nbsp;        return  Jwts.parser().</b>
+<b class="nc">&nbsp;                verifyWith(getSigninKey())</b>
+<b class="nc">&nbsp;                .build()</b>
+<b class="nc">&nbsp;                .parseSignedClaims(token)</b>
+<b class="nc">&nbsp;                .getPayload();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Account extractAccount (String token){
+<b class="nc">&nbsp;        String email = extractClaim(token,Claims::getSubject);</b>
+<b class="nc">&nbsp;        return authenticationRepository.findAccountByEmail(email);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isTokenExpired(String token){
+<b class="nc">&nbsp;        return extractExpiration(token).before(new Date());</b>
+&nbsp;    }
+&nbsp;    public Date extractExpiration(String token){
+<b class="nc">&nbsp;        return extractClaim(token,Claims::getExpiration);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public &lt;T&gt; T extractClaim(String token, Function&lt;Claims,T&gt; resolver){
+<b class="nc">&nbsp;        Claims claims = extractAllClaims(token);</b>
+<b class="nc">&nbsp;        return  resolver.apply(claims);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

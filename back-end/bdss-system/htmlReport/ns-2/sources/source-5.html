@@ -1,0 +1,155 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > SecurityConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.config</a>
+</div>
+
+<h1>Coverage Summary for Class: SecurityConfig (com.gtwo.bdss_system.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SecurityConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.config;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+&nbsp;import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.http.SessionCreationPolicy;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.security.web.SecurityFilterChain;
+&nbsp;import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.service.auth.impl.AuthenticationServiceImpl;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableMethodSecurity(prePostEnabled = true)
+<b class="nc">&nbsp;public class SecurityConfig {</b>
+&nbsp;    @Autowired
+&nbsp;    Filter filter;
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public PasswordEncoder passwordEncoder() {
+<b class="nc">&nbsp;        return new BCryptPasswordEncoder();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+<b class="nc">&nbsp;        return configuration.getAuthenticationManager();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationServiceImpl authenticationServiceImpl) throws Exception {
+<b class="nc">&nbsp;        return http</b>
+<b class="nc">&nbsp;                .cors() // Enable CORS support so the CorsConfigurationSource bean is applied</b>
+<b class="nc">&nbsp;                .and()</b>
+<b class="nc">&nbsp;                .csrf(csrf -&gt; csrf.disable())</b>
+<b class="nc">&nbsp;                .authorizeHttpRequests(</b>
+&nbsp;                        req -&gt;req
+<b class="nc">&nbsp;                                .requestMatchers( &quot;/**&quot;).permitAll()</b>
+<b class="nc">&nbsp;                                .anyRequest()</b>
+<b class="nc">&nbsp;                                .authenticated()</b>
+&nbsp;                )
+<b class="nc">&nbsp;                .userDetailsService(authenticationServiceImpl)</b>
+<b class="nc">&nbsp;                .sessionManagement(session -&gt;</b>
+<b class="nc">&nbsp;                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</b>
+<b class="nc">&nbsp;                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

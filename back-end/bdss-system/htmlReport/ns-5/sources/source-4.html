@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationRequestAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.controller.donation</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationRequestAPI (com.gtwo.bdss_system.controller.donation)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DonationRequestAPI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.controller.donation;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationRequestDTO;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationRequestDetailDTO;
+&nbsp;import com.gtwo.bdss_system.dto.donation.DonationSurveyDTO;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.entity.donation.DonationRequest;
+&nbsp;import com.gtwo.bdss_system.enums.StatusRequest;
+&nbsp;import com.gtwo.bdss_system.service.donation.DonationRequestService;
+&nbsp;import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.security.core.annotation.AuthenticationPrincipal;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/donation-requests&quot;)
+&nbsp;@SecurityRequirement(name = &quot;api&quot;)
+<b class="nc">&nbsp;public class DonationRequestAPI {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationRequestService service;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DonationRequestService donationRequestService;
+&nbsp;
+&nbsp;    @PreAuthorize(&quot;hasAnyRole(&#39;MEMBER&#39;, &#39;STAFF&#39;)&quot;)
+&nbsp;    @PostMapping(&quot;/register/{scheduleId}&quot;)
+&nbsp;    public ResponseEntity&lt;DonationRequest&gt; registerRequest(
+&nbsp;            @PathVariable Long scheduleId,
+&nbsp;            @Valid @RequestBody DonationSurveyDTO surveyDTO,
+&nbsp;            @AuthenticationPrincipal Account currentUser) {
+<b class="nc">&nbsp;        DonationRequest newRequest = service.createRequest(scheduleId, currentUser, surveyDTO);</b>
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;MEMBER&#39;)&quot;)
+&nbsp;    @PutMapping(&quot;/cancel/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;DonationRequest&gt; cancelOwnRequest(
+&nbsp;            @PathVariable Long id,
+&nbsp;            @RequestParam(required = false) String note,
+&nbsp;            @AuthenticationPrincipal Account currentUser) {
+<b class="nc">&nbsp;        DonationRequest cancelled = service.cancelOwnRequest(id, currentUser, note);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(cancelled);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/list&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;DonationRequestDetailDTO&gt;&gt; getAll() {
+<b class="nc">&nbsp;        List&lt;DonationRequest&gt; requests = service.getAll();</b>
+<b class="nc">&nbsp;        List&lt;DonationRequestDetailDTO&gt; dtoList = requests.stream()</b>
+<b class="nc">&nbsp;                .map(request -&gt; donationRequestService.requestTable(request))</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(dtoList);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/search/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;STAFF&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;DonationRequestDetailDTO&gt; getById(@PathVariable Long id) {
+<b class="nc">&nbsp;        DonationRequest entity = service.getById(id);</b>
+<b class="nc">&nbsp;        DonationRequestDetailDTO dto = service.requestTable(entity);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(dto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/my-requests&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;MEMBER&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;DonationRequestDetailDTO&gt;&gt; getMyRequests(@AuthenticationPrincipal Account user) {
+<b class="nc">&nbsp;        Long userId = user.getId();</b>
+<b class="nc">&nbsp;        List&lt;DonationRequestDetailDTO&gt; dtos = service.getAllRequestsByMember(userId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(dtos);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

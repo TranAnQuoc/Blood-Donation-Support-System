@@ -1,0 +1,116 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > DonationSurveyDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.donation</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationSurveyDTO (com.gtwo.bdss_system.dto.donation)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DonationSurveyDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.donation;
+&nbsp;
+&nbsp;import jakarta.validation.constraints.Max;
+&nbsp;import jakarta.validation.constraints.Min;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import jakarta.validation.constraints.Size;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class DonationSurveyDTO {
+&nbsp;
+&nbsp;    @NotNull(message = &quot;B?n ph?i xác nh?n tình tr?ng s?c kh?e hôm nay.&quot;)
+&nbsp;    private Boolean isHealthyToday;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có ?ang có tri?u ch?ng (s?t, ho, tiêu ch?y...) không.&quot;)
+&nbsp;    private Boolean hasSymptoms;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có t?ng m?c b?nh truy?n nhi?m không.&quot;)
+&nbsp;    private Boolean hasInfectiousDiseases;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có quan h? không an toàn g?n ?ây không.&quot;)
+&nbsp;    private Boolean unsafeSex;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có ph?u thu?t/x?m trong vòng 6 tháng không.&quot;)
+&nbsp;    private Boolean recentSurgeryTattoo;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có tiêm vaccine g?n ?ây không.&quot;)
+&nbsp;    private Boolean recentVaccination;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có ?ang s? d?ng thu?c không.&quot;)
+&nbsp;    private Boolean onMedication;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có b?nh mãn tính không.&quot;)
+&nbsp;    private Boolean hasChronicDisease;
+&nbsp;
+&nbsp;    @Size(max = 255, message = &quot;Ghi chú b?nh mãn tính không ???c v??t quá 255 ký t?.&quot;)
+&nbsp;    private String chronicDiseaseNote;
+&nbsp;
+&nbsp;    @Min(value = 0, message = &quot;S? ngày k? t? l?n hi?n máu g?n nh?t không h?p l?.&quot;)
+&nbsp;    @Max(value = 10000, message = &quot;S? ngày k? t? l?n hi?n máu quá l?n.&quot;)
+&nbsp;    private Integer lastDonationDays;
+&nbsp;
+&nbsp;    @NotNull(message = &quot;Vui lòng cho bi?t b?n có t?ng b? ph?n ?ng sau khi hi?n không.&quot;)
+&nbsp;    private Boolean hadReactionPreviousDonation;
+&nbsp;
+&nbsp;    @Size(max = 255, message = &quot;Ghi chú ph?n ?ng sau hi?n không ???c v??t quá 255 ký t?.&quot;)
+&nbsp;    private String previousReactionNote;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

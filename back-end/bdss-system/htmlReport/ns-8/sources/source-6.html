@@ -1,0 +1,121 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > BloodStorageResponseDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.dto.commons</a>
+</div>
+
+<h1>Coverage Summary for Class: BloodStorageResponseDTO (com.gtwo.bdss_system.dto.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">BloodStorageResponseDTO</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.dto.commons;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.StatusBloodStorage;
+&nbsp;import com.gtwo.bdss_system.enums.StatusVerified;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;
+&nbsp;@Data
+&nbsp;public class BloodStorageResponseDTO {
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    private Long donorId;
+&nbsp;    private String donorName;
+&nbsp;    private String donorPhone;
+&nbsp;    private String donorRole;
+&nbsp;
+&nbsp;    private Long bloodTypeId;
+&nbsp;    private String bloodTypeName;
+&nbsp;    private String bloodTypeRh;
+&nbsp;    private Long bloodComponentId;
+&nbsp;    private String bloodComponentName;
+&nbsp;    private Integer quantity;
+&nbsp;    private StatusBloodStorage bloodStatus;
+&nbsp;    private LocalDateTime createAt;
+&nbsp;
+&nbsp;    private Long createdById;
+&nbsp;    private String createdByName;
+&nbsp;    private String createdByPhone;
+&nbsp;    private String createdByRole;
+&nbsp;
+&nbsp;    private LocalDateTime approvedAt;
+&nbsp;    private Long approvedById;
+&nbsp;    private String approvedByName;
+&nbsp;    private String approvedByPhone;
+&nbsp;    private String approvedByRole;
+&nbsp;
+&nbsp;    private String usageReason;
+&nbsp;    private LocalDateTime takeAt;
+&nbsp;    private Long takeById;
+&nbsp;    private String takeByName;
+&nbsp;    private String takeByPhone;
+&nbsp;    private String takeByRole;
+&nbsp;
+&nbsp;    private LocalDateTime verifiedAt;
+&nbsp;    private Long verifiedById;
+&nbsp;    private String verifiedByName;
+&nbsp;    private String verifiedByPhone;
+&nbsp;    private String verifiedByRole;
+&nbsp;
+&nbsp;    private StatusVerified verifiedStatus;
+&nbsp;    private String verifiedNote;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

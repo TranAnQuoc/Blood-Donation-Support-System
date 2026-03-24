@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > BloodStorageAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.controller.commons</a>
+</div>
+
+<h1>Coverage Summary for Class: BloodStorageAPI (com.gtwo.bdss_system.controller.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BloodStorageAPI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.controller.commons;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.dto.commons.*;
+&nbsp;import com.gtwo.bdss_system.entity.auth.Account;
+&nbsp;import com.gtwo.bdss_system.entity.commons.BloodStorage;
+&nbsp;import com.gtwo.bdss_system.enums.StatusBloodStorage;
+&nbsp;import com.gtwo.bdss_system.service.commons.BloodStorageService;
+&nbsp;import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.security.core.annotation.AuthenticationPrincipal;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/blood-storage&quot;)
+&nbsp;@SecurityRequirement(name = &quot;api&quot;)
+<b class="nc">&nbsp;public class BloodStorageAPI {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private BloodStorageService service;
+&nbsp;
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;MEMBER&#39;)&quot;)
+&nbsp;    @GetMapping(&quot;/my-bags&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;BloodStorageStatusDTO&gt;&gt; getAllMyBloodBags(@AuthenticationPrincipal Account donor) {
+<b class="nc">&nbsp;        Long donorId = donor.getId();</b>
+<b class="nc">&nbsp;        List&lt;BloodStorageStatusDTO&gt; resp = service.findAllByDonor(donorId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(resp);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;STAFF&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; create(@Valid @RequestBody BloodStorageDTO dto, @AuthenticationPrincipal Account creater) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(service.create(dto, creater));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/approve/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; approve(@PathVariable Long id, @RequestBody ApproveRequestDTO dto, @AuthenticationPrincipal Account approver) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(service.approve(id, dto, approver));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/use/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;STAFF&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; use(@PathVariable Long id, @RequestBody BloodStorageUseDTO dto, @AuthenticationPrincipal Account user) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(service.use(id, dto, user));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/verify/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; verify(@PathVariable Long id, @RequestBody VerifiedNote verifiedNote, @AuthenticationPrincipal Account verifier) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(service.verify(id, verifiedNote,verifier));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasAnyRole(&#39;STAFF&#39;, &#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getAll() {
+<b class="nc">&nbsp;        return ResponseEntity.ok(service.getAll());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/status&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyRole(&#39;STAFF&#39;, &#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; getByStatus(@RequestParam(&quot;status&quot;) StatusBloodStorage status) {
+<b class="nc">&nbsp;        List&lt;BloodStorageResponseDTO&gt; result = service.getByStatus(status);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(result);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/search&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyRole(&#39;STAFF&#39;, &#39;ADMIN&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;BloodStorageResponseDTO&gt;&gt; searchByTypeRhComponent(
+&nbsp;            @RequestParam(required = false) Long bloodTypeId,
+&nbsp;            @RequestParam(required = false) Long bloodComponentId) {
+<b class="nc">&nbsp;        return ResponseEntity.ok(service.searchByTypeRhComponent(bloodTypeId, bloodComponentId));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

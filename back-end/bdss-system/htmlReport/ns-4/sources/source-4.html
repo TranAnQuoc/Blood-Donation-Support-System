@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmergencyHotlineAPI</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.controller.commons</a>
+</div>
+
+<h1>Coverage Summary for Class: EmergencyHotlineAPI (com.gtwo.bdss_system.controller.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EmergencyHotlineAPI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.controller.commons;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.entity.commons.EmergencyHotline;
+&nbsp;import com.gtwo.bdss_system.service.commons.EmergencyHotlineService;
+&nbsp;import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/hotlines&quot;)
+&nbsp;@SecurityRequirement(name = &quot;api&quot;)
+&nbsp;public class EmergencyHotlineAPI {
+&nbsp;
+&nbsp;    private final EmergencyHotlineService service;
+&nbsp;
+<b class="nc">&nbsp;    public EmergencyHotlineAPI(EmergencyHotlineService service) {</b>
+<b class="nc">&nbsp;        this.service = service;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public List&lt;EmergencyHotline&gt; getAll() {
+<b class="nc">&nbsp;        return service.getAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/staff&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;STAFF&#39;)&quot;)
+&nbsp;    public List&lt;EmergencyHotline&gt; getForStaff() {
+<b class="nc">&nbsp;        return service.getForStaff();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/address&quot;)
+&nbsp;    @PreAuthorize(&quot;hasAnyRole(&#39;STAFF&#39;, &#39;ADMIN&#39;)&quot;)
+&nbsp;    public List&lt;EmergencyHotline&gt; getByAddress(@RequestParam String address) {
+<b class="nc">&nbsp;        return service.getByAddress(address);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public EmergencyHotline create(@RequestBody @Valid EmergencyHotline hotline) {
+<b class="nc">&nbsp;        return service.create(hotline);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public EmergencyHotline update(@PathVariable Long id, @RequestBody @Valid EmergencyHotline hotline) {
+<b class="nc">&nbsp;        return service.update(id, hotline);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public void delete(@PathVariable Long id) {
+<b class="nc">&nbsp;        service.delete(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/restore/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)
+&nbsp;    public void restore(@PathVariable Long id) {
+<b class="nc">&nbsp;        service.restore(id);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>

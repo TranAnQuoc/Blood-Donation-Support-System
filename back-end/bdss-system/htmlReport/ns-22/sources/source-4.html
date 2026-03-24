@@ -1,0 +1,105 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > EmergencyHotline</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.gtwo.bdss_system.entity.commons</a>
+</div>
+
+<h1>Coverage Summary for Class: EmergencyHotline (com.gtwo.bdss_system.entity.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">EmergencyHotline</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.gtwo.bdss_system.entity.commons;
+&nbsp;
+&nbsp;import com.gtwo.bdss_system.enums.Status;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import jakarta.validation.constraints.Pattern;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import org.hibernate.annotations.Nationalized;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;emergency_hotline&quot;)
+&nbsp;@Data
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;public class EmergencyHotline {
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    @Column(name = &quot;Id&quot;)
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @Column(name = &quot;Facility_name&quot;)
+&nbsp;    @Nationalized
+&nbsp;    private String name;
+&nbsp;
+&nbsp;    @Column(name = &quot;Number&quot;)
+&nbsp;    @Pattern(regexp = &quot;^(0|\\+84)[0-9]{9}$&quot;, message = &quot;S? hotline không h?p l? (ph?i b?t ??u b?ng 0 ho?c +84 và ?? 10 s?)&quot;)
+&nbsp;    private String number;
+&nbsp;
+&nbsp;    @Column(name = &quot;Address&quot;)
+&nbsp;    @Nationalized
+&nbsp;    private String address;
+&nbsp;
+&nbsp;    @Column(name = &quot;Status&quot;)
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private Status status;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-24 20:54</div>
+</div>
+</body>
+</html>
